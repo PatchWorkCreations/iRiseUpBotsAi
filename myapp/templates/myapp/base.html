@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    {% load static %}
+
+    <title>{% block title %}Braine Digital Agency Business HTML-5 Template{% endblock %}</title>
+    <!-- Stylesheets -->
+    <link href="{% static 'myapp/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'myapp/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'myapp/css/meanmenu.min.css' %}" rel="stylesheet">
+    <link href="{% static 'myapp/css/responsive.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static 'myapp/images/favicon.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'myapp/images/favicon.png' %}" type="image/x-icon">
+    <!-- Responsive -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        {% block content %}
+        <!-- Content will be injected here -->
+        {% endblock %}
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'myapp/js/jquery.js' %}"></script>
+    <script src="{% static 'myapp/js/popper.min.js' %}"></script>
+    <script src="{% static 'myapp/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'myapp/js/appear.js' %}"></script>
+    <script src="{% static 'myapp/js/parallax.min.js' %}"></script>
+    <script src="{% static 'myapp/js/tilt.jquery.min.js' %}"></script>
+    <script src="{% static 'myapp/js/jquery.paroller.min.js' %}"></script>
+    <script src="{% static 'myapp/js/wow.js' %}"></script>
+    <script src="{% static 'myapp/js/swiper.min.js' %}"></script>
+    <script src="{% static 'myapp/js/backtotop.js' %}"></script>
+    <script src="{% static 'myapp/js/odometer.js' %}"></script>
+    <script src="{% static 'myapp/js/parallax-scroll.js' %}"></script>
+    <script src="{% static 'myapp/js/gsap.min.js' %}"></script>
+    <script src="{% static 'myapp/js/SplitText.min.js' %}"></script>
+    <script src="{% static 'myapp/js/ScrollTrigger.min.js' %}"></script>
+    <script src="{% static 'myapp/js/ScrollToPlugin.min.js' %}"></script>
+    <script src="{% static 'myapp/js/ScrollSmoother.min.js' %}"></script>
+    <script src="{% static 'myapp/js/touchspin.js' %}"></script>
+    <script src="{% static 'myapp/js/jquery.marquee.min.js' %}"></script>
+    <script src="{% static 'myapp/js/magnific-popup.min.js' %}"></script>
+    <script src="{% static 'myapp/js/nav-tool.js' %}"></script>
+    <script src="{% static 'myapp/js/jquery-ui.js' %}"></script>
+    <script src="{% static 'myapp/js/element-in-view.js' %}"></script>
+    <script src="{% static 'myapp/js/script.js' %}"></script>
+    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
+    <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
+</body>
+</html>

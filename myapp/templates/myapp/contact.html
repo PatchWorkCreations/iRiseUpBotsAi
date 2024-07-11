@@ -1,0 +1,69 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+
+<body>
+
+<div class="page-wrapper">
+    <!-- Main Header -->
+	{% load static %}
+    {% include 'header.html' %}
+    <!-- End Main Header -->
+
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="auto-container">
+            <h2>Contact Us</h2>
+            <ul class="bread-crumb clearfix">
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li>Contact Us</li>
+            </ul>
+        </div>
+    </section>
+    <!-- End Page Title -->
+
+    <!-- Contact Info -->
+    <section class="contact-info">
+        <div class="auto-container">
+            <div class="row clearfix">
+                <div class="info-block_one col-lg-4 col-md-6 col-sm-12">
+                    <div class="info-block_one-inner">
+                        <div class="info-block_one-icon">
+                            <i class="icon-phone"></i>
+                        </div>
+                        <h4>Call us on</h4>
+                        <a href="tel:+415-864-8728">+415-864-8728</a> <br>
+                        <a href="tel:+415-864-8729">+415-864-8729</a>
+                    </div>
+                </div>
+                <div class="info-block_one active col-lg-4 col-md-6 col-sm-12">
+                    <div class="info-block_one-inner">
+                        <div class="info-block_one-icon">
+                            <i class="icon-envelope"></i>
+                        </div>
+                        <h4>Email us</h4>
+                        <a href="mailto:support@braine.com">support@braine.com</a> <br>
+                        <a href="mailto:contact@braine.com">contact@braine.com</a>
+                    </div>
+                </div>
+                <div class="info-block_one col-lg-4 col-md-6 col-sm-12">
+                    <div class="info-block_one-inner">
+                        <div class="info-block_one-icon">
+                            <i class="icon-map"></i>
+                        </div>
+                        <h4>Our location</h4>
+                        <div class="text">1426 Center Street Bend, OR <br> 97702, California, USA</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Contact Info -->
+
+    <!-- Main Footer -->
+    {% include 'footer.html' %}
+</div>
+
+{% endblock %}

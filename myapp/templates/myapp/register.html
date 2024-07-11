@@ -1,0 +1,122 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="page-wrapper">
+	
+	<!-- Cursor -->
+	<div class="cursor"></div>
+	<div class="cursor-follower"></div>
+	<!-- Cursor End -->
+ 	
+	<!-- Preloader -->
+	<div class="loader-wrap">
+		<div class="preloader">
+			<div class="preloader-close">x</div>
+			<div id="handle-preloader" class="handle-preloader">
+				<div class="animation-preloader">
+					<div class="txt-loading">
+						<span data-text-preloader="L" class="letters-loading">L</span>
+						<span data-text-preloader="O" class="letters-loading">O</span>
+						<span data-text-preloader="A" class="letters-loading">A</span>
+						<span data-text-preloader="D" class="letters-loading">D</span>
+						<span data-text-preloader="I" class="letters-loading">I</span>
+						<span data-text-preloader="N" class="letters-loading">N</span>
+						<span data-text-preloader="G" class="letters-loading">G</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Preloader End -->
+	
+	<!-- Main Header -->
+{% include 'header.html' %}
+	<!-- End Main Header -->
+	
+	<!-- Page Title -->
+    <section class="page-title">
+		<div class="page-title-icon" style="background-image:url(assets/images/icons/page-title_icon-1.png)"></div>
+		<div class="page-title-icon-two" style="background-image:url(assets/images/icons/page-title_icon-2.png)"></div>
+		<div class="page-title-shadow" style="background-image:url(assets/images/background/page-title-1.png)"></div>
+		<div class="page-title-shadow_two" style="background-image:url(assets/images/background/page-title-2.png)"></div>
+        <div class="auto-container">
+			<h2>Register now</h2>
+			<ul class="bread-crumb clearfix">
+				<li><a href="{% static 'myapp/index.html' %}"">Home</a></li>
+				<li>Registration now</li>
+			</ul>
+        </div>
+    </section>
+    <!-- End Page Title -->
+
+	<!-- Register One -->
+	<section class="register-one">
+		<div class="auto-container">
+			<div class="inner-container">
+				<h3>Registration</h3>
+				<div class="text">Your email address will not be published.</div>
+
+				<!-- Register Form -->
+				<div class="register-form">
+					<form method="post" action="{% url 'contact' %}">
+						
+						<div class="form-group">
+							<label>Name*</label>
+							<input type="text" name="name" placeholder="" required="">
+						</div>
+
+						<div class="form-group">
+							<label>Email*</label>
+							<input type="text" name="email" placeholder="" required="">
+						</div>
+
+						<div class="form-group">
+							<label>Password*</label>
+							<span class="icon fa-regular fa-eye fa-fw"></span>
+							<input type="password" name="password" placeholder="" required="">
+						</div>
+
+						<div class="form-group">
+							<!-- Button Box -->
+							<button type="submit" class="btn-style-one submit-btn template-btn">
+								<span class="btn-wrap">
+									<span class="text-one">Join now</span>
+									<span class="text-two">Join now</span>
+								</span>
+							</button>
+						</div>
+						
+						<div class="form-group">
+							<div class="creat-account">Already have a account? <a href="#">Login Now</a></div>
+						</div>
+
+					</form>
+				</div>
+				<!-- End Default Form -->
+
+			</div>
+		</div>
+	</section>
+	<!-- End Register One -->
+
+	<!-- CTA One -->
+	{% include 'ctaone.html' %}
+	<!-- End CTA One -->
+
+	<!-- Main Footer -->
+	{% include 'footer.html' %}
+<!-- End PageWrapper -->
+
+<div class="progress-wrap">
+	<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+		<path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+	</svg>
+</div>
+
+{% endblock %}

@@ -1,0 +1,262 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}Team Detail{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="page-wrapper">
+	
+	<!-- Cursor -->
+	<div class="cursor"></div>
+	<div class="cursor-follower"></div>
+	<!-- Cursor End -->
+ 	
+	<!-- Preloader -->
+	<div class="loader-wrap">
+		<div class="preloader">
+			<div class="preloader-close">x</div>
+			<div id="handle-preloader" class="handle-preloader">
+				<div class="animation-preloader">
+					<div class="txt-loading">
+						<span data-text-preloader="L" class="letters-loading">L</span>
+						<span data-text-preloader="O" class="letters-loading">O</span>
+						<span data-text-preloader="A" class="letters-loading">A</span>
+						<span data-text-preloader="D" class="letters-loading">D</span>
+						<span data-text-preloader="I" class="letters-loading">I</span>
+						<span data-text-preloader="N" class="letters-loading">N</span>
+						<span data-text-preloader="G" class="letters-loading">G</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Preloader End -->
+	
+	<!-- Main Header -->
+{% include 'header.html' %}
+	<!-- End Main Header -->
+	
+	<!-- Page Title -->
+    <section class="page-title">
+		<div class="page-title-icon" style="background-image:url(assets/images/icons/page-title_icon-1.png)"></div>
+		<div class="page-title-icon-two" style="background-image:url(assets/images/icons/page-title_icon-2.png)"></div>
+		<div class="page-title-shadow" style="background-image:url(assets/images/background/page-title-1.png)"></div>
+		<div class="page-title-shadow_two" style="background-image:url(assets/images/background/page-title-2.png)"></div>
+        <div class="auto-container">
+			<h2>Team detail</h2>
+			<ul class="bread-crumb clearfix">
+				<li><a href="{% static 'myapp/index.html' %}"">Home</a></li>
+				<li>Team detail</li>
+			</ul>
+        </div>
+    </section>
+    <!-- End Page Title -->
+
+	<!-- Team Detail -->
+	<section class="team-detail">
+		<div class="auto-container">
+			<div class="row clearfix">
+
+				<!-- Team Block One -->
+				<div class="team-detail_image-column col-lg-6 col-md-12 col-sm-12">
+					<div class="team-detail_image-outer">
+						<div class="team-detail_image">
+							<img src="assets/images/resource/team-7.jpg" alt="" />
+						</div>
+					</div>
+				</div>
+
+				<!-- Team Block One -->
+				<div class="team-detail_content-column col-lg-6 col-md-12 col-sm-12">
+					<div class="team-detail_content-outer">
+						<div class="team-detail_subtitle">About me</div>
+						<h2 class="team-detail_title">Elliot S. Acevedo</h2>
+						<div class="team-detail_text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut e massa  Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis  consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna.</div>
+						<div class="team-detail_info-outer">
+							<div class="row clearfix">
+								<!-- Column -->
+								<div class="column col-lg-6 col-md-6 col-sm-6">
+									<div class="team-detail_info">
+										email
+										<span>wlliot@braine.com</span>
+									</div>
+									<div class="team-detail_info">
+										Location:
+										<span>Burnside, UT 84501</span>
+									</div>
+								</div>
+								<!-- Column -->
+								<div class="column col-lg-6 col-md-6 col-sm-6">
+									<div class="team-detail_info">
+										Phone:
+										<span>02 (908) 480-20</span>
+									</div>
+									<div class="team-detail_info">
+										Experience
+										<span>06+ Years</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="team-detail_button">
+							<a href="{% url 'contact' %}" class="template-btn btn-style-one">
+								<span class="btn-wrap">
+									<span class="text-one">Contact me</span>
+									<span class="text-two">Contact me</span>
+								</span>
+							</a>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</section>
+	<!-- End Team Detail -->
+
+	<!-- Team Detail Experiance -->
+	<section class="team-detail_experiance">
+		<div class="auto-container">
+			<div class="row clearfix">
+
+				<!-- Column -->
+				<div class="column col-lg-6 col-md-6 col-sm-12">
+					<!-- Sec Title -->
+					<div class="sec-title style-four title-anim">
+						<div class="sec-title_title">Experiences</div>
+						<h2 class="sec-title_heading">Explore my personal <span>experiences</span></h2>
+					</div>
+				</div>
+
+				<!-- Column -->
+				<div class="column col-lg-6 col-md-6 col-sm-12">
+					<div class="sec-title_text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa  Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis l consectetur, ultrices mauris. Maecenas vitae mattis</div>
+					<!-- Skills -->
+					<div class="default-skills">
+
+						<!-- Skill Item -->
+						<div class="default-skill-item">
+							<div class="default-skill-title">Patent Law</div>
+							<div class="default-skill-bar">
+								<div class="default-bar-inner">
+									<div class="default-bar progress-line" data-width="86">
+										<div class="default-skill-percentage"></div>
+									</div>
+								</div>
+							</div>
+							<div class="default-count-box count-box"><span class="count-text" data-speed="2000" data-stop="86">0</span>%</div>
+						</div>
+
+						<!-- Skill Item -->
+						<div class="default-skill-item">
+							<div class="default-skill-title">Trademark</div>
+							<div class="default-skill-bar">
+								<div class="default-bar-inner">
+									<div class="default-bar progress-line" data-width="92">
+										<div class="default-skill-percentage"></div>
+									</div>
+								</div>
+							</div>
+							<div class="default-count-box count-box"><span class="count-text" data-speed="2000" data-stop="92">0</span>%</div>
+						</div>
+						
+						<!-- Skill Item -->
+						<div class="default-skill-item">
+							<div class="default-skill-title">Copyright</div>
+							<div class="default-skill-bar">
+								<div class="default-bar-inner">
+									<div class="default-bar progress-line" data-width="80">
+										<div class="default-skill-percentage"></div>
+									</div>
+								</div>
+							</div>
+							<div class="default-count-box count-box"><span class="count-text" data-speed="2000" data-stop="80">0</span>%</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Team Detail Experiance -->
+
+	<!-- Team Detail Form -->
+	<section class="team-detail_form">
+		<div class="auto-container">
+			<div class="row clearfix">
+				<!-- Column -->
+				<div class="column col-lg-6 col-md-12 col-sm-12">
+					<!-- Sec Title -->
+					<div class="sec-title style-four">
+						<div class="sec-title_title">Contact me</div>
+						<h2 class="sec-title_heading">Let's win <span>together</span></h2>
+						<div class="sec-title_text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa <br> Aliquam in hendrerit urna.</div>
+					</div>
+				</div>
+				<!-- Column -->
+				<div class="column col-lg-6 col-md-12 col-sm-12">
+					<div class="default-form">
+						<form method="post" action="{% static 'myapp/index.html' %}"">
+							<div class="row clearfix">
+								<!--Form Group-->
+								<div class="form-group col-lg-6 col-md-6 col-sm-6">
+									<input type="text" name="name" value="" placeholder="Name" required>
+								</div>
+								<!--Form Group-->
+								<div class="form-group col-lg-6 col-md-6 col-sm-6">
+									<input type="email" name="email" value="" placeholder="Email" required>
+								</div>
+								<div class="form-group col-lg-6 col-md-6 col-sm-6">
+									<input type="text" name="phone" value="" placeholder="Phone" required>
+								</div>
+								<!--Form Group-->
+								<div class="form-group col-lg-6 col-md-6 col-sm-6">
+									<select name="country" class="custom-select-box">
+										<option>Select Service</option>
+										<option>Service 01</option>
+										<option>Service 02</option>
+										<option>Service 03</option>
+									</select>
+								</div>
+								<div class="col-lg-12 col-md-12 col-sm-12 form-group">
+									<textarea class="" name="message" placeholder="Type Comment here*"></textarea>
+								</div>
+								<div class="form-group col-lg-12 col-md-12 col-sm-12">
+									<button type="button" class="template-btn btn-style-one">
+										<span class="btn-wrap">
+											<span class="text-one">Send now</span>
+											<span class="text-two">Send now</span>
+										</span>
+									</button>
+								</div>
+								
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Team Detail Form -->
+
+	<!-- CTA One -->
+	{% include 'ctaone.html' %}
+	<!-- End CTA One -->
+
+	<!-- Main Footer -->
+	{% include 'footer.html' %}
+<!-- End PageWrapper -->
+
+<div class="progress-wrap">
+	<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+		<path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+	</svg>
+</div>
+
+{% endblock %}

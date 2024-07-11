@@ -1,0 +1,396 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+
+{% load static %}
+{% block content %}
+
+
+<div class="page-wrapper">
+	
+	<!-- Cursor -->
+	<div class="cursor"></div>
+	<div class="cursor-follower"></div>
+	<!-- Cursor End -->
+ 	
+	<!-- Preloader -->
+	<div class="loader-wrap">
+		<div class="preloader">
+			<div class="preloader-close">x</div>
+			<div id="handle-preloader" class="handle-preloader">
+				<div class="animation-preloader">
+					<div class="txt-loading">
+						<span data-text-preloader="L" class="letters-loading">L</span>
+						<span data-text-preloader="O" class="letters-loading">O</span>
+						<span data-text-preloader="A" class="letters-loading">A</span>
+						<span data-text-preloader="D" class="letters-loading">D</span>
+						<span data-text-preloader="I" class="letters-loading">I</span>
+						<span data-text-preloader="N" class="letters-loading">N</span>
+						<span data-text-preloader="G" class="letters-loading">G</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Preloader End -->
+	
+	<!-- Main Header -->
+{% include 'header.html' %}
+	<!-- End Main Header -->
+	
+	<!-- Page Title -->
+    <section class="page-title">
+		
+		<div class="page-title-icon" style="background-image:url(assets/images/icons/page-title_icon-1.png)"></div>
+		<div class="page-title-icon-two" style="background-image:url(assets/images/icons/page-title_icon-2.png)"></div>
+		<div class="page-title-shadow" style="background-image:url(assets/images/background/page-title-1.png)"></div>
+		<div class="page-title-shadow_two" style="background-image:url(assets/images/background/page-title-2.png)"></div>
+        <div class="auto-container">
+			<h2>About us</h2>
+			<ul class="bread-crumb clearfix">
+				<li><a href="{% static 'myapp/index.html' %}"">Home</a></li>
+				<li>About us</li>
+			</ul>
+        </div>
+    </section>
+    <!-- End Page Title -->
+
+	<!-- Story One -->
+	<section class="story-one">
+		<div class="auto-container">
+			<div class="row clearfix">
+
+				<!-- Image Column -->
+				<div class="story-one_image-column col-lg-6 col-md-12 col-sm-12">
+					<div class="story-one_image-outer">
+						<div class="story-one_image">
+							<img src="assets/images/resource/story.png" alt="" />
+						</div>
+					</div>
+				</div>
+
+				<!-- Image Column -->
+				<div class="story-one_content-column col-lg-6 col-md-12 col-sm-12">
+					<div class="story-one_content-outer">
+						<!-- Sec Title -->
+						<div class="sec-title style-four">
+							<div class="sec-title_title">Our story</div>
+							<h2 class="sec-title_heading">Navigating the frontier of our <span>intelligence</span></h2>
+						</div>
+						<p>The narrative unfolds as we delve into the inception of our company, tracing the roots of our vision for a future intertwined with artificial intelligence. Through the lens of this captivating chronicle, readers will witness the trials and triumphs that have shaped. the story weaves together the intricate threads of innovation</p>
+						<p>Through anecdotes and case studies, readers will witness the tangible difference our innovations make in fields ranging from healthcare and finance to education and beyond.</p>
+						<div class="story-one_button">
+							<a href="#" class="template-btn btn-style-one">
+								<span class="btn-wrap">
+									<span class="text-one">Know more</span>
+									<span class="text-two">Know more</span>
+								</span>
+							</a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+	<!-- End Assistance One -->
+
+	<!-- Value One -->
+	<section class="value-one">
+		<div class="auto-container">
+			<!-- Sec Title -->
+			<div class="sec-title style-four centered">
+				<div class="sec-title_title">core value</div>
+				<h2 class="sec-title_heading">Unveiling our <span>core values</span> <br> for lasting impact.</h2>
+			</div>
+			<div class="row clearfix">
+
+				<!-- Value Block One -->
+				<div class="value-block_one col-lg-4 col-md-6 col-sm-12">
+					<div class="value-block_one-inner">
+						<div class="value-block_one-icon">
+							<i class="icon-users-4"></i>
+						</div>
+						<h5 class="value-block_one-title">People</h5>
+						<div class="value-block_one-text">The impact of our AI solutions on the broader world forms a central theme, highlighting real-world applications and the positive changes</div>
+					</div>
+				</div>
+
+				<!-- Value Block One -->
+				<div class="value-block_one active col-lg-4 col-md-6 col-sm-12">
+					<div class="value-block_one-inner">
+						<div class="value-block_one-icon">
+							<i class="icon-bulb1"></i>
+						</div>
+						<h5 class="value-block_one-title">Innovation</h5>
+						<div class="value-block_one-text">The impact of our AI solutions on the broader world forms a central theme, highlighting real-world applications and the positive changes</div>
+					</div>
+				</div>
+
+				<!-- Value Block One -->
+				<div class="value-block_one col-lg-4 col-md-6 col-sm-12">
+					<div class="value-block_one-inner">
+						<div class="value-block_one-icon">
+							<i class="fa-solid fa-bullseye fa-fw"></i>
+						</div>
+						<h5 class="value-block_one-title">Mission</h5>
+						<div class="value-block_one-text">The impact of our AI solutions on the broader world forms a central theme, highlighting real-world applications and the positive changes</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- Button Box -->
+			<div class="value-one_button text-center">
+				<a href="#" class="template-btn btn-style-two">
+					<span class="btn-wrap">
+						<span class="text-one">Join braine today</span>
+						<span class="text-two">Join braine today</span>
+					</span>
+				</a>
+			</div>
+
+		</div>
+	</section>
+	<!-- End Value One -->
+
+	<!-- Team One -->
+	<section class="team-one">
+		<div class="auto-container">
+			<div class="row clearfix">
+				<!-- Title Column -->
+				<div class="team-one_title-column col-lg-4 col-md-12 col-sm-12">
+					<div class="team-one_title-outer">
+						<!-- Sec Title -->
+						<div class="sec-title style-four">
+							<div class="sec-title_title">Our team</div>
+							<h2 class="sec-title_heading">Team behind the <span>innovation</span></h2>
+							<div class="sec-title_text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa Aliquam hendrerit urna.Maecenas vitae mattis tellus.</div>
+						</div>
+						<!-- If we need navigation buttons -->
+						<div class="team-one_arrows">
+							<div class="team_carousel-prev fa-solid fa-angle-left fa-fw"></div>
+							<div class="team_carousel-next fa-solid fa-angle-right fa-fw"></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Team Column -->
+				<div class="team-one_team-column col-lg-8 col-md-12 col-sm-12">
+					<div class="team-one_team-outer">
+						<div class="team-carousel swiper-container">
+							<div class="swiper-wrapper">
+				
+								<!-- Slide -->
+								<div class="swiper-slide">
+									<!-- Team Block One -->
+									<div class="team-block_one">
+										<div class="team-block_one-inner">
+											<div class="team-block_one-image">
+												<a href="{% url 'teamdetail' %}"><img src="{% static 'myapp/images/resource/team-1.jpg' %}" alt="" /></a>
+											</div>
+											<div class="team-block_one-content">
+												<h4 class="team-block_one-title"><a href="{% url 'teamdetail' %}">Elliot S. Acevedo</a></h4>
+												<div class="team-block_one-designation">Founder</div>
+												<!-- Social Box -->
+												<div class="team-block_one-socials">
+													<a href="https://facebook.com/"><i class="fa-brands fa-facebook-f"></i></a>
+													<a href="https://twitter.com/"><i class="fa-brands fa-twitter"></i></a>
+													<a href="https://linkedin.com/"><i class="fa-brands fa-linkedin-in"></i></a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Slide -->
+								<div class="swiper-slide">
+									<!-- Team Block One -->
+									<div class="team-block_one">
+										<div class="team-block_one-inner">
+											<div class="team-block_one-image">
+												<a href="{% url 'teamdetail' %}"><img src="{% static 'myapp/images/resource/team-2.jpg' %}" alt="" /></a>
+											</div>
+											<div class="team-block_one-content">
+												<h4 class="team-block_one-title"><a href="{% url 'teamdetail' %}">Elliot S. Acevedo</a></h4>
+												<div class="team-block_one-designation">Founder</div>
+												<!-- Social Box -->
+												<div class="team-block_one-socials">
+													<a href="https://facebook.com/"><i class="fa-brands fa-facebook-f"></i></a>
+													<a href="https://twitter.com/"><i class="fa-brands fa-twitter"></i></a>
+													<a href="https://linkedin.com/"><i class="fa-brands fa-linkedin-in"></i></a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+	<!-- End Team One -->
+
+	<!-- Testimonial Three -->
+	<section class="testimonial-three">
+		<div class="auto-container">
+			<!-- Sec Title -->
+			<div class="sec-title style-four centered">
+				<div class="sec-title_title">Success Stories</div>
+				<h2 class="sec-title_heading">Our clients share their <br> fitness <span>journey</span></h2>
+			</div>
+			
+			<div class="three-item_carousel ">
+				<div class="swiper-wrapper">
+	
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<!-- Testimonial Block One -->
+						<div class="testimonial-block_one">
+							<div class="testimonial-block_one-inner">
+								<div class="testimonial-block_one-rating">
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+								</div>
+								<div class="testimonial-block_one-text">Lorem ipsum amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit <span>Pellentesque sit amet</span> sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue.</div>
+								<div class="testimonial-block_one-author_box">
+									<div class="testimonial-block_one-author-image">
+										<img src="{% static 'myapp/images/resource/author-2.png' %}" alt="" />
+									</div>
+									Larry K. Lund <span>Social Media Manger</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<!-- Testimonial Block One -->
+						<div class="testimonial-block_one">
+							<div class="testimonial-block_one-inner">
+								<div class="testimonial-block_one-rating">
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+								</div>
+								<div class="testimonial-block_one-text">Lorem ipsum amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit <span>Pellentesque sit amet</span> sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue.</div>
+								<div class="testimonial-block_one-author_box">
+									<div class="testimonial-block_one-author-image">
+										<img src="{% static 'myapp/images/resource/author-3.png' %}" alt="" />
+									</div>
+									Marian R. Vieira <span>Social Media Manger</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<!-- Testimonial Block One -->
+						<div class="testimonial-block_one">
+							<div class="testimonial-block_one-inner">
+								<div class="testimonial-block_one-rating">
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+								</div>
+								<div class="testimonial-block_one-text">Lorem ipsum amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit <span>Pellentesque sit amet</span> sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue.</div>
+								<div class="testimonial-block_one-author_box">
+									<div class="testimonial-block_one-author-image">
+										<img src="{% static 'myapp/images/resource/author-4.png' %}" alt="" />
+									</div>
+									Bob E. Wiggins <span>Social Media Manger</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<!-- If we need pagination -->
+				<div class="three-item_carousel-pagination"></div>
+
+			</div>
+
+		</div>
+	</section>
+	<!-- End Testimonial Three -->
+
+	<!-- Clients Two -->
+	<section class="clients-two">
+		<div class="auto-container">
+			<!-- Sec Title -->
+			<div class="sec-title centered">
+				<div class="sec-title_title">Trusted Organizations</div>
+			</div>
+			<div class="clients_slider swiper-container">
+				<div class="swiper-wrapper">
+
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<div class="client-image">
+							<a href="#"><img src="{% static 'myapp/images/clients/1.png' %}" alt="" /></a>
+						</div>
+					</div>
+
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<div class="client-image">
+							<a href="#"><img src="{% static 'myapp/images/clients/2.png' %}" alt="" /></a>
+						</div>
+					</div>
+
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<div class="client-image">
+							<a href="#"><img src="{% static 'myapp/images/clients/3.png' %}" alt="" /></a>
+						</div>
+					</div>
+
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<div class="client-image">
+							<a href="#"><img src="{% static 'myapp/images/clients/4.png' %}" alt="" /></a>
+						</div>
+					</div>
+
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<div class="client-image">
+							<a href="#"><img src="{% static 'myapp/images/clients/5.png' %}" alt="" /></a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Clients Two -->
+
+	<!-- CTA One -->
+	{% include 'ctaone.html' %}
+	<!-- End CTA One -->
+
+	<!-- Main Footer -->
+	{% include 'footer.html' %}
+	<!-- End PageWrapper -->
+
+<div class="progress-wrap">
+	<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+		<path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+	</svg>
+</div>
+
+{% endblock %}

@@ -1,0 +1,219 @@
+
+{% extends "myapp/base.html" %}
+
+{% block title %}Our Blog{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="page-wrapper">
+	
+	<!-- Cursor -->
+	<div class="cursor"></div>
+	<div class="cursor-follower"></div>
+	<!-- Cursor End -->
+ 	
+	<!-- Preloader -->
+	<div class="loader-wrap">
+		<div class="preloader">
+			<div class="preloader-close">x</div>
+			<div id="handle-preloader" class="handle-preloader">
+				<div class="animation-preloader">
+					<div class="txt-loading">
+						<span data-text-preloader="L" class="letters-loading">L</span>
+						<span data-text-preloader="O" class="letters-loading">O</span>
+						<span data-text-preloader="A" class="letters-loading">A</span>
+						<span data-text-preloader="D" class="letters-loading">D</span>
+						<span data-text-preloader="I" class="letters-loading">I</span>
+						<span data-text-preloader="N" class="letters-loading">N</span>
+						<span data-text-preloader="G" class="letters-loading">G</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Preloader End -->
+	
+	<!-- Main Header -->
+{% include 'header.html' %}
+	<!-- End Main Header -->
+	
+	<!-- Page Title -->
+    <section class="page-title">
+		<div class="page-title-icon" style="background-image:url(assets/images/icons/page-title_icon-1.png)"></div>
+		<div class="page-title-icon-two" style="background-image:url(assets/images/icons/page-title_icon-2.png)"></div>
+		<div class="page-title-shadow" style="background-image:url(assets/images/background/page-title-1.png)"></div>
+		<div class="page-title-shadow_two" style="background-image:url(assets/images/background/page-title-2.png)"></div>
+        <div class="auto-container">
+			<h2>Our blog</h2>
+			<ul class="bread-crumb clearfix">
+				<li><a href="{% static 'myapp/index.html' %}"">Home</a></li>
+				<li>Blog</li>
+			</ul>
+        </div>
+    </section>
+    <!-- End Page Title -->
+
+	<!-- News Three -->
+	<section class="news-three">
+		<div class="auto-container">
+			<div class="row clearfix">
+
+				<!-- News Block One -->
+				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
+					<div class="news-block_one-inner">
+						<div class="news-block_one-image">
+							<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-7.jpg" alt="" /></a>
+						</div>
+						<div class="news-block_one-content">
+							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Beyond code the human element in ai development</a></h5>
+							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- News Block One -->
+				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
+					<div class="news-block_one-inner">
+						<div class="news-block_one-image">
+							<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-8.jpg" alt="" /></a>
+						</div>
+						<div class="news-block_one-content">
+							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Exploring the cutting-edge of artificial intelligence</a></h5>
+							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- News Block One -->
+				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
+					<div class="news-block_one-inner">
+						<div class="news-block_one-image">
+							<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-9.jpg" alt="" /></a>
+						</div>
+						<div class="news-block_one-content">
+							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Understanding the basics of artificial intelligence</a></h5>
+							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- News Block One -->
+				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
+					<div class="news-block_one-inner">
+						<div class="news-block_one-image">
+							<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-10.jpg" alt="" /></a>
+						</div>
+						<div class="news-block_one-content">
+							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Transforming industries and shaping the future</a></h5>
+							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- News Block One -->
+				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
+					<div class="news-block_one-inner">
+						<div class="news-block_one-image">
+							<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-11.jpg" alt="" /></a>
+						</div>
+						<div class="news-block_one-content">
+							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Diving deep exploring the core algorithms of our ai</a></h5>
+							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- News Block One -->
+				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
+					<div class="news-block_one-inner">
+						<div class="news-block_one-image">
+							<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-12.jpg" alt="" /></a>
+						</div>
+						<div class="news-block_one-content">
+							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">The art and science of building intelligent machines</a></h5>
+							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- News Block One -->
+				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
+					<div class="news-block_one-inner">
+						<div class="news-block_one-image">
+							<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-13.jpg" alt="" /></a>
+						</div>
+						<div class="news-block_one-content">
+							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Navigating the ai front challenges and triumphs</a></h5>
+							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- News Block One -->
+				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
+					<div class="news-block_one-inner">
+						<div class="news-block_one-image">
+							<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-14.jpg" alt="" /></a>
+						</div>
+						<div class="news-block_one-content">
+							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Innovation unleashed: behind the scenes our ai breakthroughs</a></h5>
+							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- News Block One -->
+				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
+					<div class="news-block_one-inner">
+						<div class="news-block_one-image">
+							<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-15.jpg" alt="" /></a>
+						</div>
+						<div class="news-block_one-content">
+							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Decoding the future: ai's impact on the industries</a></h5>
+							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- Styled Pagination -->
+			<ul class="styled-pagination text-center">
+				<li><a href="#" class="active">1</a></li>
+				<li><a href="#">2</a></li>
+				<li><a href="#">3</a></li>
+				<li class="next"><a href="#"><span class="fa-solid fa-angle-right fa-fw"></span></a></li>
+			</ul>
+			<!-- End Styled Pagination -->
+
+		</div>
+	</section>
+	<!-- End News Three -->
+	
+	<!-- CTA One -->
+	{% include 'ctaone.html' %}
+	<!-- End CTA One -->
+
+	<!-- Main Footer -->
+	{% include 'footer.html' %}
+<!-- End PageWrapper -->
+
+<div class="progress-wrap">
+	<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+		<path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+	</svg>
+</div>
+
+{% endblock %}
