@@ -1,4 +1,4 @@
-/* Braine Digital Agency Business HTML-5 Template */
+/* iRiseUp.Ai Digital Agency Business HTML-5 Template */
 
 /************ TABLE OF CONTENTS ***************
 1. Fonts
@@ -70,7 +70,7 @@
 @import url('header.css');
 @import url('footer.css');
 @import url('animate.css');
-@import url('jquery-ui.css');
+   
 @import url('swiper.min.css');
 @import url('icomoon-style.css');
 @import url('font-awesome.css');
@@ -86,6 +86,45 @@
 ====================================================================
 
 ***/
+
+:root {
+    --main-color: #122523; /* Dark Teal */
+    --main-color-rgb: 18, 37, 35;
+
+    --color-two: #1C5E52; /* Teal Green */
+    --color-two-rgb: 28, 94, 82;
+
+    --color-three: #B8955F; /* Gold */
+    --color-three-rgb: 184, 149, 95;
+
+    --color-four: #F6EEE3; /* Ivory */
+    --color-four-rgb: 246, 238, 227;
+
+    --color-five: #1C5E52; /* Teal Green */
+    --color-five-rgb: 28, 94, 82;
+
+    --color-six: #122523; /* Dark Teal */
+    --color-six-rgb: 18, 37, 35;
+
+    --color-seven: #F6EEE3; /* Ivory */
+    --color-seven-rgb: 246, 238, 227;
+
+    --color-eight: #B8955F; /* Gold */
+    --color-eight-rgb: 184, 149, 95;
+
+    --color-nine: #122523; /* Dark Teal */
+    --color-nine-rgb: 18, 37, 35;
+
+    --color-ten: #1C5E52; /* Teal Green */
+    --color-ten-rgb: 28, 94, 82;
+
+    --white-color: #F6EEE3; /* Ivory */
+    --white-color-rgb: 246, 238, 227;
+
+    --black-color: #122523; /* Dark Teal */
+    --black-color-rgb: 18, 37, 35;
+}
+
 
 .slider-one{
 	position:relative;
@@ -1555,7 +1594,7 @@
 	cursor:pointer;
 	padding:16px 34px;
 	border-radius:8px;
-	color:var(--white-color);
+	color:var(--color-three);
 	-webkit-transition:all 300ms ease;
 	-ms-transition:all 300ms ease;
 	-o-transition:all 300ms ease;
@@ -7726,7 +7765,7 @@
 }
 
 .register-form .check-box input[type="checkbox"]:checked + label:before{
-	background: var(--main-color) url(../images/icons/check-1.png) center center no-repeat;
+	background: var(--main-color) url(../images/icons/check.png) center center no-repeat;
 }
 
 .register-form .check-box input[type="checkbox"]:checked + label:after {
@@ -7883,4 +7922,8 @@
 
 .news-one_shadow-two {
     background-image: url('/static/myapp/images/background/news-shadow-2.png');
+}
+
+.footer-pattern {
+    background-image: url('/static/myapp/images/background/footer-pattern.png');
 }

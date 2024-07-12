@@ -48,7 +48,7 @@
         <div class="auto-container">
 			<h2>Reset password</h2>
 			<ul class="bread-crumb clearfix">
-				<li><a href="{% static 'myapp/index.html' %}"">Home</a></li>
+				<li><a href="{% url 'index' %}"">Home</a></li>
 				<li>Reset password</li>
 			</ul>
         </div>
@@ -82,7 +82,7 @@
 						</div>
 						
 						<div class="form-group">
-							<div class="creat-account">Back to <a href="{% static 'myapp/login.html' %}">login</a></div>
+							<div class="creat-account">Back to <a href="{% url 'login' %}">login</a></div>
 						</div>
 
 					</form>

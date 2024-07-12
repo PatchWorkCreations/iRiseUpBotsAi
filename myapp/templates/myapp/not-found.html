@@ -48,7 +48,7 @@
         <div class="auto-container">
 			<h2>Error 404</h2>
 			<ul class="bread-crumb clearfix">
-				<li><a href="{% static 'myapp/index.html' %}"">Home</a></li>
+				<li><a href="{% url 'index' %}"">Home</a></li>
 				<li>Error 404</li>
 			</ul>
         </div>
@@ -64,7 +64,7 @@
 			<div class="text">We're really sorry but we can't seem to find the page you <br> were looking for.</div>
 			<!-- Button Box -->
 			<div class="button-box text-center">
-				<a href="{% static 'myapp/index.html' %}"" class="template-btn btn-style-one">
+				<a href="{% url 'index' %}"" class="template-btn btn-style-one">
 					<span class="btn-wrap">
 						<span class="text-one">Go back home now</span>
 						<span class="text-two">Go back home now</span>

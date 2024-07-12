@@ -49,7 +49,7 @@
         <div class="auto-container">
 			<h2>Frequently asked questions</h2>
 			<ul class="bread-crumb clearfix">
-				<li><a href="{% static 'myapp/index.html' %}"">Home</a></li>
+				<li><a href="{% url 'index' %}"">Home</a></li>
 				<li>Faq's</li>
 			</ul>
         </div>
@@ -230,7 +230,7 @@
 				<!-- Column -->
 				<div class="column col-lg-6 col-md-12 col-sm-12">
 					<div class="default-form">
-						<form method="post" action="{% static 'myapp/index.html' %}"">
+						<form method="post" action="{% url 'index' %}"">
 							<div class="row clearfix">
 								<!--Form Group-->
 								<div class="form-group col-lg-6 col-md-6 col-sm-6">

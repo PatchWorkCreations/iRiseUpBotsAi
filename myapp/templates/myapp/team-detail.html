@@ -48,7 +48,7 @@
         <div class="auto-container">
 			<h2>Team detail</h2>
 			<ul class="bread-crumb clearfix">
-				<li><a href="{% static 'myapp/index.html' %}"">Home</a></li>
+				<li><a href="{% url 'index' %}"">Home</a></li>
 				<li>Team detail</li>
 			</ul>
         </div>
@@ -81,7 +81,7 @@
 								<div class="column col-lg-6 col-md-6 col-sm-6">
 									<div class="team-detail_info">
 										email
-										<span>wlliot@braine.com</span>
+										<span>wlliot@iRiseUp.Ai.com</span>
 									</div>
 									<div class="team-detail_info">
 										Location:
@@ -202,7 +202,7 @@
 				<!-- Column -->
 				<div class="column col-lg-6 col-md-12 col-sm-12">
 					<div class="default-form">
-						<form method="post" action="{% static 'myapp/index.html' %}"">
+						<form method="post" action="{% url 'index' %}"">
 							<div class="row clearfix">
 								<!--Form Group-->
 								<div class="form-group col-lg-6 col-md-6 col-sm-6">

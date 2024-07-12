@@ -1,4 +1,4 @@
-# /Users/Julia/Downloads/braine-package/myapp/urls.py
+# /Users/Julia/Downloads/iRiseUp.Ai-package/myapp/urls.py
 from django.urls import path
 from . import views
 
