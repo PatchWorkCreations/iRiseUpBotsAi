@@ -41,10 +41,10 @@
 	
 	<!-- Page Title -->
     <section class="page-title">
-		<div class="page-title-icon" style="background-image:url(assets/images/icons/page-title_icon-1.png)"></div>
-		<div class="page-title-icon-two" style="background-image:url(assets/images/icons/page-title_icon-2.png)"></div>
-		<div class="page-title-shadow" style="background-image:url(assets/images/background/page-title-1.png)"></div>
-		<div class="page-title-shadow_two" style="background-image:url(assets/images/background/page-title-2.png)"></div>
+		<div class="page-title-icon"></div>
+			<div class="page-title-icon-two"></div>
+			<div class="page-title-shadow"></div>
+			<div class="page-title-shadow-two"></div>
         <div class="auto-container">
 			<h2>Service details</h2>
 			<ul class="bread-crumb clearfix">
@@ -72,7 +72,7 @@
 				</div>
 			</div>
 			<div class="service-detail_image">
-				<img src="assets/images/resource/service-detail.jpg" alt="" />
+				<img src="{% static 'myapp/images/resource/service-detail.jpg' %}" alt="" />
 			</div>
 		</div>
 	</section>
@@ -139,8 +139,9 @@
 
 	<!-- Steps One -->
 	<section class="steps-one">
-		<div class="steps-one_bg" style="background-image:url(assets/images/background/step-1_bg.png)"></div>
-		<div class="steps-one_icon" style="background-image:url(assets/images/icons/step.png)"></div>
+		<div class="steps-one_bg"></div>
+<div class="steps-one_icon"></div>
+
 		<div class="auto-container">
 			<div class="inner-container">
 				<div class="circle-layer"></div>
@@ -173,7 +174,7 @@
 								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="assets/images/resource/step-1.png" alt="" />
+										<img src="{% static 'myapp/images/resource/step-1.png' %}" alt="" />
 									</div>
 								</div>
 							</div>
@@ -190,7 +191,7 @@
 								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="assets/images/resource/step-2.png" alt="" />
+										<img src="{% static 'myapp/images/resource/step-2.png' %}" alt="" />
 									</div>
 								</div>
 							</div>
@@ -204,7 +205,7 @@
 								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="assets/images/resource/step-3.png" alt="" />
+										<img src="{% static 'myapp/images/resource/step-3.png' %}" alt="" />
 									</div>
 								</div>
 							</div>
@@ -241,13 +242,13 @@
 			<div class="row clearfix">
 				<div class="column col-lg-6 col-md-6 col-sm-12">
 					<div class="service-detail_image-two">
-						<img src="assets/images/resource/service-detail-1.jpg" alt="" />
+						<img src="{% static 'myapp/images/resource/service-detail-1.jpg' %}" alt="" />
 					</div>
 				</div>
 				<div class="column col-lg-6 col-md-6 col-sm-12">
 					<div class="service-detail_image-two">
 						<a href="https://www.youtube.com/watch?v=kxPCFljwJws" class="lightbox-video service-detail_play"><span class="fa-solid fa-play fa-fw"><i class="ripple"></i></span></a>
-						<img src="assets/images/resource/service-detail-2.jpg" alt="" />
+						<img src="{% static 'myapp/images/resource/service-detail-2' %}" alt="" />
 					</div>
 				</div>
 			</div>
@@ -399,10 +400,7 @@
 	{% include 'footer.html' %}
 <!-- End PageWrapper -->
 
-<div class="progress-wrap">
-	<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-		<path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
-	</svg>
-</div>
+ 
+
 
 {% endblock %}

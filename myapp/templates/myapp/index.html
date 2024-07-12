@@ -231,14 +231,15 @@
 				<!-- Service Block Two -->
 				<div class="service-block_two col-lg-4 col-md-6 col-sm-12">
 					<div class="service-block_two-inner wow fadeInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
-						<div class="service-block_two-sideicon" style="background-image:url(assets/images/icons/service-1.png)"></div>
+						<div class="service-block_two-sideicon"></div>
+
 						<div class="service-block_two-icon">
-							<img src="assets/images/icons/service.png" alt="" />
+							<img src="{% static 'myapp/images/icons/service.png' %}" alt="" />
 						</div>
 						<h5 class="service-block_two-heading"><a href="{% url 'servicedetail' %}">More service</a></h5>
 						<div class="service-block_two-text">Lorem ipsum dolor sit ame consectetur.</div>
 						<div class="service-block_two-button">
-							<a href="service.html" class="template-btn btn-style-one">
+							<a href="{% url 'services' %}" class="template-btn btn-style-one">
 								<span class="btn-wrap">
 									<span class="text-one">learn more</span>
 									<span class="text-two">learn more</span>
@@ -255,18 +256,20 @@
 	
 	<!-- About One -->
 	<section class="about-one">
-		<div class="about-one_pattern" style="background-image:url(assets/images/background/about-pattern.png)"></div>
-		<div class="about-one_icon" style="background-image:url(assets/images/icons/about-1.png)"></div>
-		<div class="about-one_icon-two" style="background-image:url(assets/images/icons/about-2.png)"></div>
+		<div class="about-one_pattern"></div>
+		<div class="about-one_icon"></div>
+		<div class="about-one_icon-two"></div>
+
 		<div class="auto-container">
 			<div class="row clearfix">
 
 				<!-- Tab Column -->
 				<div class="about-one_tab-column col-xl-6 col-lg-6 col-md-12 col-sm-12">
 					<div class="about-one_tab-outer">
-						<div class="about-one_tab-shadow" style="background-image:url(assets/images/background/tab-shadow.png)"></div>
+						<div class="about-one_tab-shadow"></div>
+
 						<div class="about-one_tab-image">
-							<img src="assets/images/resource/tabs.png" alt="" />
+							<img src="{% static 'myapp/images/resource/tabs.png' %}" alt="" />
 						</div>
 					</div>
 				</div>
@@ -384,9 +387,10 @@
 				<!-- Tab Column -->
 				<div class="answer-one_content-column col-lg-7 col-md-12 col-sm-12">
 					<div class="answer-one_content-outer">
-						<div class="answer-one_pattern" style="background-image:url(assets/images/background/faq-shadow.png)"></div>
+						<div class="answer-one_pattern"></div>
+
 						<div class="answer-one_image">
-							<img src="assets/images/resource/faq.png" alt="" />
+							<img src="{% static 'myapp/images/resource/faq.png' %}" alt="" />
 						</div>		
 					</div>
 				</div>
@@ -399,7 +403,8 @@
 	<!-- Testimonial One -->
 	<section class="testimonial-one">
 		<div class="auto-container">
-			<div class="inner-container" style="background-image:url(assets/images/background/testimonial-one_bg.png)">
+			<div class="inner-container"></div>
+
 				<!-- Sec Title -->
 				<div class="sec-title centered">
 					<div class="sec-title_title">Testimonials</div>
@@ -491,8 +496,9 @@
 
 	<!-- Steps One -->
 	<section class="steps-one">
-		<div class="steps-one_bg" style="background-image:url(assets/images/background/step-1_bg.png)"></div>
-		<div class="steps-one_icon" style="background-image:url(assets/images/icons/step.png)"></div>
+		<div class="steps-one_bg"></div>
+<div class="steps-one_icon"></div>
+
 		<div class="auto-container">
 			<div class="inner-container">
 				<div class="circle-layer"></div>
@@ -525,7 +531,7 @@
 								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="assets/images/resource/step-1.png" alt="" />
+										<img src="{% static 'myapp/images/resource/step-1.png' %}" alt="" />
 									</div>
 								</div>
 							</div>
@@ -542,7 +548,7 @@
 								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="assets/images/resource/step-2.png" alt="" />
+										<img src="{% static 'myapp/images/resource/step-2.png' %}" alt="" />
 									</div>
 								</div>
 							</div>
@@ -556,7 +562,7 @@
 								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="assets/images/resource/step-3.png" alt="" />
+										<img src="{% static 'myapp/images/resource/step-3.png' %}" alt="" />
 									</div>
 								</div>
 							</div>
@@ -571,7 +577,8 @@
 
 	<!-- Price One -->
 	<section class="price-one">
-		<div class="price-one_bg" style="background-image:url(assets/images/background/price-bg.png)"></div>
+		<div class="price-one_bg"></div>
+
 		<div class="auto-container">
 			<div class="inner-container">
 				<!-- Sec Title -->
@@ -624,7 +631,7 @@
 									<!-- Price Block One -->
 									<div class="price-block_one active col-lg-4 col-md-6 col-sm-12">
 										<div class="price-block_one-inner">
-											<div class="price-one_stars" style="background-image:url(assets/images/icons/price-stars.png)"></div>
+											<div class="price-one_stars"></div>
 											<div class="price-block_one-title">Professional</div>
 											<div class="price-block_one-subtitle">Up to 10,000 words / mo</div>
 											<div class="price-block_one-content">
@@ -705,7 +712,7 @@
 									<!-- Price Block One -->
 									<div class="price-block_one active col-lg-4 col-md-6 col-sm-12">
 										<div class="price-block_one-inner">
-											<div class="price-one_stars" style="background-image:url(assets/images/icons/price-stars.png)"></div>
+											<div class="price-one_stars"></div>
 											<div class="price-block_one-title">Professional</div>
 											<div class="price-block_one-subtitle">Up to 10,000 words / mo</div>
 											<div class="price-block_one-content">
@@ -764,8 +771,9 @@
 
 	<!-- Faq One -->
 	<section class="faq-one">
-		<div class="faq-one_bg" style="background-image:url(assets/images/background/faq-bg.png)"></div>
-		<div class="faq-one_icon" style="background-image:url(assets/images/icons/step.png)"></div>
+		<div class="faq-one_bg"></div>
+		<div class="faq-one_icon"></div>
+
 		<div class="auto-container">
 			<div class="row clearfix">
 
@@ -858,7 +866,8 @@
 
 	<!-- Social One -->
 	<section class="social-one">
-		<div class="social-one_bg-shadow" style="background-image:url(assets/images/background/social-bg.png)"></div>
+		<div class="social-one_bg-shadow"></div>
+
 		<div class="auto-container">
 			<!-- Sec Title -->
 			<div class="sec-title centered">
@@ -866,54 +875,54 @@
 				<h2 class="sec-title_heading">Incorporate our tool into <br> <span>your everyday tasks</span></h2>
 			</div>
 			<div class="social-one_logo">
-				<span><img src="assets/images/icons/social-logo.png" alt="" /></span>
+				<span><img src="{% static 'myapp/images/icons/social-logo.png' %}" alt="" /></span>
 			</div>
 			<div class="inner-container">
-				<div class="social-one_bg" style="background-image:url(assets/images/background/social-one_pattern.png)"></div>
-				<div class="social-one_bg-two" style="background-image:url(assets/images/background/social-one_pattern-two.png)"></div>
+				<<div class="social-one_bg"></div>
+				<div class="social-one_bg-two"></div>	
 				
 				<div class="social-box_one">
 					<div class="animation_mode">
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-1.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-1.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-2.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-2.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-3.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-3.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-4.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-4.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-5.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-5.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-6.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-6.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-7.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-7.png' %}" alt="" />
 							</a>
 						</div>
 					</div>
@@ -924,43 +933,43 @@
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-8.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-8.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-9.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-9.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-10.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-10.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-11.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-11.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-12.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-12.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-13.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-13.png' %}" alt="" />
 							</a>
 						</div>
 						<!-- Icon -->
 						<div class="social_icon-box">
 							<a href="#">
-								<img src="assets/images/icons/social-14.png" alt="" />
+								<img src="{% static 'myapp/images/icons/social-14.png' %}" alt="" />
 							</a>
 						</div>
 					</div>
@@ -973,8 +982,9 @@
 
 	<!-- News One -->
 	<section class="news-one">
-		<div class="news-one_shadow" style="background-image:url(assets/images/background/news-shadow-1.png)"></div>
-		<div class="news-one_shadow-two" style="background-image:url(assets/images/background/news-shadow-2.png)"></div>
+		<div class="news-one_shadow"></div>
+		<div class="news-one_shadow-two"></div>
+
 		<div class="auto-container">
 			<!-- Sec Title -->
 			<div class="sec-title title-anim centered">
@@ -990,7 +1000,7 @@
 						<div class="news-block_one">
 							<div class="news-block_one-inner">
 								<div class="news-block_one-image">
-									<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-1.jpg" alt="" /></a>
+									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-1.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
 									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Transforming industries and shaping the future</a></h5>
@@ -1014,7 +1024,7 @@
 						<div class="news-block_one">
 							<div class="news-block_one-inner">
 								<div class="news-block_one-image">
-									<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-2.jpg" alt="" /></a>
+									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-2.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
 									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Exploring the cutting-edge of artificial intelligence</a></h5>
@@ -1038,7 +1048,7 @@
 						<div class="news-block_one">
 							<div class="news-block_one-inner">
 								<div class="news-block_one-image">
-									<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-3.jpg" alt="" /></a>
+									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-3.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
 									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Understanding the basics of artificial intelligence</a></h5>
@@ -1070,10 +1080,7 @@
 	{% include 'footer.html' %}
 <!-- End PageWrapper -->
 
-<div class="progress-wrap">
-	<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-		<path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
-	</svg>
-</div>
+ 
+
 
 {% endblock %}

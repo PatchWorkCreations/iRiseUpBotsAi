@@ -1,41 +1,41 @@
 {% load static %}
 
 <section class="cta-one style-two">
-		
-	<div class="auto-container">
-		<div class="inner-container">
-			<div class="cta-icon_one" style="background-image:url(assets/images/icons/cta-icon-1.png)"></div>
-			<div class="cta-icon_two" style="background-image:url(assets/images/icons/cta-icon-2.png)"></div>
-			<div class="cta-one_card">
-				<img src="{% static 'myapp/images/icons/cta-card.png' %}" alt="" />
-			</div>
-			<div class="row clearfix">
-				<!-- Column -->
-				<div class="cta-one_title-column col-lg-6 col-md-12 col-sm-12">
-					<div class="cta-one_title-outer">
-						<h2 class="cta-one_title">Craft your next great <span>content now.</span></h2>
-						<div class="cta-one_button">
-							<a href="{% url 'about' %}" class="template-btn btn-style-three">
-								<span class="btn-wrap">
-									<span class="text-one">Get started free</span>
-									<span class="text-two">Get started free</span>
-								</span>
-							</a>
-						</div>
-					</div>
-				</div>
-				<!-- Column -->
-				<div class="cta-one_image-column col-lg-6 col-md-12 col-sm-12">
-					<div class="cta-one_image-outer">
-						<div class="cta-one_cards">
-							<img src="assets/images/icons/cta-cards.png" alt="" />
-						</div>
-						<div class="image">
-							<img src="assets/images/resource/cta.png" alt="" />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="auto-container">
+        <div class="inner-container">
+            <div class="cta-icon_one"></div>
+            <div class="cta-icon_two"></div>
+
+            <div class="cta-one_card">
+                <img src="{% static 'myapp/images/icons/cta-card.png' %}" alt="CTA Card" />
+            </div>
+            <div class="row clearfix">
+                <!-- Column -->
+                <div class="cta-one_title-column col-lg-6 col-md-12 col-sm-12">
+                    <div class="cta-one_title-outer">
+                        <h2 class="cta-one_title">Craft your next great <span>content now.</span></h2>
+                        <div class="cta-one_button">
+                            <a href="{% url 'about' %}" class="template-btn btn-style-three">
+                                <span class="btn-wrap">
+                                    <span class="text-one">Get started free</span>
+                                    <span class="text-two">Get started free</span>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column -->
+                <div class="cta-one_image-column col-lg-6 col-md-12 col-sm-12">
+                    <div class="cta-one_image-outer">
+                        <div class="cta-one_cards">
+                            <img src="{% static 'myapp/images/icons/cta-cards.png' %}" alt="CTA Cards" />
+                        </div>
+                        <div class="image">
+                            <img src="{% static 'myapp/images/resource/cta.png' %}" alt="CTA Image" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

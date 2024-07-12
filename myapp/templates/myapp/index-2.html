@@ -42,12 +42,12 @@
 	
 	<!-- Banner One -->
 	<section class="banner-one">
-		<div class="banner-one_shadow" style="background-image: url(assets/images/main-slider/banner-bg.png)"></div>
+		<div class="banner-one_shadow" style="background-image: url(myapp/images/main-slider/banner-bg.png)"></div>
 		<div class="auto-container">
 			<!-- Content Column -->
 			<div class="banner-one_content">
 				<div class="banner-one_content-inner">
-					<div class="banner-one_title"><i><img src="assets/images/main-slider/hand.png" alt="" /></i> Effortless communication</div>
+					<div class="banner-one_title"><i><img src="{% static 'myapp/images/main-slider/hand.png' %}" alt="" /></i> Effortless communication</div>
 					<h1 class="banner-one_heading">Intelligent <span>chat assistance</span> for your business</h1>
 					<div class="banner-one_text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa <br> mi. Aliquam in hendrerit urna.</div>
 					<div class="banner-one_newsletter">
@@ -72,9 +72,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="banner-one_icon" style="background-image: url(assets/images/main-slider/banner-icon.png)"></div>
+			<div class="banner-one_icon" style="background-image: url(myapp/images/main-slider/banner-icon.png)"></div>
 			<div class="banner-one_image">
-				<img src="assets/images/main-slider/banner.png" alt="" />
+				<img src="{% static 'myapp/images/main-slider/banner.png' %}" alt="" />
 			</div>
 		</div>
 	</section>
@@ -96,8 +96,8 @@
 						<!-- Service Block Three -->
 						<div class="service-block_three">
 							<div class="service-block_three-inner wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
-								<div class="service-block_three-dots" style="background-image: url(assets/images/icons/icon-2.png)"></div>
-								<div class="service-block_three-circles" style="background-image: url(assets/images/icons/service-three_circle.png)"></div>
+								<div class="service-block_three-dots" style="background-image: url(myapp/images/icons/icon-2.png)"></div>
+								<div class="service-block_three-circles" style="background-image: url(myapp/images/icons/service-three_circle.png)"></div>
 								<div class="color-layer"></div>
 								<div class="service-block_three-icon">
 									<i class="icon-cart"></i>
@@ -114,8 +114,8 @@
 						<!-- Service Block Three -->
 						<div class="service-block_three">
 							<div class="service-block_three-inner wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
-								<div class="service-block_three-dots" style="background-image: url(assets/images/icons/icon-2.png)"></div>
-								<div class="service-block_three-circles" style="background-image: url(assets/images/icons/service-three_circle.png)"></div>
+								<div class="service-block_three-dots" style="background-image: url(myapp/images/icons/icon-2.png)"></div>
+								<div class="service-block_three-circles" style="background-image: url(myapp/images/icons/service-three_circle.png)"></div>
 								<div class="color-layer"></div>
 								<div class="service-block_three-icon">
 									<i class="icon-magnet"></i>
@@ -132,8 +132,8 @@
 						<!-- Service Block Three -->
 						<div class="service-block_three">
 							<div class="service-block_three-inner wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
-								<div class="service-block_three-dots" style="background-image: url(assets/images/icons/icon-2.png)"></div>
-								<div class="service-block_three-circles" style="background-image: url(assets/images/icons/service-three_circle.png)"></div>
+								<div class="service-block_three-dots" style="background-image: url(myapp/images/icons/icon-2.png)"></div>
+								<div class="service-block_three-circles" style="background-image: url(myapp/images/icons/service-three_circle.png)"></div>
 								<div class="color-layer"></div>
 								<div class="service-block_three-icon">
 									<i class="icon-diagram"></i>
@@ -164,11 +164,11 @@
 				<!-- Image Column -->
 				<div class="livechat_image-column col-lg-6 col-md-12 col-sm-12">
 					<div class="livechat_image-outer">
-						<div class="livechat-agent"><i><img src="assets/images/icons/livechat-stars.png" alt="" /></i> AI AGENT</div>
-						<div class="livechat-layer" style="background-image: url(assets/images/background/service-three_bg.png)"></div>
-						<div class="livechat-icon" style="background-image: url(assets/images/icons/livechat-icon.png)"></div>
+						<div class="livechat-agent"><i><img src="{% static 'myapp/images/icons/livechat-stars.png' %}" alt="" /></i> AI AGENT</div>
+						<div class="livechat-layer" style="background-image: url(myapp/images/background/service-three_bg.png)"></div>
+						<div class="livechat-icon" style="background-image: url(myapp/images/icons/livechat-icon.png)"></div>
 						<div class="color-layer"></div>
-						<img src="assets/images/resource/livechat.png" alt="" />
+						<img src="{% static 'myapp/images/resource/livechat.png' %}" alt="" />
 					</div>
 				</div>
 
@@ -195,7 +195,7 @@
 									</span>
 								</a>
 							</div>
-							<a class="livechat-now" href="{% url 'contact' %}"><i><img src="assets/images/icons/chat.png" alt="" /></i> Live chat</a>
+							<a class="livechat-now" href="{% url 'contact' %}"><i><img src="{% static 'myapp/images/icons/chat.png' %}" alt="" /></i> Live chat</a>
 						</div>
 					</div>
 				</div>
@@ -290,7 +290,7 @@
 									</span>
 								</a>
 							</div>
-							<a class="livechat-now" href="{% url 'contact' %}"><i><img src="assets/images/icons/chat.png" alt="" /></i> Live chat</a>
+							<a class="livechat-now" href="{% url 'contact' %}"><i><img src="{% static 'myapp/images/icons/chat.png' %}" alt="" /></i> Live chat</a>
 						</div>
 					</div>
 				</div>
@@ -299,7 +299,7 @@
 				<div class="conversation-one_chat-column col-lg-6 col-md-12 col-sm-12">
 					<div class="conversation-one_chat-outer">
 						<div class="conversation-one_image">
-							<img src="assets/images/resource/chats.png" alt="" />
+							<img src="{% static 'myapp/images/resource/chats.png' %}" alt="" />
 						</div>
 					</div>
 				</div>
@@ -359,7 +359,7 @@
 						<!-- Client Box -->
 						<div class="clients-box">
 							<a href="#">
-								<img src="assets/images/clients/6.png" alt="" />
+								<img src="{% static 'myapp/images/clients/6.png' %}" alt="" />
 							</a>
 						</div>
 
@@ -378,7 +378,7 @@
 				<div class="order-one_skill-column col-lg-6 col-md-12 col-sm-12">
 					<div class="order-one_skill-outer">
 						<div class="image">
-							<img src="assets/images/resource/skill.png" alt="" />
+							<img src="{% static 'myapp/images/resource/skill.png' %}" alt="" />
 						</div>
 					</div>
 				</div>
@@ -482,7 +482,7 @@
 												<div class="testimonial-block_two-text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare maximus ante.</div>
 												<div class="testimonial-block_two-author_box">
 													<div class="testimonial-block_two-author-image">
-														<img src="assets/images/resource/author-5.png" alt="" />
+														<img src="{% static 'myapp/images/resource/author-5.png' %}" alt="" />
 													</div>
 													Sara Ven <span>Social Media Manger</span>
 												</div>
@@ -493,7 +493,7 @@
 											<div class="testimonial-block_two-image-outer">
 												<div class="testimonial-block_two-quote fa-solid fa-quote-left fa-fw"></div>
 												<div class="testimonial-block_two-image">
-													<img src="assets/images/resource/testimonial.jpg" alt="" />
+													<img src="{% static 'myapp/images/resource/testimonial.jpg' %}" alt="" />
 												</div>
 											</div>
 										</div>
@@ -522,7 +522,7 @@
 												<div class="testimonial-block_two-text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare maximus ante.</div>
 												<div class="testimonial-block_two-author_box">
 													<div class="testimonial-block_two-author-image">
-														<img src="assets/images/resource/author-5.png" alt="" />
+														<img src="{% static 'myapp/images/resource/skill.png' %}" alt="" />
 													</div>
 													Sara Ven <span>Social Media Manger</span>
 												</div>
@@ -533,7 +533,7 @@
 											<div class="testimonial-block_two-image-outer">
 												<div class="testimonial-block_two-quote fa-solid fa-quote-left fa-fw"></div>
 												<div class="testimonial-block_two-image">
-													<img src="assets/images/resource/testimonial.jpg" alt="" />
+													<img src="{% static 'myapp/images/resource/testimonial.jpg' %}" alt="" />
 												</div>
 											</div>
 										</div>
@@ -562,7 +562,7 @@
 												<div class="testimonial-block_two-text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare maximus ante.</div>
 												<div class="testimonial-block_two-author_box">
 													<div class="testimonial-block_two-author-image">
-														<img src="assets/images/resource/author-5.png" alt="" />
+														<img src="{% static 'myapp/images/resource/skill.png' %}" alt="" />
 													</div>
 													Sara Ven <span>Social Media Manger</span>
 												</div>
@@ -573,7 +573,7 @@
 											<div class="testimonial-block_two-image-outer">
 												<div class="testimonial-block_two-quote fa-solid fa-quote-left fa-fw"></div>
 												<div class="testimonial-block_two-image">
-													<img src="assets/images/resource/testimonial.jpg" alt="" />
+													<img src="{% static 'myapp/images/resource/testimonial.jpg' %}" alt="" />
 												</div>
 											</div>
 										</div>
@@ -602,9 +602,9 @@
 
 	<!-- Tools One -->
 	<section class="tools-one">
-		<div class="tools-one_shadow" style="background-image: url(assets/images/background/tools-one_shadow.png)"></div>
-		<div class="tools-one_bg" style="background-image: url(assets/images/background/tools-bg.png)"></div>
-		<div class="tools-one_bg-two" style="background-image: url(assets/images/background/testimonial-one_bg.png)"></div>
+		<div class="tools-one_shadow" style="background-image: url(myapp/images/background/tools-one_shadow.png)"></div>
+		<div class="tools-one_bg" style="background-image: url(myapp/images/background/tools-bg.png)"></div>
+		<div class="tools-one_bg-two" style="background-image: url(myapp/images/background/testimonial-one_bg.png)"></div>
 		<div class="auto-container">
 			<!-- Sec Title -->
 			<div class="sec-title style-two centered">
@@ -617,7 +617,7 @@
 				<div class="social-block_one">
 					<div class="social-block_one-inner">
 						<div class="social-block_one-icon">
-							<i><img src="assets/images/icons/social-15.png" alt="" /></i>
+							<i><img src="{% static 'myapp/images/icons/social-15.png' %}" alt="" /></i>
 						</div>
 						<h5 class="social-block_one-title"><a href="#">Discord</a></h5>
 						<div class="social-block_one-text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi.</div>
@@ -629,7 +629,7 @@
 				<div class="social-block_one">
 					<div class="social-block_one-inner">
 						<div class="social-block_one-icon">
-							<i><img src="assets/images/icons/social-16.png" alt="" /></i>
+							<i><img src="{% static 'myapp/images/icons/social-16.png' %}" alt="" /></i>
 						</div>
 						<h5 class="social-block_one-title"><a href="#">Telegram</a></h5>
 						<div class="social-block_one-text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi.</div>
@@ -641,7 +641,7 @@
 				<div class="social-block_one">
 					<div class="social-block_one-inner">
 						<div class="social-block_one-icon">
-							<i><img src="assets/images/icons/social-17.png" alt="" /></i>
+							<i><img src="{% static 'myapp/images/icons/social-17.png' %}" alt="" /></i>
 						</div>
 						<h5 class="social-block_one-title"><a href="#">Whatsapp</a></h5>
 						<div class="social-block_one-text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi.</div>
@@ -653,7 +653,7 @@
 				<div class="social-block_one">
 					<div class="social-block_one-inner">
 						<div class="social-block_one-icon">
-							<i><img src="assets/images/icons/social-18.png" alt="" /></i>
+							<i><img src="{% static 'myapp/images/icons/social-18.png' %}" alt="" /></i>
 						</div>
 						<h5 class="social-block_one-title"><a href="#">Messenger</a></h5>
 						<div class="social-block_one-text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi.</div>
@@ -665,7 +665,7 @@
 				<div class="social-block_one">
 					<div class="social-block_one-inner">
 						<div class="social-block_one-icon">
-							<i><img src="assets/images/icons/social-19.png" alt="" /></i>
+							<i><img src="{% static 'myapp/images/icons/social-19.png' %}" alt="" /></i>
 						</div>
 						<h5 class="social-block_one-title"><a href="#">Pinterest</a></h5>
 						<div class="social-block_one-text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi.</div>
@@ -677,7 +677,7 @@
 				<div class="social-block_one">
 					<div class="social-block_one-inner">
 						<div class="social-block_one-icon">
-							<i><img src="assets/images/icons/social-20.png" alt="" /></i>
+							<i><img src="{% static 'myapp/images/icons/social-20.png' %}" alt="" /></i>
 						</div>
 						<h5 class="social-block_one-title"><a href="#">Zoom</a></h5>
 						<div class="social-block_one-text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi.</div>
@@ -730,7 +730,7 @@
 									<!-- Price Block One -->
 									<div class="price-block_one style-two col-lg-4 col-md-6 col-sm-12">
 										<div class="price-block_one-inner">
-											<div class="price-one_stars" style="background-image:url(assets/images/icons/price-stars.png)"></div>
+											<div class="price-one_stars"></div>
 											<div class="price-block_one-title">Starter</div>
 											<div class="price-block_one-subtitle">Up to 2,000 words / mo</div>
 											<div class="price-block_one-content">
@@ -757,7 +757,7 @@
 									<!-- Price Block One -->
 									<div class="price-block_one style-two active col-lg-4 col-md-6 col-sm-12">
 										<div class="price-block_one-inner">
-											<div class="price-one_stars" style="background-image:url(assets/images/icons/price-stars.png)"></div>
+											<div class="price-one_stars"></div>
 											<div class="price-block_one-title">Professional</div>
 											<div class="price-block_one-subtitle">Up to 10,000 words / mo</div>
 											<div class="price-block_one-content">
@@ -783,7 +783,7 @@
 									<!-- Price Block One -->
 									<div class="price-block_one style-two col-lg-4 col-md-6 col-sm-12">
 										<div class="price-block_one-inner">
-											<div class="price-one_stars" style="background-image:url(assets/images/icons/price-stars.png)"></div>
+											<div class="price-one_stars"></div>
 											<div class="price-block_one-title">Enterprise</div>
 											<div class="price-block_one-subtitle">Up to 10,000 words / mo</div>
 											<div class="price-block_one-content">
@@ -818,7 +818,7 @@
 									<!-- Price Block One -->
 									<div class="price-block_one style-two col-lg-4 col-md-6 col-sm-12">
 										<div class="price-block_one-inner">
-											<div class="price-one_stars" style="background-image:url(assets/images/icons/price-stars.png)"></div>
+											<div class="price-one_stars"></div>
 											<div class="price-block_one-title">Starter</div>
 											<div class="price-block_one-subtitle">Up to 2,000 words / mo</div>
 											<div class="price-block_one-content">
@@ -845,7 +845,7 @@
 									<!-- Price Block One -->
 									<div class="price-block_one style-two active col-lg-4 col-md-6 col-sm-12">
 										<div class="price-block_one-inner">
-											<div class="price-one_stars" style="background-image:url(assets/images/icons/price-stars.png)"></div>
+											<div class="price-one_stars"></div>
 											<div class="price-block_one-title">Professional</div>
 											<div class="price-block_one-subtitle">Up to 10,000 words / mo</div>
 											<div class="price-block_one-content">
@@ -871,7 +871,7 @@
 									<!-- Price Block One -->
 									<div class="price-block_one style-two col-lg-4 col-md-6 col-sm-12">
 										<div class="price-block_one-inner">
-											<div class="price-one_stars" style="background-image:url(assets/images/icons/price-stars.png)"></div>
+											<div class="price-one_stars"></div>
 											<div class="price-block_one-title">Enterprise</div>
 											<div class="price-block_one-subtitle">Up to 10,000 words / mo</div>
 											<div class="price-block_one-content">
@@ -934,7 +934,7 @@
 					<li><i class="fa-solid fa-check fa-fw"></i>Free No credit card required</li>
 				</ul>
 				<div class="community-one_image">
-					<img src="assets/images/resource/community.png" alt="" />
+					<img src="{% static 'myapp/images/resource/community.png' %}" alt="" />
 				</div>
 			</div>
 		</div>
@@ -943,7 +943,7 @@
 
 	<!-- News One -->
 	<section class="news-one style-two">
-		<div class="news-one_shadow-two" style="background-image:url(assets/images/background/news-shadow-2.png)"></div>
+		<div class="news-one_shadow-two" style="background-image:url(myapp/images/background/news-shadow-2.png)"></div>
 		<div class="auto-container">
 			<!-- Sec Title -->
 			<div class="sec-title style-two">
@@ -973,7 +973,7 @@
 						<div class="news-block_one">
 							<div class="news-block_one-inner">
 								<div class="news-block_one-image">
-									<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-1.jpg" alt="" /></a>
+									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-1.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
 									<div class="news-block_one-time">By Admin <span>6 min read</span></div>
@@ -990,7 +990,7 @@
 						<div class="news-block_one">
 							<div class="news-block_one-inner">
 								<div class="news-block_one-image">
-									<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-2.jpg" alt="" /></a>
+									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-2.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
 									<div class="news-block_one-time">By Admin <span>6 min read</span></div>
@@ -1007,7 +1007,7 @@
 						<div class="news-block_one">
 							<div class="news-block_one-inner">
 								<div class="news-block_one-image">
-									<a href="{% url 'newsdetail' %}"><img src="assets/images/resource/news-3.jpg" alt="" /></a>
+									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-3.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
 									<div class="news-block_one-time">By Admin <span>6 min read</span></div>
@@ -1027,115 +1027,13 @@
 	<!-- End News One -->
 
 	<!-- Main Footer -->
-	<footer class="main-footer style-two">
-		<div class="footer_pattern" style="background-image: url(assets/images/background/footer-pattern.png)"></div>
-		<div class="footer-upper-box">
-			<div class="auto-container">
-				<div class="d-flex align-items-center justify-content-between flex-wrap">
-					<div class="footer-logo"><a href="{% static 'myapp/index.html' %}""><img src="assets/images/logo.svg" alt="" title=""></a></div>
-					<!-- Social Box -->
-					<div class="footer-social_box">
-						<span>Follow us:</span>
-						<a href="https://facebook.com/"><i class="fa-brands fa-facebook-f"></i></a>
-						<a href="https://twitter.com/"><i class="fa-brands fa-twitter"></i></a>
-						<a href="https://youtube.com/"><i class="fa-brands fa-youtube"></i></a>
-						<a href="https://instagram.com/"><i class="fa-brands fa-instagram"></i></a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="auto-container">
-			<div class="inner-container">
-				<!-- Widgets Section -->
-				<div class="widgets-section">
-					<div class="row clearfix">
-						
-						<!-- Big Column -->
-						<div class="big-column col-lg-7 col-md-12 col-sm-12">
-							<div class="footer-lists_outer">
-								<div class="row clearfix">
-									<!-- Column -->
-									<div class="column col-lg-5 col-md-4 col-sm-6">
-										<h5 class="footer-title">Services</h5>
-										<ul class="footer-pages_list">
-											<li><a href="#">AI-powered copywriting</a></li>
-											<li><a href="#">Blog post generation</a></li>
-											<li><a href="#">Social media content</a></li>
-											<li><a href="#">Product descriptions</a></li>
-											<li><a href="#">Email campaigns</a></li>
-											<li><a href="#">Copy writings</a></li>
-											<li><a href="#">SEO specialist</a></li>
-										</ul>
-									</div>
-									<!-- Column -->
-									<div class="column col-lg-3 col-md-4 col-sm-6">
-										<h5 class="footer-title">resources</h5>
-										<ul class="footer-pages_list">
-											<li><a href="#">Blog</a></li>
-											<li><a href="#">FAQs</a></li>
-											<li><a href="#">Help center</a></li>
-											<li><a href="#">case studies</a></li>
-											<li><a href="#">whitepapers</a></li>
-											<li><a href="#">Services</a></li>
-										</ul>
-									</div>
-									<!-- Column -->
-									<div class="column col-lg-4 col-md-4 col-sm-6">
-										<h5 class="footer-title">about us</h5>
-										<ul class="footer-pages_list">
-											<li><a href="#">Our story</a></li>
-											<li><a href="#">Team</a></li>
-											<li><a href="#">Careers</a></li>
-											<li><a href="#">Testimonials</a></li>
-											<li><a href="#">Error 404</a></li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
 
-						<!-- Big Column -->
-						<div class="big-column col-lg-5 col-md-12 col-sm-12">
-							<div class="footer-newsletter">
-								<h5 class="footer-title">Newsletter</h5>
-								<div class="footer-newsletter_text">Lorem ipsum dolor sit amet consectetur adipiscing vitae mattis tellus. Nullam quis mattis.</div>
-								<div class="newsletter-box">
-									<form method="post" action="{% url 'contact' %}">
-										<div class="form-group">
-											<span class="icon fa-regular fa-envelope fa-fw"></span>
-											<input type="email" name="search-field" value="" placeholder="Enter your mail" required>
-											<button type="submit" class="template-btn btn-style-one">
-												<span class="btn-wrap">
-													<span class="text-one">Subscribe</span>
-													<span class="text-two">Subscribe</span>
-												</span>
-											</button>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="footer-bottom">
-			<div class="auto-container">
-				<div class="inner-container d-flex justify-content-center">
-					<div class="footer-copyright">&copy; 2024 <a href="{% static 'myapp/index.html' %}"">Braine.</a> All rights reserved.</div>
-				</div>
-			</div>
-		</div>
-	</footer>
+	{% include 'footer.html' %}
 
 </div>
 <!-- End PageWrapper -->
 
-<div class="progress-wrap">
-	<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-		<path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
-	</svg>
-</div>
+ 
+
 
 {% endblock %}

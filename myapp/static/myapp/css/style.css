@@ -7778,3 +7778,109 @@
 	font-size: 18px;
 	color: var(--color-six);
 }
+
+/* Page title icon */
+
+.page-title-icon {
+    background-image: url('/static/myapp/images/icons/page-title_icon-1.png');
+}
+
+.page-title-icon-two {
+    background-image: url('/static/myapp/images/icons/page-title_icon-2.png');
+}
+
+.page-title-shadow {
+    background-image: url('/static/myapp/images/background/page-title-1.png');
+}
+
+.page-title-shadow-two {
+    background-image: url('/static/myapp/images/background/page-title-2.png');
+}
+
+.price-one_stars {
+    background-image: url('/static/myapp/images/icons/price-stars.png');
+}
+
+.blockquote_bg {
+    background-image: url('/static/myapp/images/background/blockquote-bg.png');
+}
+
+.error-one {
+    background-image: url('/static/myapp/images/background/error-bg.png');
+}
+
+.steps-one_bg {
+    background-image: url('/static/myapp/images/background/step-1_bg.png');
+}
+
+.steps-one_icon {
+    background-image: url('/static/myapp/images/icons/step.png');
+}
+
+.service-block_two-sideicon {
+    background-image: url('/static/myapp/images/icons/service-1.png');
+}
+
+.cta-icon_one {
+    background-image: url('/static/myapp/images/icons/cta-icon-1.png');
+}
+
+.cta-icon_two {
+    background-image: url('/static/myapp/images/icons/cta-icon-2.png');
+}
+
+.inner-container {
+    background-image: url('/static/myapp/images/background/testimonial-one_bg.png');
+}
+
+.about-one_pattern {
+    background-image: url('/static/myapp/images/background/about-pattern.png');
+}
+
+.about-one_icon {
+    background-image: url('/static/myapp/images/icons/about-1.png');
+}
+
+.about-one_icon-two {
+    background-image: url('/static/myapp/images/icons/about-2.png');
+}
+
+.about-one_tab-shadow {
+    background-image: url('/static/myapp/images/background/tab-shadow.png');
+}
+
+.answer-one_pattern {
+    background-image: url('/static/myapp/images/background/faq-shadow.png');
+}
+
+.price-one_bg {
+    background-image: url('/static/myapp/images/background/price-bg.png');
+}
+
+.faq-one_bg {
+    background-image: url('/static/myapp/images/background/faq-bg.png');
+}
+
+.faq-one_icon {
+    background-image: url('/static/myapp/images/icons/step.png');
+}
+
+.social-one_bg-shadow {
+    background-image: url('/static/myapp/images/background/social-bg.png');
+}
+
+.social-one_bg {
+    background-image: url('/static/myapp/images/background/social-one_pattern.png');
+}
+
+.social-one_bg-two {
+    background-image: url('/static/myapp/images/background/social-one_pattern-two.png');
+}
+
+.news-one_shadow {
+    background-image: url('/static/myapp/images/background/news-shadow-1.png');
+}
+
+.news-one_shadow-two {
+    background-image: url('/static/myapp/images/background/news-shadow-2.png');
+}
