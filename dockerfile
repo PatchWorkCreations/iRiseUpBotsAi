@@ -8,17 +8,19 @@ WORKDIR /app
 COPY requirements.txt /app/
 
 # Install any needed packages specified in requirements.txt
-RUN --mount=type=cache,id=s/a689ff66-ae9d-4bd9-a704-f29f4664dc11-/root/cache/pip,target=/root/.cache/pip python -m venv --copies /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the working directory contents into the container at /app
 COPY . /app
 
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
+# Install Nginx
+RUN apt-get update && apt-get install -y nginx
 
-# Define environment variable
-ENV PYTHONUNBUFFERED=1
-ENV NIXPACKS_PATH=/opt/venv/bin:$NIXPACKS_PATH
+# Copy custom Nginx configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Run the command to start Gunicorn
-CMD ["gunicorn", "IRiseUpAi.wsgi:application", "--log-file", "-"]
+# Make port 80 available to the world outside this container
+EXPOSE 80
+
+# Run both Nginx and Gunicorn
+CMD service nginx start && gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
