@@ -6,31 +6,6 @@
 {% block content %}
 <style>
 
-.slider-one_icon {
-    background-image: url("{% static 'myapp/images/main-slider/icon-1.png' %}");
-}
-
-.slider-one_icon-two {
-    background-image: url("{% static 'myapp/images/main-slider/icon-1.png' %}");
-}
-
-.slider-one_pattern {
-    background-image: url("{% static 'myapp/images/main-slider/pattern-1.png' %}");
-}
-
-.slider-one_pattern-two {
-    background-image: url("{% static 'myapp/images/main-slider/pattern-2.png' %}");
-}
-
-.slider-one_pattern-four {
-    background-image: url("{% static 'myapp/images/main-slider/pattern-4.png' %}");
-}
-
-.slider-one_pattern-three {
-    background-image: url("{% static 'myapp/images/main-slider/pattern-3.png' %}");
-}
-
-
 </style>
 
 <body>
@@ -71,64 +46,78 @@
 	<section class="slider-one">
 		<div class="main-slider swiper-container">
 			<div class="swiper-wrapper">
-	
-				<!-- Slide -->
-				<div class="swiper-slide">
-					<div class="slider-one_icon"></div>
-					<div class="slider-one_icon-two"></div>
-					<div class="slider-one_pattern"></div>
-					<div class="slider-one_pattern-two"></div>
-					<div class="slider-one_pattern-four"></div>
-					<div class="auto-container">
-						<div class="row clearfix">
-							<!-- Content Column -->
-							<div class="slider-one_content col-lg-7 col-md-12 col-sm-12">
-								<div class="slider-one_content-inner">
-									<div class="slider-one_title"><i><img src= "{% static 'myapp/images/main-slider/hand.png' %}" alt="" /></i> AI makes content fast & easy</div>
-									<h1 class="slider-one_heading">Crafting digital brilliance <span>AI-Driven</span> copywriting</h1>
-									<div class="slider-one_text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien.</div>
-									<div class="slider-one_button d-flex align-items-center flex-wrap">
-										<a href="{% url 'about' %}" class="template-btn btn-style-one">
-											<span class="btn-wrap">
-												<span class="text-one">Get started free</span>
-												<span class="text-two">Get started free</span>
-											</span>
-										</a>
-										<div class="slider-one_video">
-											<a href="https://www.youtube.com/watch?v=kxPCFljwJws" class="lightbox-video play-box"><span class="fa fa-play"></span></a>
+
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<div class="slider-one_icon"></div>
+						<div class="slider-one_icon-two"></div>
+						<div class="slider-one_pattern"></div>
+						<div class="slider-one_pattern-two"></div>
+						<div class="slider-one_pattern-four"></div>
+						<div class="auto-container">
+							<div class="row clearfix">
+								<!-- Content Column -->
+								<div class="slider-one_content col-lg-7 col-md-12 col-sm-12">
+									<div class="slider-one_content-inner">
+										<div class="slider-one_title">
+											<i><img src="{% static 'myapp/images/main-slider/hand.png' %}" alt="" /></i> 
+											AI makes business growth fast & easy
+										</div>
+										<h1 class="slider-one_heading">
+											Elevate Your Business with <span>AI-Driven</span> Solutions
+										</h1>
+										<div class="slider-one_text">
+											At iRiseUp, we empower busy entrepreneurs to harness the power of AI, simplifying complex tasks and unlocking new revenue streams. Let us help you focus on what you do best while we take care of the rest.
+										</div>
+										<div class="slider-one_button d-flex align-items-center flex-wrap">
+											<a href="{% url 'about' %}" class="template-btn btn-style-one">
+												<span class="btn-wrap">
+													<span class="text-one">Get started free</span>
+													<span class="text-two">Get started free</span>
+												</span>
+											</a>
+											<div class="slider-one_video">
+												<a href="https://www.youtube.com/watch?v=kxPCFljwJws" class="lightbox-video play-box">
+													<span class="fa fa-play"></span>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Image Column -->
+								<div class="slider-one_image-column col-lg-5 col-md-12 col-sm-12">
+									<div class="slider-one_pattern-three"></div>
+									<div class="slider-one_image-outer">
+										<!-- Slider One Author -->
+										<div class="slider-one_author">
+											<i><img src="{% static 'myapp/images/main-slider/icon-2.png' %}" alt="" /></i>
+											<h5 class="slider-one_author-name">Sara Ven</h5>
+											<div class="slider-one_author-text">Social Media Manager</div>
+										</div>
+										<!-- Slider One Percent -->
+										<div class="slider-one_percentage">
+											<i class="fa-solid fa-arrow-up fa-fw"></i>
+											<div class="slider-one_percent">90<sub>%</sub></div>
+											<div class="slider-one_percentage-text">Efficiency</div>
+										</div>
+										<div class="slider-one_graph">
+											<div class="slider-one_graph-title">
+												Annual Goal <span>$98,541 <sup><i class="fa-solid fa-caret-up fa-fw"></i>110%</sup></span>
+											</div>
+											<img src="{% static 'myapp/images/main-slider/graph.png' %}" alt="" />
+										</div>
+										<div class="slider-one_image">
+											<img src="{% static 'myapp/images/main-slider/image-1.png' %}" alt="" />
 										</div>
 									</div>
 								</div>
 							</div>
-							<!-- Image Column -->
-							<div class="slider-one_image-column col-lg-5 col-md-12 col-sm-12">
-								<div class="slider-one_pattern-three"></div>
-								<div class="slider-one_image-outer">
-									<!-- Slider One Author -->
-									<div class="slider-one_author">
-										<i><img src="{% static 'myapp/images/main-slider/icon-2.png' %}" alt="" /></i>
-										<h5 class="slider-one_author-name">Sara Ven</h5>
-										<div class="slider-one_author-text">Social media manger</div>
-									</div>
-									<!-- Slider One Percent -->
-									<div class="slider-one_percentage">
-										<i class="fa-solid fa-arrow-up fa-fw"></i>
-										<div class="slider-one_percent">90<sub>%</sub></div>
-										<div class="slider-one_percentage-text">efficiency</div>
-									</div>
-									<div class="slider-one_graph">
-										<div class="slider-one_graph-title">Annual goal <span>$98,541 <sup><i class="fa-solid fa-caret-up fa-fw"></i>110%</sup></span></div>
-										<img src="{% static 'myapp/images/main-slider/graph.png' %}" alt="" />
-									</div>
-									<div class="slider-one_image">
-										<img src="{% static 'myapp/images/main-slider/image-1.png' %}" alt="" />
-									</div>
-								</div>
-							</div>
+							
 						</div>
-						
 					</div>
 				</div>
+				
+			
 	
 				<!-- Additional slides here -->
 	
@@ -148,41 +137,41 @@
 		<div class="auto-container">
 			<!-- Sec Title -->
 			<div class="sec-title centered">
-				<div class="sec-title_title">Our Service</div>
-				<h2 class="sec-title_heading">Experience our latest <br> <span>new features</span></h2>
+				<div class="sec-title_title">Our Services</div>
+				<h2 class="sec-title_heading">Experience Our Latest <br> <span>AI-Driven Solutions</span></h2>
 			</div>
 			<div class="row clearfix">
-
+	
 				<!-- Service Block One -->
 				<div class="service-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="service-block_one-inner wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
 						<div class="service-block_one-icon">
 							<i class="icon-speaker1"></i>
 						</div>
-						<h5 class="service-block_one-heading"><a href="{% url 'servicedetail' %}">Digital marketers</a></h5>
-						<div class="service-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et <span>massa mi. Aliquam</span> in hendrerit urna..</div>
+						<h5 class="service-block_one-heading"><a href="{% url 'servicedetail' %}">Digital Marketers</a></h5>
+						<div class="service-block_one-text">Enhance your marketing campaigns with AI-powered insights and automation, saving you time and increasing your reach.</div>
 						<div class="lower-box d-flex justify-content-between align-items-center flex-wrap">
 							<div class="service-block_one-number">01</div>
 							<a class="service-block_one-join" href="{% url 'servicedetail' %}">Join now <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
-
+	
 				<!-- Service Block One -->
 				<div class="service-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="service-block_one-inner wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
 						<div class="service-block_one-icon">
 							<i class="icon-marketing"></i>
 						</div>
-						<h5 class="service-block_one-heading"><a href="{% url 'servicedetail' %}">Content marketers</a></h5>
-						<div class="service-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et <span>massa mi. Aliquam</span> in hendrerit urna..</div>
+						<h5 class="service-block_one-heading"><a href="{% url 'servicedetail' %}">Content Marketers</a></h5>
+						<div class="service-block_one-text">Create compelling content effortlessly with AI-driven tools that generate, optimize, and analyze your marketing materials.</div>
 						<div class="lower-box d-flex justify-content-between align-items-center flex-wrap">
 							<div class="service-block_one-number">02</div>
 							<a class="service-block_one-join" href="{% url 'servicedetail' %}">Join now <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
-
+	
 				<!-- Service Block One -->
 				<div class="service-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="service-block_one-inner wow fadeInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
@@ -190,14 +179,14 @@
 							<i class="icon-users"></i>
 						</div>
 						<h5 class="service-block_one-heading"><a href="{% url 'servicedetail' %}">Founders</a></h5>
-						<div class="service-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et <span>massa mi. Aliquam</span> in hendrerit urna..</div>
+						<div class="service-block_one-text">Empower your leadership with AI tools that streamline operations, enhance decision-making, and drive business growth.</div>
 						<div class="lower-box d-flex justify-content-between align-items-center flex-wrap">
 							<div class="service-block_one-number">03</div>
 							<a class="service-block_one-join" href="{% url 'servicedetail' %}">Join now <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
-
+	
 				<!-- Service Block One -->
 				<div class="service-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="service-block_one-inner wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
@@ -205,110 +194,112 @@
 							<i class="icon-copyright"></i>
 						</div>
 						<h5 class="service-block_one-heading"><a href="{% url 'servicedetail' %}">Copywriters</a></h5>
-						<div class="service-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et <span>massa mi. Aliquam</span> in hendrerit urna..</div>
+						<div class="service-block_one-text">Leverage AI to craft high-quality, engaging content that resonates with your audience and drives conversions.</div>
 						<div class="lower-box d-flex justify-content-between align-items-center flex-wrap">
 							<div class="service-block_one-number">04</div>
 							<a class="service-block_one-join" href="{% url 'servicedetail' %}">Join now <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
-
+	
 				<!-- Service Block One -->
 				<div class="service-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="service-block_one-inner wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
 						<div class="service-block_one-icon">
 							<i class="icon-tag"></i>
 						</div>
-						<h5 class="service-block_one-heading"><a href="{% url 'servicedetail' %}">SEO specialists</a></h5>
-						<div class="service-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et <span>massa mi. Aliquam</span> in hendrerit urna..</div>
+						<h5 class="service-block_one-heading"><a href="{% url 'servicedetail' %}">SEO Specialists</a></h5>
+						<div class="service-block_one-text">Optimize your search rankings with AI tools that analyze trends, track performance, and suggest improvements.</div>
 						<div class="lower-box d-flex justify-content-between align-items-center flex-wrap">
 							<div class="service-block_one-number">05</div>
 							<a class="service-block_one-join" href="{% url 'servicedetail' %}">Join now <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
-
+	
 				<!-- Service Block Two -->
 				<div class="service-block_two col-lg-4 col-md-6 col-sm-12">
 					<div class="service-block_two-inner wow fadeInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
 						<div class="service-block_two-sideicon"></div>
-
+	
 						<div class="service-block_two-icon">
 							<img src="{% static 'myapp/images/icons/service.png' %}" alt="" />
 						</div>
-						<h5 class="service-block_two-heading"><a href="{% url 'servicedetail' %}">More service</a></h5>
-						<div class="service-block_two-text">Lorem ipsum dolor sit ame consectetur.</div>
+						<h5 class="service-block_two-heading"><a href="{% url 'servicedetail' %}">More Services</a></h5>
+						<div class="service-block_two-text">Explore additional AI-driven solutions tailored to your unique business needs.</div>
 						<div class="service-block_two-button">
 							<a href="{% url 'services' %}" class="template-btn btn-style-one">
 								<span class="btn-wrap">
-									<span class="text-one">learn more</span>
-									<span class="text-two">learn more</span>
+									<span class="text-one">Learn more</span>
+									<span class="text-two">Learn more</span>
 								</span>
 							</a>
 						</div>
 					</div>
 				</div>
-
+	
 			</div>
 		</div>
 	</section>
+	
 	<!-- End Services One -->
 	
-	<!-- About One -->
-	<section class="about-one">
-		<div class="about-one_pattern"></div>
-		<div class="about-one_icon"></div>
-		<div class="about-one_icon-two"></div>
+<!-- About One -->
+<section class="about-one">
+	<div class="about-one_pattern"></div>
+	<div class="about-one_icon"></div>
+	<div class="about-one_icon-two"></div>
 
-		<div class="auto-container">
-			<div class="row clearfix">
+	<div class="auto-container">
+		<div class="row clearfix">
 
-				<!-- Tab Column -->
-				<div class="about-one_tab-column col-xl-6 col-lg-6 col-md-12 col-sm-12">
-					<div class="about-one_tab-outer">
-						<div class="about-one_tab-shadow"></div>
+			<!-- Tab Column -->
+			<div class="about-one_tab-column col-xl-6 col-lg-6 col-md-12 col-sm-12">
+				<div class="about-one_tab-outer">
+					<div class="about-one_tab-shadow"></div>
 
-						<div class="about-one_tab-image">
-							<img src="{% static 'myapp/images/resource/tabs.png' %}" alt="" />
-						</div>
+					<div class="about-one_tab-image">
+						<img src="{% static 'myapp/images/resource/tabs.png' %}" alt="" />
 					</div>
 				</div>
+			</div>
 
-				<!-- Tab Column -->
-				<div class="about-one_content-column col-xl-6 col-lg-6 col-md-12 col-sm-12">
-					<div class="about-one_content-outer">
-						<!-- Sec Title -->
-						<div class="sec-title">
-							<div class="sec-title_title">About us</div>
-							<h2 class="sec-title_heading">Crafting of your digital <span>narrative discover</span> our journey</h2>
-						</div>
-						<p>Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna. <span>Pellentesque sit amet</span> sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue.</p>
-						<p>Lorem ipsum dolor sit amet consectetur adipiscing vitae mattis tellus. Nullam quis mattis ligula consectetur.</p>
-						<div class="about-one_options d-flex align-items-center flex-wrap">
-							<a href="{% url 'about' %}" class="template-btn btn-style-one">
-								<span class="btn-wrap">
-									<span class="text-one">Know more</span>
-									<span class="text-two">Know more</span>
-								</span>
-							</a>
-							<div class="about-one_rating-box d-flex align-items-center flex-wrap">
-								4.7
-								<div class="about-one_rating">
-									<span class="fa fa-star"></span>
-									<span class="fa fa-star"></span>
-									<span class="fa fa-star"></span>
-									<span class="fa fa-star"></span>
-									<span class="fa fa-star"></span>
-									<i>Customer rating</i>
-								</div>
+			<!-- Content Column -->
+			<div class="about-one_content-column col-xl-6 col-lg-6 col-md-12 col-sm-12">
+				<div class="about-one_content-outer">
+					<!-- Sec Title -->
+					<div class="sec-title">
+						<div class="sec-title_title">About Us</div>
+						<h2 class="sec-title_heading">Crafting Your Digital <span>Narrative</span><br> Discover Our Journey</h2>
+					</div>
+					<p>At iRiseUp, we believe in the transformative power of AI. Our mission is to empower busy entrepreneurs to leverage AI technology, making business growth fast, efficient, and effective. We understand the challenges of managing a business and are here to simplify your journey with intelligent solutions.</p>
+					<p>Founded by industry experts, iRiseUp has been at the forefront of AI innovation, delivering tailored solutions that drive real results. Our passion for technology and dedication to our clients set us apart in the digital landscape.</p>
+					<div class="about-one_options d-flex align-items-center flex-wrap">
+						<a href="{% url 'about' %}" class="template-btn btn-style-one">
+							<span class="btn-wrap">
+								<span class="text-one">Know more</span>
+								<span class="text-two">Know more</span>
+							</span>
+						</a>
+						<div class="about-one_rating-box d-flex align-items-center flex-wrap">
+							4.7
+							<div class="about-one_rating">
+								<span class="fa fa-star"></span>
+								<span class="fa fa-star"></span>
+								<span class="fa fa-star"></span>
+								<span class="fa fa-star"></span>
+								<span class="fa fa-star"></span>
+								<i>Customer rating</i>
 							</div>
 						</div>
 					</div>
 				</div>
-
 			</div>
+
 		</div>
-	</section>
+	</div>
+</section>
+
 	<!-- End About One -->
 	
 	<!-- Choose One -->
@@ -317,42 +308,43 @@
 			<div class="inner-container">
 				<!-- Sec Title -->
 				<div class="sec-title light centered">
-					<div class="sec-title_title">why chose us</div>
-					<h2 class="sec-title_heading">Reason to chose our <br> <span>platform</span></h2>
+					<div class="sec-title_title">Why Choose Us</div>
+					<h2 class="sec-title_heading">Reasons to Choose Our <br> <span>AI Platform</span></h2>
 				</div>
 				<div class="row clearfix">
-
+	
 					<!-- Counter Block One -->
 					<div class="counter-block_one col-lg-4 col-md-6 col-sm-12">
 						<div class="counter-block_one-inner wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
-							<div class="counter-block_one-icon fa-brands fa-instagram fa-fw"></div>
+							<div class="counter-block_one-icon fa-solid fa-users fa-fw"></div>
 							<div class="counter-block_one-count"><span class="odometer" data-count="8000"></span><i>+</i></div>
-							<div class="counter-block_one-text">More than 8,000 customers have experimented with Kafkai</div>
+							<div class="counter-block_one-text">More than 8,000 businesses have leveraged our AI solutions</div>
 						</div>
 					</div>
-
-					<!-- Counter Block One -->
+	
+					<!-- Counter Block Two -->
 					<div class="counter-block_one col-lg-4 col-md-6 col-sm-12">
 						<div class="counter-block_one-inner wow fadeInLeft" data-wow-delay="150ms" data-wow-duration="1500ms">
-							<div class="counter-block_one-icon fa-brands fa-instagram fa-fw"></div>
+							<div class="counter-block_one-icon fa-solid fa-chart-line fa-fw"></div>
 							<div class="counter-block_one-count"><span class="odometer" data-count="500000"></span><i>+</i></div>
-							<div class="counter-block_one-text">More than 8,000 customers have experimented with Kafkai</div>
+							<div class="counter-block_one-text">Over 500,000 hours saved with our AI-driven automation</div>
 						</div>
 					</div>
-
-					<!-- Counter Block One -->
+	
+					<!-- Counter Block Three -->
 					<div class="counter-block_one col-lg-4 col-md-6 col-sm-12">
 						<div class="counter-block_one-inner wow fadeInLeft" data-wow-delay="300ms" data-wow-duration="1500ms">
-							<div class="counter-block_one-icon fa-brands fa-instagram fa-fw"></div>
+							<div class="counter-block_one-icon fa-solid fa-dollar-sign fa-fw"></div>
 							<div class="counter-block_one-count"><span class="odometer" data-count="200000"></span><i>+</i></div>
-							<div class="counter-block_one-text">More than 8,000 customers have experimented with Kafkai</div>
+							<div class="counter-block_one-text">Over $200,000 in increased revenue for our clients</div>
 						</div>
 					</div>
-
+	
 				</div>
 			</div>
 		</div>
 	</section>
+	
 	<!-- End Choose One -->
 
 	<!-- Answer One -->
@@ -401,104 +393,105 @@
 	<!-- End Answer One -->
 
 	<!-- Testimonial One -->
-	<section class="testimonial-one">
-		<div class="auto-container">
-			<div class="inner-container"></div>
+<section class="testimonial-one">
+	<div class="auto-container">
+		<div class="inner-container"></div>
 
-				<!-- Sec Title -->
-				<div class="sec-title centered">
-					<div class="sec-title_title">Testimonials</div>
-					<h2 class="sec-title_heading">What our respectable <br> <span>clients says</span></h2>
-				</div>
-				<div class="three-item_carousel swiper-container">
-					<div class="swiper-wrapper">
-		
-						<!-- Slide -->
-						<div class="swiper-slide">
-							<!-- Testimonial Block One -->
-							<div class="testimonial-block_one">
-								<div class="testimonial-block_one-inner">
-									<div class="testimonial-block_one-rating">
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
+			<!-- Sec Title -->
+			<div class="sec-title centered">
+				<div class="sec-title_title">Testimonials</div>
+				<h2 class="sec-title_heading">What Our Valued <br> <span>Clients Say</span></h2>
+			</div>
+			<div class="three-item_carousel swiper-container">
+				<div class="swiper-wrapper">
+	
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<!-- Testimonial Block One -->
+						<div class="testimonial-block_one">
+							<div class="testimonial-block_one-inner">
+								<div class="testimonial-block_one-rating">
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+								</div>
+								<div class="testimonial-block_one-text">"Using iRiseUp's AI solutions has transformed our business. We save so much time on repetitive tasks and can focus on strategic growth. It's like having an extra team member!"</div>
+								<div class="testimonial-block_one-author_box">
+									<div class="testimonial-block_one-author-image">
+										<img src="{% static 'myapp/images/resource/author-2.png' %}" alt="" />
 									</div>
-									<div class="testimonial-block_one-text">Lorem ipsum amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit <span>Pellentesque sit amet</span> sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue.</div>
-									<div class="testimonial-block_one-author_box">
-										<div class="testimonial-block_one-author-image">
-											<img src="{% static 'myapp/images/resource/author-2.png' %}" alt="" />
-										</div>
-										Larry K. Lund <span>Social Media Manger</span>
-									</div>
+									Larry K. Lund <span>Social Media Manager</span>
 								</div>
 							</div>
 						</div>
-
-						<!-- Slide -->
-						<div class="swiper-slide">
-							<!-- Testimonial Block One -->
-							<div class="testimonial-block_one">
-								<div class="testimonial-block_one-inner">
-									<div class="testimonial-block_one-rating">
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-									</div>
-									<div class="testimonial-block_one-text">Lorem ipsum amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit <span>Pellentesque sit amet</span> sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue.</div>
-									<div class="testimonial-block_one-author_box">
-										<div class="testimonial-block_one-author-image">
-											<img src="{% static 'myapp/images/resource/author-3.png' %}" alt="" />
-										</div>
-										Marian R. Vieira <span>Social Media Manger</span>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<!-- Slide -->
-						<div class="swiper-slide">
-							<!-- Testimonial Block One -->
-							<div class="testimonial-block_one">
-								<div class="testimonial-block_one-inner">
-									<div class="testimonial-block_one-rating">
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-									</div>
-									<div class="testimonial-block_one-text">Lorem ipsum amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit <span>Pellentesque sit amet</span> sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue.</div>
-									<div class="testimonial-block_one-author_box">
-										<div class="testimonial-block_one-author-image">
-											<img src="{% static 'myapp/images/resource/author-4.png' %}" alt="" />
-										</div>
-										Bob E. Wiggins <span>Social Media Manger</span>
-									</div>
-								</div>
-							</div>
-						</div>
-
 					</div>
 
-					<!-- If we need pagination -->
-					<div class="three-item_carousel-pagination"></div>
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<!-- Testimonial Block One -->
+						<div class="testimonial-block_one">
+							<div class="testimonial-block_one-inner">
+								<div class="testimonial-block_one-rating">
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+								</div>
+								<div class="testimonial-block_one-text">"iRiseUp has been a game-changer for our content marketing. The AI-driven tools provide incredible insights and efficiencies, boosting our engagement rates significantly."</div>
+								<div class="testimonial-block_one-author_box">
+									<div class="testimonial-block_one-author-image">
+										<img src="{% static 'myapp/images/resource/author-3.png' %}" alt="" />
+									</div>
+									Marian R. Vieira <span>Content Marketer</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Slide -->
+					<div class="swiper-slide">
+						<!-- Testimonial Block One -->
+						<div class="testimonial-block_one">
+							<div class="testimonial-block_one-inner">
+								<div class="testimonial-block_one-rating">
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+									<span class="fa fa-star"></span>
+								</div>
+								<div class="testimonial-block_one-text">"As a founder, time is my most precious resource. iRiseUp's AI solutions have streamlined our operations and given us back valuable hours each week. I can't recommend them enough."</div>
+								<div class="testimonial-block_one-author_box">
+									<div class="testimonial-block_one-author-image">
+										<img src="{% static 'myapp/images/resource/author-4.png' %}" alt="" />
+									</div>
+									Bob E. Wiggins <span>Founder</span>
+								</div>
+							</div>
+						</div>
+					</div>
 
 				</div>
 
+				<!-- If we need pagination -->
+				<div class="three-item_carousel-pagination"></div>
+
 			</div>
+
 		</div>
-	</section>
+	</div>
+</section>
+
 	<!-- End Testimonial One -->
 
 	<!-- Steps One -->
 	<section class="steps-one">
 		<div class="steps-one_bg"></div>
-<div class="steps-one_icon"></div>
-
+		<div class="steps-one_icon"></div>
+	
 		<div class="auto-container">
 			<div class="inner-container">
 				<div class="circle-layer"></div>
@@ -509,8 +502,8 @@
 			
 				<!-- Sec Title -->
 				<div class="sec-title">
-					<div class="sec-title_title">How its work</div>
-					<h2 class="sec-title_heading">iRiseUp.Ai <span>typically operate</span> in <br> a three steps</h2>
+					<div class="sec-title_title">How It Works</div>
+					<h2 class="sec-title_heading">How <span>iRiseUp.AI</span> Operates in <br> Three Simple Steps</h2>
 				</div>
 				<div class="steps-one_button">
 					<a href="{% url 'about' %}" class="template-btn btn-style-two">
@@ -526,12 +519,12 @@
 						<!-- Step Block One -->
 						<div class="step-block_one">
 							<div class="step-block_one-inner">
-								<div class="step-block_one-steps">step 01</div>
-								<h5 class="step-block_one-title">Algorithm processing</h5>
-								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
+								<div class="step-block_one-steps">Step 01</div>
+								<h5 class="step-block_one-title">Data Collection & Input</h5>
+								<div class="step-block_one-text">We start by gathering relevant data and inputs from your business, ensuring we have all the necessary information to tailor our AI solutions to your specific needs.</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="{% static 'myapp/images/resource/step-1.png' %}" alt="" />
+										<img src="{% static 'myapp/images/resource/step-1.png' %}" alt="Data Collection" />
 									</div>
 								</div>
 							</div>
@@ -539,40 +532,39 @@
 					</div>
 					<!-- Column -->
 					<div class="column col-lg-6 col-md-12 col-sm-12">
-
 						<!-- Step Block One -->
 						<div class="step-block_one">
 							<div class="step-block_one-inner">
-								<div class="step-block_one-steps">step 02</div>
-								<h5 class="step-block_one-title">Input & data gathering</h5>
-								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
+								<div class="step-block_one-steps">Step 02</div>
+								<h5 class="step-block_one-title">AI Algorithm Processing</h5>
+								<div class="step-block_one-text">Our advanced AI algorithms process the collected data, identifying patterns and insights that will drive the creation of intelligent solutions for your business.</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="{% static 'myapp/images/resource/step-2.png' %}" alt="" />
+										<img src="{% static 'myapp/images/resource/step-2.png' %}" alt="AI Processing" />
 									</div>
 								</div>
 							</div>
 						</div>
-
+	
 						<!-- Step Block One -->
 						<div class="step-block_one">
 							<div class="step-block_one-inner">
-								<div class="step-block_one-steps">step 03</div>
-								<h5 class="step-block_one-title">Content generation & refinement</h5>
-								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
+								<div class="step-block_one-steps">Step 03</div>
+								<h5 class="step-block_one-title">Content Generation & Optimization</h5>
+								<div class="step-block_one-text">Based on the processed data, we generate high-quality content and refine it to ensure it aligns perfectly with your business goals and audience preferences.</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="{% static 'myapp/images/resource/step-3.png' %}" alt="" />
+										<img src="{% static 'myapp/images/resource/step-3.png' %}" alt="Content Generation" />
 									</div>
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
+	
 	<!-- End Steps One -->
 
 	<!-- Price One -->
@@ -773,34 +765,34 @@
 	<section class="faq-one">
 		<div class="faq-one_bg"></div>
 		<div class="faq-one_icon"></div>
-
+	
 		<div class="auto-container">
 			<div class="row clearfix">
-
+	
 				<!-- Tab Column -->
 				<div class="faq-one_title-column col-lg-5 col-md-12 col-sm-12">
 					<div class="faq-one_title-outer">
 						<!-- Sec Title -->
 						<div class="sec-title title-anim">
-							<div class="sec-title_title">faq</div>
-							<h2 class="sec-title_heading">Frequently asked <span>questions</span></h2>
-							<div class="sec-title_text">Lorem ipsum dolor sit amet consectetur adipiscing vitae mattis tellus. Nullam quis mattis ligula consectetur.</div>
+							<div class="sec-title_title">FAQ</div>
+							<h2 class="sec-title_heading">Frequently Asked <span>Questions</span></h2>
+							<div class="sec-title_text">Find answers to some of the most common questions about our AI solutions and how they can benefit your business.</div>
 						</div>
 						<div class="faq-one_button">
 							<a href="{% url 'contact' %}" class="template-btn btn-style-one">
 								<span class="btn-wrap">
-									<span class="text-one">Contact now</span>
-									<span class="text-two">Contact now</span>
+									<span class="text-one">Contact Now</span>
+									<span class="text-two">Contact Now</span>
 								</span>
 							</a>
 						</div>
 					</div>
 				</div>
-
-				<!-- Accordian Column -->
+	
+				<!-- Accordion Column -->
 				<div class="faq-one_accordian-column col-lg-7 col-md-12 col-sm-12">
 					<div class="faq-one_accordian-outer">
-
+	
 						<!-- Accordion Box -->
 						<ul class="accordion-box_two">
 									
@@ -809,7 +801,7 @@
 								<div class="acc-btn"><div class="icon-outer"><span class="icon icon-plus fa-solid fa-plus fa-fw"></span></div>How does your AI copywriting tool work?</div>
 								<div class="acc-content">
 									<div class="content">
-										<div class="text">Our AI copywriting tool uses sophisticated algorithms to understand context, tone, and language nuances. Users input specific details or prompts, and the AI generates high-quality content based on that input, refining.</div>
+										<div class="text">Our AI copywriting tool uses advanced algorithms to understand context, tone, and language nuances. Users input specific details or prompts, and the AI generates high-quality content based on that input, refining it to match your brand voice.</div>
 									</div>
 								</div>
 							</li>
@@ -819,49 +811,50 @@
 								<div class="acc-btn"><div class="icon-outer"><span class="icon icon-plus fa-solid fa-plus fa-fw"></span></div>What is AI copywriting?</div>
 								<div class="acc-content">
 									<div class="content">
-										<div class="text">Our AI copywriting tool uses sophisticated algorithms to understand context, tone, and language nuances. Users input specific details or prompts, and the AI generates high-quality content based on that input, refining.</div>
+										<div class="text">AI copywriting involves using artificial intelligence to create written content. It leverages machine learning algorithms to produce text that mimics human writing, making it ideal for generating marketing materials, social media posts, articles, and more.</div>
 									</div>
 								</div>
 							</li>
-
+	
 							<!-- Block -->
 							<li class="accordion block">
 								<div class="acc-btn"><div class="icon-outer"><span class="icon icon-plus fa-solid fa-plus fa-fw"></span></div>Can I trust the content generated by AI?</div>
 								<div class="acc-content">
 									<div class="content">
-										<div class="text">Our AI copywriting tool uses sophisticated algorithms to understand context, tone, and language nuances. Users input specific details or prompts, and the AI generates high-quality content based on that input, refining.</div>
+										<div class="text">Yes, our AI is designed to generate reliable, high-quality content. It learns from vast amounts of data to produce accurate and relevant text. However, we always recommend reviewing and refining the content to ensure it perfectly aligns with your specific needs and voice.</div>
 									</div>
 								</div>
 							</li>
-
+	
 							<!-- Block -->
 							<li class="accordion block">
 								<div class="acc-btn"><div class="icon-outer"><span class="icon icon-plus fa-solid fa-plus fa-fw"></span></div>What types of content can your AI generate?</div>
 								<div class="acc-content">
 									<div class="content">
-										<div class="text">Our AI copywriting tool uses sophisticated algorithms to understand context, tone, and language nuances. Users input specific details or prompts, and the AI generates high-quality content based on that input, refining.</div>
+										<div class="text">Our AI can generate a wide range of content types, including blog posts, social media updates, email newsletters, product descriptions, advertisements, and more. It's versatile enough to handle various content needs, ensuring consistency and quality across your marketing efforts.</div>
 									</div>
 								</div>
 							</li>
-
+	
 							<!-- Block -->
 							<li class="accordion block">
 								<div class="acc-btn"><div class="icon-outer"><span class="icon icon-plus fa-solid fa-plus fa-fw"></span></div>What languages does your AI support?</div>
 								<div class="acc-content">
 									<div class="content">
-										<div class="text">Our AI copywriting tool uses sophisticated algorithms to understand context, tone, and language nuances. Users input specific details or prompts, and the AI generates high-quality content based on that input, refining.</div>
+										<div class="text">Our AI supports multiple languages, allowing you to create content in the language that best suits your audience. This feature is ideal for businesses operating in diverse markets or looking to expand their reach globally.</div>
 									</div>
 								</div>
 							</li>
-
+	
 						</ul>
-
+	
 					</div>
 				</div>
-
+	
 			</div>
 		</div>
 	</section>
+	
 	<!-- End Faq One -->
 
 	<!-- Social One -->
@@ -984,7 +977,7 @@
 	<section class="news-one">
 		<div class="news-one_shadow"></div>
 		<div class="news-one_shadow-two"></div>
-
+	
 		<div class="auto-container">
 			<!-- Sec Title -->
 			<div class="sec-title title-anim centered">
@@ -994,7 +987,7 @@
 			<div class="three-item_carousel swiper-container">
 				<div class="swiper-wrapper">
 	
-					<!-- Slide -->
+					<!-- Slide 1 -->
 					<div class="swiper-slide">
 						<!-- News Block One -->
 						<div class="news-block_one">
@@ -1003,8 +996,8 @@
 									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-1.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
-									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Transforming industries and shaping the future</a></h5>
-									<div  class="news-block_one-text">Lorem ipsum dolor sit amet consectetur adipiscing vitae mattis tellus. Nullam quis mattis ligula consectetur.</div>
+									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Bye-Bye Busy Work: How AI Can Take Over Tedious Tasks So You Don’t Have To</a></h5>
+									<div class="news-block_one-text">Discover how AI can handle the boring stuff, leaving you free to focus on what you love about your business.</div>
 									<div class="news-block_one-button">
 										<a href="{% url 'blog' %}" class="template-btn btn-style-two">
 											<span class="btn-wrap">
@@ -1017,8 +1010,8 @@
 							</div>
 						</div>
 					</div>
-
-					<!-- Slide -->
+	
+					<!-- Slide 2 -->
 					<div class="swiper-slide">
 						<!-- News Block One -->
 						<div class="news-block_one">
@@ -1027,8 +1020,8 @@
 									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-2.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
-									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Exploring the cutting-edge of artificial intelligence</a></h5>
-									<div  class="news-block_one-text">Lorem ipsum dolor sit amet consectetur adipiscing vitae mattis tellus. Nullam quis mattis ligula consectetur.</div>
+									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Less Grind, More Growth: Using AI to Free Up Your Time</a></h5>
+									<div class="news-block_one-text">Learn how AI tools can save you hours every week, giving you more time to grow your startup and enjoy life.</div>
 									<div class="news-block_one-button">
 										<a href="{% url 'blog' %}" class="template-btn btn-style-two">
 											<span class="btn-wrap">
@@ -1041,8 +1034,8 @@
 							</div>
 						</div>
 					</div>
-
-					<!-- Slide -->
+	
+					<!-- Slide 3 -->
 					<div class="swiper-slide">
 						<!-- News Block One -->
 						<div class="news-block_one">
@@ -1051,8 +1044,8 @@
 									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-3.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
-									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Understanding the basics of artificial intelligence</a></h5>
-									<div  class="news-block_one-text">Lorem ipsum dolor sit amet consectetur adipiscing vitae mattis tellus. Nullam quis mattis ligula consectetur.</div>
+									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Start Smart: Integrate AI into Your New Business from Day One</a></h5>
+									<div class="news-block_one-text">Tips on setting up your startup with AI right from the beginning to stay ahead of the game.</div>
 									<div class="news-block_one-button">
 										<a href="{% url 'blog' %}" class="template-btn btn-style-two">
 											<span class="btn-wrap">
@@ -1065,13 +1058,14 @@
 							</div>
 						</div>
 					</div>
-
+	
 				</div>
 				<!-- If we need pagination -->
 				<div class="three-item_carousel-pagination"></div>
 			</div>
 		</div>
 	</section>
+	
 	<!-- End News One -->
 
 	{% include 'ctaone.html' %}

@@ -1,0 +1,282 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}News Details{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="page-wrapper">
+	
+	<!-- Cursor -->
+	<div class="cursor"></div>
+	<div class="cursor-follower"></div>
+	<!-- Cursor End -->
+ 	
+	<!-- Preloader -->
+	<div class="loader-wrap">
+		<div class="preloader">
+			<div class="preloader-close">x</div>
+			<div id="handle-preloader" class="handle-preloader">
+				<div class="animation-preloader">
+					<div class="txt-loading">
+						<span data-text-preloader="L" class="letters-loading">L</span>
+						<span data-text-preloader="O" class="letters-loading">O</span>
+						<span data-text-preloader="A" class="letters-loading">A</span>
+						<span data-text-preloader="D" class="letters-loading">D</span>
+						<span data-text-preloader="I" class="letters-loading">I</span>
+						<span data-text-preloader="N" class="letters-loading">N</span>
+						<span data-text-preloader="G" class="letters-loading">G</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Preloader End -->
+	
+	<!-- Main Header -->
+{% include 'header.html' %}
+	<!-- End Main Header -->
+	
+	<!-- Page Title -->
+    <section class="page-title">
+		<div class="page-title-icon"></div>
+			<div class="page-title-icon-two"></div>
+			<div class="page-title-shadow"></div>
+			<div class="page-title-shadow-two"></div>
+        <div class="auto-container">
+			<h2>News detail</h2>
+			<ul class="bread-crumb clearfix">
+				<li><a href="{% url 'index' %}"">Home</a></li>
+				<li>News detail</li>
+			</ul>
+        </div>
+    </section>
+    <!-- End Page Title -->
+
+	<!-- Sidebar Page Container -->
+	<div class="sidebar-page-container">
+		<div class="auto-container">
+			<div class="row clearfix">
+				
+				<!-- Content Side -->
+				<div class="content-side col-lg-8 col-md-12 col-sm-12">
+					<div class="blog-detail">
+						<div class="blog-detail_inner">
+							<div class="blog-detail_image">
+								<img src="{% static 'myapp/images/resource/news-19.jpg' %}" alt="" />
+							</div>
+							<div class="blog-detail_content">
+								<h3 class="blog-detail_heading">Less Grind, More Growth: Using AI to Free Up Your Time</h3>
+								<div class="blog-detail_author-outer d-flex align-items-center flex-wrap">
+									<div class="blog-detail-author d-flex align-items-center flex-wrap">
+										<div class="blog-detail-author-image">
+											<img src="{% static 'myapp/images/resource/author-6.png' %}" alt="" />
+										</div>
+										<i>By Ellena M.Rice</i>
+									</div>
+									<ul class="blog-detail-meta d-flex align-items-center flex-wrap">
+										<li><span class="icon fa-regular fa-calendar fa-fw"></span>20 Jan, 2024</li>
+										<li><span class="icon fa-regular fa-comment-dots fa-fw"></span>03 Comments</li>
+									</ul>
+								</div>
+								<p>Are you tired of the endless grind and ready to unlock more growth in your startup? If that sounds like music to your ears, then let’s dive into how AI, specifically iriseup.ai, can be your ticket to more free time and greater success. 🎉</p>
+								<h3>The Magic of AI</h3>
+								<p>Running a successful, profitable business doesn’t have to be an uphill battle. The truth is, you can do less and make more. With AI, you can automate the mundane, repetitive tasks that drain your energy and focus on what truly matters—growing your business and enjoying your life. And with iriseup.ai, this process becomes even more seamless and efficient.</p>
+								<h3>How AI Saves You Time</h3>
+								<ul class="blog-detail_list">
+									<li><i class="fa-solid fa-check fa-fw"></i>Automate Daily Operations: Think of iriseup.ai as your digital assistant, handling tasks like scheduling, reminders, and follow-ups. No more juggling calendars and to-do lists; iriseup.ai keeps you organized and efficient.</li>
+									<li><i class="fa-solid fa-check fa-fw"></i>Supercharge Your Marketing: AI tools like iriseup.ai can analyze customer data, optimize ad campaigns, and personalize email marketing. This means you can reach your audience more effectively while spending less time on manual marketing efforts.</li>
+									<li><i class="fa-solid fa-check fa-fw"></i>Enhance Customer Support: AI-powered chatbots from iriseup.ai can handle customer inquiries 24/7, providing instant responses and freeing you up from constant email checking and phone answering.</li>
+								</ul>
+								<h3>Reclaim Your Time</h3>
+								<p>Imagine having hours back in your week. What could you do with that extra time? Whether it’s brainstorming new ideas, connecting with clients, or simply taking a well-deserved break, iriseup.ai gives you the freedom to focus on high-impact activities.</p>
+								<h3>Grow Your Startup and Enjoy Life</h3>
+								<p>Your work is valuable, and so is your time. AI helps you grow and scale with ease and simplicity, so you can:</p>
+								<ul class="blog-detail_list">
+									<li><i class="fa-solid fa-check fa-fw"></i>Reduce the grind and focus on strategic growth.</li>
+									<li><i class="fa-solid fa-check fa-fw"></i>Spend more time on creative and visionary tasks.</li>
+									<li><i class="fa-solid fa-check fa-fw"></i>Enjoy a better work-life balance without sacrificing business success.</li>
+								</ul>
+								<p>In short, if going from where you are now (constantly grinding) to a more relaxed, yet highly productive business feels like a dream, you’re in the right place. iriseup.ai can be your secret weapon, handling the grind so you can focus on growth.</p>
+								<h3>Ready to Start Growing?</h3>
+								<p>Embrace iriseup.ai to save hours every week, giving you more time to grow your startup and enjoy life. Say goodbye to the constant hustle and hello to a more balanced, fulfilling entrepreneurial journey. 🚀</p>
+								<p>So, are you ready for less grind and more growth? Let iriseup.ai free up your time and watch your business soar!</p>
+								<!-- Post Share Options-->
+								<div class="post-share-options">
+									<div class="post-share-inner d-flex justify-content-between flex-wrap">
+										<div class="post-tags"><a href="#">AI</a> <a href="#">Productivity</a> <a href="#">iriseup</a></div>
+										<ul class="social-links">
+											<li><a href="#" class="fa-brands fa-facebook-f fa-fw"></a></li>
+											<li><a href="#" class="fa-brands fa-twitter fa-fw"></a></li>
+											<li><a href="#" class="fa-brands fa-google fa-fw"></a></li>
+											<li><a href="#" class="fa-brands fa-dribbble fa-fw"></a></li>
+										</ul>
+									</div>
+								</div>
+	
+								<!-- Author Box -->
+								<div class="blog-author_box">
+									<div class="blog-author-box_inner">
+										<div class="blog-author-box_content">
+											<div class="blog-author-box_image">
+												<img src="{% static 'myapp/images/resource/author-7.png' %}" alt="" />
+											</div>
+											<h5>Ellena M. Rice</h5>
+											<div class="blog-author_box-designation">UI/UX Instructor</div>
+											<div class="blog-author_box-text">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut massa mi. Aliquam in hendrerit Pellentesque sit amet sapien fringilla.</div>
+											<ul class="author-social_links">
+												<li><a href="#" class="fa-brands fa-facebook-f fa-fw"></a></li>
+												<li><a href="#" class="fa-brands fa-twitter fa-fw"></a></li>
+												<li><a href="#" class="fa-brands fa-google fa-fw"></a></li>
+												<li><a href="#" class="fa-brands fa-dribbble fa-fw"></a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+	
+								<!-- Comment Form -->
+								<div class="comment-form_outer">
+									<div class="group-title">
+										<h3>Leave a comment</h3>
+										<div class="form-text">Your email address will not be published. Required fields are marked *</div>
+									</div>
+									<!-- Comment Form -->
+									<div class="comment-form">
+										<form method="post" action="{% url 'blog' %}">
+											<div class="row clearfix">
+												
+												<div class="col-lg-6 col-md-6 col-sm-12 form-group">
+													<label>Name*</label>
+													<input type="text" name="username" >
+												</div>
+												
+												<div class="col-lg-6 col-md-6 col-sm-12 form-group">
+													<label>Email*</label>
+													<input type="text" name="username" >
+												</div>
+												
+												<div class="col-lg-12 col-md-12 col-sm-12 form-group">
+													<label>Type Comment here*</label>
+													<textarea class="" name="message"></textarea>
+												</div>
+												
+												<div class="col-lg-12 col-md-12 col-sm-12 form-group">
+													<!-- Button Box -->
+													<button type="submit" class="template-btn btn-style-one">
+														<span class="btn-wrap">
+															<span class="text-one">Submit now</span>
+															<span class="text-two">Submit now</span>
+														</span>
+													</button>
+												</div>
+												
+											</div>
+										</form>
+									</div>
+									<!-- End Default Form -->
+								</div>
+								<!--End Comment Form -->
+	
+							</div>
+						</div>
+					</div>
+				</div>
+	
+				<!-- Sidebar Side -->
+				<div class="sidebar-side col-lg-4 col-md-12 col-sm-12">
+					<aside class="sidebar">
+						<div class="sidebar-inner">
+	
+							<!-- Search Widget -->
+							<div class="sidebar-widget search-box">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Search here</h5>
+									<form method="post" action="{% url 'contact' %}">
+										<div class="form-group">
+											<input type="search" name="search-field" value="" placeholder="Search..." required>
+											<button type="submit"><span class="icon fa fa-search"></span></button>
+										</div>
+									</form>
+								</div>
+							</div>
+	
+							<!-- Post Widget -->
+							<div class="sidebar-widget post-widget">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Latest post</h5>
+	
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-1.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Redefining tomorrow adventures in ai and technology</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+	
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-2.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Beyond binary navigating the ai landscape</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+	
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-3.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Algorithmic horizons a glimpse into our ai world</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+	
+								</div>
+							</div>
+	
+							<!-- Service Widget -->
+							<div class="sidebar-widget category-widget">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Categories</h5>
+									<ul class="service-list">
+										<li><a href="#">TechLeadership <span>(03)</span></a></li>
+										<li><a href="#">TechTalks <span>(04)</span></a></li>
+										<li><a href="#">TechTrends <span>(02)</span></a></li>
+										<li><a href="#">Innovate <span>(05)</span></a></li>
+										<li><a href="#">MLTech <span>(02)</span></a></li>
+									</ul>
+								</div>
+							</div>
+	
+							<!-- Popular tags -->
+							<div class="sidebar-widget popular-tags">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Popular tags</h5>
+									<a href="#">DigitalAI</a>
+									<a href="#">TechInnovate</a>
+									<a href="#">FutureAI</a>
+									<a href="#">TechBlog</a>
+									<a href="#">CodingAI</a>
+								</div>
+							</div>
+	
+						</div>
+	
+					</aside>
+				</div>
+	
+			</div>
+		</div>
+	</div>
+	
+	<!-- End Sidebar Page Container -->
+	
+	<!-- CTA One -->
+	{% include 'ctaone.html' %}
+	<!-- End CTA One -->
+
+	<!-- Main Footer -->
+	{% include 'footer.html' %}
+	<!-- End Main Footer -->
+
+</div>
+<!-- End PageWrapper -->
+
+ 
+
+
+{% endblock %}

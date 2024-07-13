@@ -56,3 +56,35 @@ def team(request):
 
 def testimonial(request):
     return render(request, 'myapp/testimonial.html')
+
+
+def newsdetail1(request):
+    return render(request, 'myapp/news-detail1.html')
+
+def newsdetail2(request):
+    return render(request, 'myapp/news-detail2.html')
+
+def newsdetail3(request):
+    return render(request, 'myapp/news-detail3.html')
+
+def newsdetail4(request):
+    return render(request, 'myapp/news-detail4.html')
+
+def newsdetail5(request):
+    return render(request, 'myapp/news-detail5.html')
+
+def newsdetail6(request):
+    return render(request, 'myapp/news-detail6.html')
+
+def newsdetail7(request):
+    return render(request, 'myapp/news-detail7.html')
+
+def newsdetail8(request):
+    return render(request, 'myapp/news-detail8.html')
+
+
+
+
+
+
+

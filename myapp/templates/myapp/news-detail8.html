@@ -1,0 +1,269 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}News Details{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="page-wrapper">
+	
+	<!-- Cursor -->
+	<div class="cursor"></div>
+	<div class="cursor-follower"></div>
+	<!-- Cursor End -->
+ 	
+	<!-- Preloader -->
+	<div class="loader-wrap">
+		<div class="preloader">
+			<div class="preloader-close">x</div>
+			<div id="handle-preloader" class="handle-preloader">
+				<div class="animation-preloader">
+					<div class="txt-loading">
+						<span data-text-preloader="L" class="letters-loading">L</span>
+						<span data-text-preloader="O" class="letters-loading">O</span>
+						<span data-text-preloader="A" class="letters-loading">A</span>
+						<span data-text-preloader="D" class="letters-loading">D</span>
+						<span data-text-preloader="I" class="letters-loading">I</span>
+						<span data-text-preloader="N" class="letters-loading">N</span>
+						<span data-text-preloader="G" class="letters-loading">G</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Preloader End -->
+	
+	<!-- Main Header -->
+{% include 'header.html' %}
+	<!-- End Main Header -->
+	
+	<!-- Page Title -->
+    <section class="page-title">
+		<div class="page-title-icon"></div>
+			<div class="page-title-icon-two"></div>
+			<div class="page-title-shadow"></div>
+			<div class="page-title-shadow-two"></div>
+        <div class="auto-container">
+			<h2>News detail</h2>
+			<ul class="bread-crumb clearfix">
+				<li><a href="{% url 'index' %}"">Home</a></li>
+				<li>News detail</li>
+			</ul>
+        </div>
+    </section>
+    <!-- End Page Title -->
+
+	<!-- Sidebar Page Container -->
+<div class="sidebar-page-container">
+    <div class="auto-container">
+        <div class="row clearfix">
+            
+            <!-- Content Side -->
+<div class="content-side col-lg-8 col-md-12 col-sm-12">
+    <div class="blog-detail">
+        <div class="blog-detail_inner">
+            <div class="blog-detail_image">
+                <img src="{% static 'myapp/images/resource/news-19.jpg' %}" alt="" />
+            </div>
+            <div class="blog-detail_content">
+                <h3 class="blog-detail_heading">Marketing Magic: How AI Can Make Your Campaigns Smarter</h3>
+                <div class="blog-detail_author-outer d-flex align-items-center flex-wrap">
+                    <div class="blog-detail-author d-flex align-items-center flex-wrap">
+                        <div class="blog-detail-author-image">
+                            <img src="{% static 'myapp/images/resource/author-6.png' %}" alt="" />
+                        </div>
+                        <i>By Ellena M.Rice</i>
+                    </div>
+                    <ul class="blog-detail-meta d-flex align-items-center flex-wrap">
+                        <li><span class="icon fa-regular fa-calendar fa-fw"></span>20 Jan, 2024</li>
+                        <li><span class="icon fa-regular fa-comment-dots fa-fw"></span>03 Comments</li>
+                    </ul>
+                </div>
+                <p>Ever feel like your marketing efforts are falling short? It’s time to sprinkle some AI magic on your campaigns and watch them transform into high-performing powerhouses. Here’s how AI can help you reach the right people and make your marketing more effective. ✨</p>
+                <h3>The Magic of AI in Marketing</h3>
+                <p>AI isn’t just a buzzword—it’s a game-changer that can revolutionize your marketing strategies. By leveraging AI, you can optimize your campaigns, personalize your messaging, and make data-driven decisions that drive results.</p>
+                <h3>1. Target the Right Audience</h3>
+                <p>One of the biggest challenges in marketing is reaching the right people. AI can analyze vast amounts of data to identify your ideal customers. Tools like iriseup.ai use machine learning algorithms to segment your audience based on behavior, preferences, and demographics. This ensures your campaigns are seen by the people most likely to convert.</p>
+                <h3>2. Personalize Your Messaging</h3>
+                <p>Gone are the days of one-size-fits-all marketing. AI allows you to personalize your content and offers for each customer. By analyzing customer data, AI can create tailored messages that resonate with individual preferences. Whether it’s personalized email campaigns or targeted ads, AI helps you deliver the right message at the right time.</p>
+                <h3>3. Optimize Campaign Performance</h3>
+                <p>AI takes the guesswork out of marketing. With predictive analytics, AI can forecast the success of your campaigns and suggest adjustments for better results. It can identify which channels, content, and strategies are most effective, allowing you to allocate your budget more wisely. Tools like iriseup.ai can continuously monitor and optimize your campaigns in real-time, ensuring maximum ROI.</p>
+                <h3>4. Enhance Customer Experience</h3>
+                <p>AI can significantly improve the customer journey by providing personalized recommendations and support. Chatbots, powered by AI, can engage with customers, answer queries, and guide them through the purchasing process. This not only enhances customer satisfaction but also increases the likelihood of conversions.</p>
+                <h3>5. Automate Routine Tasks</h3>
+                <p>Save time and focus on strategic initiatives by automating routine marketing tasks. AI can handle email marketing, social media scheduling, and even content creation. Automation tools like iriseup.ai streamline your workflows, allowing you to manage multiple campaigns effortlessly.</p>
+                <h3>Real-World Success</h3>
+                <p>Businesses of all sizes are already experiencing the benefits of AI-powered marketing. For instance, an e-commerce store used AI to analyze customer purchase history and send personalized product recommendations. The result? A significant increase in sales and customer retention.</p>
+                <h3>Why AI Matters for Your Marketing</h3>
+                <p>Integrating AI into your marketing strategy offers several key advantages:</p>
+                <ul class="blog-detail_list">
+                    <li><i class="fa-solid fa-check fa-fw"></i>Increased Efficiency: Automate tasks and focus on high-impact activities.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Better Targeting: Reach the right audience with precision.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Enhanced Personalization: Deliver tailored messages that resonate.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Data-Driven Decisions: Make informed choices based on real-time insights.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Improved ROI: Optimize campaigns for maximum return on investment.</li>
+                </ul>
+                <h3>Ready to Work Some Marketing Magic?</h3>
+                <p>Your marketing efforts deserve the power of AI. By leveraging tools like iriseup.ai, you can transform your campaigns into smart, efficient, and highly effective strategies that drive growth.</p>
+                <h3>Unlock the Magic of AI</h3>
+                <p>Let AI take your marketing to the next level. With the right tools and strategies, you can reach the right people, deliver personalized experiences, and achieve better results than ever before.</p>
+                <p>So, are you ready to add some AI magic to your marketing campaigns? Embrace the power of AI and watch your marketing efforts soar! 🚀</p>
+                <!-- Post Share Options-->
+                <div class="post-share-options">
+                    <div class="post-share-inner d-flex justify-content-between flex-wrap">
+                        <div class="post-tags"><a href="#">AI</a> <a href="#">Marketing</a> <a href="#">iriseup</a></div>
+                        <ul class="social-links">
+                            <li><a href="#" class="fa-brands fa-facebook-f fa-fw"></a></li>
+                            <li><a href="#" class="fa-brands fa-twitter fa-fw"></a></li>
+                            <li><a href="#" class="fa-brands fa-google fa-fw"></a></li>
+                            <li><a href="#" class="fa-brands fa-dribbble fa-fw"></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+
+								<!-- Comment Form -->
+								<div class="comment-form_outer">
+									<div class="group-title">
+										<h3>Leave a comment</h3>
+										<div class="form-text">Your email address will not be published. Required fields are marked *</div>
+									</div>
+									<!-- Comment Form -->
+									<div class="comment-form">
+										<form method="post" action="{% url 'blog' %}">
+											<div class="row clearfix">
+												
+												<div class="col-lg-6 col-md-6 col-sm-12 form-group">
+													<label>Name*</label>
+													<input type="text" name="username" >
+												</div>
+												
+												<div class="col-lg-6 col-md-6 col-sm-12 form-group">
+													<label>Email*</label>
+													<input type="text" name="username" >
+												</div>
+												
+												<div class="col-lg-12 col-md-12 col-sm-12 form-group">
+													<label>Type Comment here*</label>
+													<textarea class="" name="message"></textarea>
+												</div>
+												
+												<div class="col-lg-12 col-md-12 col-sm-12 form-group">
+													<!-- Button Box -->
+													<button type="submit" class="template-btn btn-style-one">
+														<span class="btn-wrap">
+															<span class="text-one">Submit now</span>
+															<span class="text-two">Submit now</span>
+														</span>
+													</button>
+												</div>
+												
+											</div>
+										</form>
+									</div>
+									<!-- End Default Form -->
+								</div>
+								<!--End Comment Form -->
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Sidebar Side -->
+                <div class="sidebar-side col-lg-4 col-md-12 col-sm-12">
+                	<aside class="sidebar">
+						<div class="sidebar-inner">
+
+							<!-- Search Widget -->
+							<div class="sidebar-widget search-box">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Search here</h5>
+									<form method="post" action="{% url 'contact' %}">
+										<div class="form-group">
+											<input type="search" name="search-field" value="" placeholder="Search..." required>
+											<button type="submit"><span class="icon fa fa-search"></span></button>
+										</div>
+									</form>
+								</div>
+							</div>
+
+							<!-- Post Widget -->
+							<div class="sidebar-widget post-widget">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Latest post</h5>
+
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-1.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Redefining tomorrow adventures in ai and technology</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-2.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Beyond binary navigating the ai landscape</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-3.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Algorithmic horizons a glimpse into our ai world</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+
+								</div>
+							</div>
+
+							<!-- Service Widget -->
+							<div class="sidebar-widget category-widget">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Categories</h5>
+									<ul class="service-list">
+										<li><a href="#">TechLeadership <span>(03)</span></a></li>
+										<li><a href="#">TechTalks <span>(04)</span></a></li>
+										<li><a href="#">TechTrends <span>(02)</span></a></li>
+										<li><a href="#">Innovate <span>(05)</span></a></li>
+										<li><a href="#">MLTech <span>(02)</span></a></li>
+									</ul>
+								</div>
+							</div>
+
+							<!-- Popular tags -->
+							<div class="sidebar-widget popular-tags">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Popular tags</h5>
+									<a href="#">DigitalAI</a>
+									<a href="#">TechInnovate</a>
+									<a href="#">FutureAI</a>
+									<a href="#">TechBlog</a>
+									<a href="#">CodingAI</a>
+								</div>
+							</div>
+
+						</div>
+
+					</aside>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- End Sidebar Page Container -->
+	
+	<!-- CTA One -->
+	{% include 'ctaone.html' %}
+	<!-- End CTA One -->
+
+	<!-- Main Footer -->
+	{% include 'footer.html' %}
+	<!-- End Main Footer -->
+
+</div>
+<!-- End PageWrapper -->
+
+ 
+
+
+{% endblock %}

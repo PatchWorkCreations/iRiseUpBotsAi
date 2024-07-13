@@ -22,4 +22,12 @@ urlpatterns = [
     path('team-detail/', views.teamdetail, name='teamdetail'),
     path('team/', views.team, name='team'),
     path('testimonial/', views.testimonial, name='testimonial'),
+    path('news-detail1/', views.newsdetail1, name='newsdetail1'),
+    path('news-detail2/', views.newsdetail2, name='newsdetail2'),
+    path('news-detail3/', views.newsdetail3, name='newsdetail3'),
+    path('news-detail4/', views.newsdetail4, name='newsdetail4'),
+    path('news-detail5/', views.newsdetail5, name='newsdetail5'),
+    path('news-detail6/', views.newsdetail6, name='newsdetail6'),
+    path('news-detail7/', views.newsdetail7, name='newsdetail7'),
+    path('news-detail8/', views.newsdetail8, name='newsdetail8'),
 ]

@@ -1,0 +1,270 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}News Details{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="page-wrapper">
+	
+	<!-- Cursor -->
+	<div class="cursor"></div>
+	<div class="cursor-follower"></div>
+	<!-- Cursor End -->
+ 	
+	<!-- Preloader -->
+	<div class="loader-wrap">
+		<div class="preloader">
+			<div class="preloader-close">x</div>
+			<div id="handle-preloader" class="handle-preloader">
+				<div class="animation-preloader">
+					<div class="txt-loading">
+						<span data-text-preloader="L" class="letters-loading">L</span>
+						<span data-text-preloader="O" class="letters-loading">O</span>
+						<span data-text-preloader="A" class="letters-loading">A</span>
+						<span data-text-preloader="D" class="letters-loading">D</span>
+						<span data-text-preloader="I" class="letters-loading">I</span>
+						<span data-text-preloader="N" class="letters-loading">N</span>
+						<span data-text-preloader="G" class="letters-loading">G</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Preloader End -->
+	
+	<!-- Main Header -->
+{% include 'header.html' %}
+	<!-- End Main Header -->
+	
+	<!-- Page Title -->
+    <section class="page-title">
+		<div class="page-title-icon"></div>
+			<div class="page-title-icon-two"></div>
+			<div class="page-title-shadow"></div>
+			<div class="page-title-shadow-two"></div>
+        <div class="auto-container">
+			<h2>News detail</h2>
+			<ul class="bread-crumb clearfix">
+				<li><a href="{% url 'index' %}"">Home</a></li>
+				<li>News detail</li>
+			</ul>
+        </div>
+    </section>
+    <!-- End Page Title -->
+
+	<!-- Sidebar Page Container -->
+<div class="sidebar-page-container">
+    <div class="auto-container">
+        <div class="row clearfix">
+            
+            <!-- Content Side -->
+<div class="content-side col-lg-8 col-md-12 col-sm-12">
+    <div class="blog-detail">
+        <div class="blog-detail_inner">
+            <div class="blog-detail_image">
+                <img src="{% static 'myapp/images/resource/news-19.jpg' %}" alt="" />
+            </div>
+            <div class="blog-detail_content">
+                <h3 class="blog-detail_heading">Customer Service Superpowers: AI Bots That Work Around the Clock</h3>
+                <div class="blog-detail_author-outer d-flex align-items-center flex-wrap">
+                    <div class="blog-detail-author d-flex align-items-center flex-wrap">
+                        <div class="blog-detail-author-image">
+                            <img src="{% static 'myapp/images/resource/author-6.png' %}" alt="" />
+                        </div>
+                        <i>By Ellena M.Rice</i>
+                    </div>
+                    <ul class="blog-detail-meta d-flex align-items-center flex-wrap">
+                        <li><span class="icon fa-regular fa-calendar fa-fw"></span>20 Jan, 2024</li>
+                        <li><span class="icon fa-regular fa-comment-dots fa-fw"></span>03 Comments</li>
+                    </ul>
+                </div>
+                <p>Ever wish you could provide stellar customer service without burning out your team? Meet your new best friend: AI chatbots. These digital dynamos can keep your customers happy 24/7, ensuring they get the support they need whenever they need it. Let’s explore how AI bots can give your business customer service superpowers. 🌟</p>
+                <h3>Why AI Chatbots?</h3>
+                <p>Customer expectations are higher than ever. They want fast, efficient, and accurate responses, no matter the time of day. AI chatbots, like those offered by iriseup.ai, are designed to meet these demands head-on. They can handle inquiries, provide information, and even assist with transactions—all without requiring a break.</p>
+                <h3>How AI Chatbots Work Their Magic</h3>
+                <ul class="blog-detail_list">
+                    <li><i class="fa-solid fa-check fa-fw"></i>Instant Responses: AI chatbots can respond to customer inquiries in real-time, eliminating wait times and enhancing satisfaction. Whether it’s a simple FAQ or a complex query, chatbots are always ready to assist.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>24/7 Availability: Unlike human agents, chatbots don’t need sleep. They’re available around the clock, ensuring your customers can get help whenever they need it, even during holidays or off-hours.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Handling High Volume: During peak times, chatbots can manage multiple conversations simultaneously, ensuring no customer is left waiting. This scalability is a game-changer for businesses of all sizes.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Personalized Interactions: Modern AI chatbots use customer data to provide personalized responses. They can remember past interactions and tailor their replies to meet individual needs, making customers feel valued and understood.</li>
+                </ul>
+                <h3>Benefits for Your Business</h3>
+                <p>Integrating AI chatbots into your customer service strategy offers several key advantages:</p>
+                <ul class="blog-detail_list">
+                    <li><i class="fa-solid fa-check fa-fw"></i>Reduced Workload: Free up your team to handle more complex and high-value tasks while the chatbot takes care of routine inquiries.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Consistency: Chatbots provide consistent and accurate information, reducing the risk of human error.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Cost-Effective: Maintaining a chatbot is generally more cost-effective than hiring additional staff, especially for 24/7 coverage.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Enhanced Customer Satisfaction: Quick and efficient service leads to happier customers and improved loyalty.</li>
+                </ul>
+                <h3>Real-World Success</h3>
+                <p>Businesses across various industries are already reaping the benefits of AI chatbots. For example, a local e-commerce store implemented a chatbot from iriseup.ai to handle customer queries about order status, product availability, and return policies. The result? A significant reduction in support tickets and a noticeable increase in customer satisfaction.</p>
+                <h3>Ready to Empower Your Customer Service?</h3>
+                <p>Your customers deserve the best, and with AI chatbots, you can deliver exceptional service around the clock. By integrating chatbots like those from iriseup.ai, you can ensure your customers always have access to the help they need, when they need it.</p>
+                <h3>Unlock Your Customer Service Superpowers</h3>
+                <p>Let AI chatbots take your customer service to the next level. Provide instant, personalized, and 24/7 support without exhausting your team. Embrace the power of AI and watch your customer satisfaction soar.</p>
+                <p>So, are you ready to give your business the customer service superpowers it deserves? Let AI chatbots work their magic and keep your customers happy, day or night! 🚀</p>
+                <!-- Post Share Options-->
+                <div class="post-share-options">
+                    <div class="post-share-inner d-flex justify-content-between flex-wrap">
+                        <div class="post-tags"><a href="#">AI</a> <a href="#">CustomerService</a> <a href="#">iriseup</a></div>
+                        <ul class="social-links">
+                            <li><a href="#" class="fa-brands fa-facebook-f fa-fw"></a></li>
+                            <li><a href="#" class="fa-brands fa-twitter fa-fw"></a></li>
+                            <li><a href="#" class="fa-brands fa-google fa-fw"></a></li>
+                            <li><a href="#" class="fa-brands fa-dribbble fa-fw"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+								<!-- Comment Form -->
+								<div class="comment-form_outer">
+									<div class="group-title">
+										<h3>Leave a comment</h3>
+										<div class="form-text">Your email address will not be published. Required fields are marked *</div>
+									</div>
+									<!-- Comment Form -->
+									<div class="comment-form">
+										<form method="post" action="{% url 'blog' %}">
+											<div class="row clearfix">
+												
+												<div class="col-lg-6 col-md-6 col-sm-12 form-group">
+													<label>Name*</label>
+													<input type="text" name="username" >
+												</div>
+												
+												<div class="col-lg-6 col-md-6 col-sm-12 form-group">
+													<label>Email*</label>
+													<input type="text" name="username" >
+												</div>
+												
+												<div class="col-lg-12 col-md-12 col-sm-12 form-group">
+													<label>Type Comment here*</label>
+													<textarea class="" name="message"></textarea>
+												</div>
+												
+												<div class="col-lg-12 col-md-12 col-sm-12 form-group">
+													<!-- Button Box -->
+													<button type="submit" class="template-btn btn-style-one">
+														<span class="btn-wrap">
+															<span class="text-one">Submit now</span>
+															<span class="text-two">Submit now</span>
+														</span>
+													</button>
+												</div>
+												
+											</div>
+										</form>
+									</div>
+									<!-- End Default Form -->
+								</div>
+								<!--End Comment Form -->
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Sidebar Side -->
+                <div class="sidebar-side col-lg-4 col-md-12 col-sm-12">
+                	<aside class="sidebar">
+						<div class="sidebar-inner">
+
+							<!-- Search Widget -->
+							<div class="sidebar-widget search-box">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Search here</h5>
+									<form method="post" action="{% url 'contact' %}">
+										<div class="form-group">
+											<input type="search" name="search-field" value="" placeholder="Search..." required>
+											<button type="submit"><span class="icon fa fa-search"></span></button>
+										</div>
+									</form>
+								</div>
+							</div>
+
+							<!-- Post Widget -->
+							<div class="sidebar-widget post-widget">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Latest post</h5>
+
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-1.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Redefining tomorrow adventures in ai and technology</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-2.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Beyond binary navigating the ai landscape</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-3.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Algorithmic horizons a glimpse into our ai world</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+
+								</div>
+							</div>
+
+							<!-- Service Widget -->
+							<div class="sidebar-widget category-widget">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Categories</h5>
+									<ul class="service-list">
+										<li><a href="#">TechLeadership <span>(03)</span></a></li>
+										<li><a href="#">TechTalks <span>(04)</span></a></li>
+										<li><a href="#">TechTrends <span>(02)</span></a></li>
+										<li><a href="#">Innovate <span>(05)</span></a></li>
+										<li><a href="#">MLTech <span>(02)</span></a></li>
+									</ul>
+								</div>
+							</div>
+
+							<!-- Popular tags -->
+							<div class="sidebar-widget popular-tags">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Popular tags</h5>
+									<a href="#">DigitalAI</a>
+									<a href="#">TechInnovate</a>
+									<a href="#">FutureAI</a>
+									<a href="#">TechBlog</a>
+									<a href="#">CodingAI</a>
+								</div>
+							</div>
+
+						</div>
+
+					</aside>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- End Sidebar Page Container -->
+	
+	<!-- CTA One -->
+	{% include 'ctaone.html' %}
+	<!-- End CTA One -->
+
+	<!-- Main Footer -->
+	{% include 'footer.html' %}
+	<!-- End Main Footer -->
+
+</div>
+<!-- End PageWrapper -->
+
+ 
+
+
+{% endblock %}

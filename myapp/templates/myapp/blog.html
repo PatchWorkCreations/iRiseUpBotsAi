@@ -1,10 +1,21 @@
-
 {% extends "myapp/base.html" %}
 
 {% block title %}Our Blog{% endblock %}
 
 {% load static %}
 {% block content %}
+
+<style>
+	.news-block_one-content p {
+    color: aliceblue !important;
+}
+
+.news-block_one-content a {
+    color: aliceblue !important; 
+}
+
+</style>
+
 
 <body>
 
@@ -69,8 +80,9 @@
 						</div>
 						<div class="news-block_one-content">
 							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Beyond code the human element in ai development</a></h5>
-							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Bye-Bye Busy Work: How AI Can Take Over Tedious Tasks So You Don’t Have To</a></h5>
+							<p>AI can swoop in like a superhero and save the day by automating your emails, scheduling social media posts, and managing customer service inquiries.</p>
+							<a class="news-block_one-more" href="{% url 'newsdetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
@@ -79,12 +91,13 @@
 				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="news-block_one-inner">
 						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-8.jpg' %}" alt="" /></a>
+							<a href="{% url 'newsdetail1' %}"><img src="{% static 'myapp/images/resource/news-8.jpg' %}" alt="" /></a>
 						</div>
 						<div class="news-block_one-content">
 							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Exploring the cutting-edge of artificial intelligence</a></h5>
-							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail1' %}">Less Grind, More Growth: Using AI to Free Up Your Time</a></h5>
+							<p>AI tools like iriseup.ai can automate daily operations, supercharge your marketing, and enhance customer support to help you grow your startup and enjoy life.</p>
+							<a class="news-block_one-more" href="{% url 'newsdetail1' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
@@ -93,12 +106,13 @@
 				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="news-block_one-inner">
 						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-9.jpg' %}" alt="" /></a>
+							<a href="{% url 'newsdetail2' %}"><img src="{% static 'myapp/images/resource/news-9.jpg' %}" alt="" /></a>
 						</div>
 						<div class="news-block_one-content">
 							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Understanding the basics of artificial intelligence</a></h5>
-							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail2' %}">Start Smart: Integrate AI into Your New Business from Day One</a></h5>
+							<p>Integrating AI from day one gives you a competitive edge, helping you automate administrative tasks, enhance customer support, and optimize marketing efforts.</p>
+							<a class="news-block_one-more" href="{% url 'newsdetail2' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
@@ -107,12 +121,13 @@
 				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="news-block_one-inner">
 						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-10.jpg' %}" alt="" /></a>
+							<a href="{% url 'newsdetail3' %}"><img src="{% static 'myapp/images/resource/news-10.jpg' %}" alt="" /></a>
 						</div>
 						<div class="news-block_one-content">
 							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Transforming industries and shaping the future</a></h5>
-							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail3' %}">Real-Life AI Success Stories: How Small Businesses Are Winning Big</a></h5>
+							<p>Discover how small businesses are leveraging AI to achieve incredible results, from boosting sales to improving customer satisfaction.</p>
+							<a class="news-block_one-more" href="{% url 'newsdetail3' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
@@ -121,12 +136,13 @@
 				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="news-block_one-inner">
 						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-11.jpg' %}" alt="" /></a>
+							<a href="{% url 'newsdetail4' %}"><img src="{% static 'myapp/images/resource/news-11.jpg' %}" alt="" /></a>
 						</div>
 						<div class="news-block_one-content">
 							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Diving deep exploring the core algorithms of our ai</a></h5>
-							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail4' %}">Customer Service Superpowers: AI Bots That Work Around the Clock</a></h5>
+							<p>AI chatbots can provide stellar customer service 24/7, handling inquiries and assisting with transactions without requiring a break.</p>
+							<a class="news-block_one-more" href="{% url 'newsdetail4' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
@@ -135,12 +151,13 @@
 				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="news-block_one-inner">
 						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-12.jpg' %}" alt="" /></a>
+							<a href="{% url 'newsdetail6' %}"><img src="{% static 'myapp/images/resource/news-12.jpg' %}" alt="" /></a>
 						</div>
 						<div class="news-block_one-content">
 							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">The art and science of building intelligent machines</a></h5>
-							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail6' %}">Turn Data into Gold: How AI Helps You Make Smarter Business Decisions</a></h5>
+							<p>AI can transform mountains of raw data into actionable insights, helping you make smarter business decisions and drive growth.</p>
+							<a class="news-block_one-more" href="{% url 'newsdetail6' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
@@ -149,12 +166,13 @@
 				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="news-block_one-inner">
 						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-13.jpg' %}" alt="" /></a>
+							<a href="{% url 'newsdetail7' %}"><img src="{% static 'myapp/images/resource/news-13.jpg' %}" alt="" /></a>
 						</div>
 						<div class="news-block_one-content">
 							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Navigating the ai front challenges and triumphs</a></h5>
-							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail7' %}">The Ultimate AI Toolbox: Must-Have Tools for Every Entrepreneur</a></h5>
+							<p>Discover the coolest AI tools that can help you crush it in business, from customer engagement to financial management.</p>
+							<a class="news-block_one-more" href="{% url 'newsdetail7' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
@@ -163,26 +181,13 @@
 				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="news-block_one-inner">
 						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-14.jpg' %}" alt="" /></a>
+							<a href="{% url 'newsdetail8' %}"><img src="{% static 'myapp/images/resource/news-14.jpg' %}" alt="" /></a>
 						</div>
 						<div class="news-block_one-content">
 							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Innovation unleashed: behind the scenes our ai breakthroughs</a></h5>
-							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
-						</div>
-					</div>
-				</div>
-
-				<!-- News Block One -->
-				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
-					<div class="news-block_one-inner">
-						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-15.jpg' %}" alt="" /></a>
-						</div>
-						<div class="news-block_one-content">
-							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Decoding the future: ai's impact on the industries</a></h5>
-							<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+							<h5 class="news-block_one-title"><a href="{% url 'newsdetail8' %}">Marketing Magic: How AI Can Make Your Campaigns Smarter</a></h5>
+							<p>AI can optimize your marketing campaigns, personalize messaging, and make data-driven decisions to reach the right audience effectively.</p>
+							<a class="news-block_one-more" href="{% url 'newsdetail8' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
@@ -209,8 +214,5 @@
 	<!-- Main Footer -->
 	{% include 'footer.html' %}
 <!-- End PageWrapper -->
-
- 
-
 
 {% endblock %}

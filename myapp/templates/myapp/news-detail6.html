@@ -1,0 +1,270 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}News Details{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="page-wrapper">
+	
+	<!-- Cursor -->
+	<div class="cursor"></div>
+	<div class="cursor-follower"></div>
+	<!-- Cursor End -->
+ 	
+	<!-- Preloader -->
+	<div class="loader-wrap">
+		<div class="preloader">
+			<div class="preloader-close">x</div>
+			<div id="handle-preloader" class="handle-preloader">
+				<div class="animation-preloader">
+					<div class="txt-loading">
+						<span data-text-preloader="L" class="letters-loading">L</span>
+						<span data-text-preloader="O" class="letters-loading">O</span>
+						<span data-text-preloader="A" class="letters-loading">A</span>
+						<span data-text-preloader="D" class="letters-loading">D</span>
+						<span data-text-preloader="I" class="letters-loading">I</span>
+						<span data-text-preloader="N" class="letters-loading">N</span>
+						<span data-text-preloader="G" class="letters-loading">G</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Preloader End -->
+	
+	<!-- Main Header -->
+{% include 'header.html' %}
+	<!-- End Main Header -->
+	
+	<!-- Page Title -->
+    <section class="page-title">
+		<div class="page-title-icon"></div>
+			<div class="page-title-icon-two"></div>
+			<div class="page-title-shadow"></div>
+			<div class="page-title-shadow-two"></div>
+        <div class="auto-container">
+			<h2>News detail</h2>
+			<ul class="bread-crumb clearfix">
+				<li><a href="{% url 'index' %}"">Home</a></li>
+				<li>News detail</li>
+			</ul>
+        </div>
+    </section>
+    <!-- End Page Title -->
+
+	<!-- Sidebar Page Container -->
+<div class="sidebar-page-container">
+    <div class="auto-container">
+        <div class="row clearfix">
+            
+            <!-- Content Side -->
+<div class="content-side col-lg-8 col-md-12 col-sm-12">
+    <div class="blog-detail">
+        <div class="blog-detail_inner">
+            <div class="blog-detail_image">
+                <img src="{% static 'myapp/images/resource/news-19.jpg' %}" alt="" />
+            </div>
+            <div class="blog-detail_content">
+                <h3 class="blog-detail_heading">Turn Data into Gold: How AI Helps You Make Smarter Business Decisions</h3>
+                <div class="blog-detail_author-outer d-flex align-items-center flex-wrap">
+                    <div class="blog-detail-author d-flex align-items-center flex-wrap">
+                        <div class="blog-detail-author-image">
+                            <img src="{% static 'myapp/images/resource/author-6.png' %}" alt="" />
+                        </div>
+                        <i>By Ellena M.Rice</i>
+                    </div>
+                    <ul class="blog-detail-meta d-flex align-items-center flex-wrap">
+                        <li><span class="icon fa-regular fa-calendar fa-fw"></span>20 Jan, 2024</li>
+                        <li><span class="icon fa-regular fa-comment-dots fa-fw"></span>03 Comments</li>
+                    </ul>
+                </div>
+                <p>In the age of information, data is the new gold. But how do you transform mountains of raw data into actionable insights that drive your business forward? The answer lies in AI. Let’s dive into how AI can turn your data into gold and help you make smarter business decisions. 🌟</p>
+                <h3>The Power of Data</h3>
+                <p>Every interaction, every transaction, and every customer feedback generates data. This data holds invaluable insights about your business, your customers, and your market. However, manually sifting through this data is like finding a needle in a haystack. That’s where AI comes in.</p>
+                <h3>How AI Turns Data into Gold</h3>
+                <ul class="blog-detail_list">
+                    <li><i class="fa-solid fa-check fa-fw"></i>Data Collection and Organization: AI tools can automatically gather and organize data from various sources, such as customer interactions, sales transactions, and social media activity. This ensures that you have a comprehensive and structured dataset at your fingertips.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Pattern Recognition: AI algorithms excel at identifying patterns and trends in large datasets. Whether it’s spotting a dip in sales or identifying the most popular products, AI can highlight critical insights that might go unnoticed.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Predictive Analytics: AI can analyze historical data to predict future trends. For example, by examining past sales data, AI can forecast future demand, helping you make informed decisions about inventory and marketing strategies.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Customer Insights: AI can analyze customer behavior and preferences, providing you with deep insights into what drives your customers. This allows you to tailor your products, services, and marketing efforts to better meet their needs.</li>
+                </ul>
+                <h3>Making Smarter Business Decisions</h3>
+                <p>Integrating AI into your decision-making process offers several key benefits:</p>
+                <ul class="blog-detail_list">
+                    <li><i class="fa-solid fa-check fa-fw"></i>Informed Strategy: With AI-driven insights, you can make data-backed decisions that align with your business goals and market trends.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Efficiency: AI can process and analyze data faster and more accurately than humans, saving you time and reducing the risk of errors.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Competitive Edge: By leveraging AI to gain deeper insights, you can stay ahead of the competition and respond to market changes more swiftly.</li>
+                    <li><i class="fa-solid fa-check fa-fw"></i>Personalization: AI enables you to offer personalized experiences to your customers, enhancing satisfaction and loyalty.</li>
+                </ul>
+                <h3>Real-World Success</h3>
+                <p>Businesses across various industries are already using AI to turn data into gold. For instance, a retail company used AI from iriseup.ai to analyze customer purchasing patterns. This analysis revealed peak shopping times, popular products, and customer preferences, allowing the company to optimize its inventory and marketing strategies. The result? Increased sales and improved customer satisfaction.</p>
+                <h3>Ready to Transform Your Data?</h3>
+                <p>Your business has a wealth of data waiting to be tapped into. With AI, you can turn this data into actionable insights that drive smarter decisions and fuel growth. Tools like iriseup.ai can help you collect, analyze, and interpret your data, turning it into a valuable asset.</p>
+                <h3>Unlock the Gold in Your Data</h3>
+                <p>Let AI help you harness the full potential of your data. By transforming raw data into meaningful insights, AI enables you to make informed decisions that propel your business forward.</p>
+                <p>So, are you ready to turn your data into gold and make smarter business decisions? Embrace the power of AI and watch your business thrive! 🚀</p>
+                <!-- Post Share Options-->
+                <div class="post-share-options">
+                    <div class="post-share-inner d-flex justify-content-between flex-wrap">
+                        <div class="post-tags"><a href="#">AI</a> <a href="#">BusinessIntelligence</a> <a href="#">iriseup</a></div>
+                        <ul class="social-links">
+                            <li><a href="#" class="fa-brands fa-facebook-f fa-fw"></a></li>
+                            <li><a href="#" class="fa-brands fa-twitter fa-fw"></a></li>
+                            <li><a href="#" class="fa-brands fa-google fa-fw"></a></li>
+                            <li><a href="#" class="fa-brands fa-dribbble fa-fw"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+								<!-- Comment Form -->
+								<div class="comment-form_outer">
+									<div class="group-title">
+										<h3>Leave a comment</h3>
+										<div class="form-text">Your email address will not be published. Required fields are marked *</div>
+									</div>
+									<!-- Comment Form -->
+									<div class="comment-form">
+										<form method="post" action="{% url 'blog' %}">
+											<div class="row clearfix">
+												
+												<div class="col-lg-6 col-md-6 col-sm-12 form-group">
+													<label>Name*</label>
+													<input type="text" name="username" >
+												</div>
+												
+												<div class="col-lg-6 col-md-6 col-sm-12 form-group">
+													<label>Email*</label>
+													<input type="text" name="username" >
+												</div>
+												
+												<div class="col-lg-12 col-md-12 col-sm-12 form-group">
+													<label>Type Comment here*</label>
+													<textarea class="" name="message"></textarea>
+												</div>
+												
+												<div class="col-lg-12 col-md-12 col-sm-12 form-group">
+													<!-- Button Box -->
+													<button type="submit" class="template-btn btn-style-one">
+														<span class="btn-wrap">
+															<span class="text-one">Submit now</span>
+															<span class="text-two">Submit now</span>
+														</span>
+													</button>
+												</div>
+												
+											</div>
+										</form>
+									</div>
+									<!-- End Default Form -->
+								</div>
+								<!--End Comment Form -->
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Sidebar Side -->
+                <div class="sidebar-side col-lg-4 col-md-12 col-sm-12">
+                	<aside class="sidebar">
+						<div class="sidebar-inner">
+
+							<!-- Search Widget -->
+							<div class="sidebar-widget search-box">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Search here</h5>
+									<form method="post" action="{% url 'contact' %}">
+										<div class="form-group">
+											<input type="search" name="search-field" value="" placeholder="Search..." required>
+											<button type="submit"><span class="icon fa fa-search"></span></button>
+										</div>
+									</form>
+								</div>
+							</div>
+
+							<!-- Post Widget -->
+							<div class="sidebar-widget post-widget">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Latest post</h5>
+
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-1.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Redefining tomorrow adventures in ai and technology</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-2.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Beyond binary navigating the ai landscape</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+
+									<div class="post">
+										<div class="thumb"><a href="blog-detail.html"><img src="{% static 'myapp/images/resource/post-thumb-3.png' %}" alt=""></a></div>
+										<h6><a href="blog-detail.html">Algorithmic horizons a glimpse into our ai world</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> Mar 18, 2028</div>
+									</div>
+
+								</div>
+							</div>
+
+							<!-- Service Widget -->
+							<div class="sidebar-widget category-widget">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Categories</h5>
+									<ul class="service-list">
+										<li><a href="#">TechLeadership <span>(03)</span></a></li>
+										<li><a href="#">TechTalks <span>(04)</span></a></li>
+										<li><a href="#">TechTrends <span>(02)</span></a></li>
+										<li><a href="#">Innovate <span>(05)</span></a></li>
+										<li><a href="#">MLTech <span>(02)</span></a></li>
+									</ul>
+								</div>
+							</div>
+
+							<!-- Popular tags -->
+							<div class="sidebar-widget popular-tags">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Popular tags</h5>
+									<a href="#">DigitalAI</a>
+									<a href="#">TechInnovate</a>
+									<a href="#">FutureAI</a>
+									<a href="#">TechBlog</a>
+									<a href="#">CodingAI</a>
+								</div>
+							</div>
+
+						</div>
+
+					</aside>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- End Sidebar Page Container -->
+	
+	<!-- CTA One -->
+	{% include 'ctaone.html' %}
+	<!-- End CTA One -->
+
+	<!-- Main Footer -->
+	{% include 'footer.html' %}
+	<!-- End Main Footer -->
+
+</div>
+<!-- End PageWrapper -->
+
+ 
+
+
+{% endblock %}
