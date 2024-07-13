@@ -73,56 +73,32 @@
 /* Theme Color */
 
 :root {
-	
-	/* Inverted #761FE3 -> #89E01C */
-	--main-color: rgb(10, 147, 23) !important;
-	--main-color-rgb: 137,224,28 !important;
-	
-	/* Inverted #141414 -> #EBEBEB */
-	--color-two: rgb(235,235,235) !important;
-	--color-two-rgb: 235,235,235 !important;
-	
-	/* Inverted #BDBDBD -> #424242 */
-	--color-three: rgb(66,66,66) !important;
-	--color-three-rgb: 66,66,66 !important;
-	
-	/* Inverted #0F0F0F -> #F0F0F0 */
-	--color-four: rgb(240,240,240) !important;
-	--color-four-rgb: 240,240,240 !important;
-	
-	/* Inverted #D093E8 -> #2F6C17 */
-	--color-five: rgb(47,108,23) !important;
-	--color-five-rgb: 47,108,23 !important;
-	
-	/* Inverted #A3A3A3 -> #5C5C5C */
-	--color-six: rgb(92,92,92) !important;
-	--color-six-rgb: 92,92,92 !important;
-	
-	/* Inverted #1C1C1C -> #E3E3E3 */
-	--color-seven: rgb(227,227,227) !important;
-	--color-seven-rgb: 227,227,227 !important;
-	
-	/* Inverted #333333 -> #CCCCCC */
-	--color-eight: rgb(204,204,204) !important;
-	--color-eight-rgb: 204,204,204 !important;
-	
-	/* Inverted #242424 -> #DBDBDB */
-	--color-nine: rgb(219,219,219) !important;
-	--color-nine-rgb: 219,219,219 !important;
-	
-	/* Inverted #343334 -> #CBCBCD */
-	--color-ten: rgb(203,203,205) !important;
-	--color-ten-rgb: 203,203,205 !important;
-
-    /* Inverted #FFFFFF -> #000000 */
-	--white-color: rgb(0,0,0) !important;
-	--white-color-rgb: 0,0,0 !important;
-
-	/* Inverted #000000 -> #FFFFFF */
-	--black-color: rgb(255,255,255) !important;
-	--black-color-rgb: 255,255,255 !important;
-
+    --main-color: rgb(18, 37, 35); /* #122523 */
+    --main-color-rgb: 18, 37, 35;
+    --color-two: rgb(28, 94, 82); /* #1C5E52 */
+    --color-two-rgb: 28, 94, 82;
+    --color-three: rgb(184, 149, 95); /* #B8955F */
+    --color-three-rgb: 184, 149, 95;
+    --color-four: rgb(28, 28, 28); /* Dark enough to ensure contrast */
+    --color-four-rgb: 28, 28, 28;
+    --color-five: rgb(246, 238, 227); /* #F6EEE3 */
+    --color-five-rgb: 246, 238, 227;
+    --color-six: rgb(163, 163, 163); /* Neutral grey to ensure contrast */
+    --color-six-rgb: 163, 163, 163;
+    --color-seven: rgb(28, 28, 28); /* Dark enough to ensure contrast */
+    --color-seven-rgb: 28, 28, 28;
+    --color-eight: rgb(51, 51, 51); /* Dark enough to ensure contrast */
+    --color-eight-rgb: 51, 51, 51;
+    --color-nine: rgb(36, 36, 36); /* Dark enough to ensure contrast */
+    --color-nine-rgb: 36, 36, 36;
+    --color-ten: rgb(52, 51, 52); /* Dark enough to ensure contrast */
+    --color-ten-rgb: 52, 51, 52;
+    --white-color: rgb(246, 238, 227); /* #F6EEE3 */
+    --white-color-rgb: 246, 238, 227;
+    --black-color: rgb(18, 37, 35); /* #122523 */
+    --black-color-rgb: 18, 37, 35;
 }
+
 
 
 /*** 
