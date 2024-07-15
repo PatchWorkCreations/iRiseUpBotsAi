@@ -1,9 +1,12 @@
-{% extends "myapp/base.html" %}
+# service-detail.py
 
-{% block title %}Service Details{% endblock %}
+html_template = """
+{{% extends "myapp/base.html" %}}
 
-{% load static %}
-{% block content %}
+{{% block title %}}Service Details{{% endblock %}}
+
+{{% load static %}}
+{{% block content %}}
 
 <body>
 
@@ -36,7 +39,7 @@
 	<!-- Preloader End -->
 	
 	<!-- Main Header -->
-{% include 'header.html' %}
+{{% include 'header.html' %}}
 	<!-- End Main Header -->
 	
 	<!-- Page Title -->
@@ -48,7 +51,7 @@
         <div class="auto-container">
 			<h2>Service details</h2>
 			<ul class="bread-crumb clearfix">
-				<li><a href="{% url 'index' %}"">Home</a></li>
+				<li><a href="{{% url 'index' %}}">Home</a></li>
 				<li>Service details</li>
 			</ul>
         </div>
@@ -72,7 +75,7 @@
 				</div>
 			</div>
 			<div class="service-detail_image">
-				<img src="{% static 'myapp/images/resource/service-detail.jpg' %}" alt="" />
+				<img src="{{% static 'myapp/images/resource/service-detail.jpg' %}}" alt="" />
 			</div>
 		</div>
 	</section>
@@ -140,7 +143,7 @@
 	<!-- Steps One -->
 	<section class="steps-one">
 		<div class="steps-one_bg"></div>
-<div class="steps-one_icon"></div>
+		<div class="steps-one_icon"></div>
 
 		<div class="auto-container">
 			<div class="inner-container">
@@ -156,7 +159,7 @@
 					<h2 class="sec-title_heading">iRiseUp.Ai <span>typically operate</span> in <br> a three steps</h2>
 				</div>
 				<div class="steps-one_button">
-					<a href="{% url 'about' %}" class="template-btn btn-style-two">
+					<a href="{{% url 'about' %}}" class="template-btn btn-style-two">
 						<span class="btn-wrap">
 							<span class="text-one">Know more</span>
 							<span class="text-two">Know more</span>
@@ -174,7 +177,7 @@
 								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="{% static 'myapp/images/resource/step-1.png' %}" alt="" />
+										<img src="{{% static 'myapp/images/resource/step-1.png' %}}" alt="" />
 									</div>
 								</div>
 							</div>
@@ -191,7 +194,7 @@
 								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="{% static 'myapp/images/resource/step-2.png' %}" alt="" />
+										<img src="{{% static 'myapp/images/resource/step-2.png' %}}" alt="" />
 									</div>
 								</div>
 							</div>
@@ -205,7 +208,7 @@
 								<div class="step-block_one-text">Lorem ipsum dolor sit ame consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna..</div>
 								<div class="step-block_one-content">
 									<div class="image">
-										<img src="{% static 'myapp/images/resource/step-3.png' %}" alt="" />
+										<img src="{{% static 'myapp/images/resource/step-3.png' %}}" alt="" />
 									</div>
 								</div>
 							</div>
@@ -242,13 +245,13 @@
 			<div class="row clearfix">
 				<div class="column col-lg-6 col-md-6 col-sm-12">
 					<div class="service-detail_image-two">
-						<img src="{% static 'myapp/images/resource/service-detail-1.jpg' %}" alt="" />
+						<img src="{{% static 'myapp/images/resource/service-detail-1.jpg' %}}" alt="" />
 					</div>
 				</div>
 				<div class="column col-lg-6 col-md-6 col-sm-12">
 					<div class="service-detail_image-two">
 						<a href="https://www.youtube.com/watch?v=kxPCFljwJws" class="lightbox-video service-detail_play"><span class="fa-solid fa-play fa-fw"><i class="ripple"></i></span></a>
-						<img src="{% static 'myapp/images/resource/service-detail-2' %}" alt="" />
+						<img src="{{% static 'myapp/images/resource/service-detail-2' %}}" alt="" />
 					</div>
 				</div>
 			</div>
@@ -285,7 +288,7 @@
 							<div class="sec-title_text">Lorem ipsum dolor sit amet consectetur adipiscing vitae mattis tellus. Nullam quis mattis ligula consectetur.</div>
 						</div>
 						<div class="faq-one_button">
-							<a href="{% url 'contact' %}" class="template-btn btn-style-one">
+							<a href="{{% url 'contact' %}}" class="template-btn btn-style-one">
 								<span class="btn-wrap">
 									<span class="text-one">Contact now</span>
 									<span class="text-two">Contact now</span>
@@ -393,14 +396,19 @@
 	</div>
 
 	<!-- CTA One -->
-	{% include 'ctaone.html' %}
+	{{% include 'ctaone.html' %}}
 	<!-- End CTA One -->
 
 	<!-- Main Footer -->
-	{% include 'footer.html' %}
+	{{% include 'footer.html' %}}
 <!-- End PageWrapper -->
+{{% endblock %}}
+"""
 
- 
+for i in range(1, 5):
+    file_content = html_template.format(i)
+    file_name = f"service-detail-{i}.html"
+    with open(file_name, "w") as file:
+        file.write(file_content)
 
-
-{% endblock %}
+print("HTML files created successfully.")

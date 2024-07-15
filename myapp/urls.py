@@ -30,4 +30,9 @@ urlpatterns = [
     path('news-detail6/', views.newsdetail6, name='newsdetail6'),
     path('news-detail7/', views.newsdetail7, name='newsdetail7'),
     path('news-detail8/', views.newsdetail8, name='newsdetail8'),
+    path('service-detail1/', views.servicedetail1, name='servicedetail1'),
+    path('service-detail2/', views.servicedetail2, name='servicedetail2'),
+    path('service-detail3/', views.servicedetail3, name='servicedetail3'),
+    path('service-detail4/', views.servicedetail4, name='servicedetail4'),
+    path('service-detail5/', views.servicedetail5, name='servicedetail5'),
 ]

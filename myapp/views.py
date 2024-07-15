@@ -82,7 +82,20 @@ def newsdetail7(request):
 def newsdetail8(request):
     return render(request, 'myapp/news-detail8.html')
 
+def servicedetail1(request):
+    return render(request, 'myapp/service-detail1.html')
 
+def servicedetail2(request):
+    return render(request, 'myapp/service-detail2.html')
+
+def servicedetail3(request):
+    return render(request, 'myapp/service-detail3.html')
+
+def servicedetail4(request):
+    return render(request, 'myapp/service-detail4.html')
+
+def servicedetail5(request):
+    return render(request, 'myapp/service-detail5.html')
 
 
 

@@ -1,0 +1,385 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}Service Details{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="page-wrapper">
+	
+	<!-- Cursor -->
+	<div class="cursor"></div>
+	<div class="cursor-follower"></div>
+	<!-- Cursor End -->
+ 	
+	<!-- Preloader -->
+	<div class="loader-wrap">
+		<div class="preloader">
+			<div class="preloader-close">x</div>
+			<div id="handle-preloader" class="handle-preloader">
+				<div class="animation-preloader">
+					<div class="txt-loading">
+						<span data-text-preloader="L" class="letters-loading">L</span>
+						<span data-text-preloader="O" class="letters-loading">O</span>
+						<span data-text-preloader="A" class="letters-loading">A</span>
+						<span data-text-preloader="D" class="letters-loading">D</span>
+						<span data-text-preloader="I" class="letters-loading">I</span>
+						<span data-text-preloader="N" class="letters-loading">N</span>
+						<span data-text-preloader="G" class="letters-loading">G</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Preloader End -->
+	
+	<!-- Main Header -->
+	{% include 'header.html' %}
+	<!-- End Main Header -->
+	
+	<!-- Page Title -->
+    <section class="page-title">
+		<div class="page-title-icon"></div>
+		<div class="page-title-icon-two"></div>
+		<div class="page-title-shadow"></div>
+		<div class="page-title-shadow-two"></div>
+        <div class="auto-container">
+			<h2>Service Details</h2>
+			<ul class="bread-crumb clearfix">
+				<li><a href="{% url 'index' %}">Home</a></li>
+				<li>Service Details</li>
+			</ul>
+        </div>
+    </section>
+    <!-- End Page Title -->
+
+	<!-- Services Detail -->
+	<section class="services-detail">
+		<div class="auto-container">
+			<!-- Sec Title -->
+			<div class="sec-title style-four">
+				<div class="d-flex justify-content-between align-items-center flex-wrap">
+					<div class="left-box">
+						<div class="sec-title_title">Content Marketers</div>
+						<h2 class="sec-title_heading">Navigating the digital landscape with <span>content marketing</span></h2>
+					</div>
+					<div class="right-box">
+						<p>In today's digital age, standing out requires more than just good content—it requires smart content. Our team at iriseup.ai helps you navigate the complexities of content marketing with ease and precision. From crafting engaging posts to optimizing for SEO, we’ve got you covered.</p>
+						<p>Using the latest AI tools, we ensure your content not only reaches your audience but resonates with them. It's time to elevate your content game and make your brand unforgettable.</p>
+					</div>
+				</div>
+			</div>
+			<div class="service-detail_image">
+				<img src="{% static 'myapp/images/resource/service-detail.jpg' %}" alt="Service Detail" />
+			</div>
+		</div>
+	</section>
+	<!-- End Services Detail -->
+
+	<!-- Services Benefit -->
+	<div class="services-two">
+		<div class="auto-container">
+			<!-- Sec Title -->
+			<div class="sec-title style-four centered">
+				<div class="sec-title_title">Service Benefit</div>
+				<h2 class="sec-title_heading"><span>Benefits</span> of Our Services</h2>
+			</div>
+			<div class="row clearfix">
+				<!-- Service Block Four -->
+				<div class="service-block_four col-lg-3 col-md-6 col-sm-12">
+					<div class="service-block_four-inner">
+						<div class="service-block_four-icon">
+							<i class="icon-heart-hand"></i>
+						</div>
+						<h4 class="service-block_four-title">Engagement</h4>
+						<div class="service-block_four-text">Our AI-driven strategies ensure your content engages your audience, turning casual visitors into loyal customers.</div>
+					</div>
+				</div>
+				<!-- Service Block Four -->
+				<div class="service-block_four col-lg-3 col-md-6 col-sm-12">
+					<div class="service-block_four-inner">
+						<div class="service-block_four-icon">
+							<i class="icon-eye"></i>
+						</div>
+						<h4 class="service-block_four-title">Brand Visibility</h4>
+						<div class="service-block_four-text">Increase your brand's visibility with targeted AI solutions that put you in front of the right audience at the right time.</div>
+					</div>
+				</div>
+				<!-- Service Block Four -->
+				<div class="service-block_four col-lg-3 col-md-6 col-sm-12">
+					<div class="service-block_four-inner">
+						<div class="service-block_four-icon">
+							<i class="icon-seo"></i>
+						</div>
+						<h4 class="service-block_four-title">SEO Optimization</h4>
+						<div class="service-block_four-text">Boost your search engine rankings with AI-powered SEO strategies that drive organic traffic to your site.</div>
+					</div>
+				</div>
+				<!-- Service Block Four -->
+				<div class="service-block_four col-lg-3 col-md-6 col-sm-12">
+					<div class="service-block_four-inner">
+						<div class="service-block_four-icon">
+							<i class="icon-magnet-1"></i>
+						</div>
+						<h4 class="service-block_four-title">Lead Generation</h4>
+						<div class="service-block_four-text">Generate quality leads with AI tools that identify and target potential customers most likely to convert.</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Services Benefit -->
+
+	<!-- Steps One -->
+	<section class="steps-one">
+		<div class="steps-one_bg"></div>
+		<div class="steps-one_icon"></div>
+
+		<div class="auto-container">
+			<div class="inner-container">
+				<div class="circle-layer"></div>
+				<div class="dots-layer">
+					<span class="dot-one"></span>
+					<span class="dot-two"></span>
+				</div>
+			
+				<!-- Sec Title -->
+				<div class="sec-title">
+					<div class="sec-title_title">How It Works</div>
+					<h2 class="sec-title_heading">iriseup.ai <span>typically operates</span> in <br> three steps</h2>
+				</div>
+				<div class="steps-one_button">
+					<a href="{% url 'about' %}" class="template-btn btn-style-two">
+						<span class="btn-wrap">
+							<span class="text-one">Know More</span>
+							<span class="text-two">Know More</span>
+						</span>
+					</a>
+				</div>
+				<div class="row clearfix">
+					<!-- Column -->
+					<div class="column col-lg-6 col-md-12 col-sm-12">
+						<!-- Step Block One -->
+						<div class="step-block_one">
+							<div class="step-block_one-inner">
+								<div class="step-block_one-steps">Step 01</div>
+								<h5 class="step-block_one-title">Algorithm Processing</h5>
+								<div class="step-block_one-text">Our advanced algorithms analyze data to deliver precise and actionable insights, tailored to your business needs.</div>
+								<div class="step-block_one-content">
+									<div class="image">
+										<img src="{% static 'myapp/images/resource/step-1.png' %}" alt="Step 1" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Column -->
+					<div class="column col-lg-6 col-md-12 col-sm-12">
+						<!-- Step Block One -->
+						<div class="step-block_one">
+							<div class="step-block_one-inner">
+								<div class="step-block_one-steps">Step 02</div>
+								<h5 class="step-block_one-title">Input & Data Gathering</h5>
+								<div class="step-block_one-text">We gather comprehensive data inputs to ensure our AI solutions are based on robust and accurate information.</div>
+								<div class="step-block_one-content">
+									<div class="image">
+										<img src="{% static 'myapp/images/resource/step-2.png' %}" alt="Step 2" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Step Block One -->
+						<div class="step-block_one">
+							<div class="step-block_one-inner">
+								<div class="step-block_one-steps">Step 03</div>
+								<h5 class="step-block_one-title">Content Generation & Refinement</h5>
+								<div class="step-block_one-text">Our AI generates and refines content that aligns with your brand’s voice, ensuring it resonates with your audience.</div>
+								<div class="step-block_one-content">
+									<div class="image">
+										<img src="{% static 'myapp/images/resource/step-3.png' %}" alt="Step 3" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Steps One -->
+
+	<!-- Solution One -->
+	<section class="solution-one">
+		<div class="auto-container">
+			<!-- Sec Title -->
+			<div class="sec-title style-four">
+				<div class="d-flex justify-content-between align-items-center flex-wrap">
+					<div class="left-box">
+						<div class="sec-title_title">Problem & Solutions</div>
+						<h2 class="sec-title_heading">Unveiling <span>Solutions</span> for Common Dilemmas in iriseup.ai</h2>
+					</div>
+					<div class="right-box">
+						<p>Every business faces unique challenges. At iriseup.ai, we provide tailored solutions to overcome these hurdles, ensuring your path to success is smooth and effective.</p>
+						<ul class="solution-one_list">
+							<li><i class="fa-solid fa-check fa-fw"></i>Streamline operations and enhance efficiency.</li>
+							<li><i class="fa-solid fa-check fa-fw"></i>Improve customer engagement with personalized interactions.</li>
+							<li><i class="fa-solid fa-check fa-fw"></i>Utilize data-driven strategies for better decision-making.</li>
+							<li><i class="fa-solid fa-check fa-fw"></i>Ensure consistent brand messaging across all platforms.</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="row clearfix">
+				<div class="column col-lg-6 col-md-6 col-sm-12">
+					<div class="service-detail_image-two">
+						<img src="{% static 'myapp/images/resource/service-detail-1.jpg' %}" alt="Solution Image 1" />
+					</div>
+				</div>
+				<div class="column col-lg-6 col-md-6 col-sm-12">
+					<div class="service-detail_image-two">
+						<a href="https://www.youtube.com/watch?v=kxPCFljwJws" class="lightbox-video service-detail_play"><span class="fa-solid fa-play fa-fw"><i class="ripple"></i></span></a>
+						<img src="{% static 'myapp/images/resource/service-detail-2.jpg' %}" alt="Solution Image 2" />
+					</div>
+				</div>
+			</div>
+
+			<!-- Sec Title -->
+			<div class="sec-title style-four">
+				<div class="d-flex justify-content-between align-items-center flex-wrap">
+					<div class="left-box">
+						<div class="sec-title_title">Final Result</div>
+						<h2 class="sec-title_heading">Excellence in Our Service <span>Final Results</span></h2>
+					</div>
+					<div class="right-box">
+						<p>With iriseup.ai, you can expect top-notch results. Our AI-driven solutions ensure excellence in every aspect, from content creation to customer engagement, delivering tangible improvements for your business.</p>
+						<p>Experience a boost in productivity, enhanced customer satisfaction, and a strong online presence. Let us help you achieve your business goals with our cutting-edge AI solutions.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Solution One -->
+
+	<!-- Faq One -->
+	<section class="faq-one style-three">
+		<div class="auto-container">
+			<div class="row clearfix">
+
+				<!-- Tab Column -->
+				<div class="faq-one_title-column col-lg-5 col-md-12 col-sm-12">
+					<div class="faq-one_title-outer">
+						<!-- Sec Title -->
+						<div class="sec-title">
+							<div class="sec-title_title">FAQ</div>
+							<h2 class="sec-title_heading">Frequently Asked <span>Questions</span></h2>
+							<div class="sec-title_text">Got questions? We've got answers. Learn more about how our AI solutions can benefit your business.</div>
+						</div>
+						<div class="faq-one_button">
+							<a href="{% url 'contact' %}" class="template-btn btn-style-one">
+								<span class="btn-wrap">
+									<span class="text-one">Contact Now</span>
+									<span class="text-two">Contact Now</span>
+								</span>
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<!-- Accordion Column -->
+				<div class="faq-one_accordian-column col-lg-7 col-md-12 col-sm-12">
+					<div class="faq-one_accordian-outer">
+						<!-- Accordion Box -->
+						<ul class="accordion-box_two">
+							<!-- Block -->
+							<li class="accordion block">
+								<div class="acc-btn"><div class="icon-outer"><span class="icon icon-plus fa-solid fa-plus fa-fw"></span></div>How does your AI copywriting tool work?</div>
+								<div class="acc-content">
+									<div class="content">
+										<div class="text">Our AI copywriting tool uses sophisticated algorithms to understand context, tone, and language nuances. Users input specific details or prompts, and the AI generates high-quality content based on that input, refining it to match your brand’s voice.</div>
+									</div>
+								</div>
+							</li>
+							<!-- Block -->
+							<li class="accordion block">
+								<div class="acc-btn"><div class="icon-outer"><span class="icon icon-plus fa-solid fa-plus fa-fw"></span></div>What is AI copywriting?</div>
+								<div class="acc-content">
+									<div class="content">
+										<div class="text">AI copywriting involves using artificial intelligence to generate written content. Our AI copywriting tool produces high-quality content based on your inputs, ensuring it meets your specific requirements and resonates with your target audience.</div>
+									</div>
+								</div>
+							</li>
+							<!-- Block -->
+							<li class="accordion block">
+								<div class="acc-btn"><div class="icon-outer"><span class="icon icon-plus fa-solid fa-plus fa-fw"></span></div>Can I trust the content generated by AI?</div>
+								<div class="acc-content">
+									<div class="content">
+										<div class="text">Absolutely! Our AI copywriting tool uses sophisticated algorithms to produce content that is both high-quality and relevant. The generated content is reviewed and refined to ensure it meets your standards and objectives.</div>
+									</div>
+								</div>
+							</li>
+							<!-- Block -->
+							<li class="accordion block">
+								<div class="acc-btn"><div class="icon-outer"><span class="icon icon-plus fa-solid fa-plus fa-fw"></span></div>What types of content can your AI generate?</div>
+								<div class="acc-content">
+									<div class="content">
+										<div class="text">Our AI can generate a wide range of content types, including blog posts, social media updates, email newsletters, product descriptions, and more. The content is tailored to your specific needs and designed to engage your audience.</div>
+									</div>
+								</div>
+							</li>
+							<!-- Block -->
+							<li class="accordion block">
+								<div class="acc-btn"><div class="icon-outer"><span class="icon icon-plus fa-solid fa-plus fa-fw"></span></div>What languages does your AI support?</div>
+								<div class="acc-content">
+									<div class="content">
+										<div class="text">Our AI copywriting tool supports multiple languages, enabling you to create content that caters to a diverse audience. Just provide the language preference, and our AI will generate content accordingly.</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Faq One -->
+
+	<div class="more-options">
+		<div class="auto-container">
+			<!-- Post Share Options-->
+			<div class="post-share-options">
+				<div class="post-share-inner d-flex justify-content-between align-items-center flex-wrap">
+					<div class="post-tags"><a href="#">DataAI</a> <a href="#">AIFuture</a> <a href="#">AIExperts</a></div>
+					<ul class="social-links">
+						<li><a href="#" class="fa-brands fa-facebook-f fa-fw"></a></li>
+						<li><a href="#" class="fa-brands fa-twitter fa-fw"></a></li>
+						<li><a href="#" class="fa-brands fa-google fa-fw"></a></li>
+						<li><a href="#" class="fa-brands fa-dribbble fa-fw"></a></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="service-detail_posts">
+				<div class="d-flex align-items-center flex-wrap justify-content-between">
+					<div class="new-post">
+						<a href="#"><i class="fa-solid fa-angle-left fa-fw"></i> Previous</a>
+						<h4>Protection of Designs</h4>
+					</div>
+					<div class="new-post text-right">
+						<a href="#">Next <i class="fa-solid fa-angle-right fa-fw"></i></a>
+						<h4>Brand Protection</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- CTA One -->
+	{% include 'ctaone.html' %}
+	<!-- End CTA One -->
+
+	<!-- Main Footer -->
+	{% include 'footer.html' %}
+<!-- End PageWrapper -->
+{% endblock %}
