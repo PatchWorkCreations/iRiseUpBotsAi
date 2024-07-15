@@ -941,33 +941,21 @@
 	</section>
 	<!-- End Community One -->
 
-	<!-- News One -->
-	<section class="news-one style-two">
-		<div class="news-one_shadow-two" style="background-image:url(myapp/images/background/news-shadow-2.png)"></div>
+<!-- News One -->
+	<section class="news-one">
+		<div class="news-one_shadow"></div>
+		<div class="news-one_shadow-two"></div>
+	
 		<div class="auto-container">
 			<!-- Sec Title -->
-			<div class="sec-title style-two">
-				<div class="d-flex justify-content-between align-items-end flex-wrap">
-					<div class="left-box">
-						<div class="sec-title_title">OUR BLOG</div>
-						<h2 class="sec-title_heading">Read our latest <span>blogs</span></h2>
-					</div>
-					<div class="news-two_button">
-						<div class="livechat_button">
-							<a href="{% url 'about' %}" class="template-btn btn-style-one">
-								<span class="btn-wrap">
-									<span class="text-one">Learn more</span>
-									<span class="text-two">Learn more</span>
-								</span>
-							</a>
-						</div>
-					</div>
-				</div>
+			<div class="sec-title title-anim centered">
+				<div class="sec-title_title">our blog</div>
+				<h2 class="sec-title_heading">Read our latest <span>blogs</span></h2>
 			</div>
 			<div class="three-item_carousel swiper-container">
 				<div class="swiper-wrapper">
 	
-					<!-- Slide -->
+					<!-- Slide 1 -->
 					<div class="swiper-slide">
 						<!-- News Block One -->
 						<div class="news-block_one">
@@ -976,15 +964,22 @@
 									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-1.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
-									<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Transforming industries and shaping the future</a></h5>
-									<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Bye-Bye Busy Work: How AI Can Take Over Tedious Tasks So You Don’t Have To</a></h5>
+									<div class="news-block_one-text">Discover how AI can handle the boring stuff, leaving you free to focus on what you love about your business.</div>
+									<div class="news-block_one-button">
+										<a href="{% url 'blog' %}" class="template-btn btn-style-two">
+											<span class="btn-wrap">
+												<span class="text-one">Read more</span>
+												<span class="text-two">Read more</span>
+											</span>
+										</a>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-
-					<!-- Slide -->
+	
+					<!-- Slide 2 -->
 					<div class="swiper-slide">
 						<!-- News Block One -->
 						<div class="news-block_one">
@@ -993,15 +988,22 @@
 									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-2.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
-									<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Exploring the cutting-edge of artificial intelligence</a></h5>
-									<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Less Grind, More Growth: Using AI to Free Up Your Time</a></h5>
+									<div class="news-block_one-text">Learn how AI tools can save you hours every week, giving you more time to grow your startup and enjoy life.</div>
+									<div class="news-block_one-button">
+										<a href="{% url 'blog' %}" class="template-btn btn-style-two">
+											<span class="btn-wrap">
+												<span class="text-one">Read more</span>
+												<span class="text-two">Read more</span>
+											</span>
+										</a>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-
-					<!-- Slide -->
+	
+					<!-- Slide 3 -->
 					<div class="swiper-slide">
 						<!-- News Block One -->
 						<div class="news-block_one">
@@ -1010,14 +1012,21 @@
 									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-3.jpg' %}" alt="" /></a>
 								</div>
 								<div class="news-block_one-content">
-									<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Understanding the basics of artificial intelligence</a></h5>
-									<a class="news-block_one-more" href="{% url 'servicedetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Start Smart: Integrate AI into Your New Business from Day One</a></h5>
+									<div class="news-block_one-text">Tips on setting up your startup with AI right from the beginning to stay ahead of the game.</div>
+									<div class="news-block_one-button">
+										<a href="{% url 'blog' %}" class="template-btn btn-style-two">
+											<span class="btn-wrap">
+												<span class="text-one">Read more</span>
+												<span class="text-two">Read more</span>
+											</span>
+										</a>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-
+	
 				</div>
 				<!-- If we need pagination -->
 				<div class="three-item_carousel-pagination"></div>

@@ -894,86 +894,98 @@
 	</section>
 	<!-- End CTA Three -->
 
-	<!-- News Two -->
-	<section class="news-two">
+<!-- News One -->
+	<section class="news-one">
+		<div class="news-one_shadow"></div>
+		<div class="news-one_shadow-two"></div>
+	
 		<div class="auto-container">
 			<!-- Sec Title -->
-			<div class="sec-title title-anim style-three light centered">
-				<div class="sec-title_title">Our Blog</div>
+			<div class="sec-title title-anim centered">
+				<div class="sec-title_title">our blog</div>
 				<h2 class="sec-title_heading">Read our latest <span>blogs</span></h2>
 			</div>
-			<div class="inner-container">
-				
-				<!-- News Block Two -->
-				<div class="news-block_two">
-					<div class="news-block_two-inner">
-						<div class="d-flex justify-content-between align-items-center flex-wrap">
-							<div class="news-block_two-content">
-								<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-								<h3 class="news-block_one-heading"><a href="{% url 'newsdetail' %}">Understanding the basics of artificial intelligence</a></h3>
-							</div>
-							<!-- Button Box -->
-							<div class="news-block_two-button">
-								<a href="{% url 'newsdetail' %}" class="template-btn btn-style-two">
-									<span class="btn-wrap">
-										<span class="text-one">Read more</span>
-										<span class="text-two">Read more</span>
-									</span>
-								</a>
-							</div>
-						</div>
-						<div class="news-block_two-hover" style="background-image: url( myapp/images/resource/news-4.jpg )"></div>
-					</div>
-				</div>
-
-				<!-- News Block Two -->
-				<div class="news-block_two">
-					<div class="news-block_two-inner">
-						<div class="d-flex justify-content-between align-items-center flex-wrap">
-							<div class="news-block_two-content">
-								<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-								<h3 class="news-block_one-heading"><a href="{% url 'newsdetail' %}">Transforming industries and shaping the future</a></h3>
-							</div>
-							<!-- Button Box -->
-							<div class="news-block_two-button">
-								<a href="{% url 'newsdetail' %}" class="template-btn btn-style-two">
-									<span class="btn-wrap">
-										<span class="text-one">Read more</span>
-										<span class="text-two">Read more</span>
-									</span>
-								</a>
+			<div class="three-item_carousel swiper-container">
+				<div class="swiper-wrapper">
+	
+					<!-- Slide 1 -->
+					<div class="swiper-slide">
+						<!-- News Block One -->
+						<div class="news-block_one">
+							<div class="news-block_one-inner">
+								<div class="news-block_one-image">
+									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-1.jpg' %}" alt="" /></a>
+								</div>
+								<div class="news-block_one-content">
+									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Bye-Bye Busy Work: How AI Can Take Over Tedious Tasks So You Don’t Have To</a></h5>
+									<div class="news-block_one-text">Discover how AI can handle the boring stuff, leaving you free to focus on what you love about your business.</div>
+									<div class="news-block_one-button">
+										<a href="{% url 'blog' %}" class="template-btn btn-style-two">
+											<span class="btn-wrap">
+												<span class="text-one">Read more</span>
+												<span class="text-two">Read more</span>
+											</span>
+										</a>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="news-block_two-hover" style="background-image: url( myapp/images/resource/news-5.jpg )"></div>
 					</div>
-				</div>
-
-				<!-- News Block Two -->
-				<div class="news-block_two">
-					<div class="news-block_two-inner">
-						<div class="d-flex justify-content-between align-items-center flex-wrap">
-							<div class="news-block_two-content">
-								<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-								<h3 class="news-block_one-heading"><a href="{% url 'newsdetail' %}">Exploring the cutting-edge of artificial intelligence</a></h3>
-							</div>
-							<!-- Button Box -->
-							<div class="news-block_two-button">
-								<a href="{% url 'newsdetail' %}" class="template-btn btn-style-two">
-									<span class="btn-wrap">
-										<span class="text-one">Read more</span>
-										<span class="text-two">Read more</span>
-									</span>
-								</a>
+	
+					<!-- Slide 2 -->
+					<div class="swiper-slide">
+						<!-- News Block One -->
+						<div class="news-block_one">
+							<div class="news-block_one-inner">
+								<div class="news-block_one-image">
+									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-2.jpg' %}" alt="" /></a>
+								</div>
+								<div class="news-block_one-content">
+									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Less Grind, More Growth: Using AI to Free Up Your Time</a></h5>
+									<div class="news-block_one-text">Learn how AI tools can save you hours every week, giving you more time to grow your startup and enjoy life.</div>
+									<div class="news-block_one-button">
+										<a href="{% url 'blog' %}" class="template-btn btn-style-two">
+											<span class="btn-wrap">
+												<span class="text-one">Read more</span>
+												<span class="text-two">Read more</span>
+											</span>
+										</a>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="news-block_two-hover" style="background-image: url( myapp/images/resource/news-6.jpg )"></div>
 					</div>
+	
+					<!-- Slide 3 -->
+					<div class="swiper-slide">
+						<!-- News Block One -->
+						<div class="news-block_one">
+							<div class="news-block_one-inner">
+								<div class="news-block_one-image">
+									<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-3.jpg' %}" alt="" /></a>
+								</div>
+								<div class="news-block_one-content">
+									<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Start Smart: Integrate AI into Your New Business from Day One</a></h5>
+									<div class="news-block_one-text">Tips on setting up your startup with AI right from the beginning to stay ahead of the game.</div>
+									<div class="news-block_one-button">
+										<a href="{% url 'blog' %}" class="template-btn btn-style-two">
+											<span class="btn-wrap">
+												<span class="text-one">Read more</span>
+												<span class="text-two">Read more</span>
+											</span>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+	
 				</div>
-
+				<!-- If we need pagination -->
+				<div class="three-item_carousel-pagination"></div>
 			</div>
 		</div>
 	</section>
-	<!-- End News Two -->
 
 	<!-- CTA Four -->
 	<section class="cta-four">
