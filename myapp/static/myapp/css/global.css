@@ -75,18 +75,18 @@
 :root {
     --main-color: rgb(18, 37, 35); /* #122523 */
     --main-color-rgb: 18, 37, 35;
-    --color-two:  rgb(249, 249, 248);/* #1C5E52 */
+    --color-two:  rgb(255, 255, 255);/* #1C5E52 */
     --color-two-rgb: 28, 94, 82;
-    --color-three: rgb(184, 149, 95); /* #B8955F */
-    --color-three-rgb: 184, 149, 95;
+    --color-three: rgb(28, 28, 28);  /* #B8955F */
+   --color-three-rgb: 28, 28, 28;
     --color-four: rgb(28, 28, 28); /* Dark enough to ensure contrast */
     --color-four-rgb: 28, 28, 28;
     --color-five:  rgb(28, 94, 82);/* #F6EEE3 */
     --color-five-rgb: 246, 238, 227;
     --color-six: rgb(163, 163, 163); /* Neutral grey to ensure contrast */
     --color-six-rgb: 163, 163, 163;
-    --color-seven: rgb(28, 28, 28); /* Dark enough to ensure contrast */
-    --color-seven-rgb: 28, 28, 28;
+    --color-seven: rgb(246, 238, 227); /* Dark enough to ensure contrast */
+    --color-seven-rgb: 246, 238, 227;
     --color-eight: rgb(51, 51, 51); /* Dark enough to ensure contrast */
     --color-eight-rgb: 51, 51, 51;
     --color-nine: rgb(36, 36, 36); /* Dark enough to ensure contrast */
@@ -571,7 +571,7 @@ img{
 	border-radius:5px;
 	padding:18px 34px;
 	display:inline-block;
-    color: var(--color-five);
+    color: var(--color-two);
 	background-color: var(--main-color);
 }
 
@@ -606,7 +606,7 @@ img{
 .btn-style-one .btn-wrap .text-one{
 	position: relative;
 	display: block;
-	color: var(--color-five);
+	color: var(--color-two);
 	transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
 	-webkit-transition: all 0.3s ease;

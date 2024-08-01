@@ -92,16 +92,16 @@
     --main-color-rgb: 18, 37, 35;
      --color-two:  rgb(255, 255, 255);/* #1C5E52 */
     --color-two-rgb: 28, 94, 82;
-    --color-three: rgb(184, 149, 95); /* #B8955F */
-    --color-three-rgb: 184, 149, 95;
+    --color-three: rgb(28, 28, 28);  /* #B8955F */
+   --color-three-rgb: 28, 28, 28;
     --color-four: rgb(28, 28, 28); /* Dark enough to ensure contrast */
     --color-four-rgb: 28, 28, 28;
     --color-five:  rgb(28, 94, 82);/* #F6EEE3 */
     --color-five-rgb: 246, 238, 227;
     --color-six: rgb(163, 163, 163); /* Neutral grey to ensure contrast */
     --color-six-rgb: 163, 163, 163;
-    --color-seven: rgb(28, 28, 28); /* Dark enough to ensure contrast */
-    --color-seven-rgb: 28, 28, 28;
+    --color-seven: rgb(246, 238, 227); /* Dark enough to ensure contrast */
+    --color-seven-rgb: 246, 238, 227;
     --color-eight: rgb(51, 51, 51); /* Dark enough to ensure contrast */
     --color-eight-rgb: 51, 51, 51;
     --color-nine: rgb(36, 36, 36); /* Dark enough to ensure contrast */
@@ -1358,140 +1358,141 @@
 ====================================================================
 
 ***/
-
-.steps-one{
-	position: relative;
-	z-index: 2;
-	padding: 110px 0px 70px;
+.steps-one {
+    position: relative;
+    z-index: 2;
+    padding: 110px 0px 70px;
+    background-color: var(--desired-background-color); /* Ensure the same background color */
 }
 
 .steps-one .sec-title_title {
     color: #D093E8;
 }
 
-.steps-one_bg{
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
-	background-position: center center;
-	background-repeat: no-repeat;
+.steps-one_bg {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: var(--desired-background-color); /* Ensure the same background color */
 }
 
-.steps-one_icon{
-	position: absolute;
-	left: 20%;
-	bottom: 15%;
-	width: 43px;
-	height: 45px;
+.steps-one_icon {
+    position: absolute;
+    left: 20%;
+    bottom: 15%;
+    width: 43px;
+    height: 45px;
 }
 
-.steps-one .inner-container{
-	position: relative;
+.steps-one .inner-container {
+    position: relative;
 }
 
-.steps-one .circle-layer{
-	position: absolute;
-	left: 150px;
-	top: 150px;
-	width: 930px;
-	height: 930px;
-	border-radius: 50%;
-	border: 1px dashed rgba(var(--white-color-rgb), 0.20);
+.steps-one .circle-layer {
+    position: absolute;
+    left: 150px;
+    top: 150px;
+    width: 930px;
+    height: 930px;
+    border-radius: 50%;
+    border: 1px dashed rgba(var(--white-color-rgb), 0.20);
 }
 
-.steps-one .dots-layer{
-	position: absolute;
-	left: 150px;
-	top: 150px;
-	width: 930px;
-	height: 930px;
-	border-radius: 50%;
+.steps-one .dots-layer {
+    position: absolute;
+    left: 150px;
+    top: 150px;
+    width: 930px;
+    height: 930px;
+    border-radius: 50%;
 }
 
-.steps-one .dots-layer .dot-one{
-	position: absolute;
-	left: 22%;
+.steps-one .dots-layer .dot-one {
+    position: absolute;
+    left: 22%;
     top: 8%;
-	width: 8px;
-	height: 8px;
-	border-radius: 50px;
-	background-color: var(--color-five);
+    width: 8px;
+    height: 8px;
+    border-radius: 50px;
+    background-color: var(--color-five);
 }
 
-.steps-one .dots-layer .dot-two{
-	position: absolute;
-	left: 42%;
+.steps-one .dots-layer .dot-two {
+    position: absolute;
+    left: 42%;
     bottom: 2px;
-	width: 8px;
-	height: 8px;
-	border-radius: 50px;
-	background-color: var(--color-five);
+    width: 8px;
+    height: 8px;
+    border-radius: 50px;
+    background-color: var(--color-five);
 }
 
-.steps-one .column:nth-child(2n + 0){
-	margin-top: -330px;
+.steps-one .column:nth-child(2n + 0) {
+    margin-top: -330px;
 }
 
-.steps-one_button{
-	margin-bottom: 70px;
+.steps-one_button {
+    margin-bottom: 70px;
 }
 
-.step-block_one{
-	position: relative;
-	margin-bottom: 30px;
+.step-block_one {
+    position: relative;
+    margin-bottom: 30px;
 }
 
-.step-block_one-inner{
-	position: relative;
-	padding: 30px 25px;
-	border-radius: 8px;
-	background: rgba(var(--main-color-rgb), 1);
+.step-block_one-inner {
+    position: relative;
+    padding: 30px 25px;
+    border-radius: 8px;
+    background: rgba(var(--main-color-rgb), 1);
     background: linear-gradient(to bottom, rgba(var(--main-color-rgb), 1) 0%, var(--color-two) 100%);
 }
 
-.step-block_one-steps{
-	position: relative;
-	padding: 7px 18px;
-	border-radius: 50px;
-	display: inline-block;
-	color: var(--color-five);
-	text-transform: capitalize;
-	background-color: var(--color-two);
+.step-block_one-steps {
+    position: relative;
+    padding: 7px 18px;
+    border-radius: 50px;
+    display: inline-block;
+    color: var(--color-five);
+    text-transform: capitalize;
+    background-color: var(--color-two);
 }
 
-.step-block_one-title{
-	position: relative;
-	font-size: 22px;
-	font-weight: 600;
-	margin-top: 22px;
-	color: var(--color-five);
+.step-block_one-title {
+    position: relative;
+    font-size: 22px;
+    font-weight: 600;
+    margin-top: 22px;
+    color: var(--color-five);
 }
 
-.step-block_one-text{
-	position: relative;
-	font-size: 17px;
-	line-height: 27px;
-	margin-top: 15px;
-	color: var(--color-six);
+.step-block_one-text {
+    position: relative;
+    font-size: 17px;
+    line-height: 27px;
+    margin-top: 15px;
+    color: var(--color-six);
 }
 
-.step-block_one-content{
-	position: relative;
-	margin-top: 35px;
+.step-block_one-content {
+    position: relative;
+    margin-top: 35px;
 }
 
-.step-block_one-content::before{
-	position: absolute;
-	content: '';
-	left: 0px;
-	top: 40%;
-	right: 0px;
-	bottom: 0px;
-	z-index: 1;
-	border-radius: 8px;
-	background: rgba(var(--color-two-rgb), 1);
+.step-block_one-content::before {
+    position: absolute;
+    content: '';
+    left: 0px;
+    top: 40%;
+    right: 0px;
+    bottom: 0px;
+    z-index: 1;
+    border-radius: 8px;
+    background: rgba(var(--color-two-rgb), 1);
     background: linear-gradient(to top, rgba(var(--color-two-rgb), 1) 0%, rgba(var(--white-color-rgb), 0) 100%);
 }
 
