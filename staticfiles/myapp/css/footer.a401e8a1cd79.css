@@ -54,7 +54,7 @@
 	font-size: 20px;
 	margin-bottom: 15px;
 	text-transform: capitalize;
-	color: var(--white-color);
+	color: var(--color-five);
 }
 
 .footer-newsletter_text{
@@ -176,7 +176,7 @@
 	border-radius: 50px;
 	text-align: center;
 	display: inline-block;
-	color: var(--white-color);
+	color: var(--color-five);
 	border: 1px solid rgba(var(--white-color-rgb), 0.07);
 }
 

@@ -47,13 +47,13 @@
 	position: relative;
 	font-size: 16px;
 	font-weight: 500;
-	color: var(--white-color);
+	color: var(--color-five);
 }
 
 .header-top .text a{
 	position: relative;
 	font-weight: 600;
-	color: var(--white-color);
+	color: var(--color-five);
 	text-decoration: underline;
 }
 
@@ -63,7 +63,7 @@
 	top: 22px;
 	font-size: 16px;
 	cursor: pointer;
-	color: var(--white-color);
+	color: var(--color-five);
 }
 
 /* Header Style One */
@@ -101,13 +101,13 @@
 	border: none;
 	cursor: pointer;
 	padding: 0px 0px;
-	color: var(--white-color);
+	color: var(--color-five);
 	text-transform:capitalize;
 }
 
 .language-dropdown button:focus,
 .language-dropdown button:hover{
-	color: var(--white-color);
+	color: var(--color-five);
 }
 
 .language-dropdown button .flag{
@@ -145,7 +145,7 @@
 	font-weight:400;
 	font-size:14px;
 	padding:8px 15px;
-	color: var(--white-color);
+	color: var(--color-five);
 	text-transform:capitalize;
 	background-color:var(--main-color);
 	border-bottom:1px solid rgba(0, 0, 0, 0.20);
@@ -160,7 +160,7 @@
 }
 
 .language-dropdown .dropdown-menu .dropdown-item:hover{
-	color: var(--white-color);
+	color: var(--color-five);
 	background-color:var(--color-two);
 }
 
@@ -195,7 +195,7 @@
 }
 
 .header-login_box:hover{
-	color: var(--white-color);
+	color: var(--color-five);
 	border-color: var(--main-color);
 	background-color: var(--main-color);
 }
@@ -310,7 +310,7 @@
 }
 
 .main-header.header-style-three .main-menu .navigation > li > a{
-	color: var(--white-color);
+	color: var(--color-five);
 }
 
 .main-header.header-style-three .outer-box{
@@ -361,7 +361,7 @@
     border-radius: 50px;
     text-align: center;
     display: inline-block;
-    color: var(--white-color);
+    color: var(--color-five);
     border: 1px solid rgba(var(--white-color-rgb), 0.07);
 }
 
@@ -802,7 +802,7 @@
 	font-weight:400;
 	font-size:14px;
 	padding: 10px 17px;
-	color:var(--white-color);
+	color:var(--color-five);
 	transition:all 500ms ease;
 	-moz-transition:all 500ms ease;
 	-webkit-transition:all 500ms ease;
@@ -829,7 +829,7 @@
 	text-align:center;
 	font-weight:800;
 	font-size:14px;
-	color:var(--white-color);
+	color:var(--color-five);
 	font-family: 'Font Awesome 6 Free';
 }
 
@@ -957,7 +957,7 @@
 	font-weight:400;
 	font-size:14px;
 	padding: 10px 17px;
-	color:var(--white-color);
+	color:var(--color-five);
 	transition:all 500ms ease;
 	-moz-transition:all 500ms ease;
 	-webkit-transition:all 500ms ease;
@@ -995,9 +995,9 @@
 	width:30px;
 	height:30px;
 	text-align:center;
-	color:var(--white-color);
+	color:var(--color-five);
 	line-height:28px;
-	border:1px solid var(--white-color);
+	border:1px solid var(--color-five);
 	background-size:20px;
 	cursor:pointer;
 	z-index:5;
@@ -1018,7 +1018,7 @@
 	line-height: 1em;
 	cursor: pointer;
 	display: none;
-	color:var(--white-color);
+	color:var(--color-five);
 	font-family: "flaticon_gymfit-flat";
 }
 
