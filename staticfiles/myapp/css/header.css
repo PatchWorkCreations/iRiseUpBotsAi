@@ -1,4 +1,4 @@
-/* iRiseUp.Ai Digital Agency Business HTML-5 Template */
+    /* iRiseUp.Ai Digital Agency Business HTML-5 Template */
 
 /*** 
 
@@ -47,13 +47,13 @@
 	position: relative;
 	font-size: 16px;
 	font-weight: 500;
-	color: var(--color-five);
+	color: black;
 }
 
 .header-top .text a{
 	position: relative;
 	font-weight: 600;
-	color: var(--color-five);
+	color: black;
 	text-decoration: underline;
 }
 
@@ -63,7 +63,7 @@
 	top: 22px;
 	font-size: 16px;
 	cursor: pointer;
-	color: var(--color-five);
+	color: black;
 }
 
 /* Header Style One */
@@ -101,13 +101,13 @@
 	border: none;
 	cursor: pointer;
 	padding: 0px 0px;
-	color: var(--color-five);
+	color: black;
 	text-transform:capitalize;
 }
 
 .language-dropdown button:focus,
 .language-dropdown button:hover{
-	color: var(--color-five);
+	color: black;
 }
 
 .language-dropdown button .flag{
@@ -145,7 +145,7 @@
 	font-weight:400;
 	font-size:14px;
 	padding:8px 15px;
-	color: var(--color-five);
+	color: black;
 	text-transform:capitalize;
 	background-color:var(--main-color);
 	border-bottom:1px solid rgba(0, 0, 0, 0.20);
@@ -160,7 +160,7 @@
 }
 
 .language-dropdown .dropdown-menu .dropdown-item:hover{
-	color: var(--color-five);
+	color: black;
 	background-color:var(--color-two);
 }
 
@@ -195,7 +195,7 @@
 }
 
 .header-login_box:hover{
-	color: var(--color-five);
+	color: black;
 	border-color: var(--main-color);
 	background-color: var(--main-color);
 }
@@ -310,7 +310,7 @@
 }
 
 .main-header.header-style-three .main-menu .navigation > li > a{
-	color: var(--color-five);
+	color: black;
 }
 
 .main-header.header-style-three .outer-box{
@@ -361,7 +361,7 @@
     border-radius: 50px;
     text-align: center;
     display: inline-block;
-    color: var(--color-five);
+    color: black;
     border: 1px solid rgba(var(--white-color-rgb), 0.07);
 }
 
@@ -802,17 +802,18 @@
 	font-weight:400;
 	font-size:14px;
 	padding: 10px 17px;
-	color:var(--color-five);
+	color:black;
 	transition:all 500ms ease;
 	-moz-transition:all 500ms ease;
 	-webkit-transition:all 500ms ease;
 	-ms-transition:all 500ms ease;
 	-o-transition:all 500ms ease;
-	background-color:#231e29;
+	background-color:white;
 }
 
 .main-header .main-menu .navigation > li > ul > li > a:hover{
 	color: var(--main-color);
+    background-color: var(--color-seven);
 }
 
 .main-header .main-menu .navigation > li > ul > li.dropdown > a:after{
@@ -829,7 +830,7 @@
 	text-align:center;
 	font-weight:800;
 	font-size:14px;
-	color:var(--color-five);
+	color:black;
 	font-family: 'Font Awesome 6 Free';
 }
 
@@ -957,17 +958,18 @@
 	font-weight:400;
 	font-size:14px;
 	padding: 10px 17px;
-	color:var(--color-five);
+	color:black;
 	transition:all 500ms ease;
 	-moz-transition:all 500ms ease;
 	-webkit-transition:all 500ms ease;
 	-ms-transition:all 500ms ease;
 	-o-transition:all 500ms ease;
-	background-color:#231e29;
+	background-color:white;
 }
 
 .main-header .main-menu .navigation > li > ul > li > ul > li > a:hover{
 	color: var(--main-color);
+    background-color: var(--color-seven);
 }
 
 .main-header .main-menu .navigation > li.dropdown:hover > ul{
@@ -995,9 +997,9 @@
 	width:30px;
 	height:30px;
 	text-align:center;
-	color:var(--color-five);
+	color:black;
 	line-height:28px;
-	border:1px solid var(--color-five);
+	border:1px solid black;
 	background-size:20px;
 	cursor:pointer;
 	z-index:5;
@@ -1018,7 +1020,7 @@
 	line-height: 1em;
 	cursor: pointer;
 	display: none;
-	color:var(--color-five);
+	color:black;
 	font-family: "flaticon_gymfit-flat";
 }
 
