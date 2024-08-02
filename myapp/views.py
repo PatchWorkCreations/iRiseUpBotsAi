@@ -97,7 +97,18 @@ def servicedetail4(request):
 def servicedetail5(request):
     return render(request, 'myapp/service-detail5.html')
 
+def coursemenu(request):
+    return render(request, 'myapp/coursemenu.html')
 
+from django.shortcuts import render
+from .models import Course, UserCourseAccess
 
+def coursemenu(request):
+    current_course = Course.objects.first()  # Example logic
+    all_courses = Course.objects.all()
+    return render(request, 'myapp/coursemenu.html', {
+        'current_course': current_course,
+        'all_courses': all_courses,
+    })
 
 

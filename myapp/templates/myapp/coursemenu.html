@@ -1,0 +1,168 @@
+<!-- myapp/templates/myapp/coursemenu.html -->
+{% extends "myapp/base.html" %}
+{% block title %}Course Menu{% endblock %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Dashboard</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        background: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .current-course, .course-grid {
+        margin-top: 20px;
+    }
+
+    .course-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 20px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+    }
+
+    .course-card-header {
+        display: flex;
+        align-items: center;
+    }
+
+    .course-image img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+    .course-info {
+        margin-left: 15px;
+    }
+
+    .course-info p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .course-info h3 {
+        margin: 5px 0;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .progress-bar {
+        background: #e0e0e0;
+        border-radius: 5px;
+        height: 10px;
+        margin: 20px 0;
+        width: 100%;
+    }
+
+    .progress {
+        background: #4caf50;
+        height: 100%;
+        border-radius: 5px;
+    }
+
+    .continue-btn, .view-btn {
+        background: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        width: 100%;
+    }
+
+    .continue-btn:hover, .view-btn:hover {
+        background: #0056b3;
+    }
+
+    .course-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .course-grid .course-card {
+        flex: 1 1 calc(33.333% - 20px);
+        margin: 10px;
+    }
+
+    .course-grid .course-card .course-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+<body>
+    <div class="container">
+        <h1>My Courses</h1>
+        <div class="current-course">
+            <h2>Continue Learning</h2>
+            <div class="course-card current">
+                <div class="course-card-header">
+                    <div class="course-image">
+                        <img src="{{ current_course.image.url }}" alt="Current Course Image">
+                    </div>
+                    <div class="course-info">
+                        <p>{{ current_course.units }} Units • {{ current_course.hours }} Hours</p>
+                        <h3>{{ current_course.title }}</h3>
+                        <p>{{ current_course.description }}</p>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: {{ current_course_access.progress }}%;"></div>
+                </div>
+                <button class="continue-btn">Continue learning</button>
+            </div>
+        </div>
+        <div class="course-grid">
+            <h2>All Courses</h2>
+            {% for course in all_courses %}
+            <div class="course-card">
+                <div class="course-card-header">
+                    <div class="course-image">
+                        <img src="{{ course.image.url }}" alt="Course Image">
+                    </div>
+                    <div class="course-info">
+                        <h3>{{ course.title }}</h3>
+                    </div>
+                </div>
+                <a href="{% url 'course_detail' course.id %}" class="view-btn">View Course</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

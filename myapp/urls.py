@@ -35,4 +35,5 @@ urlpatterns = [
     path('service-detail3/', views.servicedetail3, name='servicedetail3'),
     path('service-detail4/', views.servicedetail4, name='servicedetail4'),
     path('service-detail5/', views.servicedetail5, name='servicedetail5'),
+    path('coursemenu/', views.coursemenu, name='coursemenu'),
 ]

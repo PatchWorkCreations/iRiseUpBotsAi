@@ -1,0 +1,18 @@
+<!-- customadmin/templates/customadmin/dashboard.html -->
+{% extends "customadmin/base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome to the Admin Dashboard</h2>
+<p>Here you can manage your courses and other content.</p>
+<section>
+    <h3>All Courses</h3>
+    <ul>
+        {% for course in courses %}
+        <li>{{ course.title }} - <a href="{% url 'course_detail' course.pk %}">View</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'add_course' %}">Add New Course</a>
+</section>
+{% endblock %}
