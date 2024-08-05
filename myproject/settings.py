@@ -15,7 +15,10 @@ ALLOWED_HOSTS = [
     # Add any other domains or IPs as needed
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://iriseupai.up.railway.app']
+CSRF_TRUSTED_ORIGINS = [
+    'https://iriseupai-production.up.railway.app',
+    'http://localhost:8000',  # Add other domains as needed
+]
 
 # Application definition
 INSTALLED_APPS = [
