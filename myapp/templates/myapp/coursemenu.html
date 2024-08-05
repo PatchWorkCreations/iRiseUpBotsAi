@@ -3,14 +3,6 @@
 {% block title %}Course Menu{% endblock %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Dashboard</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
-</head>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -124,45 +116,47 @@
         align-items: center;
     }
 </style>
-<body>
-    <div class="container">
-        <h1>My Courses</h1>
-        <div class="current-course">
-            <h2>Continue Learning</h2>
-            <div class="course-card current">
-                <div class="course-card-header">
-                    <div class="course-image">
-                        <img src="{{ current_course.image.url }}" alt="Current Course Image">
-                    </div>
-                    <div class="course-info">
-                        <p>{{ current_course.units }} Units • {{ current_course.hours }} Hours</p>
-                        <h3>{{ current_course.title }}</h3>
-                        <p>{{ current_course.description }}</p>
-                    </div>
+
+<div class="container">
+    <h1>My Courses</h1>
+    <div class="current-course">
+        <h2>Continue Learning</h2>
+        {% if current_course %}
+        <div class="course-card current">
+            <div class="course-card-header">
+                <div class="course-image">
+                    <img src="{{ current_course.image.url }}" alt="Current Course Image">
                 </div>
-                <div class="progress-bar">
-                    <div class="progress" style="width: {{ current_course_access.progress }}%;"></div>
+                <div class="course-info">
+                    <p>{{ current_course.units }} Units • {{ current_course.hours }} Hours</p>
+                    <h3>{{ current_course.title }}</h3>
+                    <p>{{ current_course.description }}</p>
                 </div>
-                <button class="continue-btn">Continue learning</button>
             </div>
-        </div>
-        <div class="course-grid">
-            <h2>All Courses</h2>
-            {% for course in all_courses %}
-            <div class="course-card">
-                <div class="course-card-header">
-                    <div class="course-image">
-                        <img src="{{ course.image.url }}" alt="Course Image">
-                    </div>
-                    <div class="course-info">
-                        <h3>{{ course.title }}</h3>
-                    </div>
-                </div>
-                <a href="{% url 'course_detail' course.id %}" class="view-btn">View Course</a>
+            <div class="progress-bar">
+                <div class="progress" style="width: {{ current_course_access.progress }}%;"></div>
             </div>
-            {% endfor %}
+            <button class="continue-btn">Continue learning</button>
         </div>
+        {% else %}
+        <p>No current course.</p>
+        {% endif %}
     </div>
-</body>
-</html>
+    <div class="course-grid">
+        <h2>All Courses</h2>
+        {% for course in all_courses %}
+        <div class="course-card">
+            <div class="course-card-header">
+                <div class="course-image">
+                    <img src="{{ course.image.url }}" alt="Course Image">
+                </div>
+                <div class="course-info">
+                    <h3>{{ course.title }}</h3>
+                </div>
+            </div>
+            <a href="{% url 'course_detail' course.id %}" class="view-btn">View Course</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

@@ -11,13 +11,17 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
+class SubCourse(models.Model):
+    parent_course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='sub_courses')
+    title = models.CharField(max_length=200)
+    description = models.TextField(default="Default description")
+    units = models.IntegerField()
+    hours = models.FloatField()
+
 class Lesson(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    parent_sub_course = models.ForeignKey(SubCourse, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=200)
     content = models.TextField()
-
-    def __str__(self):
-        return self.title
 
 class UserCourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -26,3 +30,11 @@ class UserCourseAccess(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.course.title}"
+
+class UserSubCourseAccess(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    sub_course = models.ForeignKey(SubCourse, on_delete=models.CASCADE)
+    progress = models.FloatField(default=0.0)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.sub_course.title}"

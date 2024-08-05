@@ -1,95 +1,65 @@
-<!-- customadmin/templates/customadmin/base.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Admin Panel{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/custom_admin.css' %}">
+    <meta charset="utf-8">
+    <title>{% block title %}Admin Panel{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/custom_admin.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js" integrity="sha512-x44/aA4k5bp6a7AM2XjXULVJHIkfU4EKysxg5M1on5zEEII4DIFRm9Psyuk1q64Vy/y3HoOUU9e1X3ys4U5MQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {% block extra_css %}{% endblock %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-sizing: border-box;
+            margin: auto;
+        }
+        nav {
+            width: 100%;
+        }
+    </style>
 </head>
-<style>
-    /* static/css/custom_admin.css */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 20px;
-}
-
-header h1 {
-    margin: 0;
-    font-size: 24px;
-}
-
-nav ul {
-    list-style: none;
-    padding: 0;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 10px;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-}
-
-main {
-    padding: 20px;
-}
-
-h2 {
-    margin-top: 0;
-}
-
-section {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-section ul {
-    list-style: none;
-    padding: 0;
-}
-
-section ul li {
-    margin-bottom: 10px;
-}
-
-section ul li a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-section ul li a:hover {
-    text-decoration: underline;
-}
-
-</style>
 <body>
-    <header>
-        <h1>My Admin Panel</h1>
-        <nav>
-            <ul>
-                <li><a href="{% url 'custom_dashboard' %}">Dashboard</a></li>
-                <li><a href="{% url 'course_list' %}">Courses</a></li>
-                <li><a href="{% url 'admin:logout' %}">Logout</a></li>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'custom_dashboard' %}">Admin Panel</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'custom_dashboard' %}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'course_list' %}">Courses</a>
+                </li>
             </ul>
-        </nav>
-    </header>
-    <main>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/logout/">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-4">
         {% block content %}{% endblock %}
-    </main>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

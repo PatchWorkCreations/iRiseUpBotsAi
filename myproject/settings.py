@@ -4,6 +4,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -26,7 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'myapp',  # Add your app here
+    'myapp.apps.MyAppConfig',
+    # 'csp',  # Remove this line
 ]
 
 MIDDLEWARE = [
@@ -38,7 +42,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
+    # 'csp.middleware.CSPMiddleware',  # Remove this line
 ]
 
 STATICFILES_FINDERS = [
@@ -48,6 +52,7 @@ STATICFILES_FINDERS = [
 
 ROOT_URLCONF = 'myproject.urls'
 
+# settings.py
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -63,6 +68,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
@@ -123,3 +129,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+# settings.py
+
+LOGIN_URL = 'custom_login'
+LOGOUT_URL = 'custom_logout'
+LOGIN_REDIRECT_URL = 'custom_dashboard'
+LOGOUT_REDIRECT_URL = 'custom_dashboard'

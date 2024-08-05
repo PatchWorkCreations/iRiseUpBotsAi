@@ -1,18 +1,67 @@
-<!-- customadmin/templates/customadmin/dashboard.html -->
 {% extends "customadmin/base.html" %}
 
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<h2>Welcome to the Admin Dashboard</h2>
-<p>Here you can manage your courses and other content.</p>
-<section>
-    <h3>All Courses</h3>
-    <ul>
-        {% for course in courses %}
-        <li>{{ course.title }} - <a href="{% url 'course_detail' course.pk %}">View</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'add_course' %}">Add New Course</a>
-</section>
+<div class="container mt-5">
+    <div class="jumbotron">
+        <h1 class="display-4">Welcome to the Admin Dashboard</h1>
+        <p class="lead">Here you can manage your courses and other content.</p>
+        <hr class="my-4">
+        <a href="{% url 'add_course' %}" class="btn btn-primary btn-lg">Add New Course</a>
+    </div>
+
+    <section>
+        <h3>All Courses</h3>
+        <ul class="list-group mt-4">
+            {% for course in courses %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ course.title }}
+                    <div>
+                        <a href="{% url 'course_detail' course.pk %}" class="btn btn-info btn-sm">View</a>
+                        <a href="{% url 'edit_course' course.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-course-id="{{ course.pk }}" data-course-title="{{ course.title }}">Delete</button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Course</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the course <strong id="courseTitle"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var courseId = button.data('course-id');
+        var courseTitle = button.data('course-title');
+        var modal = $(this);
+        modal.find('#courseTitle').text(courseTitle);
+        modal.find('#deleteForm').attr('action', '/customadmin/courses/' + courseId + '/delete/');
+    });
+</script>
 {% endblock %}

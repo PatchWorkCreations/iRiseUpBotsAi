@@ -1,0 +1,212 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}{{ course.title }}{% endblock %}
+{% block content %}
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f7f9fc;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        background: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        margin: 20px auto;
+    }
+
+    h1, h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    p {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .course-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .course-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .course-info {
+        flex-grow: 1;
+        margin-right: 20px;
+    }
+
+    .course-info p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .course-info h3 {
+        margin: 5px 0;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .lessons-wrapper {
+        margin-top: 15px;
+        padding: 20px;
+        background: #f7f9fc;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .lessons {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-out;
+    }
+
+    .lessons.expanded {
+        max-height: 500px; /* Adjust as necessary */
+    }
+
+    .lessons ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .lessons ul li {
+        background: #fff;
+        margin: 5px 0;
+        padding: 15px;
+        border-radius: 5px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .lessons ul li h4 {
+        margin: 0 0 5px 0;
+        font-size: 16px;
+        color: #333;
+    }
+
+    .highlight {
+        background-color: #e0f7fa;
+    }
+
+    .progress-bar {
+        background: #e0e0e0;
+        border-radius: 5px;
+        height: 10px;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .progress {
+        background: #4caf50;
+        height: 100%;
+        border-radius: 5px;
+    }
+
+    .continue-btn {
+        background: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 10px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background 0.3s ease;
+    }
+
+    .continue-btn:hover {
+        background: #0056b3;
+    }
+
+    .toggle-icon {
+        font-size: 18px;
+        color: #007bff;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+    .toggle-icon.rotate {
+        transform: rotate(180deg);
+    }
+</style>
+<div class="container">
+    <h1>{{ course.title }}</h1>
+    <p>{{ course.description }}</p>
+
+    <h2>Sub-Courses</h2>
+    {% for sub_course in sub_courses %}
+        <div class="course-card">
+            <div class="course-card-header" onclick="toggleLessons('{{ sub_course.id }}')">
+                <div class="course-info">
+                    <h3>{{ sub_course.title }}</h3>
+                    <p>{{ sub_course.description }}</p>
+                    <p>{{ sub_course.units }} Unit • {{ sub_course.hours }} Hours</p>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: {{ sub_course.progress }}%;"></div>
+                </div>
+                <div class="toggle-icon" id="icon-{{ sub_course.id }}">&#9660;</div>
+            </div>
+            <div class="lessons-wrapper">
+                <div class="lessons" id="lessons-{{ sub_course.id }}">
+                    <ul>
+                        {% for lesson in sub_course.lessons.all %}
+                            <li class="{% if lesson.is_current %}highlight{% endif %}">
+                                <div class="lesson-info">
+                                    <h4>{{ lesson.title }}</h4>
+                                    <p>{{ lesson.description }}</p>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: {{ lesson.progress }}%;"></div>
+                                </div>
+                                <a href="{% url 'lesson_detail' lesson.id %}" class="continue-btn">Continue Lesson</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<script>
+    function toggleLessons(subCourseId) {
+        var lessonsDiv = document.getElementById('lessons-' + subCourseId);
+        var icon = document.getElementById('icon-' + subCourseId);
+        if (lessonsDiv.classList.contains('expanded')) {
+            lessonsDiv.classList.remove('expanded');
+            icon.classList.remove('rotate');
+        } else {
+            lessonsDiv.classList.add('expanded');
+            icon.classList.add('rotate');
+        }
+    }
+</script>
+{% endblock %}

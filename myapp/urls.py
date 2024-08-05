@@ -1,4 +1,3 @@
-# /Users/Julia/Downloads/iRiseUp.Ai-package/myapp/urls.py
 from django.urls import path
 from . import views
 
@@ -36,4 +35,11 @@ urlpatterns = [
     path('service-detail4/', views.servicedetail4, name='servicedetail4'),
     path('service-detail5/', views.servicedetail5, name='servicedetail5'),
     path('coursemenu/', views.coursemenu, name='coursemenu'),
+
+    path('sub_courses/<int:sub_course_id>/', views.sub_course_detail, name='sub_course_detail'),
+    path('lessons/<int:lesson_id>/', views.lesson_detail, name='lesson_detail'),
+    path('courses/', views.course_list, name='course_list'),
+    path('courses/<int:course_id>/', views.course_detail, name='course_detail'),
+    path('lessons/<int:lesson_id>/', views.lesson_detail, name='lesson_detail'),
+    path('lessons/<int:lesson_id>/next/', views.next_lesson, name='next_lesson'),
 ]

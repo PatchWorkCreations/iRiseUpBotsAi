@@ -1,0 +1,21 @@
+{% extends "customadmin/base.html" %}
+
+{% block title %}Add Lesson{% endblock %}
+
+{% block content %}
+<h2>Add Lesson</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div>
+        <label for="id_parent_sub_course">Parent Sub-Course:</label>
+        <select name="parent_sub_course" id="id_parent_sub_course">
+            <option value="">Select a sub-course</option>
+            {% for sub_course in sub_courses %}
+                <option value="{{ sub_course.id }}">{{ sub_course.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ course.title }}</title>
+</head>
+<body>
+    <h1>{{ course.title }}</h1>
+    <p>{{ course.description }}</p>
+    <img src="{{ course.image.url }}" alt="{{ course.title }}">
+    <p>Units: {{ course.units }}</p>
+    <p>Hours: {{ course.hours }}</p>
+    
+    <h2>Sub-Courses</h2>
+    <ul>
+        {% for sub_course in course.sub_courses.all %}
+            <li>{{ sub_course.title }} - {{ sub_course.description }}</li>
+            <ul>
+                {% for lesson in sub_course.lessons.all %}
+                    <li>{{ lesson.title }} - {{ lesson.content }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{% extends "customadmin/base.html" %}
+
+{% block title %}Add Sub-Course{% endblock %}
+
+{% block content %}
+<h2>Add Sub-Course</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Sub-Course</button>
+</form>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "customadmin/base.html" %}
+
+{% block title %}Edit {{ course.title }}{% endblock %}
+
+{% block content %}
+<h2>Edit {{ course.title }}</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+</form>
+
+<h3>Sub-Courses</h3>
+<ul>
+    {% for sub_course in sub_courses %}
+    <li>{{ sub_course.title }} - <a href="{% url 'edit_sub_course' sub_course.id %}">Edit</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

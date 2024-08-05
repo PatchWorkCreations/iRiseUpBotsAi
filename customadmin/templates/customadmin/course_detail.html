@@ -1,4 +1,3 @@
-<!-- templates/customadmin/course_detail.html -->
 {% extends "customadmin/base.html" %}
 
 {% block title %}{{ course.title }}{% endblock %}
@@ -6,7 +5,18 @@
 {% block content %}
 <h2>{{ course.title }}</h2>
 <p>{{ course.description }}</p>
-<p>Units: {{ course.units }}</p>
-<p>Hours: {{ course.hours }}</p>
-{% endblock %}
 
+<h3>Sub-Courses</h3>
+<ul>
+    {% for sub_course_data in sub_courses_with_lessons %}
+    <li>
+        <strong>{{ sub_course_data.sub_course.title }}</strong> - {{ sub_course_data.sub_course.description }}
+        <ul>
+            {% for lesson in sub_course_data.lessons %}
+            <li>{{ lesson.title }} - {{ lesson.content }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
