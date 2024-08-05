@@ -15,6 +15,7 @@ def dashboard(request):
     courses = Course.objects.all()
     return render(request, 'customadmin/dashboard.html', {'courses': courses})
 
+
 def course_list(request):
     courses = Course.objects.all()
     return render(request, 'customadmin/course_list.html', {'courses': courses})
@@ -119,13 +120,6 @@ def edit_lesson(request, lesson_id):
     }
     return render(request, 'customadmin/edit_lesson.html', context)
 
-def handle_uploaded_file(f):
-    # Save the file to the appropriate location and return its URL
-    file_path = os.path.join('media', 'lesson_images', f.name)
-    with open(file_path, 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-    return file_path
 
 def edit_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)

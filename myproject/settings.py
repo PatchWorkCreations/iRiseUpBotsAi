@@ -105,3 +105,6 @@ LOGIN_URL = 'custom_login'
 LOGOUT_URL = 'custom_logout'
 LOGIN_REDIRECT_URL = 'custom_dashboard'
 LOGOUT_REDIRECT_URL = 'custom_dashboard'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
