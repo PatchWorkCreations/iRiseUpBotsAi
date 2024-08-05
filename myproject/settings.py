@@ -1,11 +1,13 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -20,7 +22,6 @@ ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://iriseupai.up.railway.app']
 
 # Application definition
-
 INSTALLED_APPS = [
     'customadmin',
     'django.contrib.admin',
@@ -30,7 +31,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp.apps.MyAppConfig',
-    # 'csp',  # Remove this line
 ]
 
 MIDDLEWARE = [
@@ -42,7 +42,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    # 'csp.middleware.CSPMiddleware',  # Remove this line
 ]
 
 STATICFILES_FINDERS = [
@@ -52,7 +51,6 @@ STATICFILES_FINDERS = [
 
 ROOT_URLCONF = 'myproject.urls'
 
-# settings.py
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -69,7 +67,6 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
 # Database
@@ -77,8 +74,12 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('railway'),
+        'USER': os.getenv('postgres'),
+        'PASSWORD': os.getenv('CJWXRVupUzQgccKlpPkzLsbiYbyJMDLf'),
+        'HOST': os.getenv('postgres.railway.internal'),
+        'PORT': os.getenv('PGPORT', '5432'),  # Default port is 5432
     }
 }
 
@@ -114,14 +115,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-import os
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'myapp/static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -129,9 +125,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-# settings.py
 
 LOGIN_URL = 'custom_login'
 LOGOUT_URL = 'custom_logout'
