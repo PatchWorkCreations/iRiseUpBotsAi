@@ -8,8 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
-CSRF_TRUSTED_ORIGINS = [url.strip() for url in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if url.strip()]
+ALLOWED_HOSTS = os.getenv('iriseupai-production.up.railway.app')
+CSRF_TRUSTED_ORIGINS = ['https://iriseupai.up.railway.app']
 
 # Application definition
 INSTALLED_APPS = [
