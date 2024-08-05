@@ -8,7 +8,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('iriseupai-production.up.railway.app')
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'iriseupai-production.up.railway.app',
+    # Add any other domains or IPs as needed
+]
+
 CSRF_TRUSTED_ORIGINS = ['https://iriseupai.up.railway.app']
 
 # Application definition
