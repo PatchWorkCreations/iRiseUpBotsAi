@@ -1,0 +1,78 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Special Goal{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Is there something special you wish to achieve?</h2>
+    <p>You’re more likely to reach your goal if you have something important to aim for.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="special_goal" value="Buy a house" class="btn btn-light btn-goal d-flex align-items-center">
+                    <img src="{% static 'myapp/images/special_goal/buy_house.png' %}" alt="Buy a house" class="img-fluid goal-image me-3" />
+                    <span>Buy a house</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="special_goal" value="A perfect wedding" class="btn btn-light btn-goal d-flex align-items-center">
+                    <img src="{% static 'myapp/images/special_goal/perfect_wedding.png' %}" alt="A perfect wedding" class="img-fluid goal-image me-3" />
+                    <span>A perfect wedding</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="special_goal" value="Vacation" class="btn btn-light btn-goal d-flex align-items-center">
+                    <img src="{% static 'myapp/images/special_goal/vacation.png' %}" alt="Vacation" class="img-fluid goal-image me-3" />
+                    <span>Vacation</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="special_goal" value="Buy a car" class="btn btn-light btn-goal d-flex align-items-center">
+                    <img src="{% static 'myapp/images/special_goal/buy_car.png' %}" alt="Buy a car" class="img-fluid goal-image me-3" />
+                    <span>Buy a car</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="special_goal" value="Worry-free retirement" class="btn btn-light btn-goal d-flex align-items-center">
+                    <img src="{% static 'myapp/images/special_goal/retirement.png' %}" alt="Worry-free retirement" class="img-fluid goal-image me-3" />
+                    <span>Worry-free retirement</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="special_goal" value="Other" class="btn btn-light btn-goal d-flex align-items-center">
+                    <img src="{% static 'myapp/images/special_goal/other.png' %}" alt="Other" class="img-fluid goal-image me-3" />
+                    <span>Other</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .goal-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+    .btn-goal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+    .btn-goal span {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+{% endblock %}

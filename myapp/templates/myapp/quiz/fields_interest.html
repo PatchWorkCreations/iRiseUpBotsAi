@@ -1,0 +1,144 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Fields of Interest{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>What fields would you personally like to try yourself in?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <label for="fields_interest">Choose all that apply</label>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Graphic Design">
+                    <img src="{% static 'myapp/images/fields_interest/graphic_design.png' %}" alt="Graphic Design" class="img-fluid interest-image me-3" />
+                    <span>Graphic Design</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Content Creation">
+                    <img src="{% static 'myapp/images/fields_interest/content_creation.png' %}" alt="Content Creation" class="img-fluid interest-image me-3" />
+                    <span>Content Creation</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Web Development">
+                    <img src="{% static 'myapp/images/fields_interest/web_development.png' %}" alt="Web Development" class="img-fluid interest-image me-3" />
+                    <span>Web Development</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Artificial Intelligence">
+                    <img src="{% static 'myapp/images/fields_interest/artificial_intelligence.png' %}" alt="Artificial Intelligence" class="img-fluid interest-image me-3" />
+                    <span>Artificial Intelligence</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Digital Marketing">
+                    <img src="{% static 'myapp/images/fields_interest/digital_marketing.png' %}" alt="Digital Marketing" class="img-fluid interest-image me-3" />
+                    <span>Digital Marketing</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Social Media Management">
+                    <img src="{% static 'myapp/images/fields_interest/social_media_management.png' %}" alt="Social Media Management" class="img-fluid interest-image me-3" />
+                    <span>Social Media Management</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Video Editing">
+                    <img src="{% static 'myapp/images/fields_interest/video_editing.png' %}" alt="Video Editing" class="img-fluid interest-image me-3" />
+                    <span>Video Editing</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Photography">
+                    <img src="{% static 'myapp/images/fields_interest/photography.png' %}" alt="Photography" class="img-fluid interest-image me-3" />
+                    <span>Photography</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="E-commerce">
+                    <img src="{% static 'myapp/images/fields_interest/e_commerce.png' %}" alt="E-commerce" class="img-fluid interest-image me-3" />
+                    <span>E-commerce</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Consulting">
+                    <img src="{% static 'myapp/images/fields_interest/consulting.png' %}" alt="Consulting" class="img-fluid interest-image me-3" />
+                    <span>Consulting</span>
+                </button>
+            </div>
+        </div>
+        <input type="hidden" id="selected_fields_interest" name="selected_fields_interest">
+        <div class="row justify-content-center mt-3">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" class="btn btn-primary w-100">Continue</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .interest-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+    .btn-interest {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    .btn-interest.active {
+        background-color: #d4edda;
+    }
+    .btn-interest span {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const buttons = document.querySelectorAll('.btn-interest');
+        const selectedFieldsInput = document.getElementById('selected_fields_interest');
+        
+        buttons.forEach(button => {
+            button.addEventListener('click', function () {
+                this.classList.toggle('active');
+                updateSelectedFields();
+            });
+        });
+
+        function updateSelectedFields() {
+            const selectedFields = [];
+            buttons.forEach(button => {
+                if (button.classList.contains('active')) {
+                    selectedFields.push(button.getAttribute('data-value'));
+                }
+            });
+            selectedFieldsInput.value = selectedFields.join(',');
+        }
+    });
+</script>
+{% endblock %}

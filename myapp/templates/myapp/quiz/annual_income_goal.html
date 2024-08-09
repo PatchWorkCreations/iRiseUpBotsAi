@@ -1,0 +1,57 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Annual Income Goal{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>What annual income level do you want to achieve?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="annual_income_goal" value="30,000 – $50,000" class="btn btn-light btn-income d-flex align-items-center">
+                    <img src="{% static 'myapp/images/income_goal/30k_50k.png' %}" alt="30,000 – $50,000" class="img-fluid income-image me-3" />
+                    <span>30,000 – $50,000</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="annual_income_goal" value="$50,000 – $100,000" class="btn btn-light btn-income d-flex align-items-center">
+                    <img src="{% static 'myapp/images/income_goal/50k_100k.png' %}" alt="$50,000 – $100,000" class="img-fluid income-image me-3" />
+                    <span>$50,000 – $100,000</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="annual_income_goal" value="More than $100,000" class="btn btn-light btn-income d-flex align-items-center">
+                    <img src="{% static 'myapp/images/income_goal/more_than_100k.png' %}" alt="More than $100,000" class="img-fluid income-image me-3" />
+                    <span>More than $100,000</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .income-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+    .btn-income {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+    .btn-income span {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+{% endblock %}

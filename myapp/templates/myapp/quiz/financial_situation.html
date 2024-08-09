@@ -1,0 +1,57 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Financial Situation{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>How would you describe your financial situation?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="financial_situation" value="I'm comfortable" class="btn btn-light btn-situation d-flex align-items-center">
+                    <img src="{% static 'myapp/images/financial_situation/comfortable.png' %}" alt="I'm comfortable" class="img-fluid situation-image me-3" />
+                    <span>I'm comfortable</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="financial_situation" value="I would like to have more stability" class="btn btn-light btn-situation d-flex align-items-center">
+                    <img src="{% static 'myapp/images/financial_situation/more_stability.png' %}" alt="I would like to have more stability" class="img-fluid situation-image me-3" />
+                    <span>I would like to have more stability</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="financial_situation" value="I'm struggling to meet my financial goals" class="btn btn-light btn-situation d-flex align-items-center">
+                    <img src="{% static 'myapp/images/financial_situation/struggling.png' %}" alt="I'm struggling to meet my financial goals" class="img-fluid situation-image me-3" />
+                    <span>I'm struggling to meet my financial goals</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .situation-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+    .btn-situation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+    .btn-situation span {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+{% endblock %}

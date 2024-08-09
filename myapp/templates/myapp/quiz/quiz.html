@@ -1,0 +1,65 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Start Quiz{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>AI-Driven Income Growth Challenge</h2>
+    <h4>Select Your Gender</h4>
+    <p>1-MINUTE QUIZ</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-light" onclick="showAgeOptions('Male')">
+                    <img src="{% static 'myapp/images/quiz/Male35.png' %}" alt="Male" class="img-fluid" />
+                    <p>MALE</p>
+                </button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-light" onclick="showAgeOptions('Female')">
+                    <img src="{% static 'myapp/images/quiz/Female35.png' %}" alt="Female" class="img-fluid" />
+                    <p>FEMALE</p>
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="gender" id="gender" value="">
+        
+        <div id="age-selection" class="mt-3" style="display: none;">
+            <h4>Select Your Age</h4>
+            <div class="row">
+                <div class="col">
+                    <button type="submit" name="age_range" value="35-44" class="btn btn-light">
+                        <img src="{% static 'myapp/images/quiz/Male35.png' %}" alt="Age 35-44" class="img-fluid" id="age-35-44" />
+                        <p>Age: 35-44</p>
+                    </button>
+                </div>
+                <div class="col">
+                    <button type="submit" name="age_range" value="45+" class="btn btn-light">
+                        <img src="{% static 'myapp/images/quiz/Male55.png' %}" alt="Age 45+" class="img-fluid" id="age-45+" />
+                        <p>Age: 45+</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <p>
+        By clicking "Male" or "Female", you agree with <a href="#">Terms and Conditions</a>, <a href="#">Privacy Policy</a>, <a href="#">Subscription Terms</a>
+    </p>
+    <p>Coursiv product by Coursiv Limited. 2024 &copy; All Rights Reserved.</p>
+</div>
+
+<script>
+    function showAgeOptions(gender) {
+        document.getElementById('gender').value = gender;
+        document.getElementById('age-selection').style.display = 'block';
+
+        if (gender === 'Male') {
+            document.getElementById('age-35-44').src = "{% static 'myapp/images/quiz/Male35.png' %}";
+            document.getElementById('age-45+').src = "{% static 'myapp/images/quiz/Male55.png' %}";
+        } else {
+            document.getElementById('age-35-44').src = "{% static 'myapp/images/quiz/Female35.png' %}";
+            document.getElementById('age-45+').src = "{% static 'myapp/images/quiz/Female45.png' %}";
+        }
+    }
+</script>
+{% endblock %}

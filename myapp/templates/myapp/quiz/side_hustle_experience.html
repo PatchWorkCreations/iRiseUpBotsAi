@@ -1,0 +1,57 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Side Hustle Experience{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Have you previously earned money through some sort of side hustle?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="side_hustle_experience" value="Yes, occasional side gigs" class="btn btn-light btn-hustle d-flex align-items-center">
+                    <img src="{% static 'myapp/images/side_hustle_experience/occasional_side_gigs.png' %}" alt="Yes, occasional side gigs" class="img-fluid hustle-image me-3" />
+                    <span>Yes, occasional side gigs</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="side_hustle_experience" value="No, just a regular job" class="btn btn-light btn-hustle d-flex align-items-center">
+                    <img src="{% static 'myapp/images/side_hustle_experience/regular_job.png' %}" alt="No, just a regular job" class="img-fluid hustle-image me-3" />
+                    <span>No, just a regular job</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="side_hustle_experience" value="Freelanced for extra income" class="btn btn-light btn-hustle d-flex align-items-center">
+                    <img src="{% static 'myapp/images/side_hustle_experience/freelanced_extra_income.png' %}" alt="Freelanced for extra income" class="img-fluid hustle-image me-3" />
+                    <span>Freelanced for extra income</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .hustle-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+    .btn-hustle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+    .btn-hustle span {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+{% endblock %}

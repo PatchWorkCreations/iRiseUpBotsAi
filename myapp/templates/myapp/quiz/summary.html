@@ -1,0 +1,215 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Summary of Your Choices{% endblock %}
+{% block content %}
+<div class="container text-center profile-container">
+    <h2>Here’s Your AI-Driven Income Growth Profile</h2>
+
+    <div class="card mb-4 profile-card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center profile-content">
+                <h4 class="card-title mb-0">Readiness Score</h4>
+                <p class="card-text mb-0"><strong>Result:</strong> Perfect</p>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar-fill"></div>
+                    <div class="progress-ball"></div>
+                    <div class="progress-bar-label">Moderate</div>
+                </div>
+            </div>
+            <div class="progress-bar-labels">
+                <span>LOW</span>
+                <span>INTERMEDIATE</span>
+                <span>HIGH</span>
+            </div>
+            <div class="d-flex justify-content-center align-items-center profile-content">
+                <div class="profile-summary">
+                    <p><img src="{% static 'myapp/images/icons/motivation.png' %}" alt="Motivation" class="icon"> <strong>Motivation:</strong> High</p>
+                    <p><img src="{% static 'myapp/images/icons/potential.png' %}" alt="Potential" class="icon"> <strong>Potential:</strong> High</p>
+                    <p><img src="{% static 'myapp/images/icons/focus.png' %}" alt="Focus" class="icon"> <strong>Focus:</strong> Limited</p>
+                    <p><img src="{% static 'myapp/images/icons/ai-knowledge.png' %}" alt="AI Knowledge" class="icon"> <strong>AI Knowledge:</strong> Low</p>
+                </div>
+                <img src="{% static profile_image %}" alt="Profile Picture" class="img-fluid profile-image" />
+            </div>
+            <div class="impressive-score mt-4">
+                <div class="d-flex align-items-center">
+                    <img src="{% static 'myapp/images/icons/thumbs-up.png' %}" alt="Thumbs Up" class="impressive-icon me-2" />
+                    <p class="mb-0"><strong>Impressive score to succeed in AI:</strong> A study in 2022 found that workers who use AI tools in their work have 10-20% higher hourly rates than those who don't.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Updated Anchor Tag for Navigation -->
+    <a href="{% url 'special_goal' %}" class="btn btn-primary btn-continue">Continue</a>
+</div>
+
+<style>
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .progress-bar-container {
+        position: relative;
+        width: 100%;
+        height: 20px;
+        background: linear-gradient(to right, red, yellow, green);
+        border-radius: 10px;
+    }
+
+    .progress-bar-wrapper {
+        position: relative;
+        height: 100%;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-ball {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border: 3px solid #555;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: left 1s ease;
+    }
+
+    .progress-bar-label {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        transform: translateX(-50%);
+        background: #555;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        z-index: 5; /* Ensure it appears above the progress bar */
+        white-space: nowrap;
+        transition: left 1s ease;
+    }
+
+    .progress-bar-label:after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        width: 0;
+        height: 0;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+    .progress-bar-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .progress-bar-labels span {
+        font-size: 14px;
+    }
+
+    .profile-card {
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        border: none;
+        background-color: #fff;
+    }
+
+    .profile-image {
+        width: 150px;
+        height: auto;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-left: 20px;
+    }
+
+    .profile-content {
+        margin-top: 20px;
+    }
+
+    .btn-continue {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        font-size: 1.2em;
+        border-radius: 50px;
+        background-color: #4e73df;
+        border: none;
+        color: white;
+        margin-top: 20px;
+    }
+
+    .btn-continue:hover {
+        background-color: #2e59d9;
+    }
+
+    .summary-list .list-group-item {
+        border: none;
+        padding: 10px 20px;
+        background-color: #f8f9fa;
+        margin-bottom: 10px;
+        border-radius: 10px;
+    }
+
+    .summary-list .list-group-item strong {
+        font-weight: 600;
+    }
+
+    .card-title, .card-text {
+        text-align: left;
+    }
+
+    .profile-summary p {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 5px 0;
+    }
+
+    .icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+    }
+
+    .impressive-score {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: left;
+    }
+
+    .impressive-icon {
+        width: 30px;
+        height: auto;
+        margin-right: 10px;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressBall = document.querySelector('.progress-ball');
+        const progressLabel = document.querySelector('.progress-bar-label');
+        
+        // Move the ball to 70% and show the label
+        setTimeout(() => {
+            progressBall.style.left = '70%';
+            progressLabel.style.left = '70%';
+        }, 95); // Start animation shortly after page load
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}AI Mastery Readiness{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Rate your readiness to master AI</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="ai_mastery_readiness" value="All set - I am fully prepared" class="btn btn-light btn-readiness d-flex align-items-center">
+                    <img src="{% static 'myapp/images/ai_mastery_readiness/all_set.png' %}" alt="All set - I am fully prepared" class="img-fluid readiness-image me-3" />
+                    <span>All set - I am fully prepared</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="ai_mastery_readiness" value="Ready - I feel confident" class="btn btn-light btn-readiness d-flex align-items-center">
+                    <img src="{% static 'myapp/images/ai_mastery_readiness/ready.png' %}" alt="Ready - I feel confident" class="img-fluid readiness-image me-3" />
+                    <span>Ready - I feel confident</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="ai_mastery_readiness" value="Somewhat Ready - I have some knowledge" class="btn btn-light btn-readiness d-flex align-items-center">
+                    <img src="{% static 'myapp/images/ai_mastery_readiness/somewhat_ready.png' %}" alt="Somewhat Ready - I have some knowledge" class="img-fluid readiness-image me-3" />
+                    <span>Somewhat Ready - I have some knowledge</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="ai_mastery_readiness" value="Not Ready - I need more preparation" class="btn btn-light btn-readiness d-flex align-items-center">
+                    <img src="{% static 'myapp/images/ai_mastery_readiness/not_ready.png' %}" alt="Not Ready - I need more preparation" class="img-fluid readiness-image me-3" />
+                    <span>Not Ready - I need more preparation</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .readiness-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+    .btn-readiness {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+    .btn-readiness span {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+{% endblock %}

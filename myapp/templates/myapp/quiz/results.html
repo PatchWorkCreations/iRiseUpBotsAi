@@ -1,0 +1,36 @@
+
+{% extends "myapp/quiz/quiz_base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Your Personal Challenge</h2>
+    <p>Based on your responses, here is your personal challenge:</p>
+    <ul>
+        <li>Gender: {{ gender }}</li>
+        <li>Age Range: {{ age_range }}</li>
+        <li>Main Goal: {{ main_goal }}</li>
+        <li>Income Source: {{ income_source }}</li>
+        <li>Work Schedule: {{ work_schedule }}</li>
+        <li>Job Challenges: {{ job_challenges|join:", " }}</li>
+        <li>Financial Situation: {{ financial_situation }}</li>
+        <li>Annual Income Goal: {{ annual_income_goal }}</li>
+        <li>Control Work Hours: {{ control_work_hours }}</li>
+        <li>Routine Work: {{ routine_work }}</li>
+        <li>Time Saved Use: {{ time_saved_use }}</li>
+        <li>Job Interest Match: {{ job_interest_match }}</li>
+        <li>Digital Business Knowledge: {{ digital_business_knowledge }}</li>
+        <li>Side Hustle Experience: {{ side_hustle_experience }}</li>
+        <li>Learning New Skills: {{ learning_new_skills }}</li>
+        <li>AI Tools Familiarity: {{ ai_tools_familiarity|join:", " }}</li>
+        <li>Content Writing Knowledge: {{ content_writing_knowledge }}</li>
+        <li>Digital Marketing Knowledge: {{ digital_marketing_knowledge }}</li>
+        <li>AI Income Boost Awareness: {{ ai_income_boost_awareness }}</li>
+        <li>Fields Interest: {{ fields_interest|join:", " }}</li>
+        <li>AI Mastery Readiness: {{ ai_mastery_readiness }}</li>
+        <li>Focus Ability: {{ focus_ability }}</li>
+        <li>Special Goal: {{ special_goal }}</li>
+        <li>Time to Achieve Goal: {{ time_to_achieve_goal }}</li>
+        <li>Email: {{ email }}</li>
+        <li>Receive Offers: {{ receive_offers }}</li>
+    </ul>
+</div>
+{% endblock %}

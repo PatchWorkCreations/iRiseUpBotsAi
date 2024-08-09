@@ -1,14 +1,14 @@
 {% extends "customadmin/base.html" %}
-
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="jumbotron">
         <h1 class="display-4">Welcome to the Admin Dashboard</h1>
-        <p class="lead">Here you can manage your courses and other content.</p>
+        <p class="lead">Here you can manage your courses, quizzes, and other content.</p>
         <hr class="my-4">
         <a href="{% url 'add_course' %}" class="btn btn-primary btn-lg">Add New Course</a>
+        <a href="{% url 'add_quiz' %}" class="btn btn-primary btn-lg">Add New Quiz</a>
     </div>
 
     <section>
@@ -20,7 +20,41 @@
                     <div>
                         <a href="{% url 'course_detail' course.pk %}" class="btn btn-info btn-sm">View</a>
                         <a href="{% url 'edit_course' course.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-course-id="{{ course.pk }}" data-course-title="{{ course.title }}">Delete</button>
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-item-id="{{ course.pk }}" data-item-title="{{ course.title }}" data-item-type="course">Delete</button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="mt-5">
+        <h3>All Quizzes</h3>
+        <ul class="list-group mt-4">
+            {% for quiz in quizzes %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ quiz.title }}
+                    <div>
+                        <a href="{% url 'question_list' quiz.pk %}" class="btn btn-info btn-sm">View Questions</a>
+                        <a href="{% url 'edit_quiz' quiz.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'add_question' quiz.pk %}" class="btn btn-primary btn-sm">Add Question</a>
+                        <a href="{% url 'preview_quiz' quiz.pk %}" class="btn btn-success btn-sm">Preview Quiz</a>  <!-- New Preview Button -->
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-item-id="{{ quiz.pk }}" data-item-title="{{ quiz.title }}" data-item-type="quiz">Delete</button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="mt-5">
+        <h3>All Questions</h3>
+        <ul class="list-group mt-4">
+            {% for question in questions %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ question.text }}
+                    <div>
+                        <a href="{% url 'view_question' question.pk %}" class="btn btn-info btn-sm">View</a>
+                        <a href="{% url 'edit_question' question.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-item-id="{{ question.pk }}" data-item-title="{{ question.text }}" data-item-type="question">Delete</button>
                     </div>
                 </li>
             {% endfor %}
@@ -33,13 +67,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete Course</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete the course <strong id="courseTitle"></strong>?
+                Are you sure you want to delete the <strong id="itemType"></strong> <strong id="itemTitle"></strong>?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -57,11 +91,13 @@
 <script>
     $('#deleteModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var courseId = button.data('course-id');
-        var courseTitle = button.data('course-title');
+        var itemId = button.data('item-id');
+        var itemTitle = button.data('item-title');
+        var itemType = button.data('item-type');
         var modal = $(this);
-        modal.find('#courseTitle').text(courseTitle);
-        modal.find('#deleteForm').attr('action', '/customadmin/courses/' + courseId + '/delete/');
+        modal.find('#itemTitle').text(itemTitle);
+        modal.find('#itemType').text(itemType);
+        modal.find('#deleteForm').attr('action', '/customadmin/custom_admin/' + itemType + '/' + itemId + '/delete/');
     });
 </script>
 {% endblock %}

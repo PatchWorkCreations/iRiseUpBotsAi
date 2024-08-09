@@ -1,9 +1,8 @@
-# customadmin/urls.py
 from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.dashboard, name='custom_dashboard'),
+    path('', views.dashboard, name='dashboard'),
     path('courses/', views.course_list, name='course_list'),
     path('courses/add/', views.add_course, name='add_course'),
     path('courses/<int:course_id>/', views.course_detail, name='course_detail'),
@@ -16,4 +15,5 @@ urlpatterns = [
     path('login/', views.CustomLoginView.as_view(), name='custom_login'),
     path('logout/', views.CustomLogoutView.as_view(), name='custom_logout'),
     path('upload-csv/', views.upload_csv, name='upload_csv'),
+
 ]

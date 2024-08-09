@@ -1,0 +1,47 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Start Quiz{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>AI-Driven Income Growth Challenge</h2>
+    <h4>Select Your Gender</h4>
+    <p>1-MINUTE QUIZ</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-4">
+                <button type="submit" name="gender" value="Male" class="btn btn-light btn-gender">
+                    <img src="{% static 'myapp/images/quiz/Male35.png' %}" alt="Male" class="img-fluid gender-image" />
+                    <p>MALE</p>
+                </button>
+            </div>
+            <div class="col-6 col-md-4">
+                <button type="submit" name="gender" value="Female" class="btn btn-light btn-gender">
+                    <img src="{% static 'myapp/images/quiz/Female35.png' %}" alt="Female" class="img-fluid gender-image" />
+                    <p>FEMALE</p>
+                </button>
+            </div>
+        </div>
+    </form>
+    <p>
+        By clicking "Male" or "Female", you agree with <a href="#">Terms and Conditions</a>, <a href="#">Privacy Policy</a>, <a href="#">Subscription Terms</a>
+    </p>
+    <p>Coursiv product by Coursiv Limited. 2024 &copy; All Rights Reserved.</p>
+</div>
+
+<style>
+    .gender-image, .age-image {
+        max-width: 100%;
+        height: auto;
+        width: 200px;
+        height: 250px;
+        object-fit: cover;
+    }
+    .btn-gender, .btn-age {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}

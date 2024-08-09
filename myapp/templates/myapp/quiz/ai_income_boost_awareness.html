@@ -1,0 +1,57 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}AI Income Boost Awareness{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Did you know that AI tools may boost your income potential even further?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="ai_income_boost_awareness" value="Yes, I’ve heard of it" class="btn btn-light btn-awareness d-flex align-items-center">
+                    <img src="{% static 'myapp/images/ai_income_boost_awareness/yes_heard.png' %}" alt="Yes, I’ve heard of it" class="img-fluid awareness-image me-3" />
+                    <span>Yes, I’ve heard of it</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="ai_income_boost_awareness" value="I’m curious" class="btn btn-light btn-awareness d-flex align-items-center">
+                    <img src="{% static 'myapp/images/ai_income_boost_awareness/curious.png' %}" alt="I’m curious" class="img-fluid awareness-image me-3" />
+                    <span>I’m curious</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="ai_income_boost_awareness" value="No, this is news to me" class="btn btn-light btn-awareness d-flex align-items-center">
+                    <img src="{% static 'myapp/images/ai_income_boost_awareness/news_to_me.png' %}" alt="No, this is news to me" class="img-fluid awareness-image me-3" />
+                    <span>No, this is news to me</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .awareness-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+    .btn-awareness {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+    .btn-awareness span {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+{% endblock %}

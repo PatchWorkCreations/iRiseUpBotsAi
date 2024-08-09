@@ -1,0 +1,144 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}AI Tools Familiarity{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>What AI tools are you already familiar with?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <label for="ai_tools_familiarity">Choose all that apply</label>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="I'm new to AI tools">
+                    <img src="{% static 'myapp/images/ai_tools_familiarity/new_to_ai_tools.png' %}" alt="I'm new to AI tools" class="img-fluid ai-tools-image me-3" />
+                    <span>I'm new to AI tools</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="ChatGPT">
+                    <img src="{% static 'myapp/images/ai_tools_familiarity/chatgpt.png' %}" alt="ChatGPT" class="img-fluid ai-tools-image me-3" />
+                    <span>ChatGPT</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Midjourney">
+                    <img src="{% static 'myapp/images/ai_tools_familiarity/midjourney.png' %}" alt="Midjourney" class="img-fluid ai-tools-image me-3" />
+                    <span>Midjourney</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Google Gemini">
+                    <img src="{% static 'myapp/images/ai_tools_familiarity/google_gemini.png' %}" alt="Google Gemini" class="img-fluid ai-tools-image me-3" />
+                    <span>Google Gemini</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Otter.ai">
+                    <img src="{% static 'myapp/images/ai_tools_familiarity/otter_ai.png' %}" alt="Otter.ai" class="img-fluid ai-tools-image me-3" />
+                    <span>Otter.ai</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="AIVA">
+                    <img src="{% static 'myapp/images/ai_tools_familiarity/aiva.png' %}" alt="AIVA" class="img-fluid ai-tools-image me-3" />
+                    <span>AIVA</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="DALL-E">
+                    <img src="{% static 'myapp/images/ai_tools_familiarity/dall_e.png' %}" alt="DALL-E" class="img-fluid ai-tools-image me-3" />
+                    <span>DALL-E</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Jasper">
+                    <img src="{% static 'myapp/images/ai_tools_familiarity/jasper.png' %}" alt="Jasper" class="img-fluid ai-tools-image me-3" />
+                    <span>Jasper</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Copilot">
+                    <img src="{% static 'myapp/images/ai_tools_familiarity/copilot.png' %}" alt="Copilot" class="img-fluid ai-tools-image me-3" />
+                    <span>Copilot</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="OpenAI Playground">
+                    <img src="{% static 'myapp/images/ai_tools_familiarity/openai_playground.png' %}" alt="OpenAI Playground" class="img-fluid ai-tools-image me-3" />
+                    <span>OpenAI Playground</span>
+                </button>
+            </div>
+        </div>
+        <input type="hidden" id="selected_ai_tools" name="selected_ai_tools">
+        <div class="row justify-content-center mt-3">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" class="btn btn-primary w-100">Continue</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .ai-tools-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+    .btn-ai-tools {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    .btn-ai-tools.active {
+        background-color: #d4edda;
+    }
+    .btn-ai-tools span {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const buttons = document.querySelectorAll('.btn-ai-tools');
+        const selectedToolsInput = document.getElementById('selected_ai_tools');
+        
+        buttons.forEach(button => {
+            button.addEventListener('click', function () {
+                this.classList.toggle('active');
+                updateSelectedTools();
+            });
+        });
+
+        function updateSelectedTools() {
+            const selectedTools = [];
+            buttons.forEach(button => {
+                if (button.classList.contains('active')) {
+                    selectedTools.push(button.getAttribute('data-value'));
+                }
+            });
+            selectedToolsInput.value = selectedTools.join(',');
+        }
+    });
+</script>
+{% endblock %}

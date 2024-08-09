@@ -1,0 +1,57 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Digital Business Knowledge{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>How much do you know about digital business?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="digital_business_knowledge" value="I'm well-informed about it" class="btn btn-light btn-knowledge d-flex align-items-center">
+                    <img src="{% static 'myapp/images/digital_business_knowledge/well_informed.png' %}" alt="I'm well-informed about it" class="img-fluid knowledge-image me-3" />
+                    <span>I'm well-informed about it</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="digital_business_knowledge" value="I'm familiar with some aspects" class="btn btn-light btn-knowledge d-flex align-items-center">
+                    <img src="{% static 'myapp/images/digital_business_knowledge/familiar_aspects.png' %}" alt="I'm familiar with some aspects" class="img-fluid knowledge-image me-3" />
+                    <span>I'm familiar with some aspects</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="digital_business_knowledge" value="My knowledge is limited" class="btn btn-light btn-knowledge d-flex align-items-center">
+                    <img src="{% static 'myapp/images/digital_business_knowledge/limited_knowledge.png' %}" alt="My knowledge is limited" class="img-fluid knowledge-image me-3" />
+                    <span>My knowledge is limited</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .knowledge-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+    .btn-knowledge {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+    .btn-knowledge span {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+{% endblock %}

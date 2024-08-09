@@ -1,0 +1,57 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Control Work Hours{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Do you wish you had more control over your work hours and location?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="control_work_hours" value="Yes" class="btn btn-light btn-control d-flex align-items-center">
+                    <img src="{% static 'myapp/images/control_hours/yes.png' %}" alt="Yes" class="img-fluid control-image me-3" />
+                    <span>Yes</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="control_work_hours" value="No" class="btn btn-light btn-control d-flex align-items-center">
+                    <img src="{% static 'myapp/images/control_hours/no.png' %}" alt="No" class="img-fluid control-image me-3" />
+                    <span>No</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="control_work_hours" value="Hm, not sure" class="btn btn-light btn-control d-flex align-items-center">
+                    <img src="{% static 'myapp/images/control_hours/not_sure.png' %}" alt="Hm, not sure" class="img-fluid control-image me-3" />
+                    <span>Hm, not sure</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .control-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+    .btn-control {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+    .btn-control span {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+{% endblock %}

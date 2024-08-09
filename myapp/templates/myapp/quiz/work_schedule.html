@@ -1,0 +1,63 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Work Schedule{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>What is your work schedule like?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="work_schedule" value="9 to 5" class="btn btn-light btn-schedule d-flex align-items-center">
+                    <img src="{% static 'myapp/images/schedule/9_to_5.png' %}" alt="9 to 5" class="img-fluid schedule-image me-3" />
+                    <span>9 to 5</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="work_schedule" value="Night shifts" class="btn btn-light btn-schedule d-flex align-items-center">
+                    <img src="{% static 'myapp/images/schedule/night_shifts.png' %}" alt="Night shifts" class="img-fluid schedule-image me-3" />
+                    <span>Night shifts</span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="work_schedule" value="My hours are flexible" class="btn btn-light btn-schedule d-flex align-items-center">
+                    <img src="{% static 'myapp/images/schedule/flexible_hours.png' %}" alt="My hours are flexible" class="img-fluid schedule-image me-3" />
+                    <span>My hours are flexible</span>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+                <button type="submit" name="work_schedule" value="I’m retired" class="btn btn-light btn-schedule d-flex align-items-center">
+                    <img src="{% static 'myapp/images/schedule/retired.png' %}" alt="I’m retired" class="img-fluid schedule-image me-3" />
+                    <span>I’m retired</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .schedule-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+    .btn-schedule {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+    .btn-schedule span {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+{% endblock %}
