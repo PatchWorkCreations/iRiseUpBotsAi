@@ -1,0 +1,14 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Strengthen Your AI Foundation{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Strengthen Your AI Foundation</h2>
+    <img src="{% static 'myapp/images/somewhat_ready.png' %}" alt="Strengthen Your AI Foundation" class="img-fluid mb-3">
+    <p>You've got some knowledge—now it's time to build on that foundation. Our learning challenge will provide you with the tools and insights needed to master AI.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</div>
+{% endblock %}

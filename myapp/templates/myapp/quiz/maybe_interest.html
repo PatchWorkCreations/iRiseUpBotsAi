@@ -1,0 +1,14 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Uncover New Opportunities{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Uncover New Opportunities</h2>
+    <img src="{% static 'myapp/images/maybe_interest.png' %}" alt="Uncover New Opportunities" class="img-fluid mb-3">
+    <p>Explore careers that could ignite your passion with our challenge. Many people find their ideal job while exploring different fields. Start your journey now!</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</div>
+{% endblock %}

@@ -188,10 +188,17 @@ def age_selection(request):
     if request.method == 'POST':
         age_range = request.POST.get('age_range')
         request.session['age_range'] = age_range
-        return redirect('main_goal')
+        return redirect('after_age_page')
     gender = request.session.get('gender')
     context = {'gender': gender}
     return render(request, 'myapp/quiz/age_selection.html', context)
+
+
+def after_age_page(request):
+    if request.method == 'POST':
+        return redirect('main_goal')
+    return render(request, 'myapp/quiz/after_age_page.html')
+
 
 def main_goal(request):
     if request.method == 'POST':
@@ -215,14 +222,45 @@ def job_challenges(request):
     if request.method == 'POST':
         job_challenges = request.POST.getlist('job_challenges')
         request.session['job_challenges'] = job_challenges
-        return redirect('financial_situation')
+        return redirect('after_job_challenges_page')
     return render(request, 'myapp/quiz/job_challenges.html')
+
+
+def after_job_challenges_page(request):
+    if request.method == 'POST':
+        return redirect('financial_situation')
+    return render(request, 'myapp/quiz/after_job_challenges_page.html')
+
 
 def financial_situation(request):
     if request.method == 'POST':
-        request.session['financial_situation'] = request.POST.get('financial_situation')
-        return redirect('annual_income_goal')
+        financial_situation = request.POST.get('financial_situation')
+        request.session['financial_situation'] = financial_situation
+
+        if financial_situation == "I'm comfortable":
+            return redirect('comfortable_financial')
+        elif financial_situation == "I would like to have more stability":
+            return redirect('stability_financial')
+        elif financial_situation == "I'm struggling to meet my financial goals":
+            return redirect('struggling_financial')
     return render(request, 'myapp/quiz/financial_situation.html')
+
+
+def comfortable_financial(request):
+    if request.method == 'POST':
+        return redirect('annual_income_goal')
+    return render(request, 'myapp/quiz/comfortable_financial.html')
+
+def stability_financial(request):
+    if request.method == 'POST':
+        return redirect('annual_income_goal')
+    return render(request, 'myapp/quiz/stability_financial.html')
+
+def struggling_financial(request):
+    if request.method == 'POST':
+        return redirect('annual_income_goal')
+    return render(request, 'myapp/quiz/struggling_financial.html')
+
 
 def annual_income_goal(request):
     if request.method == 'POST':
@@ -245,14 +283,51 @@ def routine_work(request):
 def time_saved_use(request):
     if request.method == 'POST':
         request.session['time_saved_use'] = request.POST.get('time_saved_use')
-        return redirect('job_interest_match')
+        return redirect('job_interest_question')
     return render(request, 'myapp/quiz/time_saved_use.html')
 
-def job_interest_match(request):
+def job_interest_question(request):
     if request.method == 'POST':
-        request.session['job_interest_match'] = request.POST.get('job_interest_match')
-        return redirect('digital_business_knowledge')
+        request.session['job_interest_question'] = request.POST.get('job_interest_question')
+        return redirect('job_interest_match')
+    return render(request, 'myapp/quiz/job_interest_question.html')
+
+
+def job_interest_match(request):
+    job_interest_question = request.session.get('job_interest_question')
+    
+    if request.method == 'POST':
+        if job_interest_question == 'Absolutely':
+            return redirect('absolutely_interest')
+        elif job_interest_question == 'Somewhat':
+            return redirect('somewhat_interest')
+        elif job_interest_question == 'Maybe':
+            return redirect('maybe_interest')
+        elif job_interest_question == 'Not necessarily':
+            return redirect('not_necessarily_interest')
+
     return render(request, 'myapp/quiz/job_interest_match.html')
+
+def absolutely_interest(request):
+    if request.method == 'POST':
+        return redirect('digital_business_knowledge')  # Replace with the next logical step in your flow
+    return render(request, 'myapp/quiz/absolutely_interest.html')
+
+
+def somewhat_interest(request):
+    if request.method == 'POST':
+        return redirect('digital_business_knowledge')  # Replace with the next logical step in your flow
+    return render(request, 'myapp/quiz/somewhat_interest.html')
+
+def maybe_interest(request):
+    if request.method == 'POST':
+        return redirect('digital_business_knowledge')  # Replace with the next logical step in your flow
+    return render(request, 'myapp/quiz/maybe_interest.html')
+
+def not_necessarily_interest(request):
+    if request.method == 'POST':
+        return redirect('digital_business_knowledge')  # Replace with the next logical step in your flow
+    return render(request, 'myapp/quiz/not_necessarily_interest.html')
 
 def digital_business_knowledge(request):
     if request.method == 'POST':
@@ -304,11 +379,45 @@ def fields_interest(request):
         return redirect('ai_mastery_readiness')
     return render(request, 'myapp/quiz/fields_interest.html')
 
+
 def ai_mastery_readiness(request):
     if request.method == 'POST':
-        request.session['ai_mastery_readiness'] = request.POST.get('ai_mastery_readiness')
-        return redirect('focus_ability')
+        ai_mastery_readiness = request.POST.get('ai_mastery_readiness')
+        print(f"Selected option: {ai_mastery_readiness}")  # Debugging print
+        request.session['ai_mastery_readiness'] = ai_mastery_readiness
+
+        if ai_mastery_readiness == 'All set - I am fully prepared':
+            return redirect('all_set')
+        elif ai_mastery_readiness == 'Ready - I feel confident':
+            return redirect('ready')
+        elif ai_mastery_readiness == 'Somewhat Ready - I have some knowledge':
+            return redirect('somewhat_ready')
+        elif ai_mastery_readiness == 'Not Ready - I need more preparation':
+            return redirect('not_ready')
+
     return render(request, 'myapp/quiz/ai_mastery_readiness.html')
+
+
+def all_set(request):
+    if request.method == 'POST':
+        return redirect('focus_ability')
+    return render(request, 'myapp/quiz/all_set.html')
+
+def ready(request):
+    if request.method == 'POST':
+        return redirect('focus_ability')
+    return render(request, 'myapp/quiz/ready.html')
+
+def somewhat_ready(request):
+    if request.method == 'POST':
+        return redirect('focus_ability')
+    return render(request, 'myapp/quiz/somewhat_ready.html')
+
+def not_ready(request):
+    if request.method == 'POST':
+        return redirect('focus_ability')
+    return render(request, 'myapp/quiz/not_ready.html')
+
 
 def focus_ability(request):
     if request.method == 'POST':
@@ -369,33 +478,24 @@ def time_to_achieve_goal(request):
         return redirect('results')  
     return render(request, 'myapp/quiz/time_to_achieve_goal.html')
 
+from django.shortcuts import render
+from datetime import datetime, timedelta
+
 def results(request):
+    # Get the current date
+    current_date = datetime.now()
+
+    # Get the current month
+    current_month = current_date.month
+
+    # Calculate the target month, which is two months from now
+    target_date = current_date + timedelta(days=60)
+    target_month = target_date.strftime('%b, %Y')  # Format as "Month, Year"
+
     context = {
-        'gender': request.session.get('gender'),
-        'age_range': request.session.get('age_range'),
-        'main_goal': request.session.get('main_goal'),
-        'income_source': request.session.get('income_source'),
-        'work_schedule': request.session.get('work_schedule'),
-        'job_challenges': request.session.get('job_challenges'),
-        'financial_situation': request.session.get('financial_situation'),
-        'annual_income_goal': request.session.get('annual_income_goal'),
-        'control_work_hours': request.session.get('control_work_hours'),
-        'routine_work': request.session.get('routine_work'),
-        'time_saved_use': request.session.get('time_saved_use'),
-        'job_interest_match': request.session.get('job_interest_match'),
-        'digital_business_knowledge': request.session.get('digital_business_knowledge'),
-        'side_hustle_experience': request.session.get('side_hustle_experience'),
-        'learning_new_skills': request.session.get('learning_new_skills'),
-        'ai_tools_familiarity': request.session.get('ai_tools_familiarity'),
-        'content_writing_knowledge': request.session.get('content_writing_knowledge'),
-        'digital_marketing_knowledge': request.session.get('digital_marketing_knowledge'),
-        'ai_income_boost_awareness': request.session.get('ai_income_boost_awareness'),
-        'fields_interest': request.session.get('fields_interest'),
-        'ai_mastery_readiness': request.session.get('ai_mastery_readiness'),
-        'focus_ability': request.session.get('focus_ability'),
-        'special_goal': request.session.get('special_goal'),
-        'time_to_achieve_goal': request.session.get('time_to_achieve_goal'),
-        'email': request.session.get('email'),
-        'receive_offers': request.session.get('receive_offers'),
+        'current_month': current_month,
+        'target_month': target_month,
+        'special_goal': request.session.get('special_goal', 'Your Goal'),
     }
+
     return render(request, 'myapp/quiz/results.html', context)

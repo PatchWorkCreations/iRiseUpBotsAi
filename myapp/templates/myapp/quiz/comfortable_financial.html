@@ -1,0 +1,14 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Financial Comfort{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>You're on the Right Track!</h2>
+    <img src="{% static 'myapp/images/comfortable_financial.png' %}" alt="You're on the Right Track" class="img-fluid mb-3">
+    <p>Keep up the great work and discover how to make your financial journey even more rewarding. According to a Gallup poll, only 29% of Americans are financially comfortable. Join the elite group that’s pushing towards even greater success.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</div>
+{% endblock %}

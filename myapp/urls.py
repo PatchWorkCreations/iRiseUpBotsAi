@@ -46,16 +46,37 @@ urlpatterns = [
 
     path('start_quiz/', views.start_quiz, name='start_quiz'),
     path('age_selection/', views.age_selection, name='age_selection'),
+
+    path('after-age/', views.after_age_page, name='after_age_page'),
+
     path('main_goal/', views.main_goal, name='main_goal'),
     path('income_source/', views.income_source, name='income_source'),
     path('work_schedule/', views.work_schedule, name='work_schedule'),
     path('job_challenges/', views.job_challenges, name='job_challenges'),
+
+    path('after-job-challenges/', views.after_job_challenges_page, name='after_job_challenges_page'),
+    
     path('financial_situation/', views.financial_situation, name='financial_situation'),
-    path('annual_income_goal/', views.annual_income_goal, name='annual_income_goal'),
-    path('control_work_hours/', views.control_work_hours, name='control_work_hours'),
-    path('routine_work/', views.routine_work, name='routine_work'),
-    path('time_saved_use/', views.time_saved_use, name='time_saved_use'),
+
+    path('comfortable-financial/', views.comfortable_financial, name='comfortable_financial'),
+    path('stability-financial/', views.stability_financial, name='stability_financial'),
+    path('struggling-financial/', views.struggling_financial, name='struggling_financial'),
+    
+    path('annual-income-goal/', views.annual_income_goal, name='annual_income_goal'),
+    path('control-work-hours/', views.control_work_hours, name='control_work_hours'),
+    path('routine-work/', views.routine_work, name='routine_work'),
+    path('time-saved-use/', views.time_saved_use, name='time_saved_use'),
+
+
+    path('job-interest-question/', views.job_interest_question, name='job_interest_question'),
     path('job_interest_match/', views.job_interest_match, name='job_interest_match'),
+
+    path('absolutely-interest/', views.absolutely_interest, name='absolutely_interest'),
+    path('somewhat-interest/', views.somewhat_interest, name='somewhat_interest'),
+    path('maybe-interest/', views.maybe_interest, name='maybe_interest'),
+    path('not-necessarily-interest/', views.not_necessarily_interest, name='not_necessarily_interest'),
+    
+
     path('digital_business_knowledge/', views.digital_business_knowledge, name='digital_business_knowledge'),
     path('side_hustle_experience/', views.side_hustle_experience, name='side_hustle_experience'),
     path('learning_new_skills/', views.learning_new_skills, name='learning_new_skills'),
@@ -65,10 +86,17 @@ urlpatterns = [
     path('ai_income_boost_awareness/', views.ai_income_boost_awareness, name='ai_income_boost_awareness'),
     path('fields_interest/', views.fields_interest, name='fields_interest'),
     path('ai_mastery_readiness/', views.ai_mastery_readiness, name='ai_mastery_readiness'),
+
+    path('all-set/', views.all_set, name='all_set'),
+    path('ready/', views.ready, name='ready'),
+    path('somewhat-ready/', views.somewhat_ready, name='somewhat_ready'),
+    path('not-ready/', views.not_ready, name='not_ready'),
+    
     path('focus_ability/', views.focus_ability, name='focus_ability'),
     path('special_goal/', views.special_goal, name='special_goal'),
     path('time_to_achieve_goal/', views.time_to_achieve_goal, name='time_to_achieve_goal'),
     path('summary/', views.summary, name='summary'),
     path('results/', views.results, name='results'),
+
 
 ]

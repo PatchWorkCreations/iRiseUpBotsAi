@@ -1,0 +1,14 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Elevate Your AI Mastery{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Elevate Your AI Mastery!</h2>
+    <img src="{% static 'myapp/images/all_set.png' %}" alt="Elevate Your AI Mastery" class="img-fluid mb-3">
+    <p>You're already prepared—now take your skills to the next level with our advanced AI learning challenge. Join the top 10% who excel in AI!</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</div>
+{% endblock %}

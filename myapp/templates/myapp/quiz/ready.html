@@ -1,0 +1,14 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Boost Your AI Confidence{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Boost Your AI Confidence!</h2>
+    <img src="{% static 'myapp/images/ready.png' %}" alt="Boost Your AI Confidence" class="img-fluid mb-3">
+    <p>You're confident and ready—our learning challenge will enhance your knowledge and skills. Join the 70% of professionals who see a boost in their career with advanced AI training.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</div>
+{% endblock %}

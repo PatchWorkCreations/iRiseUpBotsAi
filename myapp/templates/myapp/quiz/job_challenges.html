@@ -86,12 +86,25 @@
         border-radius: 10px;
         cursor: pointer;
     }
+    .btn-challenge.checked {
+        background-color: #c8e6c9; /* Light green for selected */
+    }
     .btn-challenge span {
         flex-grow: 1;
         text-align: center;
     }
-    .btn-challenge input[type="checkbox"]:checked + label {
-        background-color: #e0e0e0;
-    }
 </style>
+
+<script>
+    document.querySelectorAll('.btn-challenge').forEach(label => {
+        label.addEventListener('click', function () {
+            const input = document.getElementById(this.htmlFor);
+            if (input.checked) {
+                this.classList.remove('checked');
+            } else {
+                this.classList.add('checked');
+            }
+        });
+    });
+</script>
 {% endblock %}

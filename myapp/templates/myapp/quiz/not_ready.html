@@ -1,0 +1,14 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Start Your AI Journey{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Start Your AI Journey</h2>
+    <img src="{% static 'myapp/images/not_ready.png' %}" alt="Start Your AI Journey" class="img-fluid mb-3">
+    <p>No worries if you're not ready yet—everyone starts somewhere. Our learning challenge will guide you step by step, helping you gain the knowledge and confidence you need to succeed with AI.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</div>
+{% endblock %}

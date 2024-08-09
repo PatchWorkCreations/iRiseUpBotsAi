@@ -1,0 +1,14 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Overcoming Financial Struggles{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Turn Struggles into Success</h2>
+    <img src="{% static 'myapp/images/struggling_financial.png' %}" alt="Turn Struggles into Success" class="img-fluid mb-3">
+    <p>Empower yourself with the tools and knowledge to overcome financial challenges and achieve your goals. Nearly 54% of adults struggle to meet their financial goals, but with the right guidance, you can transform your situation.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</div>
+{% endblock %}

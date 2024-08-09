@@ -1,0 +1,14 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Discover New Opportunities{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h2>Discover New Opportunities</h2>
+    <img src="{% static 'myapp/images/not_necessarily_interest.png' %}" alt="Discover New Opportunities" class="img-fluid mb-3">
+    <p>There are hundreds of various work opportunities online that have a high-income potential. Moreover, our challenge shows practical examples of how AI may boost your work.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</div>
+{% endblock %}
