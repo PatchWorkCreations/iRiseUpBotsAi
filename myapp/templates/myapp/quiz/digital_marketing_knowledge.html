@@ -2,21 +2,22 @@
 {% load static %}
 {% block title %}Digital Marketing Knowledge{% endblock %}
 {% block content %}
+{% include 'myapp/quiz/header.html' %}
 <div class="container text-center">
     <h2>Rate your knowledge in digital marketing</h2>
-    <p>According to Upwork, digital marketer makes around $100,000 annually.</p>
+    <p>According to Upwork, digital marketers make around $100,000 annually.</p>
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="digital_marketing_knowledge" value="Expert - I have extensive knowledge" class="btn btn-light btn-knowledge d-flex align-items-center">
-                    <img src="{% static 'myapp/images/digital_marketing_knowledge/expert.png' %}" alt="Expert - I have extensive knowledge" class="img-fluid knowledge-image me-3" />
+                    <span class="emoji">💼</span>
                     <span>Expert - I have extensive knowledge</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="digital_marketing_knowledge" value="Proficient - I am skilled" class="btn btn-light btn-knowledge d-flex align-items-center">
-                    <img src="{% static 'myapp/images/digital_marketing_knowledge/proficient.png' %}" alt="Proficient - I am skilled" class="img-fluid knowledge-image me-3" />
+                    <span class="emoji">📈</span>
                     <span>Proficient - I am skilled</span>
                 </button>
             </div>
@@ -24,13 +25,13 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="digital_marketing_knowledge" value="Intermediate - I have some knowledge" class="btn btn-light btn-knowledge d-flex align-items-center">
-                    <img src="{% static 'myapp/images/digital_marketing_knowledge/intermediate.png' %}" alt="Intermediate - I have some knowledge" class="img-fluid knowledge-image me-3" />
+                    <span class="emoji">🔍</span>
                     <span>Intermediate - I have some knowledge</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="digital_marketing_knowledge" value="Novice - I have no experience" class="btn btn-light btn-knowledge d-flex align-items-center">
-                    <img src="{% static 'myapp/images/digital_marketing_knowledge/novice.png' %}" alt="Novice - I have no experience" class="img-fluid knowledge-image me-3" />
+                    <span class="emoji">📚</span>
                     <span>Novice - I have no experience</span>
                 </button>
             </div>
@@ -39,26 +40,26 @@
 </div>
 
 <style>
-    .knowledge-image {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
+    .emoji {
+        font-size: 50px; /* Size of the emojis */
+        display: block;
+        margin-bottom: 10px;
     }
     .btn-knowledge {
         display: flex;
-        justify-content: center;
+        flex-direction: column; /* Stacks emoji and text vertically */
         align-items: center;
+        justify-content: center;
         width: 100%;
         text-align: center;
-        margin-bottom: 15px;
-        padding: 10px;
+        padding: 20px;
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
+        font-size: 24px; /* Larger text size */
     }
     .btn-knowledge span {
-        flex-grow: 1;
-        text-align: center;
+        display: block;
     }
 </style>
 {% endblock %}

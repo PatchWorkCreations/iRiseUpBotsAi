@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Time to Achieve Goal{% endblock %}
 {% block content %}
+{% include 'myapp/quiz/header.html' %}
 <div class="container text-center">
     <h2>How much time are you ready to spend to achieve your goal?</h2>
     <form method="post">
@@ -9,13 +10,13 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="time_to_achieve_goal" value="5 min/day" class="btn btn-light btn-time-goal d-flex align-items-center">
-                    <img src="{% static 'myapp/images/time_to_achieve_goal/5_min.png' %}" alt="5 min/day" class="img-fluid time-goal-image me-3" />
+                    <span class="emoji">⏱️</span>
                     <span>5 min/day</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="time_to_achieve_goal" value="10 min/day" class="btn btn-light btn-time-goal d-flex align-items-center">
-                    <img src="{% static 'myapp/images/time_to_achieve_goal/10_min.png' %}" alt="10 min/day" class="img-fluid time-goal-image me-3" />
+                    <span class="emoji">⏱️</span>
                     <span>10 min/day</span>
                 </button>
             </div>
@@ -23,13 +24,13 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="time_to_achieve_goal" value="15 min/day" class="btn btn-light btn-time-goal d-flex align-items-center">
-                    <img src="{% static 'myapp/images/time_to_achieve_goal/15_min.png' %}" alt="15 min/day" class="img-fluid time-goal-image me-3" />
+                    <span class="emoji">⏱️</span>
                     <span>15 min/day</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="time_to_achieve_goal" value="20 min/day" class="btn btn-light btn-time-goal d-flex align-items-center">
-                    <img src="{% static 'myapp/images/time_to_achieve_goal/20_min.png' %}" alt="20 min/day" class="img-fluid time-goal-image me-3" />
+                    <span class="emoji">⏱️</span>
                     <span>20 min/day</span>
                 </button>
             </div>
@@ -38,26 +39,26 @@
 </div>
 
 <style>
-    .time-goal-image {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
+    .emoji {
+        font-size: 50px; /* Adjust size as needed */
+        display: block;
+        margin-bottom: 10px;
     }
     .btn-time-goal {
         display: flex;
-        justify-content: center;
+        flex-direction: column; /* Stacks emoji and text vertically */
         align-items: center;
+        justify-content: center;
         width: 100%;
         text-align: center;
-        margin-bottom: 15px;
-        padding: 10px;
+        padding: 20px;
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
+        font-size: 24px; /* Larger text size */
     }
     .btn-time-goal span {
-        flex-grow: 1;
-        text-align: center;
+        display: block;
     }
 </style>
 {% endblock %}

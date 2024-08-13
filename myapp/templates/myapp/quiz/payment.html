@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make a Payment</title>
+    <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+    <style>
+        /* Add your custom styles here */
+        .payment-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .payment-button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .payment-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="payment-container">
+    <h2>Complete Your Payment</h2>
+    <form id="payment-form" class="payment-form">
+        <!-- Card Details Input Element -->
+        <div id="card-container"></div>
+
+        <button id="card-button" class="payment-button" type="button">Pay Now</button>
+    </form>
+</div>
+
+<script>
+    const payments = Square.payments('your-application-id', 'your-location-id');
+
+    async function initializeCard(payments) {
+        const card = await payments.card();
+        await card.attach('#card-container');
+        return card;
+    }
+
+    async function tokenize(paymentMethod) {
+        const result = await paymentMethod.tokenize();
+        if (result.status === 'OK') {
+            return result.token;
+        } else {
+            let errorMessage = `Tokenization failed with status: ${result.status}`;
+            if (result.errors) {
+                errorMessage += ` and errors: ${JSON.stringify(result.errors)}`;
+            }
+            throw new Error(errorMessage);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        const card = await initializeCard(payments);
+
+        document.getElementById('card-button').addEventListener('click', async function () {
+            try {
+                const token = await tokenize(card);
+
+                // Make a request to your server with the payment token
+                const response = await fetch('/process-payment/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({
+                        source_id: token,
+                        plan: '4-week' // or whichever plan the user selects
+                    }),
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = '/success/';
+                } else {
+                    alert('Payment failed: ' + result.error);
+                }
+            } catch (e) {
+                console.error(e.message);
+                alert('Payment failed: ' + e.message);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Summary of Your Choices{% endblock %}
 {% block content %}
+{% include 'myapp/quiz/header.html' %}
 <div class="container text-center profile-container">
     <h2>Here’s Your AI-Driven Income Growth Profile</h2>
 
@@ -23,21 +24,23 @@
                 <span>INTERMEDIATE</span>
                 <span>HIGH</span>
             </div>
+            <div class="impressive-score mt-4">
+                <div class="d-flex align-items-center">
+                    
+                    <p class="mb-0"><span class="emoji me-2">👍</span><strong>Impressive score to succeed in AI:</strong> A study in 2022 found that workers who use AI tools in their work have 10-20% higher hourly rates than those who don't.</p>
+                </div>
+            </div>
             <div class="d-flex justify-content-center align-items-center profile-content">
                 <div class="profile-summary">
-                    <p><img src="{% static 'myapp/images/icons/motivation.png' %}" alt="Motivation" class="icon"> <strong>Motivation:</strong> High</p>
-                    <p><img src="{% static 'myapp/images/icons/potential.png' %}" alt="Potential" class="icon"> <strong>Potential:</strong> High</p>
-                    <p><img src="{% static 'myapp/images/icons/focus.png' %}" alt="Focus" class="icon"> <strong>Focus:</strong> Limited</p>
-                    <p><img src="{% static 'myapp/images/icons/ai-knowledge.png' %}" alt="AI Knowledge" class="icon"> <strong>AI Knowledge:</strong> Low</p>
+                    <p><span class="emoji">🔥</span> <strong>Motivation:</strong> High</p>
+                    <p><span class="emoji">🚀</span> <strong>Potential:</strong> High</p>
+                    <p><span class="emoji">🎯</span> <strong>Focus:</strong> Limited</p>
+                    <p><span class="emoji">🤖</span> <strong>AI Knowledge:</strong> Low</p>
                 </div>
                 <img src="{% static profile_image %}" alt="Profile Picture" class="img-fluid profile-image" />
             </div>
-            <div class="impressive-score mt-4">
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'myapp/images/icons/thumbs-up.png' %}" alt="Thumbs Up" class="impressive-icon me-2" />
-                    <p class="mb-0"><strong>Impressive score to succeed in AI:</strong> A study in 2022 found that workers who use AI tools in their work have 10-20% higher hourly rates than those who don't.</p>
-                </div>
-            </div>
+            
+            
         </div>
     </div>
     
@@ -46,9 +49,13 @@
 </div>
 
 <style>
+    .emoji {
+        font-size: 20px; /* Size of the thumbs-up emoji */
+    }
     .profile-container {
         max-width: 800px;
         margin: 0 auto;
+        padding-bottom: 30px;
     }
 
     .progress-bar-container {
@@ -139,6 +146,7 @@
 
     .profile-content {
         margin-top: 20px;
+        margin-bottom: 35px;
     }
 
     .btn-continue {

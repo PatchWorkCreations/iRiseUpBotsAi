@@ -1,35 +1,36 @@
 {% extends "myapp/quiz/quiz_base.html" %}
 {% load static %}
-{% block title %}Job Interest Match{% endblock %}
+{% block title %}Job Interest{% endblock %}
 {% block content %}
+{% include 'myapp/quiz/header.html' %}
 <div class="container text-center">
     <h2>Would you enjoy a job that matches your interests?</h2>
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="job_interest_match" value="Absolutely" class="btn btn-light btn-interest d-flex align-items-center">
-                    <img src="{% static 'myapp/images/job_interest_match/absolutely.png' %}" alt="Absolutely" class="img-fluid interest-image me-3" />
+                <button type="submit" name="job_interest_question" value="Absolutely" class="btn btn-light btn-interest">
+                    <span class="emoji">💯</span>
                     <span>Absolutely</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="job_interest_match" value="Somewhat" class="btn btn-light btn-interest d-flex align-items-center">
-                    <img src="{% static 'myapp/images/job_interest_match/somewhat.png' %}" alt="Somewhat" class="img-fluid interest-image me-3" />
+                <button type="submit" name="job_interest_question" value="Somewhat" class="btn btn-light btn-interest">
+                    <span class="emoji">🙂</span>
                     <span>Somewhat</span>
                 </button>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="job_interest_match" value="Maybe" class="btn btn-light btn-interest d-flex align-items-center">
-                    <img src="{% static 'myapp/images/job_interest_match/maybe.png' %}" alt="Maybe" class="img-fluid interest-image me-3" />
+                <button type="submit" name="job_interest_question" value="Maybe" class="btn btn-light btn-interest">
+                    <span class="emoji">🤔</span>
                     <span>Maybe</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="job_interest_match" value="Not necessarily" class="btn btn-light btn-interest d-flex align-items-center">
-                    <img src="{% static 'myapp/images/job_interest_match/not_necessarily.png' %}" alt="Not necessarily" class="img-fluid interest-image me-3" />
+                <button type="submit" name="job_interest_question" value="Not necessarily" class="btn btn-light btn-interest">
+                    <span class="emoji">😐</span>
                     <span>Not necessarily</span>
                 </button>
             </div>
@@ -38,26 +39,31 @@
 </div>
 
 <style>
-    .interest-image {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
+    .emoji {
+        font-size: 50px; /* Larger emoji size */
+        display: block;
+        margin-bottom: 10px;
     }
     .btn-interest {
         display: flex;
-        justify-content: center;
+        flex-direction: column; /* Stacks emoji and text vertically */
         align-items: center;
+        justify-content: center;
         width: 100%;
         text-align: center;
-        margin-bottom: 15px;
-        padding: 10px;
+        padding: 20px;
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
+        font-size: 24px; /* Larger text size */
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .btn-interest:hover {
+        background-color: #e0e0e0;
     }
     .btn-interest span {
-        flex-grow: 1;
-        text-align: center;
+        display: block;
     }
 </style>
 {% endblock %}

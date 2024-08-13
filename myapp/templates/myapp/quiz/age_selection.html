@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Select Age{% endblock %}
 {% block content %}
+{% include 'myapp/quiz/header.html' %}
 <div class="container text-center">
     <h2>Select Your Age</h2>
     <form method="post">
@@ -38,22 +39,6 @@
     <p>
         By choosing your age, you agree with <a href="#">Terms and Conditions</a>, <a href="#">Privacy Policy</a>, <a href="#">Subscription Terms</a>
     </p>
-    <p>Coursiv Limited, Limassol, Cyprus. 2024 &copy; All Rights Reserved.</p>
+    <p>iRiseUp.ai, Limassol, Cyprus. 2024 &copy; All Rights Reserved.</p>
 </div>
-
-<style>
-    .age-image {
-        max-width: 100%;
-        height: auto;
-        width: 200px;
-        height: 250px;
-        object-fit: cover;
-    }
-    .btn-age {
-        display: block;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 15px;
-    }
-</style>
 {% endblock %}

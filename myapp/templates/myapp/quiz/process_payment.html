@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Payment</title>
+    <!-- Include the Web Payments SDK -->
+    <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+</head>
+<body>
+    <h1>Complete Your Purchase</h1>
+
+    <!-- Payment form container -->
+    <div id="payment-form-container"></div>
+
+    <!-- Payment button -->
+    <button id="card-button" type="button">Pay Now</button>
+
+    <!-- Status messages -->
+    <div id="payment-status-container"></div>
+
+    <script>
+        // Initialize the Web Payments SDK
+        const payments = Square.payments('sandbox-sq0idb-XXXXXXXXXXXXXXXXXXXX', 'LJEEWPCAXNTFS'); // Replace with your Application ID and Location ID
+        const card = await payments.card();
+        await card.attach('#payment-form-container');
+
+        // Set up the payment button
+        const cardButton = document.getElementById('card-button');
+        cardButton.addEventListener('click', async function (event) {
+            const statusContainer = document.getElementById('payment-status-container');
+            statusContainer.innerHTML = '';
+
+            try {
+                // Tokenize the payment details
+                const result = await card.tokenize();
+                if (result.status === 'OK') {
+                    const token = result.token;
+
+                    // Send the token to your server to create a payment
+                    const response = await fetch('/process-payment/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'  // Ensure CSRF protection for Django
+                        },
+                        body: JSON.stringify({
+                            sourceId: token,
+                            plan: '4-week'  // You can pass any additional data as needed
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        statusContainer.innerHTML = 'Payment successful!';
+                        // Optionally, redirect to a success page
+                        window.location.href = '/success/';
+                    } else {
+                        statusContainer.innerHTML = 'Payment failed: ' + data.error;
+                    }
+                } else {
+                    statusContainer.innerHTML = 'Tokenization failed: ' + result.errors;
+                }
+            } catch (e) {
+                statusContainer.innerHTML = 'Payment error: ' + e.message;
+            }
+        });
+    </script>
+</body>
+</html>

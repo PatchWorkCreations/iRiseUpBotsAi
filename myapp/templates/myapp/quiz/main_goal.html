@@ -2,48 +2,49 @@
 {% load static %}
 {% block title %}Main Goal{% endblock %}
 {% block content %}
+{% include 'myapp/quiz/header.html' %}
 <div class="container text-center">
     <h2>What is your main goal?</h2>
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="main_goal" value="Grow wealth" class="btn btn-light btn-goal d-flex align-items-center">
-                    <img src="{% static 'myapp/images/goals/grow_wealth.png' %}" alt="Grow wealth" class="img-fluid goal-image me-3" />
+                <button type="submit" name="main_goal" value="Grow wealth" class="btn btn-light btn-goal">
+                    <span class="emoji">💰</span>
                     <span>Grow wealth</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="main_goal" value="Be my own boss" class="btn btn-light btn-goal d-flex align-items-center">
-                    <img src="{% static 'myapp/images/goals/be_my_own_boss.png' %}" alt="Be my own boss" class="img-fluid goal-image me-3" />
+                <button type="submit" name="main_goal" value="Be my own boss" class="btn btn-light btn-goal">
+                    <span class="emoji">🧑‍💼</span>
                     <span>Be my own boss</span>
                 </button>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="main_goal" value="Financial freedom" class="btn btn-light btn-goal d-flex align-items-center">
-                    <img src="{% static 'myapp/images/goals/financial_freedom.png' %}" alt="Financial freedom" class="img-fluid goal-image me-3" />
+                <button type="submit" name="main_goal" value="Financial freedom" class="btn btn-light btn-goal">
+                    <span class="emoji">💸</span>
                     <span>Financial freedom</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="main_goal" value="Travel the world" class="btn btn-light btn-goal d-flex align-items-center">
-                    <img src="{% static 'myapp/images/goals/travel_the_world.png' %}" alt="Travel the world" class="img-fluid goal-image me-3" />
+                <button type="submit" name="main_goal" value="Travel the world" class="btn btn-light btn-goal">
+                    <span class="emoji">🌍</span>
                     <span>Travel the world</span>
                 </button>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="main_goal" value="Professional growth" class="btn btn-light btn-goal d-flex align-items-center">
-                    <img src="{% static 'myapp/images/goals/professional_growth.png' %}" alt="Professional growth" class="img-fluid goal-image me-3" />
+                <button type="submit" name="main_goal" value="Professional growth" class="btn btn-light btn-goal">
+                    <span class="emoji">📈</span>
                     <span>Professional growth</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="main_goal" value="Work-life balance" class="btn btn-light btn-goal d-flex align-items-center">
-                    <img src="{% static 'myapp/images/goals/work_life_balance.png' %}" alt="Work-life balance" class="img-fluid goal-image me-3" />
+                <button type="submit" name="main_goal" value="Work-life balance" class="btn btn-light btn-goal">
+                    <span class="emoji">⚖️</span>
                     <span>Work-life balance</span>
                 </button>
             </div>
@@ -52,26 +53,26 @@
 </div>
 
 <style>
-    .goal-image {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
+    .emoji {
+        font-size: 50px; /* Adjust size as needed */
+        display: block;
+        margin-bottom: 10px;
     }
     .btn-goal {
         display: flex;
-        justify-content: center;
+        flex-direction: column; /* Stacks emoji and text vertically */
         align-items: center;
+        justify-content: center;
         width: 100%;
         text-align: center;
-        margin-bottom: 15px;
-        padding: 10px;
+        padding: 20px;
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
+        font-size: 24px; /* Larger text size */
     }
     .btn-goal span {
-        flex-grow: 1;
-        text-align: center;
+        display: block;
     }
 </style>
 {% endblock %}

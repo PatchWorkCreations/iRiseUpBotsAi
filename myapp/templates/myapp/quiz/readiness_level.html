@@ -1,0 +1,156 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+
+{% block title %}Your AI-Driven Challenge is Ready{% endblock %}
+
+{% block content %}
+{% include 'myapp/quiz/header.html' %}
+<div class="container text-center">
+    <h2>Your readiness level</h2>
+    <div class="curve-container mt-4 position-relative">
+        <canvas id="readinessChart" width="600" height="300"></canvas>
+        <!-- Custom Labels -->
+        <div id="nowLabel" class="custom-label">Now</div>
+        <div id="after4WeeksLabel" class="custom-label">After 4 weeks</div>
+
+    </div>
+
+    <p class="mt-2">This chart is for illustrative purposes only</p>
+
+    <h3 class="mt-4">Your 4-week AI-Driven Income Growth Challenge is ready!</h3>
+
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-lg">CONTINUE</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('readinessChart').getContext('2d');
+
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(76, 175, 80, 0.7)');
+    gradient.addColorStop(0.5, 'rgba(255, 152, 0, 0.7)');
+    gradient.addColorStop(1, 'rgba(255, 87, 34, 0.7)');
+
+    const data = {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{
+            label: 'Readiness Level',
+            data: [20, 40, 60, 100],
+            borderColor: '#4caf50',
+            backgroundColor: gradient,
+            fill: true,
+            tension: 0.4, 
+            pointBackgroundColor: '#fff',
+            pointBorderColor: '#4caf50',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    max: 100,
+                    grid: {
+                        display: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        },
+        plugins: [{
+            id: 'customLabels',
+            afterRender: (chart) => {
+                // Position Now label
+                const nowLabelElement = document.getElementById('nowLabel');
+                const after4WeeksLabelElement = document.getElementById('after4WeeksLabel');
+
+                const xPosNow = chart.scales.x.getPixelForValue('Week 1');
+                const yPosNow = chart.scales.y.getPixelForValue(20);
+
+                const xPosAfter = chart.scales.x.getPixelForValue('Week 4');
+                const yPosAfter = chart.scales.y.getPixelForValue(100);
+
+                nowLabelElement.style.left = `${xPosNow - 20}px`;
+                nowLabelElement.style.top = `${yPosNow - 30}px`;
+
+                after4WeeksLabelElement.style.left = `${xPosAfter - 40}px`;
+                after4WeeksLabelElement.style.top = `${yPosAfter - 30}px`;
+            }
+        }]
+    };
+
+    new Chart(ctx, config);
+});
+
+
+</script>
+
+<style>
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding-top: 50px;
+    }
+
+    .curve-container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .custom-label {
+        position: absolute;
+        background-color: #424242;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        z-index: 10;
+        pointer-events: none;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+        color: #344767;
+    }
+
+    p {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+
+    .btn-primary {
+        background-color: #5e72e4;
+        border-color: #5e72e4;
+    }
+
+    .btn-primary:hover {
+        background-color: #324cdd;
+        border-color: #324cdd;
+    }
+</style>
+
+{% endblock %}

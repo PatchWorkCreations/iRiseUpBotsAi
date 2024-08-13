@@ -2,28 +2,29 @@
 {% load static %}
 {% block title %}Learning New Skills{% endblock %}
 {% block content %}
+{% include 'myapp/quiz/header.html' %}
 <div class="container text-center">
     <h2>Are you comfortable with learning new skills or techniques?</h2>
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="learning_new_skills" value="Yes" class="btn btn-light btn-skills d-flex align-items-center">
-                    <img src="{% static 'myapp/images/learning_new_skills/yes.png' %}" alt="Yes" class="img-fluid skills-image me-3" />
+                <button type="submit" name="learning_new_skills" value="Yes" class="btn btn-light btn-skills">
+                    <span class="emoji">📚</span>
                     <span>Yes</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="learning_new_skills" value="No" class="btn btn-light btn-skills d-flex align-items-center">
-                    <img src="{% static 'myapp/images/learning_new_skills/no.png' %}" alt="No" class="img-fluid skills-image me-3" />
+                <button type="submit" name="learning_new_skills" value="No" class="btn btn-light btn-skills">
+                    <span class="emoji">🚫</span>
                     <span>No</span>
                 </button>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="learning_new_skills" value="Hm, not sure" class="btn btn-light btn-skills d-flex align-items-center">
-                    <img src="{% static 'myapp/images/learning_new_skills/not_sure.png' %}" alt="Hm, not sure" class="img-fluid skills-image me-3" />
+                <button type="submit" name="learning_new_skills" value="Hm, not sure" class="btn btn-light btn-skills">
+                    <span class="emoji">🤔</span>
                     <span>Hm, not sure</span>
                 </button>
             </div>
@@ -32,26 +33,27 @@
 </div>
 
 <style>
-    .skills-image {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
+    .emoji {
+        font-size: 50px;
+        display: block;
+        margin-bottom: 10px;
     }
     .btn-skills {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
+        justify-content: center;
         width: 100%;
         text-align: center;
         margin-bottom: 15px;
-        padding: 10px;
+        padding: 20px;
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
+        font-size: 24px;
     }
     .btn-skills span {
-        flex-grow: 1;
-        text-align: center;
+        display: block;
     }
 </style>
 {% endblock %}

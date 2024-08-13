@@ -99,24 +99,7 @@ def servicedetail5(request):
 
 
 # myapp/views.py
-from django.shortcuts import render
-from .models import Course, UserCourseAccess
 
-def coursemenu(request):
-    all_courses = Course.objects.all()
-    current_course_access = None
-    current_course = None
-
-    if request.user.is_authenticated:
-        current_course_access = UserCourseAccess.objects.filter(user=request.user).first()
-        current_course = current_course_access.course if current_course_access else None
-
-    context = {
-        'all_courses': all_courses,
-        'current_course': current_course,
-        'current_course_access': current_course_access,
-    }
-    return render(request, 'myapp/coursemenu.html', context)
 
 from django.shortcuts import render, get_object_or_404
 from .models import Course, SubCourse, Lesson
@@ -478,8 +461,8 @@ def time_to_achieve_goal(request):
         return redirect('results')  
     return render(request, 'myapp/quiz/time_to_achieve_goal.html')
 
-from django.shortcuts import render
 from datetime import datetime, timedelta
+from django.shortcuts import render, redirect
 
 def results(request):
     # Get the current date
@@ -492,10 +475,209 @@ def results(request):
     target_date = current_date + timedelta(days=60)
     target_month = target_date.strftime('%b, %Y')  # Format as "Month, Year"
 
-    context = {
+    # Store the context in the session for use after the loading page
+    request.session['results_context'] = {
         'current_month': current_month,
         'target_month': target_month,
         'special_goal': request.session.get('special_goal', 'Your Goal'),
     }
 
-    return render(request, 'myapp/quiz/results.html', context)
+    # Redirect to the loading page
+    return redirect('loading_page')
+
+def loading_page(request):
+    return render(request, 'myapp/quiz/loading_page.html')
+
+from django.db import IntegrityError
+from django.shortcuts import render, redirect
+from .models import EmailCollection
+
+def email_collection(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        receive_offers = request.POST.get('receive_offers') == 'on'  # Convert "on" to True, otherwise False
+        
+        try:
+            EmailCollection.objects.create(email=email, receive_offers=receive_offers)
+        except IntegrityError:
+            # Handle the case where the email already exists
+            return redirect('email_already_exists')  # Redirect to an appropriate page or handle as needed
+
+        # Redirect to the loading page or next step
+        return redirect('readiness_level')
+
+    return render(request, 'myapp/quiz/email_collection.html')  # Updated to reflect correct path
+
+
+def readiness_level(request):
+    if request.method == 'POST':
+        # Process form submission or redirect
+        return redirect('personalized_plan')  # Replace 'next_page' with the actual next page URL or name
+
+    return render(request, 'myapp/quiz/readiness_level.html')  # Replace with the correct template path
+
+
+from django.shortcuts import render
+
+def personalized_plan(request):
+    # Retrieve session data
+    age = request.session.get('age_range', '')
+    gender = request.session.get('gender', '')
+    special_goal = request.session.get('special_goal', '')
+
+    # Convert age to integer for comparison
+    try:
+        age = int(age.split('-')[0])  # Extracts the starting age from the range, e.g., "35-44" -> 35
+    except (ValueError, IndexError):
+        age = None  # Set age to None if there's an issue with age processing
+
+    # Determine image path based on gender and age
+    if gender == 'male':
+        if age is not None and age < 30:
+            current_image_path = 'myapp/images/male_before_young.png'
+            goal_image_path = 'myapp/images/male_after_young.png'
+        else:
+            current_image_path = 'myapp/images/male_before_adult.png'
+            goal_image_path = 'myapp/images/male_after_adult.png'
+    else:
+        if age is not None and age < 30:
+            current_image_path = 'myapp/images/female_before_young.png'
+            goal_image_path = 'myapp/images/female_after_young.png'
+        else:
+            current_image_path = 'myapp/images/female_before_adult.png'
+            goal_image_path = 'myapp/images/female_after_adult.png'
+
+    # Pass context data to the template
+    context = {
+        'current_image_path': current_image_path,
+        'goal_image_path': goal_image_path,
+        'special_goal': special_goal,
+    }
+
+    return render(request, 'myapp/quiz/personalized_plan.html', context)
+
+
+
+# views.py
+from django.http import JsonResponse
+import uuid
+import json
+from square.client import Client
+
+# Initialize the Square Client
+client = Client(
+    access_token='EAAAlz5jWqFxF0gzV6PfCR-Xgu4hCsw85fhWpEapFt_E3ufGuBysx3xUoJW6RyII',  # Replace with your actual Sandbox access token
+    environment='sandbox'  # Use 'production' for live transactions
+)
+
+def determine_amount_based_on_plan(plan):
+    if plan == '1-week':
+        return 1386  # $13.86 in cents
+    elif plan == '4-week':
+        return 3999  # $39.99 in cents
+    elif plan == '12-week':
+        return 7999  # $79.99 in cents
+    else:
+        return 0
+
+def process_payment(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        card_token = data.get('cardToken')
+        selected_plan = data.get('plan')
+
+        # Determine the amount based on the selected plan
+        amount = determine_amount_based_on_plan(selected_plan)
+
+        if amount <= 0:
+            return JsonResponse({"error": "Invalid plan selected."}, status=400)
+
+        # Create the payment body
+        body = {
+            "source_id": card_token,
+            "idempotency_key": str(uuid.uuid4()),  # Generate a unique idempotency key
+            "amount_money": {
+                "amount": amount,
+                "currency": "USD"
+            }
+        }
+
+        # Make the API request to Square
+        result = client.payments.create_payment(body)
+
+        if result.is_success():
+            return JsonResponse({"success": True})
+        else:
+            return JsonResponse({"error": result.errors}, status=400)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+from django.shortcuts import render
+
+def payment_page(request):
+    return render(request, 'myapp/quiz/process_payment.html')
+
+def success_page(request):
+    return render(request, 'myapp/quiz/success.html')
+
+
+
+def subscription_terms(request):
+    return render(request, 'myapp/quiz/subscription_terms.html')
+
+def terms_conditions(request):
+    return render(request, 'myapp/quiz/terms_conditions.html')
+
+def privacy_policy(request):
+    return render(request, 'myapp/quiz/privacy_policy.html')  # Privacy Policy view
+
+def support_center(request):
+    return render(request, 'myapp/quiz/support_center.html')  # Support Center view
+
+from datetime import timedelta
+from django.utils import timezone
+from .models import UserCourseAccess
+
+def grant_course_access(user, selected_plan):
+    """
+    This function grants the user access to a course based on the selected plan.
+    It also sets an expiration date based on the plan duration.
+    """
+    # Assign course based on the selected plan
+    course = Course.objects.get(title='coursemenu')  # Replace with your actual course title
+
+    # Determine expiration date based on selected plan
+    if selected_plan == '1-week':
+        expiration_date = timezone.now() + timedelta(weeks=1)
+    elif selected_plan == '4-week':
+        expiration_date = timezone.now() + timedelta(weeks=4)
+    elif selected_plan == '12-week':
+        expiration_date = timezone.now() + timedelta(weeks=12)
+
+    # Grant access to the course
+    UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
+
+from django.shortcuts import render, get_object_or_404
+from .models import Course, UserCourseAccess
+
+def coursemenu(request):
+    all_courses = Course.objects.all()
+    current_course_access = None
+    current_course = None
+
+    if request.user.is_authenticated:
+        current_course_access = UserCourseAccess.objects.filter(user=request.user).first()
+
+        if current_course_access and current_course_access.has_expired():
+            # Access has expired, remove access
+            current_course_access.delete()
+            current_course_access = None
+        else:
+            current_course = current_course_access.course if current_course_access else None
+
+    context = {
+        'all_courses': all_courses,
+        'current_course': current_course,
+        'current_course_access': current_course_access,
+    }
+    return render(request, 'myapp/coursemenu.html', context)

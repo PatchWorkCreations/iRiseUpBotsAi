@@ -23,13 +23,19 @@ class Lesson(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
 
+from django.utils import timezone
+
 class UserCourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     progress = models.FloatField(default=0.0)
+    expiration_date = models.DateTimeField(null=True, blank=True)  # Track when access expires
 
     def __str__(self):
         return f"{self.user.username} - {self.course.title}"
+
+    def has_expired(self):
+        return timezone.now() > self.expiration_date
 
 class UserSubCourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -66,3 +72,14 @@ class QuizResponse(models.Model):
     time_to_achieve_goal = models.CharField(max_length=50)
     email = models.EmailField()
     receive_offers = models.BooleanField(default=False)
+
+from django.db import models
+from django.utils import timezone
+
+class EmailCollection(models.Model):
+    email = models.EmailField(unique=True)
+    receive_offers = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)  # Ensure this field is here
+
+    def __str__(self):
+        return self.email

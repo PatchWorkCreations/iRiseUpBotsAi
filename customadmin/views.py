@@ -223,3 +223,5 @@ def upload_csv(request):
         form = CSVUploadForm()
 
     return render(request, 'upload_csv.html', {'form': form})
+
+

@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Fields of Interest{% endblock %}
 {% block content %}
+{% include 'myapp/quiz/header.html' %}
 <div class="container text-center">
     <h2>What fields would you personally like to try yourself in?</h2>
     <form method="post">
@@ -14,13 +15,13 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Graphic Design">
-                    <img src="{% static 'myapp/images/fields_interest/graphic_design.png' %}" alt="Graphic Design" class="img-fluid interest-image me-3" />
+                    <span class="emoji">🎨</span>
                     <span>Graphic Design</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Content Creation">
-                    <img src="{% static 'myapp/images/fields_interest/content_creation.png' %}" alt="Content Creation" class="img-fluid interest-image me-3" />
+                    <span class="emoji">✍️</span>
                     <span>Content Creation</span>
                 </button>
             </div>
@@ -28,13 +29,13 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Web Development">
-                    <img src="{% static 'myapp/images/fields_interest/web_development.png' %}" alt="Web Development" class="img-fluid interest-image me-3" />
+                    <span class="emoji">💻</span>
                     <span>Web Development</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Artificial Intelligence">
-                    <img src="{% static 'myapp/images/fields_interest/artificial_intelligence.png' %}" alt="Artificial Intelligence" class="img-fluid interest-image me-3" />
+                    <span class="emoji">🤖</span>
                     <span>Artificial Intelligence</span>
                 </button>
             </div>
@@ -42,13 +43,13 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Digital Marketing">
-                    <img src="{% static 'myapp/images/fields_interest/digital_marketing.png' %}" alt="Digital Marketing" class="img-fluid interest-image me-3" />
+                    <span class="emoji">📈</span>
                     <span>Digital Marketing</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Social Media Management">
-                    <img src="{% static 'myapp/images/fields_interest/social_media_management.png' %}" alt="Social Media Management" class="img-fluid interest-image me-3" />
+                    <span class="emoji">📱</span>
                     <span>Social Media Management</span>
                 </button>
             </div>
@@ -56,13 +57,13 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Video Editing">
-                    <img src="{% static 'myapp/images/fields_interest/video_editing.png' %}" alt="Video Editing" class="img-fluid interest-image me-3" />
+                    <span class="emoji">🎥</span>
                     <span>Video Editing</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Photography">
-                    <img src="{% static 'myapp/images/fields_interest/photography.png' %}" alt="Photography" class="img-fluid interest-image me-3" />
+                    <span class="emoji">📸</span>
                     <span>Photography</span>
                 </button>
             </div>
@@ -70,13 +71,13 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="E-commerce">
-                    <img src="{% static 'myapp/images/fields_interest/e_commerce.png' %}" alt="E-commerce" class="img-fluid interest-image me-3" />
+                    <span class="emoji">🛒</span>
                     <span>E-commerce</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Consulting">
-                    <img src="{% static 'myapp/images/fields_interest/consulting.png' %}" alt="Consulting" class="img-fluid interest-image me-3" />
+                    <span class="emoji">💼</span>
                     <span>Consulting</span>
                 </button>
             </div>
@@ -91,30 +92,27 @@
 </div>
 
 <style>
-    .interest-image {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
+    .emoji {
+        font-size: 50px; /* Size of the emojis */
+        display: block;
+        margin-bottom: 10px;
     }
     .btn-interest {
         display: flex;
-        justify-content: center;
+        flex-direction: column; /* Stacks emoji and text vertically */
         align-items: center;
+        justify-content: center;
         width: 100%;
         text-align: center;
-        margin-bottom: 15px;
-        padding: 10px;
+        padding: 20px;
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
+        font-size: 24px; /* Larger text size */
         cursor: pointer;
     }
     .btn-interest.active {
         background-color: #d4edda;
-    }
-    .btn-interest span {
-        flex-grow: 1;
-        text-align: center;
     }
 </style>
 

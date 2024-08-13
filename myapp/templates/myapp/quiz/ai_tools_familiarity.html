@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}AI Tools Familiarity{% endblock %}
 {% block content %}
+{% include 'myapp/quiz/header.html' %}
 <div class="container text-center">
     <h2>What AI tools are you already familiar with?</h2>
     <form method="post">
@@ -13,70 +14,70 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="I'm new to AI tools">
-                    <img src="{% static 'myapp/images/ai_tools_familiarity/new_to_ai_tools.png' %}" alt="I'm new to AI tools" class="img-fluid ai-tools-image me-3" />
+                <button type="button" class="btn btn-light btn-ai-tools" data-value="I'm new to AI tools">
+                    <span class="emoji">🆕</span>
                     <span>I'm new to AI tools</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="ChatGPT">
-                    <img src="{% static 'myapp/images/ai_tools_familiarity/chatgpt.png' %}" alt="ChatGPT" class="img-fluid ai-tools-image me-3" />
+                <button type="button" class="btn btn-light btn-ai-tools" data-value="ChatGPT">
+                    <span class="emoji">🤖</span>
                     <span>ChatGPT</span>
                 </button>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Midjourney">
-                    <img src="{% static 'myapp/images/ai_tools_familiarity/midjourney.png' %}" alt="Midjourney" class="img-fluid ai-tools-image me-3" />
+                <button type="button" class="btn btn-light btn-ai-tools" data-value="Midjourney">
+                    <span class="emoji">🎨</span>
                     <span>Midjourney</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Google Gemini">
-                    <img src="{% static 'myapp/images/ai_tools_familiarity/google_gemini.png' %}" alt="Google Gemini" class="img-fluid ai-tools-image me-3" />
+                <button type="button" class="btn btn-light btn-ai-tools" data-value="Google Gemini">
+                    <span class="emoji">🔮</span>
                     <span>Google Gemini</span>
                 </button>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Otter.ai">
-                    <img src="{% static 'myapp/images/ai_tools_familiarity/otter_ai.png' %}" alt="Otter.ai" class="img-fluid ai-tools-image me-3" />
+                <button type="button" class="btn btn-light btn-ai-tools" data-value="Otter.ai">
+                    <span class="emoji">🦦</span>
                     <span>Otter.ai</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="AIVA">
-                    <img src="{% static 'myapp/images/ai_tools_familiarity/aiva.png' %}" alt="AIVA" class="img-fluid ai-tools-image me-3" />
+                <button type="button" class="btn btn-light btn-ai-tools" data-value="AIVA">
+                    <span class="emoji">🎵</span>
                     <span>AIVA</span>
                 </button>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="DALL-E">
-                    <img src="{% static 'myapp/images/ai_tools_familiarity/dall_e.png' %}" alt="DALL-E" class="img-fluid ai-tools-image me-3" />
+                <button type="button" class="btn btn-light btn-ai-tools" data-value="DALL-E">
+                    <span class="emoji">🖼️</span>
                     <span>DALL-E</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Jasper">
-                    <img src="{% static 'myapp/images/ai_tools_familiarity/jasper.png' %}" alt="Jasper" class="img-fluid ai-tools-image me-3" />
+                <button type="button" class="btn btn-light btn-ai-tools" data-value="Jasper">
+                    <span class="emoji">✍️</span>
                     <span>Jasper</span>
                 </button>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
-                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Copilot">
-                    <img src="{% static 'myapp/images/ai_tools_familiarity/copilot.png' %}" alt="Copilot" class="img-fluid ai-tools-image me-3" />
+                <button type="button" class="btn btn-light btn-ai-tools" data-value="Copilot">
+                    <span class="emoji">👨‍✈️</span>
                     <span>Copilot</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="OpenAI Playground">
-                    <img src="{% static 'myapp/images/ai_tools_familiarity/openai_playground.png' %}" alt="OpenAI Playground" class="img-fluid ai-tools-image me-3" />
+                <button type="button" class="btn btn-light btn-ai-tools" data-value="OpenAI Playground">
+                    <span class="emoji">🛠️</span>
                     <span>OpenAI Playground</span>
                 </button>
             </div>
@@ -91,30 +92,32 @@
 </div>
 
 <style>
-    .ai-tools-image {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
+    .emoji {
+        font-size: 50px;
+        display: block;
+        margin-bottom: 10px;
     }
     .btn-ai-tools {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
+        justify-content: center;
         width: 100%;
         text-align: center;
         margin-bottom: 15px;
-        padding: 10px;
+        padding: 20px;
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
+        font-size: 24px;
         cursor: pointer;
+        transition: background-color 0.3s;
     }
     .btn-ai-tools.active {
         background-color: #d4edda;
     }
     .btn-ai-tools span {
-        flex-grow: 1;
-        text-align: center;
+        display: block;
     }
 </style>
 

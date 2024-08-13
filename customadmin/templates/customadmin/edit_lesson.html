@@ -4,6 +4,7 @@
 {% block title %}Edit Lesson{% endblock %}
 
 {% block content %}
+{% include 'myapp/quiz/header.html' %}
 <div class="container">
     <h2>Edit Lesson: {{ lesson.title }}</h2>
     <form method="post" enctype="multipart/form-data">

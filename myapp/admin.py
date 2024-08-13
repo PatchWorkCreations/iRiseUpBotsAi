@@ -22,3 +22,12 @@ admin.site.register(SubCourse, SubCourseAdmin)
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(UserCourseAccess)
 admin.site.register(UserSubCourseAccess)
+
+
+from django.contrib import admin
+from .models import EmailCollection
+
+class EmailCollectionAdmin(admin.ModelAdmin):
+    list_display = ['email', 'receive_offers', 'created_at']  # Updated field name
+
+admin.site.register(EmailCollection, EmailCollectionAdmin)

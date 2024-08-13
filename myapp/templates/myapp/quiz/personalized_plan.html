@@ -1,0 +1,483 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Your Personalized AI-Driven Plan{% endblock %}
+{% block content %}
+<head>
+    <script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+</head>
+
+<div class="header-container d-flex justify-content-between align-items-center">
+    <div id="countdown" class="countdown-timer">
+        <span id="minutes">10</span>:<span id="seconds">00</span>
+    </div>
+    <button id="card-button" class="btn btn-primary get-plan-btn pulsate">GET MY PLAN</button>
+</div>
+
+<div class="container text-center mt-5">
+    <h2>Your readiness: 83%</h2>
+    <p><strong>4-week</strong> program is enough for you to start your AI journey</p>
+
+    <div class="d-flex justify-content-center mt-4">
+        <div class="card">
+            <div class="row">
+                <div class="col-6">
+                    <h3>Now</h3>
+                    <img src="{% static 'myapp/images/male_before.png' %}" alt="Current" class="img-fluid">
+                    <div class="progress-bar-container mt-2">
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar-label">Moderate</div>
+                            <div class="progress-bar-fill" style="width: 50%;"></div>
+                        </div>
+                        <div class="progress-bar-labels">
+                            <span>LOW</span>
+                            <span>INTERMEDIATE</span>
+                            <span>HIGH</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <h3>Goal</h3>
+                    <img src="{% static 'myapp/images/male_after.png' %}" alt="Goal" class="img-fluid">
+                    <div class="progress-bar-container mt-2">
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar-label">High</div>
+                            <div class="progress-bar-fill" style="width: 100%;"></div>
+                        </div>
+                        <div class="progress-bar-labels">
+                            <span>LOW</span>
+                            <span>INTERMEDIATE</span>
+                            <span>HIGH</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h3>AI is easier than you think</h3>
+            <ul class="list-unstyled">
+                <li>💡 No prior AI knowledge is required</li>
+                <li>🎓 No need for a university degree</li>
+                <li>🕒 Work at your own pace and terms</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h3>Try our program and you will:</h3>
+            <ul class="list-unstyled">
+                <li>✔️ Master AI tools that can boost your income</li>
+                <li>✔️ Discover new digital professions and income sources</li>
+                <li>✔️ Learn key AI terms and lessons</li>
+            </ul>
+            <div class="row">
+                <div class="col-6">
+                    <h4>Your goal</h4>
+                    <p>{{ special_goal }}</p>
+                </div>
+                <div class="col-6">
+                    <h4>Your target</h4>
+                    <p>Buy a house</p>
+                </div>
+            </div>
+            <div class="plan-selection-container">
+                <div class="plan-option">
+                    <input type="radio" id="1-week-plan" name="plan" value="1-week">
+                    <label for="1-week-plan">
+                        <div class="plan-header">
+                            <span>1-WEEK PLAN</span>
+                            <span>$13.86</span>
+                        </div>
+                        <div class="plan-price">
+                            <span>$1.98</span>
+                            <span>per day</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="plan-option most-popular">
+                    <input type="radio" id="4-week-plan" name="plan" value="4-week" checked>
+                    <label for="4-week-plan">
+                        <div class="most-popular-badge">
+                            <span>👍 MOST POPULAR</span>
+                        </div>
+                        <div class="plan-header">
+                            <span>4-WEEK PLAN</span>
+                            <span>$39.99</span>
+                        </div>
+                        <div class="plan-price">
+                            <span>$1.43</span>
+                            <span>per day</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="plan-option">
+                    <input type="radio" id="12-week-plan" name="plan" value="12-week">
+                    <label for="12-week-plan">
+                        <div class="plan-header">
+                            <span>12-WEEK PLAN</span>
+                            <span>$79.99</span>
+                        </div>
+                        <div class="plan-price">
+                            <span>$0.95</span>
+                            <span>per day</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="plan-info">
+                    <p>🎯 People using plan for 3 months achieve twice as many results as for 1 month</p>
+                    <p><small>*According to a research by Coursiv, 2023</small></p>
+                </div>
+
+                <div class="plan-button">
+                    <button id="card-button" class="btn-get-plan pulsate">GET MY PLAN</button>
+                </div>
+
+                <div class="subscription-info">
+                    <p>Extended every 4-week at the price of $39.99 if you do not cancel 24 hours before the renewal date in your account settings. <a href="#">Subscription Terms</a>.</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="money-back-container">
+            <img src="{% static 'myapp/images/quiz/icon-money-back.svg' %}" alt="Money-Back Guarantee" class="money-back-icon">
+            <h2>Money-Back Guarantee</h2>
+            <p>We are so confident in our service that we are ready to offer a full refund within 30 days of purchase if you do not achieve initial results and can demonstrate you have followed the plan.</p>
+            <p>Learn more about all the conditions in our <a href="{% url 'subscription_terms' %}">Subscription Terms</a>.</p>
+        </div>
+    </div>
+</div>
+
+<div id="checkout-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Complete Your Purchase</h2>
+      <form id="payment-form">
+        <div id="card-container"></div> <!-- This is the container for the Square payment form -->
+        <button type="submit">Pay Now</button>
+      </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+    const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');  // Replace with your actual Application ID and Location ID
+    const card = await payments.card();
+    await card.attach('#card-container');
+
+    // Get modal element
+    const modal = document.getElementById('checkout-modal');
+    const closeModalButton = document.querySelector('.modal .close');
+
+    // Show modal when 'GET MY PLAN' button is clicked
+    document.getElementById('card-button').addEventListener('click', function () {
+        modal.style.display = 'block';
+    });
+
+    // Close the modal when the close button is clicked
+    closeModalButton.addEventListener('click', function () {
+        modal.style.display = 'none';
+    });
+
+    // Process payment when 'Pay Now' button is clicked
+    document.getElementById('payment-form').addEventListener('submit', async function (e) {
+        e.preventDefault();  // Prevent form submission
+
+        try {
+            const tokenResult = await card.tokenize();
+            if (tokenResult.status === 'OK') {
+                const token = tokenResult.token;
+
+                // Make a request to your server with the payment token
+                const response = await fetch('/process-payment/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({
+                        source_id: token,
+                        plan: '4-week' // or whichever plan the user selects
+                    }),
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = '/success/';
+                } else {
+                    alert('Payment failed: ' + result.error);
+                }
+            } else {
+                console.error('Tokenization failed: ' + tokenResult.errors);
+                alert('Payment failed: ' + tokenResult.errors[0].detail);
+            }
+        } catch (e) {
+            console.error(e.message);
+            alert('Payment failed: ' + e.message);
+        }
+    });
+});
+
+</script>
+
+<style>
+
+.get-plan-btn {
+    background-color: #5860F8;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    color: white;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.get-plan-btn:hover {
+    background-color: #3c4ab8;
+}
+
+.pulsate {
+    animation: pulsate 1.5s infinite;
+}
+
+@keyframes pulsate {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Reduce the shadow during scaling down */
+    }
+    50% {
+        transform: scale(1.05); /* Slightly smaller scaling */
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* Increase shadow during scaling up */
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Back to normal */
+    }
+}
+
+
+.header-container {
+    padding: 10px;
+}
+
+.countdown-timer {
+    font-size: 24px;
+    font-weight: bold;
+    color: #5860F8; /* Match the color of the logo */
+}
+
+.get-plan-btn {
+    background-color: #5860F8;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    color: white;
+}
+
+.get-plan-btn:hover {
+    background-color: #3c4ab8;
+}
+
+
+.money-back-container {
+    background-color: #f3f8f1;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.money-back-icon {
+    width: 80px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.money-back-container h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.money-back-container p {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.money-back-container a {
+    color: #2d7a2e;
+    text-decoration: underline;
+}
+
+.money-back-container a:hover {
+    text-decoration: none;
+}
+
+.plan-option {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    border-radius: 10px;
+    padding: 15px;
+    position: relative;
+    background: #fff;
+    border: 2px solid #ddd; /* Default border color */
+    transition: border-color 0.3s ease; /* Smooth transition for border color */
+}
+
+.plan-option input[type="radio"] {
+    display: none; /* Hide the radio button itself */
+}
+
+
+
+.plan-option label {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
+}
+
+.plan-option input[type="radio"]:checked + label {
+    border: 2px solid #4e73df; /* Highlight the entire border on selection */
+}
+
+.most-popular {
+    border-radius: 10px;
+    position: relative;
+    padding-top: 30px;
+}
+
+.most-popular-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #5860F8;
+    color: white;
+    padding: 8px 10px;
+    text-align: center;
+    font-size: 0.9em;
+    font-weight: bold;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.most-popular-badge::before {
+    content: "👍";
+    margin-right: 5px;
+}
+
+
+
+.btn-get-plan {
+    background-color: #4e73df;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-size: 1.2em;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.subscription-info {
+    margin-top: 20px;
+    color: #666;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.subscription-info a {
+    color: #4e73df;
+    text-decoration: underline;
+}
+
+
+    .progress-bar-container {
+        position: relative;
+        width: 100%;
+        height: 20px;
+        background: linear-gradient(to right, red, yellow, green);
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+
+    .progress-bar-wrapper {
+        position: relative;
+        height: 100%;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-bar-label {
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #555;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        z-index: 5;
+        white-space: nowrap;
+    }
+
+    .progress-bar-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
+        font-weight: bold;
+    }
+
+    .card {
+        border-radius: 15px;
+        padding: 20px;
+        background-color: #fff;
+    }
+
+    h2 {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+
+    .btn-primary {
+        background-color: #5e72e4;
+        border-color: #5e72e4;
+    }
+
+    .btn-primary:hover {
+        background-color: #324cdd;
+        border-color: #324cdd;
+    }
+</style>
+{% endblock %}

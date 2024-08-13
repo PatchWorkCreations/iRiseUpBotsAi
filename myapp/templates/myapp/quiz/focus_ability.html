@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Focus Ability{% endblock %}
 {% block content %}
+{% include 'myapp/quiz/header.html' %}
 <div class="container text-center">
     <h2>Do you find it easy to maintain your focus?</h2>
     <form method="post">
@@ -9,13 +10,13 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="focus_ability" value="Yes, I can easily stay focused" class="btn btn-light btn-focus d-flex align-items-center">
-                    <img src="{% static 'myapp/images/focus_ability/easily_focused.png' %}" alt="Yes, I can easily stay focused" class="img-fluid focus-image me-3" />
+                    <span class="emoji">🎯</span>
                     <span>Yes, I can easily stay focused</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="focus_ability" value="Mostly, but I sometimes get distracted" class="btn btn-light btn-focus d-flex align-items-center">
-                    <img src="{% static 'myapp/images/focus_ability/sometimes_distracted.png' %}" alt="Mostly, but I sometimes get distracted" class="img-fluid focus-image me-3" />
+                    <span class="emoji">🤔</span>
                     <span>Mostly, but I sometimes get distracted</span>
                 </button>
             </div>
@@ -23,13 +24,13 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="focus_ability" value="I often struggle" class="btn btn-light btn-focus d-flex align-items-center">
-                    <img src="{% static 'myapp/images/focus_ability/often_struggle.png' %}" alt="I often struggle" class="img-fluid focus-image me-3" />
+                    <span class="emoji">😕</span>
                     <span>I often struggle</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="focus_ability" value="No, I frequently procrastinate" class="btn btn-light btn-focus d-flex align-items-center">
-                    <img src="{% static 'myapp/images/focus_ability/frequently_procrastinate.png' %}" alt="No, I frequently procrastinate" class="img-fluid focus-image me-3" />
+                    <span class="emoji">😴</span>
                     <span>No, I frequently procrastinate</span>
                 </button>
             </div>
@@ -38,26 +39,26 @@
 </div>
 
 <style>
-    .focus-image {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
+    .emoji {
+        font-size: 50px; /* Size of the emojis */
+        display: block;
+        margin-bottom: 10px;
     }
     .btn-focus {
         display: flex;
-        justify-content: center;
+        flex-direction: column; /* Stacks emoji and text vertically */
         align-items: center;
+        justify-content: center;
         width: 100%;
         text-align: center;
-        margin-bottom: 15px;
-        padding: 10px;
+        padding: 20px;
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
+        font-size: 24px; /* Larger text size */
     }
     .btn-focus span {
-        flex-grow: 1;
-        text-align: center;
+        display: block;
     }
 </style>
 {% endblock %}
