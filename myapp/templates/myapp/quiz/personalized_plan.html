@@ -166,62 +166,41 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
-    const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');  // Replace with your actual Application ID and Location ID
+    const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
     const card = await payments.card();
     await card.attach('#card-container');
 
-    // Get modal element
-    const modal = document.getElementById('checkout-modal');
-    const closeModalButton = document.querySelector('.modal .close');
-
-    // Show modal when 'GET MY PLAN' button is clicked
-    document.getElementById('card-button').addEventListener('click', function () {
-        modal.style.display = 'block';
-    });
-
-    // Close the modal when the close button is clicked
-    closeModalButton.addEventListener('click', function () {
-        modal.style.display = 'none';
-    });
-
-    // Process payment when 'Pay Now' button is clicked
-    document.getElementById('payment-form').addEventListener('submit', async function (e) {
-        e.preventDefault();  // Prevent form submission
-
+    document.getElementById('card-button').addEventListener('click', async function () {
         try {
-            const tokenResult = await card.tokenize();
-            if (tokenResult.status === 'OK') {
-                const token = tokenResult.token;
+            const token = await tokenize(card);
 
-                // Make a request to your server with the payment token
-                const response = await fetch('/process-payment/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    },
-                    body: JSON.stringify({
-                        source_id: token,
-                        plan: '4-week' // or whichever plan the user selects
-                    }),
-                });
+            // Make a request to your server with the payment token
+            const response = await fetch('/process-payment/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({
+                    source_id: token,
+                    plan: '4-week' // or whichever plan the user selects
+                }),
+            });
 
-                const result = await response.json();
-                if (result.success) {
-                    window.location.href = '/success/';
-                } else {
-                    alert('Payment failed: ' + result.error);
-                }
+            const result = await response.json();
+            if (result.success) {
+                window.location.href = '/success/';
             } else {
-                console.error('Tokenization failed: ' + tokenResult.errors);
-                alert('Payment failed: ' + tokenResult.errors[0].detail);
+                console.error('Payment failed:', result.error);
+                alert('Payment failed: ' + JSON.stringify(result.error)); // This will give you more detailed error information
             }
         } catch (e) {
-            console.error(e.message);
+            console.error('Payment failed:', e);
             alert('Payment failed: ' + e.message);
         }
     });
 });
+
 
 </script>
 
