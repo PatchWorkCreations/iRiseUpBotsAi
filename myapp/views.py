@@ -731,13 +731,13 @@ def process_paypal_payment(request):
             selected_plan = data.get('plan')
 
             # Determine the amount based on the selected plan
-            amount = determine_amount_based_on_plan(selected_plan)
+            amount_cents = determine_amount_based_on_plan(selected_plan)
 
-            if amount <= 0:
+            if amount_cents <= 0:
                 return JsonResponse({"error": "Invalid plan selected."}, status=400)
 
-            # Convert the amount to a string and format it for PayPal (since PayPal requires amounts in dollars)
-            amount_in_dollars = "{:.2f}".format(amount / 100)
+            # Convert cents to dollars for PayPal
+            amount_dollars = "{:.2f}".format(amount_cents / 100)
 
             payment = paypalrestsdk.Payment({
                 "intent": "sale",
@@ -746,7 +746,7 @@ def process_paypal_payment(request):
                 },
                 "transactions": [{
                     "amount": {
-                        "total": amount_in_dollars,  # Amount in dollars
+                        "total": amount_dollars,  # Pass the amount as a string in dollars
                         "currency": "USD"
                     },
                     "description": "Subscription Plan Payment"
@@ -771,6 +771,7 @@ def process_paypal_payment(request):
             return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 
 def handle_successful_payment(selected_plan):

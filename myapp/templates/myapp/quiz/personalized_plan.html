@@ -224,40 +224,52 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // PayPal payment setup function
     function setupPayPalPayments() {
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: document.querySelector('input[name="plan"]:checked').value // Set this dynamically based on the selected plan
-                        }
-                    }]
-                });
-            },
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
-                    const response = fetch('/process-paypal-payment/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}',
-                        },
-                        body: JSON.stringify({
-                            order_id: data.orderID,
-                            plan: document.querySelector('input[name="plan"]:checked').value
-                        }),
-                    });
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            // Determine the amount based on the selected plan
+            const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+            let amount;
 
-                    const jsonResult = response.json();
-                    if (jsonResult.success) {
-                        window.location.href = '/success/';
-                    } else {
-                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-                    }
-                });
+            if (selectedPlan === '1-week') {
+                amount = '13.86';
+            } else if (selectedPlan === '4-week') {
+                amount = '39.99';
+            } else if (selectedPlan === '12-week') {
+                amount = '79.99';
             }
-        }).render('#paypal-button-container');
-    }
+
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: amount  // Pass the amount as a string in dollars
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                return fetch('/process-paypal-payment/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({
+                        order_id: data.orderID,
+                        plan: document.querySelector('input[name="plan"]:checked').value
+                    }),
+                }).then(response => response.json())
+                  .then(jsonResult => {
+                      if (jsonResult.success) {
+                          window.location.href = '/success/';
+                      } else {
+                          alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+                      }
+                  });
+            });
+        }
+    }).render('#paypal-button-container');
+}
 
     // Show the modal and setup payment options when a button is clicked
     buttons.forEach(function (btn) {
