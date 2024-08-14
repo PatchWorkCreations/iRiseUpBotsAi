@@ -560,6 +560,7 @@ def personalized_plan(request):
 
 # views.py
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 import uuid
 import json
 from square.client import Client
@@ -580,10 +581,11 @@ def determine_amount_based_on_plan(plan):
     else:
         return 0
 
+@csrf_exempt  # Exempt CSRF if you're not including the CSRF token in the AJAX request
 def process_payment(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        card_token = data.get('cardToken')
+        card_token = data.get('source_id')  # Ensure this matches the key sent in your JS
         selected_plan = data.get('plan')
 
         # Determine the amount based on the selected plan
@@ -608,9 +610,12 @@ def process_payment(request):
         if result.is_success():
             return JsonResponse({"success": True})
         else:
-            return JsonResponse({"error": result.errors}, status=400)
+            # Better error formatting
+            error_messages = [error['detail'] for error in result.errors]
+            return JsonResponse({"error": error_messages}, status=400)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 from django.shortcuts import render
 

@@ -101,12 +101,13 @@ urlpatterns = [
     path('loading/', views.loading_page, name='loading_page'),
     path('email-collection/', views.email_collection, name='email_collection'),
     path('readiness-level/', views.readiness_level, name='readiness_level'),
-    path('personalized-plan/', views.personalized_plan, name='personalized_plan'),
+   
     path('subscription-terms/', views.subscription_terms, name='subscription_terms'),
-     path('terms-conditions/', views.terms_conditions, name='terms_conditions'),
+    path('terms-conditions/', views.terms_conditions, name='terms_conditions'),
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),  # Privacy Policy URL
     path('support-center/', views.support_center, name='support_center'),  # Support Center URL
 
+    path('personalized-plan/', views.personalized_plan, name='personalized_plan'),
     path('process-payment/', views.process_payment, name='process_payment'),
      # URL pattern for the payment page
     path('payment/', views.payment_page, name='payment_page'),

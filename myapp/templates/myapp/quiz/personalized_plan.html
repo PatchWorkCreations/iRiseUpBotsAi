@@ -166,66 +166,56 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
-    try {
-        // Initialize the Square payment form
-        const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
-        const card = await payments.card();
-        await card.attach('#card-container');  // Attach the payment form to the correct container
+    // Initialize the Square payment form
+    const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
+    const card = await payments.card();
+    await card.attach('#card-container');  // Attach the payment form to the correct container
 
-        // Define the tokenize function
-        async function tokenize(card) {
-            const result = await card.tokenize();
-            if (result.status === 'OK') {
-                return result.token;
-            } else {
-                throw new Error(result.errors ? result.errors[0].message : 'Tokenization failed');
-            }
+    // Define the tokenize function
+    async function tokenize(card) {
+        const result = await card.tokenize();
+        if (result.status === 'OK') {
+            return result.token;
+        } else {
+            throw new Error(result.errors ? result.errors[0].message : 'Tokenization failed');
         }
-
-        // Handle the "GET MY PLAN" button click to open the modal
-        document.getElementById('open-checkout-modal').addEventListener('click', function () {
-            document.getElementById('checkout-modal').style.display = 'block';
-        });
-
-        // Handle the modal close action
-        document.getElementById('close-modal').addEventListener('click', function () {
-            document.getElementById('checkout-modal').style.display = 'none';
-        });
-
-        // Handle the form submission inside the modal
-        document.getElementById('payment-form').addEventListener('submit', async function (e) {
-            e.preventDefault();  // Prevent the default form submission
-            try {
-                const token = await tokenize(card);
-
-                // Send the payment token and plan to your server
-                const response = await fetch('/process-payment/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    },
-                    body: JSON.stringify({
-                        source_id: token,
-                        plan: document.querySelector('input[name="plan"]:checked').value
-                    }),
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    window.location.href = '/success/';
-                } else {
-                    alert('Payment failed: ' + JSON.stringify(result.error));
-                }
-            } catch (e) {
-                console.error(e.message);
-                alert('Payment failed: ' + e.message);
-            }
-        });
-    } catch (error) {
-        console.error('Error initializing Square payment form:', error.message);
-        alert('Failed to initialize payment form: ' + error.message);
     }
+
+    // Handle the "GET MY PLAN" button click to open the modal
+    document.getElementById('card-button').addEventListener('click', function () {
+        document.getElementById('checkout-modal').style.display = 'block';
+    });
+
+    // Handle the form submission inside the modal
+    document.getElementById('payment-form').addEventListener('submit', async function (e) {
+        e.preventDefault();  // Prevent the default form submission
+        try {
+            const token = await tokenize(card);
+
+            // Send the payment token and plan to your server
+            const response = await fetch('/process-payment/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({
+                    source_id: token,  // Make sure this key matches what you're expecting in your Django view
+                    plan: document.querySelector('input[name="plan"]:checked').value
+                }),
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                window.location.href = '/success/';
+            } else {
+                alert('Payment failed: ' + JSON.stringify(result.error));
+            }
+        } catch (e) {
+            console.error(e.message);
+            alert('Payment failed: ' + e.message);
+        }
+    });
 });
 
 </script>
