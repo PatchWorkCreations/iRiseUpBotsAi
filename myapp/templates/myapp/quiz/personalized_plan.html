@@ -232,7 +232,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (paypalInitialized) return; // Prevent re-initialization
 
     paypal.Buttons({
-    createOrder: function (data, actions) {
+    createOrder: function(data, actions) {
+        // Dynamically set the value based on the selected plan
         const planValue = document.querySelector('input[name="plan"]:checked').value;
         let amount;
         switch (planValue) {
@@ -248,6 +249,7 @@ document.addEventListener('DOMContentLoaded', function () {
             default:
                 amount = '0.00';
         }
+
         return actions.order.create({
             purchase_units: [{
                 amount: {
@@ -256,8 +258,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         });
     },
-    onApprove: function (data, actions) {
-        return actions.order.capture().then(async function (details) {
+    onApprove: function(data, actions) {
+        return actions.order.capture().then(async function(details) {
             const response = await fetch('/capture-paypal-payment/', {
                 method: 'POST',
                 headers: {
@@ -265,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     'X-CSRFToken': '{{ csrf_token }}',
                 },
                 body: JSON.stringify({
-                    authorization_id: details.id,  // Make sure you use the correct id from details
+                    authorization_id: details.purchase_units[0].payments.captures[0].id,
                     amount: details.purchase_units[0].amount.value
                 }),
             });
@@ -278,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     },
-    onError: function (err) {
+    onError: function(err) {
         console.error('PayPal error:', err);
         alert('An error occurred during PayPal payment: ' + err);
     }
