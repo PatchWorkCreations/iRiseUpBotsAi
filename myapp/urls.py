@@ -120,4 +120,5 @@ urlpatterns = [
     # URL for password reset done (you can create a similar page like the above for this):
     path('password-reset-done/', views.CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
      path('change-password/', views.CustomPasswordChangeView.as_view(), name='password_change'),
+     path('capture-paypal-payment/', views.capture_paypal_payment, name='capture_paypal_payment'),
 ]

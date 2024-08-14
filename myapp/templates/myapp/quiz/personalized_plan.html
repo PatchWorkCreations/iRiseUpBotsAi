@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // PayPal payment setup function
-    function setupPayPalPayments() {
+    async function setupPayPalPayments() {
         if (paypalInitialized) return; // Prevent re-initialization
 
         paypal.Buttons({
@@ -261,32 +261,39 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             onApprove: function (data, actions) {
                 return actions.order.capture().then(async function (details) {
-                    try {
-                        const response = await fetch('/process-paypal-payment/', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': '{{ csrf_token }}',
-                            },
-                            body: JSON.stringify({
-                                order_id: data.orderID,
-                                plan: document.querySelector('input[name="plan"]:checked').value
-                            }),
-                        });
+                    const planValue = document.querySelector('input[name="plan"]:checked').value;
+                    let amount;
+                    switch (planValue) {
+                        case '1-week':
+                            amount = '13.86';
+                            break;
+                        case '4-week':
+                            amount = '39.99';
+                            break;
+                        case '12-week':
+                            amount = '79.99';
+                            break;
+                        default:
+                            amount = '0.00';
+                    }
 
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
+                    const response = await fetch('/capture-paypal-payment/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify({
+                            authorization_id: data.orderID,
+                            amount: amount
+                        }),
+                    });
 
-                        const jsonResult = await response.json();
-                        if (jsonResult.success) {
-                            window.location.href = '/success/';
-                        } else {
-                            alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-                        }
-                    } catch (err) {
-                        console.error('PayPal payment processing error:', err);
-                        alert('An error occurred during PayPal payment processing: ' + err.message);
+                    const jsonResult = await response.json();
+                    if (jsonResult.success) {
+                        window.location.href = '/success/';
+                    } else {
+                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
                     }
                 });
             },
@@ -298,7 +305,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         paypalInitialized = true; // Set flag to prevent re-initialization
     }
-
 
     // Show the modal and setup payment options when a button is clicked
     buttons.forEach(function (btn) {
