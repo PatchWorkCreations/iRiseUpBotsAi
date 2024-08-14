@@ -167,15 +167,26 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', async function () {
-    const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
-    const card = await payments.card();
-    await card.attach('#card-container');
+document.addEventListener('DOMContentLoaded', function () {
+    // Get the modal
+    const modal = document.getElementById('checkout-modal');
 
-    const payButtons = document.querySelectorAll('.card-button'); // Select all buttons with the class 'card-button'
+    // Get all the buttons that open the modal
+    const buttons = document.querySelectorAll('.card-button');
 
-    payButtons.forEach(function (payButton) {
-        payButton.addEventListener('click', async () => {
+    // Get the <span> element that closes the modal
+    const span = document.getElementsByClassName('close')[0];
+
+    // Define the Square payment setup function
+    async function setupSquarePayments() {
+        const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
+        const card = await payments.card();
+        await card.attach('#card-container');
+
+        // Attach the payment processing logic to the "Pay Now" button inside the modal
+        const payButton = document.getElementById('payment-form').querySelector('button[type="submit"]');
+        payButton.addEventListener('click', async function (event) {
+            event.preventDefault(); // Prevent form from submitting normally
             try {
                 const result = await card.tokenize();
                 if (result.status === 'OK') {
@@ -206,27 +217,13 @@ document.addEventListener('DOMContentLoaded', async function () {
                 alert('Payment failed: ' + e.message);
             }
         });
-    });
-});
+    }
 
-
-
-// modal code 
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Get the modal
-    const modal = document.getElementById('checkout-modal');
-
-    // Get all the buttons that open the modal
-    const buttons = document.querySelectorAll('.card-button');
-
-    // Get the <span> element that closes the modal
-    const span = document.getElementsByClassName('close')[0];
-
-    // When the user clicks any button with the class 'card-button', open the modal
+    // When the user clicks any button with the class 'card-button', open the modal and setup Square payments
     buttons.forEach(function (btn) {
         btn.addEventListener('click', function () {
             modal.style.display = 'block';
+            setupSquarePayments(); // Initialize Square payments only when the modal opens
         });
     });
 
