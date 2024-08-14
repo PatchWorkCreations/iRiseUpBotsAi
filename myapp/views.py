@@ -803,7 +803,7 @@ def sign_in(request):
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
-            login(request, user)
+            sign_in(request, user)
             return redirect('coursemenu')  # Ensure 'home' is defined in your urls.py
         else:
             messages.error(request, 'Invalid email or password. Please try again.')
