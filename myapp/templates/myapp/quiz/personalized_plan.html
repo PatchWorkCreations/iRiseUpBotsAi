@@ -10,7 +10,9 @@
     <div id="countdown" class="countdown-timer">
         <span id="minutes">10</span>:<span id="seconds">00</span>
     </div>
-    <button id="card-button" class="btn btn-primary get-plan-btn pulsate">GET MY PLAN</button>
+    <div class="plan-button">
+        <button class="card-button btn btn-primary get-plan-btn pulsate">GET MY PLAN</button>
+    </div>
 </div>
 
 <div class="container text-center mt-5">
@@ -135,7 +137,7 @@
                 </div>
 
                 <div class="plan-button">
-                    <button id="card-button" class="btn btn-primary get-plan-btn pulsate">GET MY PLAN</button>
+                    <button class="card-button btn btn-primary get-plan-btn pulsate">GET MY PLAN</button>
                 </div>
 
                 <div class="subscription-info">
@@ -215,18 +217,18 @@ document.addEventListener('DOMContentLoaded', function () {
     // Get the modal
     const modal = document.getElementById('checkout-modal');
 
-    // Get the button that opens the modal
-    const btn = document.getElementById('card-button');
+    // Get all the buttons that open the modal
+    const buttons = document.querySelectorAll('.card-button');
 
     // Get the <span> element that closes the modal
     const span = document.getElementsByClassName('close')[0];
 
-    // When the user clicks the button, open the modal 
-    if (btn) {
+    // When the user clicks any button with the class 'card-button', open the modal
+    buttons.forEach(function (btn) {
         btn.addEventListener('click', function () {
             modal.style.display = 'block';
         });
-    }
+    });
 
     // When the user clicks on <span> (x), close the modal
     if (span) {
@@ -242,6 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
 
 
 </script>
