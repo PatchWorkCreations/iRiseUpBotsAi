@@ -715,12 +715,13 @@ def process_payment(request):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+from django.conf import settings
 import paypalrestsdk
 
 paypalrestsdk.configure({
-    "mode": PAYPAL_MODE,  # sandbox or live
-    "client_id": PAYPAL_CLIENT_ID,
-    "client_secret": PAYPAL_CLIENT_SECRET
+    "mode": settings.PAYPAL_MODE,
+    "client_id": settings.PAYPAL_CLIENT_ID,
+    "client_secret": settings.PAYPAL_CLIENT_SECRET
 })
 
 def process_paypal_payment(amount, selected_plan):
