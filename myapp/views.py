@@ -609,12 +609,16 @@ from django.utils.crypto import get_random_string
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
+import logging
 
 # Initialize the Square Client
 client = Client(
     access_token='EAAAlz5jWqFxF0gzV6PfCR-Xgu4hCsw85fhWpEapFt_E3ufGuBysx3xUoJW6RyII',  # Replace with your actual Sandbox access token
     environment='sandbox'  # Use 'production' for live transactions
 )
+
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 def determine_amount_based_on_plan(plan):
     if plan == '1-week':
@@ -627,13 +631,8 @@ def determine_amount_based_on_plan(plan):
         return 0
 
 def grant_course_access(user, selected_plan):
-    """
-    This function grants the user access to a course based on the selected plan.
-    It also sets an expiration date based on the plan duration.
-    """
     course = Course.objects.get(title='coursemenu')  # Replace with your actual course title
 
-    # Determine expiration date based on selected plan
     if selected_plan == '1-week':
         expiration_date = timezone.now() + timedelta(weeks=1)
     elif selected_plan == '4-week':
@@ -641,66 +640,68 @@ def grant_course_access(user, selected_plan):
     elif selected_plan == '12-week':
         expiration_date = timezone.now() + timedelta(weeks=12)
 
-    # Grant access to the course
     UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
 
-@csrf_exempt  # Exempt CSRF if you're not including the CSRF token in the AJAX request
+@csrf_exempt
 def process_payment(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        card_token = data.get('source_id')  # Ensure this matches the key sent in your JS
-        selected_plan = data.get('plan')
+        try:
+            data = json.loads(request.body)
+            card_token = data.get('source_id')
+            selected_plan = data.get('plan')
 
-        # Determine the amount based on the selected plan
-        amount = determine_amount_based_on_plan(selected_plan)
+            amount = determine_amount_based_on_plan(selected_plan)
 
-        if amount <= 0:
-            return JsonResponse({"error": "Invalid plan selected."}, status=400)
+            if amount <= 0:
+                return JsonResponse({"error": "Invalid plan selected."}, status=400)
 
-        # Create the payment body
-        body = {
-            "source_id": card_token,
-            "idempotency_key": str(uuid.uuid4()),  # Generate a unique idempotency key
-            "amount_money": {
-                "amount": amount,
-                "currency": "USD"
+            body = {
+                "source_id": card_token,
+                "idempotency_key": str(uuid.uuid4()),
+                "amount_money": {
+                    "amount": amount,
+                    "currency": "USD"
+                }
             }
-        }
 
-        # Make the API request to Square
-        result = client.payments.create_payment(body)
+            # Make the API request to Square
+            result = client.payments.create_payment(body)
 
-        if result.is_success():
-            # Fetch the most recent email address associated with the user
-            user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
-            if user_email:
-                # Generate a random password
-                random_password = get_random_string(8)
+            # Log the raw response from Square API
+            logger.info("Square API Response: %s", result)
 
-                # Create the user account
-                user, created = User.objects.get_or_create(
-                    username=user_email.email,
-                    email=user_email.email,
-                )
-                if created:
-                    user.set_password(random_password)
-                    user.save()
+            if result.is_success():
+                user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+                if user_email:
+                    random_password = get_random_string(8)
 
-                    # Grant access to the course based on the selected plan
-                    grant_course_access(user, selected_plan)
+                    user, created = User.objects.get_or_create(
+                        username=user_email.email,
+                        email=user_email.email,
+                    )
+                    if created:
+                        user.set_password(random_password)
+                        user.save()
 
-                    # Send an email with the temporary password
-                    subject = 'Your Account Has Been Created'
-                    message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\n\nYou now have access to the course menu based on your selected plan.'
-                    send_mail(subject, message, 'your-email@example.com', [user_email.email])
+                        # Grant access to the course
+                        grant_course_access(user, selected_plan)
 
-            return JsonResponse({"success": True})
-        else:
-            # Better error formatting
-            error_messages = [error['detail'] for error in result.errors]
-            return JsonResponse({"error": error_messages}, status=400)
+                        subject = 'Your Account Has Been Created'
+                        message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
+                        send_mail(subject, message, 'your-email@example.com', [user_email.email])
+
+                return JsonResponse({"success": True})
+            else:
+                error_messages = [error['detail'] for error in result.errors]
+                logger.error("Payment Error: %s", error_messages)
+                return JsonResponse({"error": error_messages}, status=400)
+
+        except Exception as e:
+            logger.error("Unexpected error occurred: %s", str(e))
+            return JsonResponse({"error": "An unexpected error occurred."}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 from django.shortcuts import redirect
 from django.urls import reverse
