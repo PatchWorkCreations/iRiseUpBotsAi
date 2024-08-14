@@ -116,7 +116,6 @@ urlpatterns = [
     # Success page after successful payment
     path('success/', views.success_page, name='success_page'),
     path('preview-email/', views.preview_email, name='preview_email'),
-    path('sign-in/', views.sign_in, name='sign_in'),
 
     path('forgot-password/', views.CustomPasswordResetView.as_view(), name='password_reset'),
     # URL for password reset done (you can create a similar page like the above for this):
