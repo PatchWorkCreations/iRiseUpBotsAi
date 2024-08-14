@@ -613,8 +613,8 @@ import logging
 
 # Initialize the Square Client
 client = Client(
-    access_token='EAAAlz5jWqFxF0gzV6PfCR-Xgu4hCsw85fhWpEapFt_E3ufGuBysx3xUoJW6RyII',
-    environment='sandbox'
+    access_token='EAAAlz5jWqFxF0gzV6PfCR-Xgu4hCsw85fhWpEapFt_E3ufGuBysx3xUoJW6RyII',  # Replace with your actual Sandbox access token
+    environment='sandbox'  # Use 'production' for live transactions
 )
 
 # Initialize logger
@@ -631,13 +631,8 @@ def determine_amount_based_on_plan(plan):
         return 0
 
 def grant_course_access(user, selected_plan):
-    """
-    Grants the user access to all courses for a specified duration based on the selected plan.
-    """
-    # Retrieve all courses
-    courses = Course.objects.all()
+    course = Course.objects.get(title='coursemenu')  # Replace with your actual course title
 
-    # Determine expiration date based on selected plan
     if selected_plan == '1-week':
         expiration_date = timezone.now() + timedelta(weeks=1)
     elif selected_plan == '4-week':
@@ -645,9 +640,7 @@ def grant_course_access(user, selected_plan):
     elif selected_plan == '12-week':
         expiration_date = timezone.now() + timedelta(weeks=12)
 
-    # Grant access to all courses
-    for course in courses:
-        UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
+    UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
 
 @csrf_exempt
 def process_payment(request):
@@ -690,10 +683,9 @@ def process_payment(request):
                         user.set_password(random_password)
                         user.save()
 
-                        # Grant access to all courses
+                        # Grant access to the course
                         grant_course_access(user, selected_plan)
 
-                        # Send email with login details
                         subject = 'Your Account Has Been Created'
                         message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
@@ -709,7 +701,6 @@ def process_payment(request):
             return JsonResponse({"error": "An unexpected error occurred."}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
-
 
 
 from django.shortcuts import redirect
