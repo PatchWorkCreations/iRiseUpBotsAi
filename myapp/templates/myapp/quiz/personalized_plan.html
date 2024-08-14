@@ -228,7 +228,6 @@ document.addEventListener('DOMContentLoaded', function () {
         squareInitialized = true; // Set flag to prevent re-initialization
     }
 
-    // PayPal payment setup function
     async function setupPayPalPayments() {
     if (paypalInitialized) return; // Prevent re-initialization
 
@@ -259,7 +258,9 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         onApprove: function(data, actions) {
             return actions.order.capture().then(async function(details) {
-                const amount = details.purchase_units[0].amount.value; // Ensure we are capturing the amount
+                const authorization_id = data.orderID;
+                const amount = details.purchase_units[0].amount.value; // Ensure this gets the correct value
+
                 const response = await fetch('/capture-paypal-payment/', {
                     method: 'POST',
                     headers: {
@@ -267,8 +268,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         'X-CSRFToken': '{{ csrf_token }}',
                     },
                     body: JSON.stringify({
-                        authorization_id: data.orderID,  // Using data.orderID as authorization_id
-                        amount: amount  // Pass the captured amount
+                        authorization_id: authorization_id,
+                        amount: amount // Ensure this is correctly passed
                     }),
                 });
 
@@ -280,6 +281,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         },
+    
         onError: function (err) {
             console.error('PayPal error:', err);
             alert('An error occurred during PayPal payment: ' + err);
@@ -288,6 +290,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     paypalInitialized = true; // Set flag to prevent re-initialization
 }
+
 
 
     // Show the modal and setup payment options when a button is clicked

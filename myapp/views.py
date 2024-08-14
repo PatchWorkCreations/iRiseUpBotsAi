@@ -774,26 +774,29 @@ def process_paypal_payment(request):
 
 # yourapp/views.py
 
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .services.paypal_service import PayPalService
+from django.http import JsonResponse
 
 @csrf_exempt
 def capture_paypal_payment(request):
-    if request.method == "POST":
-        authorization_id = request.POST.get("authorization_id")
-        amount = request.POST.get("amount")
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        authorization_id = data.get('authorization_id')
+        amount = data.get('amount')
+
+        # Add debugging information
+        print(f"Received authorization_id: {authorization_id}")
+        print(f"Received amount: {amount}")
+
         if not authorization_id or not amount:
-            return JsonResponse({"error": "Missing authorization_id or amount"}, status=400)
+            return JsonResponse({'success': False, 'error': 'Missing authorization_id or amount'}, status=400)
 
-        paypal_service = PayPalService()
+        # Continue processing the payment capture using the authorization_id and amount
         try:
-            capture_response = paypal_service.capture_payment(authorization_id, amount)
-            return JsonResponse(capture_response)
-        except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": str(e)}, status=500)
-
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+            capture_response = paypal_client.capture_payment(authorization_id, amount)
+            return JsonResponse({'success': True, 'response': capture_response})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
 def handle_successful_payment(selected_plan):
