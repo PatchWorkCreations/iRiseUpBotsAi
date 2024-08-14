@@ -260,23 +260,32 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             onApprove: function (data, actions) {
                 return actions.order.capture().then(async function (details) {
-                    const response = await fetch('/process-paypal-payment/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}',
-                        },
-                        body: JSON.stringify({
-                            order_id: data.orderID,
-                            plan: document.querySelector('input[name="plan"]:checked').value
-                        }),
-                    });
+                    try {
+                        const response = await fetch('/process-paypal-payment/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}',
+                            },
+                            body: JSON.stringify({
+                                order_id: data.orderID,
+                                plan: document.querySelector('input[name="plan"]:checked').value
+                            }),
+                        });
 
-                    const jsonResult = await response.json();
-                    if (jsonResult.success) {
-                        window.location.href = '/success/';
-                    } else {
-                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const jsonResult = await response.json();
+                        if (jsonResult.success) {
+                            window.location.href = '/success/';
+                        } else {
+                            alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+                        }
+                    } catch (err) {
+                        console.error('PayPal payment processing error:', err);
+                        alert('An error occurred during PayPal payment processing: ' + err.message);
                     }
                 });
             },
