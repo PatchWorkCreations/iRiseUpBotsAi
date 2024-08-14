@@ -87,11 +87,13 @@ h1 {
     cursor: pointer;
     text-align: center;
     width: 100%;
+    position: relative;
 }
 
 .continue-btn:hover, .view-btn:hover {
     background: #0056b3;
 }
+
 
 .course-grid {
     display: flex;
