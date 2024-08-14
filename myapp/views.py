@@ -24,8 +24,6 @@ def index3(request):
 def index(request):
     return render(request, 'myapp/index.html')
 
-def login(request):
-    return render(request, 'myapp/login.html')
 
 def newsdetail(request):
     return render(request, 'myapp/news-detail.html')

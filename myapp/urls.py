@@ -11,7 +11,6 @@ urlpatterns = [
     path('faq/', views.faq, name='faq'),
     path('index-2/', views.index2, name='index2'),
     path('index-3/', views.index3, name='index3'),
-    path('login/', views.login, name='login'),
     path('news-detail/', views.newsdetail, name='newsdetail'),
     path('not-found/', views.notfound, name='notfound'),
     path('pricing/', views.pricing, name='pricing'),
