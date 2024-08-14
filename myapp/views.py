@@ -523,6 +523,27 @@ def email_collection(request):
     return render(request, 'myapp/quiz/email_collection.html')  # Updated to reflect correct path
 
 
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+def send_welcome_email(user_email):
+    subject = 'Welcome to Coursiv'
+    from_email = 'your-email@example.com'
+    to_email = [user_email]
+
+    # Render the HTML content without a confirmation link
+    html_content = render_to_string('welcome_email.html', {'user_email': user_email})
+    text_content = strip_tags(html_content)  # Strip the HTML tags for a plain text alternative
+
+    # Log the HTML content for debugging
+    print(html_content)
+
+    msg = EmailMultiAlternatives(subject, text_content, from_email, to_email)
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+
 def readiness_level(request):
     if request.method == 'POST':
         # Process form submission or redirect
