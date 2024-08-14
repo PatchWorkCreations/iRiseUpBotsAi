@@ -610,15 +610,9 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
 import logging
-
-# Initialize the Square Client
-client = Client(
-    access_token='EAAAlz5jWqFxF0gzV6PfCR-Xgu4hCsw85fhWpEapFt_E3ufGuBysx3xUoJW6RyII',  # Replace with your actual Sandbox access token
-    environment='sandbox'  # Use 'production' for live transactions
-)
-
-# Initialize logger
-logger = logging.getLogger(__name__)
+from django.utils import timezone
+from datetime import timedelta
+from .models import UserCourseAccess, Course
 
 def determine_amount_based_on_plan(plan):
     if plan == '1-week':
@@ -631,8 +625,13 @@ def determine_amount_based_on_plan(plan):
         return 0
 
 def grant_course_access(user, selected_plan):
-    course = Course.objects.get(title='coursemenu')  # Replace with your actual course title
+    """
+    This function grants the user access to all courses and sets an expiration date based on the selected plan.
+    """
+    # Get all courses available in the course menu
+    courses = Course.objects.all()
 
+    # Determine expiration date based on selected plan
     if selected_plan == '1-week':
         expiration_date = timezone.now() + timedelta(weeks=1)
     elif selected_plan == '4-week':
@@ -640,8 +639,18 @@ def grant_course_access(user, selected_plan):
     elif selected_plan == '12-week':
         expiration_date = timezone.now() + timedelta(weeks=12)
 
-    UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
+    # Grant access to all courses with the determined expiration date
+    for course in courses:
+        UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
 
+    return True
+
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger('myapp')
+
+# Then your process_payment function should work as expected:
 @csrf_exempt
 def process_payment(request):
     if request.method == "POST":
@@ -697,10 +706,11 @@ def process_payment(request):
                 return JsonResponse({"error": error_messages}, status=400)
 
         except Exception as e:
-            logger.error("Unexpected error occurred: %s", str(e))
-            return JsonResponse({"error": "An unexpected error occurred."}, status=500)
+            logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
+            return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 
 from django.shortcuts import redirect

@@ -123,4 +123,28 @@ EMAIL_HOST_PASSWORD = 'lovi mltt gpzl tgcf'
 DEFAULT_FROM_EMAIL = 'Test account'
 
 
+# In your Django settings (settings.py), add or update the LOGGING configuration:
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        # You can add your custom logger here
+        'myapp': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
