@@ -489,6 +489,90 @@ def loading_page(request):
     return render(request, 'myapp/quiz/loading_page.html')
 
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from .models import EmailCollection
+from django.db import IntegrityError
+from django.shortcuts import render, redirect
+
+def email_collection(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        receive_offers = request.POST.get('receive_offers') == 'on'  # Convert "on" to True, otherwise False
+
+        try:
+            EmailCollection.objects.create(email=email, receive_offers=receive_offers)
+            
+            # Prepare the email content
+            subject = 'Welcome to iRiseUp.Ai!'
+            html_message = render_to_string('welcome_email.html', {'email': email})
+            plain_message = strip_tags(html_message)
+            from_email = 'your-email@example.com'
+            to = email
+
+            # Send the email
+            send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+        except IntegrityError:
+            # Handle the case where the email already exists
+            return redirect('email_already_exists')  # Redirect to an appropriate page or handle as needed
+
+        # Redirect to the loading page or next step
+        return redirect('readiness_level')
+
+    return render(request, 'myapp/quiz/email_collection.html')  # Updated to reflect correct path
+
+
+def readiness_level(request):
+    if request.method == 'POST':
+        # Process form submission or redirect
+        return redirect('personalized_plan')  # Replace 'next_page' with the actual next page URL or name
+
+    return render(request, 'myapp/quiz/readiness_level.html')  # Replace with the correct template path
+
+
+from django.shortcuts import render
+
+def personalized_plan(request):
+    # Retrieve session data
+    age = request.session.get('age_range', '')
+    gender = request.session.get('gender', '')
+    special_goal = request.session.get('special_goal', '')
+
+    # Convert age to integer for comparison
+    try:
+        age = int(age.split('-')[0])  # Extracts the starting age from the range, e.g., "35-44" -> 35
+    except (ValueError, IndexError):
+        age = None  # Set age to None if there's an issue with age processing
+
+    # Determine image path based on gender and age
+    if gender == 'male':
+        if age is not None and age < 30:
+            current_image_path = 'myapp/images/male_before_young.png'
+            goal_image_path = 'myapp/images/male_after_young.png'
+        else:
+            current_image_path = 'myapp/images/male_before_adult.png'
+            goal_image_path = 'myapp/images/male_after_adult.png'
+    else:
+        if age is not None and age < 30:
+            current_image_path = 'myapp/images/female_before_young.png'
+            goal_image_path = 'myapp/images/female_after_young.png'
+        else:
+            current_image_path = 'myapp/images/female_before_adult.png'
+            goal_image_path = 'myapp/images/female_after_adult.png'
+
+    # Pass context data to the template
+    context = {
+        'current_image_path': current_image_path,
+        'goal_image_path': goal_image_path,
+        'special_goal': special_goal,
+    }
+
+    return render(request, 'myapp/quiz/personalized_plan.html', context)
+
+
+
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import uuid
@@ -558,121 +642,6 @@ def process_payment(request):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
-
-def readiness_level(request):
-    if request.method == 'POST':
-        # Process form submission or redirect
-        return redirect('personalized_plan')  # Replace 'next_page' with the actual next page URL or name
-
-    return render(request, 'myapp/quiz/readiness_level.html')  # Replace with the correct template path
-
-
-from django.shortcuts import render
-
-def personalized_plan(request):
-    # Retrieve session data
-    age = request.session.get('age_range', '')
-    gender = request.session.get('gender', '')
-    special_goal = request.session.get('special_goal', '')
-
-    # Convert age to integer for comparison
-    try:
-        age = int(age.split('-')[0])  # Extracts the starting age from the range, e.g., "35-44" -> 35
-    except (ValueError, IndexError):
-        age = None  # Set age to None if there's an issue with age processing
-
-    # Determine image path based on gender and age
-    if gender == 'male':
-        if age is not None and age < 30:
-            current_image_path = 'myapp/images/male_before_young.png'
-            goal_image_path = 'myapp/images/male_after_young.png'
-        else:
-            current_image_path = 'myapp/images/male_before_adult.png'
-            goal_image_path = 'myapp/images/male_after_adult.png'
-    else:
-        if age is not None and age < 30:
-            current_image_path = 'myapp/images/female_before_young.png'
-            goal_image_path = 'myapp/images/female_after_young.png'
-        else:
-            current_image_path = 'myapp/images/female_before_adult.png'
-            goal_image_path = 'myapp/images/female_after_adult.png'
-
-    # Pass context data to the template
-    context = {
-        'current_image_path': current_image_path,
-        'goal_image_path': goal_image_path,
-        'special_goal': special_goal,
-    }
-
-    return render(request, 'myapp/quiz/personalized_plan.html', context)
-
-
-
-from django.core.mail import send_mail
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import uuid
-import json
-from square.client import Client
-
-# Initialize the Square Client
-client = Client(
-    access_token='EAAAlz5jWqFxF0gzV6PfCR-Xgu4hCsw85fhWpEapFt_E3ufGuBysx3xUoJW6RyII',  # Replace with your actual Sandbox access token
-    environment='sandbox'  # Use 'production' for live transactions
-)
-
-def determine_amount_based_on_plan(plan):
-    if plan == '1-week':
-        return 1386  # $13.86 in cents
-    elif plan == '4-week':
-        return 3999  # $39.99 in cents
-    elif plan == '12-week':
-        return 7999  # $79.99 in cents
-    else:
-        return 0
-
-@csrf_exempt  # Exempt CSRF if you're not including the CSRF token in the AJAX request
-def process_payment(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        card_token = data.get('source_id')  # Ensure this matches the key sent in your JS
-        selected_plan = data.get('plan')
-
-        # Determine the amount based on the selected plan
-        amount = determine_amount_based_on_plan(selected_plan)
-
-        if amount <= 0:
-            return JsonResponse({"error": "Invalid plan selected."}, status=400)
-
-        # Create the payment body
-        body = {
-            "source_id": card_token,
-            "idempotency_key": str(uuid.uuid4()),  # Generate a unique idempotency key
-            "amount_money": {
-                "amount": amount,
-                "currency": "USD"
-            }
-        }
-
-        # Make the API request to Square
-        result = client.payments.create_payment(body)
-
-        if result.is_success():
-            # Send an email to the user after successful payment
-            send_mail(
-                'Your Plan Purchase Confirmation',
-                'Thank you for purchasing our plan! You now have access to the resources. If you have any questions, feel free to reach out to us.',
-                'your-email@gmail.com',  # From email
-                [request.user.email],  # To email
-                fail_silently=False,
-            )
-            return JsonResponse({"success": True})
-        else:
-            # Better error formatting
-            error_messages = [error['detail'] for error in result.errors]
-            return JsonResponse({"error": error_messages}, status=400)
-
-    return JsonResponse({"error": "Invalid request method."}, status=405)
 
 
 
