@@ -158,25 +158,16 @@
 
 <div id="checkout-modal" class="modal" style="display:none;">
     <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Complete Your Purchase</h2>
-        
-        <!-- Payment Options -->
-        <div id="payment-options">
-            <button id="pay-with-card" class="btn btn-primary">Pay with Card</button>
-            <button id="pay-with-paypal" class="btn btn-primary">Pay with PayPal</button>
-        </div>
-        
-        <!-- Card Payment Form (Hidden by Default) -->
-        <form id="card-payment-form" style="display:none;">
-            <div id="card-container"></div>
-            <button type="submit">Pay Now</button>
-        </form>
-        
-        <!-- PayPal Payment Button (Hidden by Default) -->
-        <div id="paypal-button-container" style="display:none;"></div>
+      <span class="close">&times;</span>
+      <h2>Complete Your Purchase</h2>
+      <form id="payment-form">
+        <div id="card-container"></div> <!-- Square payment form -->
+        <div id="paypal-button-container"></div> <!-- PayPal payment button -->
+        <button type="submit">Pay Now</button>
+      </form>
     </div>
 </div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
