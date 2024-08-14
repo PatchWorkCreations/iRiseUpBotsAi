@@ -494,6 +494,7 @@ from django.utils.html import strip_tags
 from .models import EmailCollection
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
 def email_collection(request):
     if request.method == 'POST':
@@ -501,6 +502,7 @@ def email_collection(request):
         receive_offers = request.POST.get('receive_offers') == 'on'  # Convert "on" to True, otherwise False
 
         try:
+            # Attempt to create the email record
             EmailCollection.objects.create(email=email, receive_offers=receive_offers)
             
             # Prepare the email content
@@ -510,18 +512,21 @@ def email_collection(request):
             from_email = 'your-email@example.com'
             to = email
 
-            # Send the email
+            # Send the welcome email
             send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+            # Redirect to the readiness level page
+            return redirect('readiness_level')
 
         except IntegrityError:
             # Handle the case where the email already exists
-            return redirect('email_already_exists')  # Redirect to an appropriate page or handle as needed
+            messages.error(request, "This email is already registered. Please use a different email or log in.")
+            return render(request, 'myapp/quiz/email_collection.html', {
+                'email': email,
+                'receive_offers': receive_offers,
+            })
 
-        # Redirect to the loading page or next step
-        return redirect('readiness_level')
-
-    return render(request, 'myapp/quiz/email_collection.html')  # Updated to reflect correct path
-
+    return render(request, 'myapp/quiz/email_collection.html')
 
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
