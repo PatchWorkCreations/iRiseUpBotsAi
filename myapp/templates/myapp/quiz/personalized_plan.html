@@ -166,11 +166,12 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
-    const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');  // Replace with your actual Application ID and Location ID
+    // Initialize the Square payment form
+    const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
     const card = await payments.card();
-    await card.attach('#card-container');  // Attach to the correct ID in your HTML
+    await card.attach('#card-container');  // Attach the payment form to the correct container
 
-    // Function to handle tokenization
+    // Define the tokenize function
     async function tokenize(card) {
         const result = await card.tokenize();
         if (result.status === 'OK') {
@@ -180,23 +181,18 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
-    // Event listener for the button click to open the modal
+    // Handle the "GET MY PLAN" button click to open the modal
     document.getElementById('card-button').addEventListener('click', function () {
         document.getElementById('checkout-modal').style.display = 'block';
     });
 
-    // Event listener for closing the modal
-    document.querySelector('.close').addEventListener('click', function () {
-        document.getElementById('checkout-modal').style.display = 'none';
-    });
-
-    // Event listener for the payment submission
+    // Handle the form submission inside the modal
     document.getElementById('payment-form').addEventListener('submit', async function (e) {
         e.preventDefault();  // Prevent the default form submission
         try {
             const token = await tokenize(card);
 
-            // Make a request to your server with the payment token
+            // Send the payment token and plan to your server
             const response = await fetch('/process-payment/', {
                 method: 'POST',
                 headers: {
@@ -205,7 +201,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 },
                 body: JSON.stringify({
                     source_id: token,
-                    plan: document.querySelector('input[name="plan"]:checked').value  // Get selected plan value
+                    plan: document.querySelector('input[name="plan"]:checked').value
                 }),
             });
 
