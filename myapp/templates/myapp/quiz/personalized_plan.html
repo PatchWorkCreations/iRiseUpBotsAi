@@ -226,29 +226,34 @@ document.addEventListener('DOMContentLoaded', function () {
     function setupPayPalPayments() {
     paypal.Buttons({
         createOrder: function(data, actions) {
-            // Determine the amount based on the selected plan
-            const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+            // Dynamically set the value based on the selected plan
+            const planValue = document.querySelector('input[name="plan"]:checked').value;
             let amount;
-
-            if (selectedPlan === '1-week') {
-                amount = '13.86';
-            } else if (selectedPlan === '4-week') {
-                amount = '39.99';
-            } else if (selectedPlan === '12-week') {
-                amount = '79.99';
+            switch(planValue) {
+                case '1-week':
+                    amount = '13.86';
+                    break;
+                case '4-week':
+                    amount = '39.99';
+                    break;
+                case '12-week':
+                    amount = '79.99';
+                    break;
+                default:
+                    amount = '0.00';
             }
 
             return actions.order.create({
                 purchase_units: [{
                     amount: {
-                        value: amount  // Pass the amount as a string in dollars
+                        value: amount // Set amount based on the selected plan
                     }
                 }]
             });
         },
         onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-                return fetch('/process-paypal-payment/', {
+            return actions.order.capture().then(async function(details) {
+                const response = await fetch('/process-paypal-payment/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -258,18 +263,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         order_id: data.orderID,
                         plan: document.querySelector('input[name="plan"]:checked').value
                     }),
-                }).then(response => response.json())
-                  .then(jsonResult => {
-                      if (jsonResult.success) {
-                          window.location.href = '/success/';
-                      } else {
-                          alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-                      }
-                  });
+                });
+
+                const jsonResult = await response.json();
+                if (jsonResult.success) {
+                    window.location.href = '/success/';
+                } else {
+                    alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+                }
             });
         }
     }).render('#paypal-button-container');
 }
+
 
     // Show the modal and setup payment options when a button is clicked
     buttons.forEach(function (btn) {
