@@ -148,3 +148,8 @@ LOGGING = {
         },
     },
 }
+
+
+PAYPAL_CLIENT_ID = 'AcO0pQSFgkyRPtmmgviw2lz2DCojtl28Y_Qr9bligTeR1kOZScy9jecX2eWixffPBqGDJJyxSWn5iT__'
+PAYPAL_CLIENT_SECRET = 'ELbhk0AXF3pOlgiJ378aXLtHzonT4EzPXkvQzEPv7dpTUth6GJOx_C6okSLpJmW2xf-ipC2zBCZzP0hQ'
+PAYPAL_MODE = 'sandbox'  # Change to 'live' for production

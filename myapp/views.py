@@ -715,6 +715,64 @@ def process_payment(request):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+import paypalrestsdk
+
+paypalrestsdk.configure({
+    "mode": PAYPAL_MODE,  # sandbox or live
+    "client_id": PAYPAL_CLIENT_ID,
+    "client_secret": PAYPAL_CLIENT_SECRET
+})
+
+def process_paypal_payment(amount, selected_plan):
+    payment = paypalrestsdk.Payment({
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal"
+        },
+        "transactions": [{
+            "amount": {
+                "total": amount,
+                "currency": "USD"
+            },
+            "description": "Subscription Plan Payment"
+        }],
+        "redirect_urls": {
+            "return_url": "http://example.com/payment/execute",  # Replace with your actual URL
+            "cancel_url": "http://example.com/payment/cancel"    # Replace with your actual URL
+        }
+    })
+
+    if payment.create():
+        return JsonResponse({"paymentID": payment.id})
+    else:
+        logger.error("Payment Error (PayPal): %s", payment.error)
+        return JsonResponse({"error": payment.error}, status=400)
+
+
+def handle_successful_payment(selected_plan):
+    user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+    if user_email:
+        random_password = get_random_string(8)
+
+        user, created = User.objects.get_or_create(
+            username=user_email.email,
+            email=user_email.email,
+        )
+        if created:
+            user.set_password(random_password)
+            user.save()
+
+            # Grant access to the course
+            grant_course_access(user, selected_plan)
+
+            subject = 'Your Account Has Been Created'
+            message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
+            send_mail(subject, message, 'your-email@example.com', [user_email.email])
+
+    return JsonResponse({"success": True})
+
+
+
 
 
 from django.shortcuts import redirect
@@ -823,3 +881,6 @@ from django.contrib.auth.views import PasswordResetDoneView
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'myapp/password_reset_done.html'
+
+
+
