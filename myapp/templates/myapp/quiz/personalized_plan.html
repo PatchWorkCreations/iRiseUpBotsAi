@@ -232,61 +232,58 @@ document.addEventListener('DOMContentLoaded', function () {
     if (paypalInitialized) return; // Prevent re-initialization
 
     paypal.Buttons({
-        createOrder: function(data, actions) {
-            const planValue = document.querySelector('input[name="plan"]:checked').value;
-            let amount;
-            switch (planValue) {
-                case '1-week':
-                    amount = '13.86';
-                    break;
-                case '4-week':
-                    amount = '39.99';
-                    break;
-                case '12-week':
-                    amount = '79.99';
-                    break;
-                default:
-                    amount = '0.00';
-            }
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: amount
-                    }
-                }]
-            });
-        },
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(async function(details) {
-                const authorization_id = data.orderID;
-                const amount = details.purchase_units[0].amount.value; // Ensure this gets the correct value
-
-                const response = await fetch('/capture-paypal-payment/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    },
-                    body: JSON.stringify({
-                        authorization_id: authorization_id,
-                        amount: amount // Ensure this is correctly passed
-                    }),
-                });
-
-                const jsonResult = await response.json();
-                if (jsonResult.success) {
-                    window.location.href = '/success/';
-                } else {
-                    alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-                }
-            });
-        },
-    
-        onError: function (err) {
-            console.error('PayPal error:', err);
-            alert('An error occurred during PayPal payment: ' + err);
+    createOrder: function (data, actions) {
+        const planValue = document.querySelector('input[name="plan"]:checked').value;
+        let amount;
+        switch (planValue) {
+            case '1-week':
+                amount = '13.86';
+                break;
+            case '4-week':
+                amount = '39.99';
+                break;
+            case '12-week':
+                amount = '79.99';
+                break;
+            default:
+                amount = '0.00';
         }
-    }).render('#paypal-button-container');
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    value: amount
+                }
+            }]
+        });
+    },
+    onApprove: function (data, actions) {
+        return actions.order.capture().then(async function (details) {
+            const response = await fetch('/capture-paypal-payment/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({
+                    authorization_id: details.id,  // Make sure you use the correct id from details
+                    amount: details.purchase_units[0].amount.value
+                }),
+            });
+
+            const jsonResult = await response.json();
+            if (jsonResult.success) {
+                window.location.href = '/success/';
+            } else {
+                alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+            }
+        });
+    },
+    onError: function (err) {
+        console.error('PayPal error:', err);
+        alert('An error occurred during PayPal payment: ' + err);
+    }
+}).render('#paypal-button-container');
+
 
     paypalInitialized = true; // Set flag to prevent re-initialization
 }
