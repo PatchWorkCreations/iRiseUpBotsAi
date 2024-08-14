@@ -114,5 +114,14 @@ LOGOUT_REDIRECT_URL = 'custom_dashboard'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'juliavictorio16@gmail.com'
+EMAIL_HOST_PASSWORD = 'lovi mltt gpzl tgcf'
+DEFAULT_FROM_EMAIL = 'Test account'
+
+
 
 

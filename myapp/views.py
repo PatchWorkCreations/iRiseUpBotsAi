@@ -488,25 +488,75 @@ def results(request):
 def loading_page(request):
     return render(request, 'myapp/quiz/loading_page.html')
 
-from django.db import IntegrityError
-from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import uuid
+import json
+from square.client import Client
 from .models import EmailCollection
 
-def email_collection(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        receive_offers = request.POST.get('receive_offers') == 'on'  # Convert "on" to True, otherwise False
-        
-        try:
-            EmailCollection.objects.create(email=email, receive_offers=receive_offers)
-        except IntegrityError:
-            # Handle the case where the email already exists
-            return redirect('email_already_exists')  # Redirect to an appropriate page or handle as needed
+# Initialize the Square Client
+client = Client(
+    access_token='EAAAlz5jWqFxF0gzV6PfCR-Xgu4hCsw85fhWpEapFt_E3ufGuBysx3xUoJW6RyII',  # Replace with your actual Sandbox access token
+    environment='sandbox'  # Use 'production' for live transactions
+)
 
-        # Redirect to the loading page or next step
-        return redirect('readiness_level')
+def determine_amount_based_on_plan(plan):
+    if plan == '1-week':
+        return 1386  # $13.86 in cents
+    elif plan == '4-week':
+        return 3999  # $39.99 in cents
+    elif plan == '12-week':
+        return 7999  # $79.99 in cents
+    else:
+        return 0
 
-    return render(request, 'myapp/quiz/email_collection.html')  # Updated to reflect correct path
+@csrf_exempt  # Exempt CSRF if you're not including the CSRF token in the AJAX request
+def process_payment(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        card_token = data.get('source_id')  # Ensure this matches the key sent in your JS
+        selected_plan = data.get('plan')
+
+        # Determine the amount based on the selected plan
+        amount = determine_amount_based_on_plan(selected_plan)
+
+        if amount <= 0:
+            return JsonResponse({"error": "Invalid plan selected."}, status=400)
+
+        # Create the payment body
+        body = {
+            "source_id": card_token,
+            "idempotency_key": str(uuid.uuid4()),  # Generate a unique idempotency key
+            "amount_money": {
+                "amount": amount,
+                "currency": "USD"
+            }
+        }
+
+        # Make the API request to Square
+        result = client.payments.create_payment(body)
+
+        if result.is_success():
+            # Fetch the most recent email address associated with the user
+            user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+            if user_email:
+                # Send an email to the user after successful payment
+                send_mail(
+                    'Your Plan Purchase Confirmation',
+                    'Thank you for purchasing our plan! You now have access to the resources. If you have any questions, feel free to reach out to us.',
+                    'your-email@gmail.com',  # From email
+                    [user_email.email],  # To email
+                    fail_silently=False,
+                )
+            return JsonResponse({"success": True})
+        else:
+            # Better error formatting
+            error_messages = [error['detail'] for error in result.errors]
+            return JsonResponse({"error": error_messages}, status=400)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
 
 
 def readiness_level(request):
@@ -558,7 +608,7 @@ def personalized_plan(request):
 
 
 
-# views.py
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import uuid
@@ -608,6 +658,14 @@ def process_payment(request):
         result = client.payments.create_payment(body)
 
         if result.is_success():
+            # Send an email to the user after successful payment
+            send_mail(
+                'Your Plan Purchase Confirmation',
+                'Thank you for purchasing our plan! You now have access to the resources. If you have any questions, feel free to reach out to us.',
+                'your-email@gmail.com',  # From email
+                [request.user.email],  # To email
+                fail_silently=False,
+            )
             return JsonResponse({"success": True})
         else:
             # Better error formatting
@@ -615,6 +673,7 @@ def process_payment(request):
             return JsonResponse({"error": error_messages}, status=400)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 
 from django.shortcuts import render
