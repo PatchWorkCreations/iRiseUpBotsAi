@@ -724,30 +724,53 @@ paypalrestsdk.configure({
     "client_secret": settings.PAYPAL_CLIENT_SECRET
 })
 
-def process_paypal_payment(amount, selected_plan):
-    payment = paypalrestsdk.Payment({
-        "intent": "sale",
-        "payer": {
-            "payment_method": "paypal"
-        },
-        "transactions": [{
-            "amount": {
-                "total": amount,
-                "currency": "USD"
-            },
-            "description": "Subscription Plan Payment"
-        }],
-        "redirect_urls": {
-            "return_url": "http://example.com/payment/execute",  # Replace with your actual URL
-            "cancel_url": "http://example.com/payment/cancel"    # Replace with your actual URL
-        }
-    })
+def process_paypal_payment(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            selected_plan = data.get('plan')
 
-    if payment.create():
-        return JsonResponse({"paymentID": payment.id})
-    else:
-        logger.error("Payment Error (PayPal): %s", payment.error)
-        return JsonResponse({"error": payment.error}, status=400)
+            # Determine the amount based on the selected plan
+            amount = determine_amount_based_on_plan(selected_plan)
+
+            if amount <= 0:
+                return JsonResponse({"error": "Invalid plan selected."}, status=400)
+
+            # Convert the amount to a string and format it for PayPal (since PayPal requires amounts in dollars)
+            amount_in_dollars = "{:.2f}".format(amount / 100)
+
+            payment = paypalrestsdk.Payment({
+                "intent": "sale",
+                "payer": {
+                    "payment_method": "paypal"
+                },
+                "transactions": [{
+                    "amount": {
+                        "total": amount_in_dollars,  # Amount in dollars
+                        "currency": "USD"
+                    },
+                    "description": "Subscription Plan Payment"
+                }],
+                "redirect_urls": {
+                    "return_url": "https://iriseupai-production.up.railway.app/success/",  # Replace with your actual success URL
+                    "cancel_url": "https://iriseupai-production.up.railway.app/payment/"    # Replace with your actual cancel URL
+                }
+            })
+
+            if payment.create():
+                for link in payment.links:
+                    if link.rel == "approval_url":
+                        approval_url = str(link.href)
+                        return JsonResponse({"approval_url": approval_url})
+            else:
+                logger.error("Payment Error (PayPal): %s", payment.error)
+                return JsonResponse({"error": payment.error}, status=400)
+
+        except Exception as e:
+            logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
+            return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
 
 
 def handle_successful_payment(selected_plan):
