@@ -114,4 +114,5 @@ urlpatterns = [
 
     # Success page after successful payment
     path('success/', views.success_page, name='success_page'),
+    path('preview-email/', views.preview_email, name='preview_email'),
 ]

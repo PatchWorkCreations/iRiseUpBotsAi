@@ -528,19 +528,19 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 def send_welcome_email(user_email):
-    subject = 'Welcome to Coursiv'
-    from_email = 'your-email@example.com'
+    subject = 'Welcome to iRiseUp.Ai!'
+    from_email = 'juliavictorio16@gmail.com'  # Replace with your actual email address
     to_email = [user_email]
 
-    # Render the HTML content without a confirmation link
+    # Render HTML content from the template
     html_content = render_to_string('welcome_email.html', {'user_email': user_email})
-    text_content = strip_tags(html_content)  # Strip the HTML tags for a plain text alternative
+    text_content = strip_tags(html_content)  # Strip the HTML tags for plain text alternative
 
-    # Log the HTML content for debugging
-    print(html_content)
-
+    # Create the email object and attach the HTML content
     msg = EmailMultiAlternatives(subject, text_content, from_email, to_email)
     msg.attach_alternative(html_content, "text/html")
+    
+    # Send the email
     msg.send()
 
 
@@ -735,3 +735,8 @@ def coursemenu(request):
         'current_course_access': current_course_access,
     }
     return render(request, 'myapp/coursemenu.html', context)
+
+
+def preview_email(request):
+    user_email = 'test@example.com'  # Example email, you can customize this
+    return render(request, 'welcome_email.html', {'user_email': user_email})
