@@ -788,7 +788,6 @@ def preview_email(request):
     return render(request, 'welcome_email.html', {'user_email': user_email})
 
 
-# views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -802,12 +801,13 @@ def sign_in(request):
         user = authenticate(request, username=email, password=password)
         
         if user is not None:
-            login(request, user)  # Use Django's login function to log in the user
-            return redirect('coursemenu')  # Redirect to course menu or any other page
+            login(request, user)  # This should correctly log in the user
+            return redirect('coursemenu')  # Redirect to the course menu
         else:
             messages.error(request, 'Invalid email or password. Please try again.')
     
     return render(request, 'myapp/quiz/sign_in.html')
+
 
 
 
