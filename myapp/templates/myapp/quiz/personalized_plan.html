@@ -179,158 +179,142 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const modal = document.getElementById('checkout-modal');
-        const buttons = document.querySelectorAll('.card-button');
-        const span = document.getElementsByClassName('close')[0];
-        let squareInitialized = false;
-        let paypalInitialized = false;
-    
-        // Square payment setup function
-        async function setupSquarePayments() {
-            if (squareInitialized) return; // Prevent re-initialization
-            const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
-            const card = await payments.card();
-            await card.attach('#card-container');
-    
-            const payButton = document.getElementById('payment-form').querySelector('button[type="submit"]');
-            payButton.addEventListener('click', async function (event) {
-                event.preventDefault();
-                try {
-                    const result = await card.tokenize();
-                    if (result.status === 'OK') {
-                        const response = await fetch('/process-payment/', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': '{{ csrf_token }}',
-                            },
-                            body: JSON.stringify({
-                                source_id: result.token,
-                                plan: document.querySelector('input[name="plan"]:checked').value
-                            }),
-                        });
-    
-                        const jsonResult = await response.json();
-                        if (jsonResult.success) {
-                            window.location.href = '/success/';
-                        } else {
-                            alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-                        }
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('checkout-modal');
+    const buttons = document.querySelectorAll('.card-button');
+    const span = document.getElementsByClassName('close')[0];
+    let squareInitialized = false;
+    let paypalInitialized = false;
+
+    // Square payment setup function
+    async function setupSquarePayments() {
+        if (squareInitialized) return; // Prevent re-initialization
+        const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
+        const card = await payments.card();
+        await card.attach('#card-container');
+
+        const payButton = document.getElementById('payment-form').querySelector('button[type="submit"]');
+        payButton.addEventListener('click', async function (event) {
+            event.preventDefault();
+            try {
+                const result = await card.tokenize();
+                if (result.status === 'OK') {
+                    const response = await fetch('/process-payment/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify({
+                            source_id: result.token,
+                            plan: document.querySelector('input[name="plan"]:checked').value
+                        }),
+                    });
+
+                    const jsonResult = await response.json();
+                    if (jsonResult.success) {
+                        window.location.href = '/success/';
                     } else {
-                        alert('Tokenization failed: ' + result.errors[0].message);
+                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
                     }
-                } catch (e) {
-                    console.error(e.message);
-                    alert('Payment failed: ' + e.message);
+                } else {
+                    alert('Tokenization failed: ' + result.errors[0].message);
                 }
-            });
-            squareInitialized = true; // Set flag to prevent re-initialization
-        }
-    
-        // PayPal payment setup function
-        async function setupPayPalPayments() {
-            if (paypalInitialized) return; // Prevent re-initialization
-    
-            paypal.Buttons({
-                createOrder: function (data, actions) {
-                    // Dynamically set the value based on the selected plan
-                    const planValue = document.querySelector('input[name="plan"]:checked').value;
-                    let amount;
-                    switch (planValue) {
-                        case '1-week':
-                            amount = '13.86';
-                            break;
-                        case '4-week':
-                            amount = '39.99';
-                            break;
-                        case '12-week':
-                            amount = '79.99';
-                            break;
-                        default:
-                            amount = '0.00';
-                    }
-    
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: amount // Set amount based on the selected plan
-                            }
-                        }]
-                    });
-                },
-                onApprove: function (data, actions) {
-                    return actions.order.capture().then(async function (details) {
-                        const planValue = document.querySelector('input[name="plan"]:checked').value;
-                        let amount;
-                        switch (planValue) {
-                            case '1-week':
-                                amount = '13.86';
-                                break;
-                            case '4-week':
-                                amount = '39.99';
-                                break;
-                            case '12-week':
-                                amount = '79.99';
-                                break;
-                            default:
-                                amount = '0.00';
-                        }
-    
-                        const response = await fetch('/capture-paypal-payment/', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': '{{ csrf_token }}',
-                            },
-                            body: JSON.stringify({
-                                authorization_id: data.orderID, // Ensure this is correctly set
-                                amount: amount
-                            }),
-                        });
-    
-                        const jsonResult = await response.json();
-                        if (jsonResult.success) {
-                            window.location.href = '/success/';
-                        } else {
-                            alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-                        }
-                    });
-                },
-                onError: function (err) {
-                    console.error('PayPal error:', err);
-                    alert('An error occurred during PayPal payment: ' + err);
-                }
-            }).render('#paypal-button-container');
-    
-            paypalInitialized = true; // Set flag to prevent re-initialization
-        }
-    
-        // Show the modal and setup payment options when a button is clicked
-        buttons.forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                modal.style.display = 'block';
-                setupSquarePayments(); // Setup Square payment
-                setupPayPalPayments(); // Setup PayPal payment
-            });
-        });
-    
-        // Close the modal when the user clicks on <span> (x)
-        if (span) {
-            span.addEventListener('click', function () {
-                modal.style.display = 'none';
-            });
-        }
-    
-        // Close the modal when the user clicks outside of it
-        window.addEventListener('click', function (event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
+            } catch (e) {
+                console.error(e.message);
+                alert('Payment failed: ' + e.message);
             }
         });
+        squareInitialized = true; // Set flag to prevent re-initialization
+    }
+
+    // PayPal payment setup function
+    async function setupPayPalPayments() {
+    if (paypalInitialized) return; // Prevent re-initialization
+
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            const planValue = document.querySelector('input[name="plan"]:checked').value;
+            let amount;
+            switch (planValue) {
+                case '1-week':
+                    amount = '13.86';
+                    break;
+                case '4-week':
+                    amount = '39.99';
+                    break;
+                case '12-week':
+                    amount = '79.99';
+                    break;
+                default:
+                    amount = '0.00';
+            }
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: amount
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(async function(details) {
+                const amount = details.purchase_units[0].amount.value; // Ensure we are capturing the amount
+                const response = await fetch('/capture-paypal-payment/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({
+                        authorization_id: data.orderID,  // Using data.orderID as authorization_id
+                        amount: amount  // Pass the captured amount
+                    }),
+                });
+
+                const jsonResult = await response.json();
+                if (jsonResult.success) {
+                    window.location.href = '/success/';
+                } else {
+                    alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+                }
+            });
+        },
+        onError: function (err) {
+            console.error('PayPal error:', err);
+            alert('An error occurred during PayPal payment: ' + err);
+        }
+    }).render('#paypal-button-container');
+
+    paypalInitialized = true; // Set flag to prevent re-initialization
+}
+
+
+    // Show the modal and setup payment options when a button is clicked
+    buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            modal.style.display = 'block';
+            setupSquarePayments(); // Setup Square payment
+            setupPayPalPayments(); // Setup PayPal payment
+        });
     });
-    </script>
-    
+
+    // Close the modal when the user clicks on <span> (x)
+    if (span) {
+        span.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+    }
+
+    // Close the modal when the user clicks outside of it
+    window.addEventListener('click', function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+</script>
+
 
 <style>
 .get-plan-btn {
