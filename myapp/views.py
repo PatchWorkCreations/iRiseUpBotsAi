@@ -613,8 +613,8 @@ import logging
 
 # Initialize the Square Client
 client = Client(
-    access_token='EAAAlz5jWqFxF0gzV6PfCR-Xgu4hCsw85fhWpEapFt_E3ufGuBysx3xUoJW6RyII',  # Replace with your actual Sandbox access token
-    environment='sandbox'  # Use 'production' for live transactions
+    access_token='EAAAlz5jWqFxF0gzV6PfCR-Xgu4hCsw85fhWpEapFt_E3ufGuBysx3xUoJW6RyII',
+    environment='sandbox'
 )
 
 # Initialize logger
@@ -689,6 +689,7 @@ def process_payment(request):
                         subject = 'Your Account Has Been Created'
                         message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
+                        logger.info("Email sent to: %s", user_email.email)  # Log email sent
 
                 return JsonResponse({"success": True})
             else:
@@ -701,6 +702,7 @@ def process_payment(request):
             return JsonResponse({"error": "An unexpected error occurred."}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 
 from django.shortcuts import redirect
