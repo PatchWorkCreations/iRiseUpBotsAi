@@ -1,0 +1,32 @@
+{% extends "customadmin/base.html" %}
+
+{% block content %}
+
+<h1>User Management</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Receive Offers</th>
+            <th>Payment Status</th>
+            <th>Date Added</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for email in email_collections %}
+        <tr>
+            <td>{{ email.email }}</td>
+            <td>{{ email.receive_offers }}</td>
+            <td>{{ email.payment_status }}</td>
+            <td>{{ email.created_at }}</td>
+            <td>
+                <a href="#">View Details</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -604,7 +604,11 @@ from django.views.decorators.csrf import csrf_exempt
 import uuid
 import json
 from square.client import Client
-from .models import EmailCollection
+from .models import EmailCollection, Course, UserCourseAccess
+from django.utils.crypto import get_random_string
+from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
 
 # Initialize the Square Client
 client = Client(
@@ -621,6 +625,24 @@ def determine_amount_based_on_plan(plan):
         return 7999  # $79.99 in cents
     else:
         return 0
+
+def grant_course_access(user, selected_plan):
+    """
+    This function grants the user access to a course based on the selected plan.
+    It also sets an expiration date based on the plan duration.
+    """
+    course = Course.objects.get(title='coursemenu')  # Replace with your actual course title
+
+    # Determine expiration date based on selected plan
+    if selected_plan == '1-week':
+        expiration_date = timezone.now() + timedelta(weeks=1)
+    elif selected_plan == '4-week':
+        expiration_date = timezone.now() + timedelta(weeks=4)
+    elif selected_plan == '12-week':
+        expiration_date = timezone.now() + timedelta(weeks=12)
+
+    # Grant access to the course
+    UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
 
 @csrf_exempt  # Exempt CSRF if you're not including the CSRF token in the AJAX request
 def process_payment(request):
@@ -652,14 +674,26 @@ def process_payment(request):
             # Fetch the most recent email address associated with the user
             user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
             if user_email:
-                # Send an email to the user after successful payment
-                send_mail(
-                    'Your Plan Purchase Confirmation',
-                    'Thank you for purchasing our plan! You now have access to the resources. If you have any questions, feel free to reach out to us.',
-                    'your-email@gmail.com',  # From email
-                    [user_email.email],  # To email
-                    fail_silently=False,
+                # Generate a random password
+                random_password = get_random_string(8)
+
+                # Create the user account
+                user, created = User.objects.get_or_create(
+                    username=user_email.email,
+                    email=user_email.email,
                 )
+                if created:
+                    user.set_password(random_password)
+                    user.save()
+
+                    # Grant access to the course based on the selected plan
+                    grant_course_access(user, selected_plan)
+
+                    # Send an email with the temporary password
+                    subject = 'Your Account Has Been Created'
+                    message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\n\nYou now have access to the course menu based on your selected plan.'
+                    send_mail(subject, message, 'your-email@example.com', [user_email.email])
+
             return JsonResponse({"success": True})
         else:
             # Better error formatting
@@ -668,7 +702,24 @@ def process_payment(request):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+from django.shortcuts import redirect
+from django.urls import reverse
 
+class ForcePasswordChangeMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.user.is_authenticated and request.user.last_login is None:
+            return redirect(reverse('password_change'))
+        return self.get_response(request)
+    
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
+
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'myapp/change_password.html'
+    success_url = reverse_lazy('coursemenu')  # Redirect to a profile page or wherever appropriate after a successful password change.
 
 
 from django.shortcuts import render
@@ -693,31 +744,6 @@ def privacy_policy(request):
 def support_center(request):
     return render(request, 'myapp/quiz/support_center.html')  # Support Center view
 
-from datetime import timedelta
-from django.utils import timezone
-from .models import UserCourseAccess
-
-def grant_course_access(user, selected_plan):
-    """
-    This function grants the user access to a course based on the selected plan.
-    It also sets an expiration date based on the plan duration.
-    """
-    # Assign course based on the selected plan
-    course = Course.objects.get(title='coursemenu')  # Replace with your actual course title
-
-    # Determine expiration date based on selected plan
-    if selected_plan == '1-week':
-        expiration_date = timezone.now() + timedelta(weeks=1)
-    elif selected_plan == '4-week':
-        expiration_date = timezone.now() + timedelta(weeks=4)
-    elif selected_plan == '12-week':
-        expiration_date = timezone.now() + timedelta(weeks=12)
-
-    # Grant access to the course
-    UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
-
-from django.shortcuts import render, get_object_or_404
-from .models import Course, UserCourseAccess
 
 def coursemenu(request):
     all_courses = Course.objects.all()
@@ -745,3 +771,38 @@ def coursemenu(request):
 def preview_email(request):
     user_email = 'test@example.com'  # Example email, you can customize this
     return render(request, 'welcome_email.html', {'user_email': user_email})
+
+
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+
+def sign_in(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Use Django's built-in authentication system
+        user = authenticate(request, username=email, password=password)
+        
+        if user is not None:
+            login(request, user)
+            return redirect('home')  # Redirect to a home page or dashboard
+        else:
+            messages.error(request, 'Invalid email or password. Please try again.')
+    
+    return render(request, 'myapp/quiz/sign_in.html')
+
+from django.contrib.auth.views import PasswordResetView
+from django.urls import reverse_lazy
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'myapp/forgot_password.html'
+    email_template_name = 'myapp/password_reset_email.html'
+    success_url = reverse_lazy('password_reset_done')
+
+from django.contrib.auth.views import PasswordResetDoneView
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'myapp/password_reset_done.html'

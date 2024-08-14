@@ -74,12 +74,13 @@ class QuizResponse(models.Model):
     receive_offers = models.BooleanField(default=False)
 
 from django.db import models
-from django.utils import timezone
 
 class EmailCollection(models.Model):
     email = models.EmailField(unique=True)
     receive_offers = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)  # Ensure this field is here
+    payment_status = models.CharField(max_length=20, choices=[('Paid', 'Paid'), ('Delayed', 'Delayed')], default='Delayed')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)  # Add this line
 
     def __str__(self):
         return self.email

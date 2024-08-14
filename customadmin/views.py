@@ -13,8 +13,7 @@ from django.urls import reverse_lazy
 
 def dashboard(request):
     courses = Course.objects.all()
-    return render(request, 'customadmin/dashboard.html', {'courses': courses})
-
+    return render(request, 'customadmin/dashboard.html')
 
 def course_list(request):
     courses = Course.objects.all()
@@ -150,7 +149,7 @@ class CustomLoginView(LoginView):
     template_name = 'customadmin/login.html'
 
 class CustomLogoutView(LogoutView):
-    next_page = reverse_lazy('custom_dashboard')
+    next_page = reverse_lazy('dashboard')
 
 # customadmin/views.py
 import os
@@ -225,3 +224,23 @@ def upload_csv(request):
     return render(request, 'upload_csv.html', {'form': form})
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from myapp.models import EmailCollection
+
+def user_management(request):
+    users = User.objects.all()
+    email_collections = EmailCollection.objects.all()
+    context = {
+        'users': users,
+        'email_collections': email_collections,
+    }
+    return render(request, 'customadmin/user_management.html', context)
+
+def send_password_reset(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    subject = 'Password Reset Request'
+    message = f'Click the link below to reset your password:\n\n{request.build_absolute_uri(reverse("password_reset_confirm", args=[user.id]))}'
+    send_mail(subject, message, 'from@example.com', [user.email])
+    return redirect('user_management')

@@ -108,8 +108,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 LOGIN_URL = 'custom_login'
 LOGOUT_URL = 'custom_logout'
-LOGIN_REDIRECT_URL = 'custom_dashboard'
-LOGOUT_REDIRECT_URL = 'custom_dashboard'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'custom_login'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
