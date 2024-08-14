@@ -800,15 +800,17 @@ def sign_in(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
+        # Use Django's built-in authentication system
         user = authenticate(request, username=email, password=password)
-
+        
         if user is not None:
-            sign_in(request, user)
-            return redirect('coursemenu')  # Ensure 'home' is defined in your urls.py
+            login(request, user)  # Use Django's login function to log in the user
+            return redirect('coursemenu')  # Redirect to course menu or any other page
         else:
             messages.error(request, 'Invalid email or password. Please try again.')
     
     return render(request, 'myapp/quiz/sign_in.html')
+
 
 
 from django.contrib.auth.views import PasswordResetView
