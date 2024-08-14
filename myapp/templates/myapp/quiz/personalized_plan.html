@@ -10,7 +10,7 @@
     <div id="countdown" class="countdown-timer">
         <span id="minutes">10</span>:<span id="seconds">00</span>
     </div>
-    <button id="open-checkout-modal" class="btn btn-primary get-plan-btn pulsate">GET MY PLAN</button>
+    <button id="card-button" class="btn btn-primary get-plan-btn pulsate">GET MY PLAN</button>
 </div>
 
 <div class="container text-center mt-5">
@@ -135,7 +135,7 @@
                 </div>
 
                 <div class="plan-button">
-                    <button id="open-checkout-modal" class="btn-get-plan pulsate">GET MY PLAN</button>
+                    <button id="card-button" class="btn btn-primary get-plan-btn pulsate">GET MY PLAN</button>
                 </div>
 
                 <div class="subscription-info">
@@ -155,11 +155,11 @@
 
 <div id="checkout-modal" class="modal" style="display:none;">
     <div class="modal-content">
-      <span id="close-modal" class="close">&times;</span>
+      <span class="close">&times;</span>
       <h2>Complete Your Purchase</h2>
       <form id="payment-form">
         <div id="card-container"></div> <!-- This is the container for the Square payment form -->
-        <button id="pay-now-button" type="submit">Pay Now</button>
+        <button type="submit">Pay Now</button>
       </form>
     </div>
 </div>
@@ -182,40 +182,50 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     // Handle the "GET MY PLAN" button click to open the modal
-    document.getElementById('card-button').addEventListener('click', function () {
-        document.getElementById('checkout-modal').style.display = 'block';
-    });
+    const cardButton = document.getElementById('card-button');
+    if (cardButton) {
+        cardButton.addEventListener('click', function () {
+            document.getElementById('checkout-modal').style.display = 'block';  // Open the modal
+        });
+    } else {
+        console.error("Button with ID 'card-button' not found.");
+    }
 
     // Handle the form submission inside the modal
-    document.getElementById('payment-form').addEventListener('submit', async function (e) {
-        e.preventDefault();  // Prevent the default form submission
-        try {
-            const token = await tokenize(card);
+    const paymentForm = document.getElementById('payment-form');
+    if (paymentForm) {
+        paymentForm.addEventListener('submit', async function (e) {
+            e.preventDefault();  // Prevent the default form submission
+            try {
+                const token = await tokenize(card);
 
-            // Send the payment token and plan to your server
-            const response = await fetch('/process-payment/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}',
-                },
-                body: JSON.stringify({
-                    source_id: token,  // Make sure this key matches what you're expecting in your Django view
-                    plan: document.querySelector('input[name="plan"]:checked').value
-                }),
-            });
+                // Send the payment token and plan to your server
+                const response = await fetch('/process-payment/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({
+                        source_id: token,  // This must match the key expected in your Django view
+                        plan: document.querySelector('input[name="plan"]:checked').value
+                    }),
+                });
 
-            const result = await response.json();
-            if (result.success) {
-                window.location.href = '/success/';
-            } else {
-                alert('Payment failed: ' + JSON.stringify(result.error));
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = '/success/';
+                } else {
+                    alert('Payment failed: ' + JSON.stringify(result.error));
+                }
+            } catch (e) {
+                console.error(e.message);
+                alert('Payment failed: ' + e.message);
             }
-        } catch (e) {
-            console.error(e.message);
-            alert('Payment failed: ' + e.message);
-        }
-    });
+        });
+    } else {
+        console.error("Payment form with ID 'payment-form' not found.");
+    }
 });
 
 </script>
@@ -468,5 +478,42 @@ p {
     background-color: #324cdd;
     border-color: #324cdd;
 }
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 </style>
 {% endblock %}
