@@ -603,7 +603,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import uuid
 import json
-from square.client import Client
 from .models import EmailCollection, Course, UserCourseAccess
 from django.utils.crypto import get_random_string
 from django.contrib.auth.models import User
@@ -613,6 +612,13 @@ import logging
 from django.utils import timezone
 from datetime import timedelta
 from .models import UserCourseAccess, Course
+from square.client import Client
+
+# Initialize the Square Client
+client = Client(
+    access_token='EAAAlz5jWqFxF0gzV6PfCR-Xgu4hCsw85fhWpEapFt_E3ufGuBysx3xUoJW6RyII',  # Replace with your actual Sandbox access token
+    environment='sandbox'  # Use 'production' for live transactions
+)
 
 def determine_amount_based_on_plan(plan):
     if plan == '1-week':
