@@ -4,7 +4,7 @@
 {% block content %}
 <head>
     <script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
-    <script src="https://www.paypal.com/sdk/js?client-id=AcO0pQSFgkyRPtmmgviw2lz2DCojtl28Y_Qr9bligTeR1kOZScy9jecX2eWixffPBqGDJJyxSWn5iT__"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
 </head>
 
 <div class="header-container d-flex justify-content-between align-items-center">
@@ -158,39 +158,39 @@
 
 <div id="checkout-modal" class="modal" style="display:none;">
     <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Complete Your Purchase</h2>
-      <form id="payment-form">
-        <div id="card-container"></div> <!-- Square payment form -->
-        <div id="paypal-button-container"></div> <!-- PayPal payment button -->
-        <button type="submit">Pay Now</button>
-      </form>
+        <span class="close">&times;</span>
+        <h2>Complete Your Purchase</h2>
+        <div id="payment-options">
+            <div id="card-payment" class="payment-option">
+                <h3>Pay with Card</h3>
+                <form id="payment-form">
+                    <div id="card-container"></div> <!-- Square payment form container -->
+                    <button type="submit">Pay Now</button>
+                </form>
+            </div>
+            <div id="paypal-payment" class="payment-option">
+                <h3>Pay with PayPal</h3>
+                <div id="paypal-button-container"></div> <!-- PayPal button container -->
+            </div>
+        </div>
     </div>
 </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('checkout-modal');
     const buttons = document.querySelectorAll('.card-button');
     const span = document.getElementsByClassName('close')[0];
-    
-    // Payment option buttons
-    const payWithCardButton = document.getElementById('pay-with-card');
-    const payWithPaypalButton = document.getElementById('pay-with-paypal');
-    
-    // Payment forms/containers
-    const cardPaymentForm = document.getElementById('card-payment-form');
-    const paypalButtonContainer = document.getElementById('paypal-button-container');
-    
+
+    // Square payment setup function
     async function setupSquarePayments() {
         const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
         const card = await payments.card();
         await card.attach('#card-container');
 
-        // Handle card payment form submission
-        cardPaymentForm.addEventListener('submit', async function (event) {
-            event.preventDefault(); 
+        const payButton = document.getElementById('payment-form').querySelector('button[type="submit"]');
+        payButton.addEventListener('click', async function (event) {
+            event.preventDefault();
             try {
                 const result = await card.tokenize();
                 if (result.status === 'OK') {
@@ -222,55 +222,60 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // PayPal payment setup function
     function setupPayPalPayments() {
         paypal.Buttons({
             createOrder: function(data, actions) {
-                const amount = document.querySelector('input[name="plan"]:checked').dataset.amount;
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: amount
+                            value: document.querySelector('input[name="plan"]:checked').value // Set this dynamically based on the selected plan
                         }
                     }]
                 });
             },
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
-                    alert('Transaction completed by ' + details.payer.name.given_name);
-                    // Optionally, send transaction details to your server for further processing
+                    const response = fetch('/process-paypal-payment/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify({
+                            order_id: data.orderID,
+                            plan: document.querySelector('input[name="plan"]:checked').value
+                        }),
+                    });
+
+                    const jsonResult = response.json();
+                    if (jsonResult.success) {
+                        window.location.href = '/success/';
+                    } else {
+                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+                    }
                 });
-            },
-            onError: function(err) {
-                console.error(err);
-                alert('An error occurred during the payment process.');
             }
         }).render('#paypal-button-container');
     }
 
+    // Show the modal and setup payment options when a button is clicked
     buttons.forEach(function (btn) {
         btn.addEventListener('click', function () {
             modal.style.display = 'block';
+            setupSquarePayments(); // Setup Square payment
+            setupPayPalPayments(); // Setup PayPal payment
         });
     });
 
-    payWithCardButton.addEventListener('click', function () {
-        cardPaymentForm.style.display = 'block';
-        paypalButtonContainer.style.display = 'none';
-        setupSquarePayments(); // Initialize Square payments
-    });
-
-    payWithPaypalButton.addEventListener('click', function () {
-        paypalButtonContainer.style.display = 'block';
-        cardPaymentForm.style.display = 'none';
-        setupPayPalPayments(); // Initialize PayPal payments
-    });
-
+    // Close the modal when the user clicks on <span> (x)
     if (span) {
         span.addEventListener('click', function () {
             modal.style.display = 'none';
         });
     }
 
+    // Close the modal when the user clicks outside of it
     window.addEventListener('click', function (event) {
         if (event.target == modal) {
             modal.style.display = 'none';
@@ -278,7 +283,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
 
 <style>
 .get-plan-btn {
