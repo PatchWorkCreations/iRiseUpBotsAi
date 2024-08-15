@@ -777,10 +777,10 @@ def process_paypal_payment(request):
 
 # myapp/views.py
 
-from django.views.decorators.csrf import csrf_exempt
+
 from django.http import JsonResponse
-import json
-from myapp.services.paypal_client import PayPalClient  # Import the PayPalClient
+from django.views.decorators.csrf import csrf_exempt
+from myapp.services.paypal_client import PayPalClient
 
 @csrf_exempt
 def capture_paypal_payment(request):
@@ -792,8 +792,10 @@ def capture_paypal_payment(request):
         if not authorization_id or not amount:
             return JsonResponse({'success': False, 'error': 'Missing authorization_id or amount'}, status=400)
 
+        # Initialize PayPalClient with your credentials
+        paypal_client = PayPalClient(client_id='your-client-id', client_secret='your-client-secret')
+
         try:
-            paypal_client = PayPalClient(client_id="Your-PayPal-Client-ID", client_secret="Your-PayPal-Client-Secret")
             capture_response = paypal_client.capture_payment(authorization_id, amount)
             return JsonResponse({'success': True, 'response': capture_response})
         except Exception as e:
