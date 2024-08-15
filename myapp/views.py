@@ -828,33 +828,28 @@ def process_paypal_payment(request):
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.core.mail import send_mail
 import json
 from myapp.services.paypal_client import PayPalClient
-from myapp.models import Course, UserCourseAccess  # Adjust import as needed
 
 @csrf_exempt
 def capture_paypal_order(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         order_id = data.get('order_id')
-        amount = data.get('amount')
-        selected_plan = data.get('plan')  # Assuming 'plan' is part of the POST data
 
-        if not order_id or not amount:
-            return JsonResponse({'success': False, 'error': 'Missing order_id or amount'}, status=400)
+        if not order_id:
+            return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
 
         paypal_client = PayPalClient(client_id='your-client-id', client_secret='your-client-secret')
 
         try:
-            capture_response = paypal_client.capture_order(order_id, amount)
+            capture_response = paypal_client.capture_order(order_id)
             if capture_response.get('status') == 'COMPLETED':
                 # Handle post-payment logic, like granting access to courses
-                user_email = data.get('email')  # Assuming 'email' is part of the POST data
-
-                # Grant access to courses based on the selected plan
+                user_email = request.user.email
+                selected_plan = request.POST.get('plan')
                 grant_course_access(request.user, selected_plan)
-                
+                    
                 # Send email notification
                 send_mail(
                     'Payment Successful',
@@ -862,7 +857,6 @@ def capture_paypal_order(request):
                     'your-email@example.com',
                     [user_email],
                 )
-
                 return JsonResponse({'success': True, 'response': capture_response})
             else:
                 return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})

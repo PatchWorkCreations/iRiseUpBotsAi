@@ -1,10 +1,11 @@
 import requests
 from requests.auth import HTTPBasicAuth
+from django.conf import settings
 
 class PayPalClient:
     def __init__(self, client_id, client_secret):
-        self.client_id = 'AcO0pQSFgkyRPtmmgviw2lz2DCojtl28Y_Qr9bligTeR1kOZScy9jecX2eWixffPBqGDJJyxSWn5iT__'
-        self.client_secret = 'ELbhk0AXF3pOlgiJ378aXLtHzonT4EzPXkvQzEPv7dpTUth6GJOx_C6okSLpJmW2xf-ipC2zBCZzP0hQ'
+        self.client_id = settings.PAYPAL_CLIENT_ID
+        self.client_secret = settings.PAYPAL_CLIENT_SECRET
         self.base_url = "https://api-m.sandbox.paypal.com"
         self.access_token = self.get_access_token()
 
@@ -23,19 +24,13 @@ class PayPalClient:
         response.raise_for_status()
         return response.json()['access_token']
 
-    def capture_payment(self, authorization_id, amount):
-        url = f"{self.base_url}/v2/payments/authorizations/{authorization_id}/capture"
+    def capture_order(self, order_id):
+        url = f"{self.base_url}/v2/checkout/orders/{order_id}/capture"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.access_token}"
         }
-        data = {
-            "amount": {
-                "value": amount,
-                "currency_code": "USD"
-            }
-        }
         
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(url, headers=headers)
         response.raise_for_status()
         return response.json()
