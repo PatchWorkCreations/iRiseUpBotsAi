@@ -832,7 +832,6 @@ from django.core.mail import send_mail
 import json
 from myapp.services.paypal_client import PayPalClient
 from myapp.models import Course, UserCourseAccess  # Adjust import as needed
-from myapp.utils import grant_course_access  # Import your grant_course_access function
 
 @csrf_exempt
 def capture_paypal_order(request):
