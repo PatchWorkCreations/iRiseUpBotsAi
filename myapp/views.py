@@ -780,6 +780,7 @@ def process_paypal_payment(request):
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+import json
 from myapp.services.paypal_client import PayPalClient
 
 @csrf_exempt
@@ -792,40 +793,17 @@ def capture_paypal_payment(request):
         if not authorization_id or not amount:
             return JsonResponse({'success': False, 'error': 'Missing authorization_id or amount'}, status=400)
 
-        # Initialize PayPalClient with your credentials
         paypal_client = PayPalClient(client_id='your-client-id', client_secret='your-client-secret')
 
         try:
             capture_response = paypal_client.capture_payment(authorization_id, amount)
-            return JsonResponse({'success': True, 'response': capture_response})
+            if capture_response.get('status') == 'COMPLETED':  # Ensure you're checking for success
+                # Send email or perform any other necessary actions here
+                return JsonResponse({'success': True, 'redirect_url': '/success/'})
+            else:
+                return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
-
-def handle_successful_payment(selected_plan):
-    user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
-    if user_email:
-        random_password = get_random_string(8)
-
-        user, created = User.objects.get_or_create(
-            username=user_email.email,
-            email=user_email.email,
-        )
-        if created:
-            user.set_password(random_password)
-            user.save()
-
-            # Grant access to the course
-            grant_course_access(user, selected_plan)
-
-            subject = 'Your Account Has Been Created'
-            message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
-            send_mail(subject, message, 'your-email@example.com', [user_email.email])
-
-    return JsonResponse({"success": True})
-
-
-
 
 
 from django.shortcuts import redirect
