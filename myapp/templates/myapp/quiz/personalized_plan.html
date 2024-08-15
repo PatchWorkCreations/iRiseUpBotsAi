@@ -266,11 +266,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             'X-CSRFToken': '{{ csrf_token }}',
                         },
                         body: JSON.stringify({
-                            authorization_id: data.orderID,
+                            order_id: data.orderID,
                             amount: details.purchase_units[0].amount.value
                         }),
                     });
-
                     const jsonResult = await response.json();
                     if (jsonResult.success) {
                         window.location.href = '/success/';

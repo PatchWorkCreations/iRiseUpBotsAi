@@ -715,6 +715,54 @@ def process_payment(request):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import paypalrestsdk
+import logging
+
+# Assuming PayPal SDK is configured
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+def create_paypal_order(request):
+    if request.method == 'POST':
+        try:
+            selected_plan = request.POST.get('plan')
+            # Determine the amount based on the selected plan
+            amount_cents = determine_amount_based_on_plan(selected_plan)
+
+            if amount_cents <= 0:
+                return JsonResponse({"error": "Invalid plan selected."}, status=400)
+
+            amount_dollars = "{:.2f}".format(amount_cents / 100)
+
+            order = paypalrestsdk.Order({
+                "intent": "CAPTURE",
+                "purchase_units": [{
+                    "amount": {
+                        "currency_code": "USD",
+                        "value": amount_dollars
+                    }
+                }],
+                "application_context": {
+                    "return_url": "https://yourapp.com/success/",
+                    "cancel_url": "https://yourapp.com/cancel/"
+                }
+            })
+
+            if order.create():
+                approval_url = next(link.href for link in order.links if link.rel == "approve")
+                return JsonResponse({"approval_url": approval_url})
+            else:
+                logger.error("Failed to create order: %s", order.error)
+                return JsonResponse({"error": order.error}, status=400)
+
+        except Exception as e:
+            logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+
 from django.conf import settings
 import paypalrestsdk
 
@@ -784,26 +832,39 @@ import json
 from myapp.services.paypal_client import PayPalClient
 
 @csrf_exempt
-def capture_paypal_payment(request):
+def capture_paypal_order(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        authorization_id = data.get('authorization_id')
-        amount = data.get('amount')
-
-        if not authorization_id or not amount:
-            return JsonResponse({'success': False, 'error': 'Missing authorization_id or amount'}, status=400)
-
-        paypal_client = PayPalClient(client_id='your-client-id', client_secret='your-client-secret')
-
         try:
-            capture_response = paypal_client.capture_payment(authorization_id, amount)
-            if capture_response.get('status') == 'COMPLETED':  # Ensure you're checking for success
-                # Send email or perform any other necessary actions here
-                return JsonResponse({'success': True, 'redirect_url': '/success/'})
+            order_id = request.POST.get('orderID')  # This comes from your front-end after PayPal approval
+
+            order = paypalrestsdk.Order.find(order_id)
+            
+            if order.status == "APPROVED":
+                capture_response = order.capture()
+                if capture_response.success():
+                    # Handle post-payment logic, like granting access to courses
+                    user_email = request.user.email
+                    selected_plan = request.POST.get('plan')
+                    grant_course_access(request.user, selected_plan)
+                    
+                    # Send email notification
+                    send_mail(
+                        'Payment Successful',
+                        'Your payment was successful. You now have access to your selected course.',
+                        'your-email@example.com',
+                        [user_email],
+                    )
+                    return JsonResponse({"success": True, "response": capture_response})
+                else:
+                    return JsonResponse({"error": "Failed to capture payment", "response": capture_response})
             else:
-                return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
+                return JsonResponse({"error": "Order not approved"}, status=400)
+
         except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+            logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 
 from django.shortcuts import redirect
