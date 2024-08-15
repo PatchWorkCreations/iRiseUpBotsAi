@@ -745,7 +745,7 @@ def create_paypal_order(request):
                     }
                 }],
                 "application_context": {
-                    "return_url": "https://yourapp.com/success/",
+                    "return_url": "https://iriseupai-production.up.railway.app/success/",
                     "cancel_url": "https://yourapp.com/cancel/"
                 }
             })
