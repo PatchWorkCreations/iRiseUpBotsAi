@@ -1,11 +1,11 @@
 import requests
 from requests.auth import HTTPBasicAuth
-from django.conf import settings
+import logging
 
 class PayPalClient:
-    def __init__(self, client_id, client_secret):
-        self.client_id = settings.PAYPAL_CLIENT_ID
-        self.client_secret = settings.PAYPAL_CLIENT_SECRET
+    def __init__(self):
+        self.client_id = 'AcO0pQSFgkyRPtmmgviw2lz2DCojtl28Y_Qr9bligTeR1kOZScy9jecX2eWixffPBqGDJJyxSWn5iT__'
+        self.client_secret = 'ELbhk0AXF3pOlgiJ378aXLtHzonT4EzPXkvQzEPv7dpTUth6GJOx_C6okSLpJmW2xf-ipC2zBCZzP0hQ'
         self.base_url = "https://api-m.sandbox.paypal.com"
         self.access_token = self.get_access_token()
 
@@ -31,6 +31,12 @@ class PayPalClient:
             "Authorization": f"Bearer {self.access_token}"
         }
         
-        response = requests.post(url, headers=headers)
-        response.raise_for_status()
-        return response.json()
+        try:
+            response = requests.post(url, headers=headers)
+            response.raise_for_status()  # Raise an error if the request failed
+            logging.info("PayPal API Response: %s", response.json())
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logging.error("PayPal API request failed: %s", str(e))
+            raise
+
