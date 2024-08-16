@@ -1,0 +1,39 @@
+{
+    "title": "Payment Successful",
+    "styles": {
+      "container": {
+        "maxWidth": "600px",
+        "margin": "0 auto",
+        "textAlign": "center",
+        "padding": "50px",
+        "backgroundColor": "#f1f1f1",
+        "borderRadius": "8px",
+        "boxShadow": "0 0 10px rgba(0, 0, 0, 0.1)"
+      },
+      "heading": {
+        "color": "#4CAF50"
+      },
+      "paragraph": {
+        "fontSize": "18px",
+        "color": "#333"
+      },
+      "button": {
+        "marginTop": "20px",
+        "padding": "10px 20px",
+        "backgroundColor": "#4CAF50",
+        "color": "white",
+        "textDecoration": "none",
+        "borderRadius": "5px"
+      },
+      "buttonHover": {
+        "backgroundColor": "#45a049"
+      }
+    },
+    "content": {
+      "heading": "Payment Successful!",
+      "paragraph": "Thank you for your payment. Your transaction was successful.",
+      "buttonText": "Return to Home",
+      "buttonLink": "/"
+    }
+  }
+  

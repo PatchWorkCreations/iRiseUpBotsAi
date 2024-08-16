@@ -813,47 +813,55 @@ def complete_paypal_payment(request):
             order_status = order_details.get('status')
             logger.info(f"Order status: {order_status}")
 
-            if order_status == 'COMPLETED':
-                # Order is already completed, render the success page
-                logger.info("Order already completed, rendering success page.")
-                return render(request, 'success_page.html')
+            if order_status == 'COMPLETED' or order_status == 'APPROVED':
+                # Capture the order if not already completed
+                if order_status == 'APPROVED':
+                    capture_response = paypal_client.capture_order(order_id)
+                    logger.info(f"Capture response: {capture_response}")
 
-            elif order_status == 'APPROVED':
-                # Attempt to capture the order
-                capture_response = paypal_client.capture_order(order_id)
-                logger.info(f"Capture response: {capture_response}")
+                    if capture_response.get('status') != 'COMPLETED':
+                        logger.error("Payment not completed: %s", capture_response)
+                        return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
 
-                if capture_response.get('status') == 'COMPLETED':
-                    user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
-                    if user_email:
-                        random_password = get_random_string(8)
+                # Handle email notification and user account creation
+                user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+                if user_email:
+                    random_password = get_random_string(8)
 
-                        # Create or retrieve the user
-                        user, created = User.objects.get_or_create(
-                            username=user_email.email,
-                            email=user_email.email,
-                        )
-                        if created:
-                            user.set_password(random_password)
-                            user.save()
+                    # Create or retrieve the user
+                    user, created = User.objects.get_or_create(
+                        username=user_email.email,
+                        email=user_email.email,
+                    )
+                    if created:
+                        user.set_password(random_password)
+                        user.save()
 
-                            # Grant access to the course
-                            grant_course_access(user, selected_plan)
+                        # Grant access to the course
+                        grant_course_access(user, selected_plan)
 
-                            # Send email notification
-                            subject = 'Your Account Has Been Created'
-                            message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
-                            send_mail(subject, message, 'your-email@example.com', [user_email.email])
+                        # Send email notification
+                        subject = 'Your Account Has Been Created'
+                        message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
+                        send_mail(subject, message, 'your-email@example.com', [user_email.email])
 
-                    # Clear the selected plan from the session
-                    del request.session['selected_plan']
+                # Clear the selected plan from the session
+                del request.session['selected_plan']
 
-                    # Render the success HTML page
-                    logger.info("Payment completed successfully, rendering success page.")
-                    return render(request, 'success_page.html')
-                else:
-                    logger.error("Payment not completed: %s", capture_response)
-                    return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
+                # Load the JSON content from the static directory
+                json_file_path = os.path.join(settings.BASE_DIR, 'static', 'myapp', 'json', 'success_page.json')
+                try:
+                    with open(json_file_path, 'r') as file:
+                        success_page_json = json.load(file)
+                except FileNotFoundError:
+                    logger.error(f"Success JSON file not found at {json_file_path}")
+                    return JsonResponse({'success': False, 'error': 'Success page not found'}, status=500)
+                except json.JSONDecodeError:
+                    logger.error(f"Error decoding JSON content from {json_file_path}")
+                    return JsonResponse({'success': False, 'error': 'Error reading success page content'}, status=500)
+
+                # Return the JSON content
+                return JsonResponse(success_page_json)
 
             else:
                 logger.error(f"Order not in a capturable state: {order_status}")
