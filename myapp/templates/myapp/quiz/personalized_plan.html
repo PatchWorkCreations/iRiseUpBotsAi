@@ -266,8 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         'X-CSRFToken': '{{ csrf_token }}',
                     },
                     body: JSON.stringify({
-                        order_id: data.orderID,  // Changed from authorization_id to order_id
-                        amount: details.purchase_units[0].amount.value
+                        order_id: data.orderID,
                     }),
                 });
 

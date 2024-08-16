@@ -730,7 +730,6 @@ paypal_client = PayPalClient(
     client_id=settings.PAYPAL_CLIENT_ID,
     client_secret=settings.PAYPAL_CLIENT_SECRET
 )
-
 @csrf_exempt
 def create_paypal_order(request):
     if request.method == 'POST':
@@ -777,7 +776,6 @@ def capture_paypal_order(request):
         try:
             data = json.loads(request.body)
             order_id = data.get('order_id')
-            selected_plan = data.get('plan')  # Get the selected plan from the request
 
             if not order_id:
                 return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
@@ -785,12 +783,10 @@ def capture_paypal_order(request):
             capture_response = paypal_client.capture_order(order_id)
 
             if capture_response.get('status') == 'COMPLETED':
-                # Retrieve the latest user email
                 user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
                 if user_email:
                     random_password = get_random_string(8)
 
-                    # Create or retrieve the user
                     user, created = User.objects.get_or_create(
                         username=user_email.email,
                         email=user_email.email,
@@ -799,10 +795,8 @@ def capture_paypal_order(request):
                         user.set_password(random_password)
                         user.save()
 
-                        # Grant access to the course
-                        grant_course_access(user, selected_plan)
+                        grant_course_access(user, data.get('plan'))
 
-                        # Send email notification
                         subject = 'Your Account Has Been Created'
                         message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
@@ -816,18 +810,6 @@ def capture_paypal_order(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
-
-from django.shortcuts import redirect
-from django.urls import reverse
-
-class ForcePasswordChangeMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        if request.user.is_authenticated and request.user.last_login is None:
-            return redirect(reverse('password_change'))
-        return self.get_response(request)
     
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
