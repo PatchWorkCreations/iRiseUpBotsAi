@@ -2,15 +2,15 @@ import requests
 from requests.auth import HTTPBasicAuth
 import logging
 
+
 class PayPalClient:
     def __init__(self, client_id, client_secret):
         self.client_id = client_id
         self.client_secret = client_secret
-        self.base_url = "https://api-m.sandbox.paypal.com"
         self.access_token = self.get_access_token()
 
     def get_access_token(self):
-        url = f"{self.base_url}/v1/oauth2/token"
+        url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
         headers = {
             "Accept": "application/json",
             "Accept-Language": "en_US"
@@ -18,36 +18,28 @@ class PayPalClient:
         data = {
             "grant_type": "client_credentials"
         }
-        auth = HTTPBasicAuth(self.client_id, self.client_secret)
-        
-        response = requests.post(url, headers=headers, data=data, auth=auth)
+        response = requests.post(url, headers=headers, data=data, auth=(self.client_id, self.client_secret))
         response.raise_for_status()
-        return response.json()['access_token']
+        access_token = response.json()['access_token']
+        return access_token
 
-    def create_order(self, intent, purchase_units, application_context=None):
-        url = f"{self.base_url}/v2/checkout/orders"
+    def get_order(self, order_id):
+        url = f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{order_id}"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.access_token}"
         }
-        order_data = {
-            "intent": intent,
-            "purchase_units": purchase_units
-        }
-        if application_context:
-            order_data["application_context"] = application_context
-
-        response = requests.post(url, headers=headers, json=order_data)
+        response = requests.get(url, headers=headers)
         response.raise_for_status()
         return response.json()
 
     def capture_order(self, order_id):
-        url = f"{self.base_url}/v2/checkout/orders/{order_id}/capture"
+        url = f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{order_id}/capture"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.access_token}"
         }
-        
         response = requests.post(url, headers=headers)
         response.raise_for_status()
         return response.json()
+
