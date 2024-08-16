@@ -805,19 +805,22 @@ def complete_paypal_payment(request):
             selected_plan = request.session.get('selected_plan')
 
             if not order_id:
+                logger.error("Missing order_id")
                 return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
 
             # Check the order status before capturing
             order_details = paypal_client.get_order(order_id)
             order_status = order_details.get('status')
+            logger.info(f"Order status: {order_status}")
 
             if order_status == 'COMPLETED':
-                # Order is already completed, so redirect to the success page
+                # Order is already completed, so render the success page
                 return render(request, 'success_page.html')
 
             elif order_status == 'APPROVED':
                 # Attempt to capture the order
                 capture_response = paypal_client.capture_order(order_id)
+                logger.info(f"Capture response: {capture_response}")
 
                 if capture_response.get('status') == 'COMPLETED':
                     user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
@@ -851,6 +854,7 @@ def complete_paypal_payment(request):
                     return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
 
             else:
+                logger.error(f"Order not in a capturable state: {order_status}")
                 return JsonResponse({'success': False, 'error': f'Order not in a capturable state: {order_status}'}, status=400)
 
         except Exception as e:
