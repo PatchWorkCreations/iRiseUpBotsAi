@@ -796,10 +796,13 @@ def _capture_payment_logic(request):
         if not order_id:
             return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
 
+        # Capture the PayPal order
         capture_response = paypal_client.capture_order(order_id)
 
+        # Check if the order has already been captured
         if capture_response.get('status') == 'COMPLETED':
             user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+
             if user_email:
                 random_password = get_random_string(8)
 
@@ -820,8 +823,13 @@ def _capture_payment_logic(request):
                     message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
                     send_mail(subject, message, 'your-email@example.com', [user_email.email])
 
-            return redirect('success_page')  # Redirect to the success page
+            # Clear the selected plan from the session
+            del request.session['selected_plan']
+
+            # Redirect to the success page
+            return redirect('success_page')
         else:
+            logger.error("Payment not completed: %s", capture_response)
             return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
 
     except Exception as e:
