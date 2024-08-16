@@ -791,6 +791,11 @@ def complete_paypal_payment(request):
             if not order_id:
                 return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
 
+            # Check order status before capturing
+            order_details = paypal_client.get_order(order_id)
+            if order_details.get('status') == 'COMPLETED':
+                return JsonResponse({'success': False, 'error': 'Order already completed'}, status=400)
+
             capture_response = paypal_client.capture_order(order_id)
 
             if capture_response.get('status') == 'COMPLETED':
@@ -812,17 +817,11 @@ def complete_paypal_payment(request):
 
                         # Send email notification
                         subject = 'Your Account Has Been Created'
-                        message = (
-                            f'Your account has been created. '
-                            f'Your temporary password is: {random_password}\n'
-                            'Please log in and change your password.\n'
-                            'You now have access to the course menu based on your selected plan.'
-                        )
+                        message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
 
                 # Clear the selected plan from the session
-                if 'selected_plan' in request.session:
-                    del request.session['selected_plan']
+                del request.session['selected_plan']
 
                 # Render the success HTML page
                 return render(request, 'success_page.html')
@@ -833,9 +832,7 @@ def complete_paypal_payment(request):
         except Exception as e:
             logger.error("Error capturing PayPal order: %s", str(e))
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-    else:
-        logger.error(f"Invalid request method: {request.method}")
-        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
 
 from django.contrib.auth.views import PasswordChangeView
