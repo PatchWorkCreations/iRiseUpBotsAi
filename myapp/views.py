@@ -717,6 +717,7 @@ def process_payment(request):
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import redirect
 import json
 import logging
 from myapp.services.paypal_client import PayPalClient
@@ -736,27 +737,37 @@ def create_paypal_order(request):
     if request.method == 'POST':
         try:
             selected_plan = request.POST.get('plan')
+
+            # Store the selected plan in the session
+            request.session['selected_plan'] = selected_plan
+
             amount_cents = determine_amount_based_on_plan(selected_plan)
             amount_dollars = "{:.2f}".format(amount_cents / 100)
 
-            purchase_units = [{
-                "amount": {
-                    "currency_code": "USD",
-                    "value": amount_dollars
+            order = {
+                "intent": "CAPTURE",
+                "purchase_units": [{
+                    "amount": {
+                        "currency_code": "USD",
+                        "value": amount_dollars
+                    }
+                }],
+                "application_context": {
+                    "return_url": "https://iriseupai-production.up.railway.app/complete-paypal-payment/",
+                    "cancel_url": "https://iriseupai-production.up.railway.app/payment/"
                 }
-            }]
-
-            application_context = {
-                "return_url": "https://iriseupai-production.up.railway.app/complete-paypal-payment/",
-                "cancel_url": "https://iriseupai-production.up.railway.app/payment/"
             }
 
-            order_response = paypal_client.create_order(
-                intent="CAPTURE",
-                purchase_units=purchase_units,
-                application_context=application_context
+            response = requests.post(
+                f"https://api-m.sandbox.paypal.com/v2/checkout/orders",
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {paypal_client.access_token}"
+                },
+                json=order
             )
-
+            response.raise_for_status()
+            order_response = response.json()
             approval_url = next(link['href'] for link in order_response['links'] if link['rel'] == 'approve')
             return JsonResponse({"approval_url": approval_url})
 
@@ -765,50 +776,57 @@ def create_paypal_order(request):
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+@csrf_exempt
+def capture_paypal_order(request):
+    if request.method == 'POST':
+        return _capture_payment_logic(request)
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
 @csrf_exempt
 def complete_paypal_payment(request):
     if request.method == 'GET':
-        try:
-            order_id = request.GET.get('token')  # PayPal returns the order ID as 'token'
-            selected_plan = request.session.get('selected_plan')
-
-            if not order_id:
-                return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
-
-            capture_response = paypal_client.capture_order(order_id)
-
-            if capture_response.get('status') == 'COMPLETED':
-                user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
-                if user_email:
-                    random_password = get_random_string(8)
-
-                    # Create or retrieve the user
-                    user, created = User.objects.get_or_create(
-                        username=user_email.email,
-                        email=user_email.email,
-                    )
-                    if created:
-                        user.set_password(random_password)
-                        user.save()
-
-                        # Grant access to the course
-                        grant_course_access(user, selected_plan)
-
-                        # Send email notification
-                        subject = 'Your Account Has Been Created'
-                        message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
-                        send_mail(subject, message, 'your-email@example.com', [user_email.email])
-
-                return redirect('/success/')
-            else:
-                return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
-
-        except Exception as e:
-            logger.error("Error capturing PayPal order: %s", str(e))
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
-    
+        return _capture_payment_logic(request)
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
+def _capture_payment_logic(request):
+    try:
+        order_id = request.GET.get('token') if request.method == 'GET' else json.loads(request.body).get('order_id')
+        selected_plan = request.session.get('selected_plan')
+
+        if not order_id:
+            return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
+
+        capture_response = paypal_client.capture_order(order_id)
+
+        if capture_response.get('status') == 'COMPLETED':
+            user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+            if user_email:
+                random_password = get_random_string(8)
+
+                # Create or retrieve the user
+                user, created = User.objects.get_or_create(
+                    username=user_email.email,
+                    email=user_email.email,
+                )
+                if created:
+                    user.set_password(random_password)
+                    user.save()
+
+                    # Grant access to the course
+                    grant_course_access(user, selected_plan)
+
+                    # Send email notification
+                    subject = 'Your Account Has Been Created'
+                    message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
+                    send_mail(subject, message, 'your-email@example.com', [user_email.email])
+
+            return redirect('success_page')  # Redirect to the success page
+        else:
+            return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
+
+    except Exception as e:
+        logger.error("Error capturing PayPal order: %s", str(e))
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
 from django.contrib.auth.views import PasswordChangeView
