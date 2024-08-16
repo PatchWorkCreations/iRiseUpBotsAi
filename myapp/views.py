@@ -807,16 +807,16 @@ def complete_paypal_payment(request):
             if not order_id:
                 return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
 
-            # Check order status before capturing
+            # Check the order status before capturing
             order_details = paypal_client.get_order(order_id)
             order_status = order_details.get('status')
 
             if order_status == 'COMPLETED':
-                # Order already completed, so lead to success page
+                # Order is already completed, so redirect to the success page
                 return render(request, 'success_page.html')
 
             elif order_status == 'APPROVED':
-                # Capture the order only if it's approved
+                # Attempt to capture the order
                 capture_response = paypal_client.capture_order(order_id)
 
                 if capture_response.get('status') == 'COMPLETED':
@@ -849,6 +849,7 @@ def complete_paypal_payment(request):
                 else:
                     logger.error("Payment not completed: %s", capture_response)
                     return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
+
             else:
                 return JsonResponse({'success': False, 'error': f'Order not in a capturable state: {order_status}'}, status=400)
 
