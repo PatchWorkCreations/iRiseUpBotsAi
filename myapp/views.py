@@ -781,8 +781,6 @@ def create_paypal_order(request):
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
 
-
-from django.shortcuts import render
 @csrf_exempt
 def complete_paypal_payment(request):
     if request.method == 'GET':
@@ -836,6 +834,7 @@ def complete_paypal_payment(request):
             logger.error("Error capturing PayPal order: %s", str(e))
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     else:
+        logger.error(f"Invalid request method: {request.method}")
         return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
 

@@ -259,15 +259,9 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         onApprove: function(data, actions) {
             return actions.order.capture().then(async function(details) {
-                const response = await fetch('/complete-paypal-payment/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    },
-                    body: JSON.stringify({
-                        order_id: data.orderID,
-                    }),
+                // Use GET instead of POST
+                const response = await fetch(`/complete-paypal-payment/?token=${data.orderID}`, {
+                    method: 'GET', // Change to GET method
                 });
 
                 const jsonResult = await response.json();
