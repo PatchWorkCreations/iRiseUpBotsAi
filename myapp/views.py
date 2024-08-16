@@ -715,13 +715,16 @@ def process_payment(request):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
+from django.conf import settings
+from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import redirect
-import json
 import logging
 from myapp.services.paypal_client import PayPalClient
-from django.conf import settings
+from myapp.models import EmailCollection, User
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
 
 # Initialize the logger
 logger = logging.getLogger(__name__)
@@ -731,6 +734,7 @@ paypal_client = PayPalClient(
     client_id=settings.PAYPAL_CLIENT_ID,
     client_secret=settings.PAYPAL_CLIENT_SECRET
 )
+
 
 @csrf_exempt
 def create_paypal_order(request):
@@ -779,7 +783,6 @@ def create_paypal_order(request):
 
 
 from django.shortcuts import render
-
 @csrf_exempt
 def complete_paypal_payment(request):
     if request.method == 'GET':
@@ -811,11 +814,17 @@ def complete_paypal_payment(request):
 
                         # Send email notification
                         subject = 'Your Account Has Been Created'
-                        message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
+                        message = (
+                            f'Your account has been created. '
+                            f'Your temporary password is: {random_password}\n'
+                            'Please log in and change your password.\n'
+                            'You now have access to the course menu based on your selected plan.'
+                        )
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
 
                 # Clear the selected plan from the session
-                del request.session['selected_plan']
+                if 'selected_plan' in request.session:
+                    del request.session['selected_plan']
 
                 # Render the success HTML page
                 return render(request, 'success_page.html')
@@ -826,8 +835,8 @@ def complete_paypal_payment(request):
         except Exception as e:
             logger.error("Error capturing PayPal order: %s", str(e))
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
-
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
 
 from django.contrib.auth.views import PasswordChangeView
