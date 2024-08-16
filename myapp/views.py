@@ -796,6 +796,7 @@ def create_paypal_order(request):
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
 @csrf_exempt
 def complete_paypal_payment(request):
     if request.method == 'GET':
@@ -832,23 +833,27 @@ def complete_paypal_payment(request):
 
                         # Send email notification
                         subject = 'Your Account Has Been Created'
-                        message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
+                        message = (
+                            f'Your account has been created. Your temporary password is: {random_password}\n'
+                            f'Please log in and change your password.\n'
+                            f'You now have access to the course menu based on your selected plan.'
+                        )
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
 
                 # Clear the selected plan from the session
-                del request.session['selected_plan']
+                if 'selected_plan' in request.session:
+                    del request.session['selected_plan']
 
-                # Render the success HTML page
-                return render(request, 'success_page.html')
+                # Redirect to success page
+                return redirect('success_page')
             else:
                 logger.error("Payment not completed: %s", capture_response)
-                return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
+                return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response}, status=400)
 
         except Exception as e:
             logger.error("Error capturing PayPal order: %s", str(e))
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
-
 
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy

@@ -230,64 +230,63 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // PayPal payment setup function
     async function setupPayPalPayments() {
-    if (paypalInitialized) return; // Prevent re-initialization
+        if (paypalInitialized) return; // Prevent re-initialization
 
-    paypal.Buttons({
-        createOrder: function(data, actions) {
-            const planValue = document.querySelector('input[name="plan"]:checked').value;
-            let amount;
-            switch (planValue) {
-                case '1-week':
-                    amount = '13.86';
-                    break;
-                case '4-week':
-                    amount = '39.99';
-                    break;
-                case '12-week':
-                    amount = '79.99';
-                    break;
-                default:
-                    amount = '0.00';
-            }
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: amount
-                    }
-                }]
-            });
-        },
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(async function(details) {
-                // Use GET instead of POST
-                const response = await fetch(`/complete-paypal-payment/?token=${data.orderID}`, {
-                    method: 'GET', // Change to GET method
-                });
-
-                const jsonResult = await response.json();
-                if (jsonResult.success) {
-                    window.location.href = '/success/';
-                } else {
-                    alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                const planValue = document.querySelector('input[name="plan"]:checked').value;
+                let amount;
+                switch (planValue) {
+                    case '1-week':
+                        amount = '13.86';
+                        break;
+                    case '4-week':
+                        amount = '39.99';
+                        break;
+                    case '12-week':
+                        amount = '79.99';
+                        break;
+                    default:
+                        amount = '0.00';
                 }
-            });
-        },
-        onError: function (err) {
-            console.error('PayPal error:', err);
-            alert('An error occurred during PayPal payment: ' + err);
-        },
-        style: {
-            layout: 'vertical',
-            color:  'blue',
-            shape:  'rect',
-            label:  'pay',
-            tagline: false
-        }
-    }).render('#paypal-button-container');
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: amount
+                        }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(async function(details) {
+                    // Use GET instead of POST
+                    const response = await fetch(`/complete-paypal-payment/?token=${data.orderID}`, {
+                        method: 'GET', // Change to GET method
+                    });
 
-    paypalInitialized = true; // Set flag to prevent re-initialization
-}
+                    const jsonResult = await response.json();
+                    if (jsonResult.success) {
+                        window.location.href = '/success/';
+                    } else {
+                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+                    }
+                });
+            },
+            onError: function (err) {
+                console.error('PayPal error:', err);
+                alert('An error occurred during PayPal payment: ' + err);
+            },
+            style: {
+                layout: 'vertical',
+                color:  'blue',
+                shape:  'rect',
+                label:  'pay',
+                tagline: false
+            }
+        }).render('#paypal-button-container');
 
+        paypalInitialized = true; // Set flag to prevent re-initialization
+    }
 
     // Show the modal and setup payment options when a button is clicked
     buttons.forEach(function (btn) {
