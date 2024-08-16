@@ -809,41 +809,48 @@ def complete_paypal_payment(request):
 
             # Check order status before capturing
             order_details = paypal_client.get_order(order_id)
-            if order_details.get('status') == 'COMPLETED':
-                return JsonResponse({'success': False, 'error': 'Order already completed'}, status=400)
+            order_status = order_details.get('status')
 
-            capture_response = paypal_client.capture_order(order_id)
-
-            if capture_response.get('status') == 'COMPLETED':
-                user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
-                if user_email:
-                    random_password = get_random_string(8)
-
-                    # Create or retrieve the user
-                    user, created = User.objects.get_or_create(
-                        username=user_email.email,
-                        email=user_email.email,
-                    )
-                    if created:
-                        user.set_password(random_password)
-                        user.save()
-
-                        # Grant access to the course
-                        grant_course_access(user, selected_plan)
-
-                        # Send email notification
-                        subject = 'Your Account Has Been Created'
-                        message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
-                        send_mail(subject, message, 'your-email@example.com', [user_email.email])
-
-                # Clear the selected plan from the session
-                del request.session['selected_plan']
-
-                # Render the success HTML page
+            if order_status == 'COMPLETED':
+                # Order already completed, so lead to success page
                 return render(request, 'success_page.html')
+
+            elif order_status == 'APPROVED':
+                # Capture the order only if it's approved
+                capture_response = paypal_client.capture_order(order_id)
+
+                if capture_response.get('status') == 'COMPLETED':
+                    user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+                    if user_email:
+                        random_password = get_random_string(8)
+
+                        # Create or retrieve the user
+                        user, created = User.objects.get_or_create(
+                            username=user_email.email,
+                            email=user_email.email,
+                        )
+                        if created:
+                            user.set_password(random_password)
+                            user.save()
+
+                            # Grant access to the course
+                            grant_course_access(user, selected_plan)
+
+                            # Send email notification
+                            subject = 'Your Account Has Been Created'
+                            message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
+                            send_mail(subject, message, 'your-email@example.com', [user_email.email])
+
+                    # Clear the selected plan from the session
+                    del request.session['selected_plan']
+
+                    # Render the success HTML page
+                    return render(request, 'success_page.html')
+                else:
+                    logger.error("Payment not completed: %s", capture_response)
+                    return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
             else:
-                logger.error("Payment not completed: %s", capture_response)
-                return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
+                return JsonResponse({'success': False, 'error': f'Order not in a capturable state: {order_status}'}, status=400)
 
         except Exception as e:
             logger.error("Error capturing PayPal order: %s", str(e))
