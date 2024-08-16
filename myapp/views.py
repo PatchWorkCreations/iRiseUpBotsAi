@@ -776,6 +776,8 @@ def create_paypal_order(request):
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
+
 @csrf_exempt
 def complete_paypal_payment(request):
     if request.method == 'GET':
@@ -823,6 +825,7 @@ def complete_paypal_payment(request):
             logger.error("Error capturing PayPal order: %s", str(e))
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
 
 
 from django.contrib.auth.views import PasswordChangeView

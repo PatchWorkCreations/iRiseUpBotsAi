@@ -8,7 +8,6 @@ from myapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('customadmin/', include('customadmin.urls')),
-    path('capture-paypal-payment/', views.capture_paypal_order, name='capture_paypal_order'),  # This is your new URL pattern
     path('', include('myapp.urls')),
     
 ]
