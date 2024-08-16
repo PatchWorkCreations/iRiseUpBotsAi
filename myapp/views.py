@@ -721,6 +721,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import logging
+import requests  # Ensure you have this imported
 from myapp.services.paypal_client import PayPalClient
 from myapp.models import EmailCollection, User
 from django.core.mail import send_mail
@@ -742,10 +743,16 @@ def create_paypal_order(request):
         try:
             selected_plan = request.POST.get('plan')
 
+            if not selected_plan:
+                return JsonResponse({"error": "Plan not provided"}, status=400)
+
             # Store the selected plan in the session
             request.session['selected_plan'] = selected_plan
 
             amount_cents = determine_amount_based_on_plan(selected_plan)
+            if amount_cents <= 0:
+                return JsonResponse({"error": "Invalid plan selected"}, status=400)
+
             amount_dollars = "{:.2f}".format(amount_cents / 100)
 
             order = {
@@ -762,6 +769,7 @@ def create_paypal_order(request):
                 }
             }
 
+            # Make the request to PayPal API
             response = requests.post(
                 f"https://api-m.sandbox.paypal.com/v2/checkout/orders",
                 headers={
@@ -771,15 +779,22 @@ def create_paypal_order(request):
                 json=order
             )
             response.raise_for_status()
+
             order_response = response.json()
-            approval_url = next(link['href'] for link in order_response['links'] if link['rel'] == 'approve')
+
+            # Safely extract the approval URL
+            try:
+                approval_url = next(link['href'] for link in order_response['links'] if link['rel'] == 'approve')
+            except (KeyError, StopIteration):
+                logger.error("Approval URL not found in PayPal response")
+                return JsonResponse({"error": "Approval URL not found"}, status=500)
+
             return JsonResponse({"approval_url": approval_url})
 
         except Exception as e:
             logger.error("Failed to create PayPal order: %s", str(e))
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method."}, status=405)
-
 
 @csrf_exempt
 def complete_paypal_payment(request):
