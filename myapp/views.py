@@ -814,7 +814,8 @@ def complete_paypal_payment(request):
             logger.info(f"Order status: {order_status}")
 
             if order_status == 'COMPLETED':
-                # Order is already completed, so render the success page
+                # Order is already completed, render the success page
+                logger.info("Order already completed, rendering success page.")
                 return render(request, 'success_page.html')
 
             elif order_status == 'APPROVED':
@@ -848,6 +849,7 @@ def complete_paypal_payment(request):
                     del request.session['selected_plan']
 
                     # Render the success HTML page
+                    logger.info("Payment completed successfully, rendering success page.")
                     return render(request, 'success_page.html')
                 else:
                     logger.error("Payment not completed: %s", capture_response)
