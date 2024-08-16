@@ -778,6 +778,8 @@ def create_paypal_order(request):
 
 
 
+from django.shortcuts import render
+
 @csrf_exempt
 def complete_paypal_payment(request):
     if request.method == 'GET':
@@ -815,8 +817,8 @@ def complete_paypal_payment(request):
                 # Clear the selected plan from the session
                 del request.session['selected_plan']
 
-                # Redirect to the success page
-                return redirect('success_page')
+                # Render the success HTML page
+                return render(request, 'success_page.html')
             else:
                 logger.error("Payment not completed: %s", capture_response)
                 return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})

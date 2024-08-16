@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Successful</title>
     <style>
+        /* Your styles */
         .success-container {
             max-width: 600px;
             margin: 0 auto;
@@ -45,6 +46,26 @@
     <p>Thank you for your payment. Your transaction was successful.</p>
     <a href="/" class="home-button">Return to Home</a>
 </div>
+
+<script>
+    fetch('/complete-paypal-payment/', {
+        method: 'GET',
+        // other fetch options if needed
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.text();  // Handle as text, since it's HTML
+        } else {
+            throw new Error('Payment failed');
+        }
+    })
+    .then(html => {
+        document.write(html);  // Display the HTML content
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+</script>
 
 </body>
 </html>
