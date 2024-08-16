@@ -24,6 +24,23 @@ class PayPalClient:
         response.raise_for_status()
         return response.json()['access_token']
 
+    def create_order(self, intent, purchase_units, application_context=None):
+        url = f"{self.base_url}/v2/checkout/orders"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.access_token}"
+        }
+        order_data = {
+            "intent": intent,
+            "purchase_units": purchase_units
+        }
+        if application_context:
+            order_data["application_context"] = application_context
+
+        response = requests.post(url, headers=headers, json=order_data)
+        response.raise_for_status()
+        return response.json()
+
     def capture_order(self, order_id):
         url = f"{self.base_url}/v2/checkout/orders/{order_id}/capture"
         headers = {
