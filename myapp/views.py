@@ -747,7 +747,7 @@ def create_paypal_order(request):
             }]
 
             application_context = {
-                "return_url": "https://iriseupai-production.up.railway.app/success/",
+                "return_url": "https://iriseupai-production.up.railway.app/complete-paypal-payment/",
                 "cancel_url": "https://iriseupai-production.up.railway.app/payment/"
             }
 
@@ -765,13 +765,13 @@ def create_paypal_order(request):
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
 @csrf_exempt
-def capture_paypal_order(request):
-    if request.method == 'POST':
+def complete_paypal_payment(request):
+    if request.method == 'GET':
         try:
-            data = json.loads(request.body)
-            order_id = data.get('order_id')
-            selected_plan = data.get('plan')  # Get the selected plan from the request
+            order_id = request.GET.get('token')  # PayPal returns the order ID as 'token'
+            selected_plan = request.session.get('selected_plan')
 
             if not order_id:
                 return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
@@ -779,7 +779,6 @@ def capture_paypal_order(request):
             capture_response = paypal_client.capture_order(order_id)
 
             if capture_response.get('status') == 'COMPLETED':
-                # Retrieve the latest user email
                 user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
                 if user_email:
                     random_password = get_random_string(8)
@@ -801,7 +800,7 @@ def capture_paypal_order(request):
                         message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
 
-                return JsonResponse({'success': True, 'response': capture_response})
+                return redirect('/success/')
             else:
                 return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
 
@@ -811,7 +810,7 @@ def capture_paypal_order(request):
     
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
-    
+
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 
