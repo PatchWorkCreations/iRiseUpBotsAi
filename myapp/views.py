@@ -726,7 +726,10 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 
 # Initialize PayPal client
-paypal_client = PayPalClient(client_id=settings.PAYPAL_CLIENT_ID, client_secret=settings.PAYPAL_CLIENT_SECRET)
+paypal_client = PayPalClient(
+    client_id=settings.PAYPAL_CLIENT_ID,
+    client_secret=settings.PAYPAL_CLIENT_SECRET
+)
 
 @csrf_exempt
 def create_paypal_order(request):
