@@ -815,12 +815,16 @@ def complete_paypal_payment(request):
     if request.method == 'GET':
         try:
             order_id = request.GET.get('token')
-            selected_plan = request.session.get('selected_plan')
+            selected_plan = request.session.get('selected_plan')  # Use the correct key
             logger.info(f"Retrieved plan from session: {selected_plan}")
 
             if not order_id:
                 logger.error("Missing order_id")
                 return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
+
+            if not selected_plan:
+                logger.error("Selected plan not found in session.")
+                return JsonResponse({'success': False, 'error': 'Selected plan not found in session.'}, status=400)
 
             # Check the order status before capturing
             order_details = paypal_client.get_order(order_id)
@@ -860,8 +864,7 @@ def complete_paypal_payment(request):
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
 
                 # Clear the selected plan from the session
-                del request.session['plan']
-                logger.info(f"Session plan value: {request.session.get('plan')}")
+                del request.session['selected_plan']  # Ensure you delete the correct key
 
                 # Load the JSON content from the static directory
                 json_file_path = os.path.join(settings.BASE_DIR, 'static', 'myapp', 'json', 'success_page.json')
