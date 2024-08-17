@@ -650,9 +650,9 @@ def grant_course_access(user, selected_plan):
         expiration_date = timezone.now() + timedelta(weeks=12)
     else:
         # Handle the case where the selected plan is not recognized
-        expiration_date = timezone.now() + timedelta(weeks=1)  # Default to 1 week if plan is unrecognized
+        expiration_date = timezone.now() + timedelta(weeks=4)  # Default to 1 week if plan is unrecognized
         # Optionally, log a warning or handle this situation differently
-        logger.warning(f"Unrecognized selected plan: {selected_plan}, defaulting to 1 week expiration.")
+        logger.warning(f"Unrecognized selected plan: {selected_plan}, defaulting to 4 week expiration.")
 
     # Grant access to all courses with the determined expiration date
     for course in courses:
