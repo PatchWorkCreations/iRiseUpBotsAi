@@ -871,7 +871,6 @@ def complete_paypal_payment(request):
                 # Clear the selected plan from the session
                 del request.session['selected_plan']  # Ensure you delete the correct key
 
-                # Load the JSON content from the static directory
                 return JsonResponse({'success': True, 'message': 'Payment completed successfully.'})
             else:
                 logger.error(f"Order not in a capturable state: {order_status}")
