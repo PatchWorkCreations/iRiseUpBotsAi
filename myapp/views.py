@@ -814,7 +814,7 @@ def complete_paypal_payment(request):
     if request.method == 'GET':
         try:
             order_id = request.GET.get('token')
-            selected_plan = request.session.get('selected_plan')
+            selected_plan = request.session.get('plan')
 
             if not order_id:
                 logger.error("Missing order_id")
