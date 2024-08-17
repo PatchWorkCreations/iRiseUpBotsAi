@@ -1,0 +1,113 @@
+{% load static %}
+<style>
+
+</style>
+<header class="main-header header-style-two alternate">
+    <div class="header-lower">
+        <div class="auto-container">
+            <div class="inner-container">
+                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                    <div class="nav-outer d-flex align-items-center flex-wrap">
+                        <div class="logo-box">
+                            <div class="logo">
+                                <a href="{% url 'index' %}">
+                                    <img src="{% static 'myapp/images/mobile-logo.svg' %}" alt="" title="">
+                                </a>
+                            </div>
+                        </div>
+                        <nav class="main-menu navbar-expand-md">
+                            <div class="navbar-header">
+                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>
+                            <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
+                                <ul class="navigation clearfix">
+                                    <li class="dropdown"><a href="#">Home</a>
+                                        <ul>
+                                            <li><a href="{% url 'index' %}">HomePage 01</a></li>
+                                            <li><a href="{% url 'index2' %}">HomePage 02</a></li>
+                                            <li><a href="{% url 'index3' %}">HomePage 03</a></li>
+                                            <li class="dropdown"><a href="#">Header Style</a>
+                                                <ul>
+                                                    <li><a href="{% url 'index' %}">Header 1</a></li>
+                                                    <li><a href="{% url 'index2' %}">Header 2</a></li>
+                                                    <li><a href="{% url 'index3' %}">Header 3</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="{% url 'about' %}">About</a></li>
+                                    <li class="dropdown"><a href="#">Pages</a>
+                                        <ul>
+                                            <li><a href="{% url 'faq' %}">Faq</a></li>
+                                            <li><a href="{% url 'pricing' %}">Price</a></li>
+                                            <li><a href="{% url 'testimonial' %}">Testimonial</a></li>
+                                            <li><a href="{% url 'login' %}">Login</a></li>
+                                            <li><a href="{% url 'register' %}">Register</a></li>
+                                            <li><a href="{% url 'reset' %}">Forgot password</a></li>
+                                            <li class="dropdown"><a href="#">Team</a>
+                                                <ul>
+                                                    <li><a href="{% url 'team' %}">Team</a></li>
+                                                    <li><a href="{% url 'teamdetail' %}">Team detail</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown"><a href="#">Services</a>
+                                        <ul>
+                                            <li><a href="{% url 'services' %}">Services</a></li>
+                                            <li><a href="{% url 'servicedetail' %}">Services detail</a></li>
+                                        </ul>
+                                    </li>
+                                    <li> <a href="{% url 'blog' %}">Blog</a> </li>
+                                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="outer-box d-flex align-items-center flex-wrap">
+                        <div class="language-dropdown">
+                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="flag"><img src="{% static 'myapp/images/icons/flag.png' %}" alt="" /></span>&nbsp;<span class="fa-solid fa-angle-down fa-fw"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#"><span class="flag"><img src="{% static 'myapp/images/icons/flag.png' %}" alt="" /></span> English</a></li>
+                                <li><a class="dropdown-item" href="#"><span class="flag"><img src="{% static 'myapp/images/icons/arabic.png' %}" alt="" /></span> Arabic</a></li>
+                                <li><a class="dropdown-item" href="#"><span class="flag"><img src="{% static 'myapp/images/icons/germany.png' %}" alt="" /></span> German</a></li>
+                                <li><a class="dropdown-item" href="#"><span class="flag"><img src="{% static 'myapp/images/icons/france.png' %}" alt="" /></span> French</a></li>
+                            </ul>
+                        </div>
+                        <div class="main-header_buttons">
+                            <a href="{% url 'login' %}" class="template-btn btn-style-two">
+                                <span class="btn-wrap">
+                                    <span class="text-one">Login</span>
+                                    <span class="text-two">Login</span>
+                                </span>
+                            </a>
+                            <a href="{% url 'register' %}" class="template-btn btn-style-one">
+                                <span class="btn-wrap">
+                                    <span class="text-one">Join now</span>
+                                    <span class="text-two">Join now</span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="mobile-nav-toggler">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6l16 0" /><path d="M4 12l16 0" /><path d="M4 18l16 0" /></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-menu">
+        <div class="menu-backdrop"></div>
+        <div class="close-btn"><span class="icon fa-solid fa-xmark fa-fw"></span></div>
+        <nav class="menu-box">
+            <div class="nav-logo"><a href="{% url 'index' %}"><img src="{% static 'myapp/images/mobile-logo.svg' %}" alt="" title=""></a></div>
+            <div class="menu-outer"><!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header--></div>
+        </nav>
+    </div>
+</header>
