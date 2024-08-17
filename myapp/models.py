@@ -46,6 +46,7 @@ class UserSubCourseAccess(models.Model):
         return f"{self.user.username} - {self.sub_course.title}"
 
 class QuizResponse(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     gender = models.CharField(max_length=10)
     age_range = models.CharField(max_length=10)
     main_goal = models.CharField(max_length=50)
@@ -80,7 +81,48 @@ class EmailCollection(models.Model):
     receive_offers = models.BooleanField(default=False)
     payment_status = models.CharField(max_length=20, choices=[('Paid', 'Paid'), ('Delayed', 'Delayed')], default='Delayed')
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)  # Add this line
+    created_at = models.DateTimeField(auto_now_add=True)
+    first_login_completed = models.BooleanField(default=False)  # New field to track first login completion
 
     def __str__(self):
         return self.email
+    
+    
+
+from django.db import migrations, models
+from django.utils.crypto import get_random_string
+
+def assign_users_based_on_email(apps, schema_editor):
+    QuizResponse = apps.get_model('myapp', 'QuizResponse')
+    User = apps.get_model('auth', 'User')
+
+    for quiz in QuizResponse.objects.all():
+        if not quiz.user_id:  # Only assign if there's no existing user
+            email = quiz.email
+            user = User.objects.filter(email=email).first()
+            if not user:
+                # Create a new user with this email
+                username = f'user_{get_random_string(8)}'
+                user = User.objects.create_user(username=username, password='temporary', email=email)
+            quiz.user = user
+            quiz.save()
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('myapp', '0009_emailcollection_payment_status_emailcollection_user'),  # Replace with your previous migration name
+    ]
+
+    operations = [
+        migrations.AddField(
+            model_name='quizresponse',
+            name='user',
+            field=models.ForeignKey(null=True, on_delete=models.CASCADE, to='auth.User'),
+        ),
+        migrations.RunPython(assign_users_based_on_email),
+        migrations.AlterField(
+            model_name='quizresponse',
+            name='user',
+            field=models.ForeignKey(on_delete=models.CASCADE, to='auth.User'),
+        ),
+    ]

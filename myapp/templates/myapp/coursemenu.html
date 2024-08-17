@@ -1,12 +1,11 @@
-<!-- myapp/templates/myapp/coursemenu.html -->
 {% extends "myapp/base.html" %}
 {% block title %}Course Menu{% endblock %}
 {% load static %}
 {% block content %}
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f9;
         margin: 0;
         padding: 0;
         display: flex;
@@ -19,28 +18,42 @@
         width: 90%;
         max-width: 1200px;
         background: #fff;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
         box-sizing: border-box;
     }
 
     h1 {
         text-align: center;
         color: #333;
+        margin-bottom: 30px;
+        font-size: 32px;
     }
 
-    .current-course, .course-grid {
+    .current-course {
         margin-top: 20px;
+    }
+
+    .current-course h2 {
+        font-size: 28px;
+        color: #444;
+        margin-bottom: 20px;
     }
 
     .course-card {
         background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         padding: 20px;
         box-sizing: border-box;
         margin-bottom: 20px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     }
 
     .course-card-header {
@@ -49,13 +62,14 @@
     }
 
     .course-image img {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
+        object-fit: cover;
     }
 
     .course-info {
-        margin-left: 15px;
+        margin-left: 20px;
     }
 
     .course-info p {
@@ -66,33 +80,37 @@
 
     .course-info h3 {
         margin: 5px 0;
-        font-size: 18px;
+        font-size: 20px;
         color: #333;
     }
 
     .progress-bar {
         background: #e0e0e0;
         border-radius: 5px;
-        height: 10px;
+        height: 12px;
         margin: 20px 0;
         width: 100%;
+        position: relative;
+        overflow: hidden;
     }
 
     .progress {
         background: #4caf50;
         height: 100%;
         border-radius: 5px;
+        transition: width 0.3s ease;
     }
 
     .continue-btn, .view-btn {
         background: #007bff;
         color: #fff;
         border: none;
-        padding: 10px 20px;
+        padding: 12px 25px;
         border-radius: 5px;
         cursor: pointer;
         text-align: center;
         width: 100%;
+        transition: background-color 0.3s ease;
     }
 
     .continue-btn:hover, .view-btn:hover {
@@ -115,49 +133,92 @@
         justify-content: space-between;
         align-items: center;
     }
+
+    /* Mobile Styles */
+    .mobile-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 15px;
+        }
+
+        .course-card {
+            margin-bottom: 15px;
+        }
+
+        .course-grid .course-card {
+            flex: 1 1 100%;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .current-course h2 {
+            font-size: 24px;
+        }
+
+        .course-info h3 {
+            font-size: 18px;
+        }
+
+        .continue-btn, .view-btn {
+            padding: 10px 20px;
+        }
+    }
 </style>
 
-<div class="container">
-    <h1>My Courses</h1>
-    <div class="current-course">
-        <h2>Continue Learning</h2>
-        {% if current_course %}
-        <div class="course-card current">
-            <div class="course-card-header">
-                <div class="course-image">
-                    <img src="{{ current_course.image.url }}" alt="Current Course Image">
+<div class="mobile-container">
+    {% include 'myapp/course_list/header_course.html' %}
+    <div class="container">
+        <h1>My Courses</h1>
+        <div class="current-course">
+            <h2>Continue Learning</h2>
+            {% if current_course %}
+            <div class="course-card current">
+                <div class="course-card-header">
+                    <div class="course-image">
+                        <img src="{{ current_course.image.url }}" alt="Current Course Image">
+                    </div>
+                    <div class="course-info">
+                        <p>{{ current_course.units }} Units • {{ current_course.hours }} Hours</p>
+                        <h3>{{ current_course.title }}</h3>
+                        <p>{{ current_course.description }}</p>
+                    </div>
                 </div>
-                <div class="course-info">
-                    <p>{{ current_course.units }} Units • {{ current_course.hours }} Hours</p>
-                    <h3>{{ current_course.title }}</h3>
-                    <p>{{ current_course.description }}</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: {{ current_course_access.progress }}%;"></div>
                 </div>
+                <button class="continue-btn">Continue learning</button>
             </div>
-            <div class="progress-bar">
-                <div class="progress" style="width: {{ current_course_access.progress }}%;"></div>
-            </div>
-            <button class="continue-btn">Continue learning</button>
+            {% else %}
+            <p>No current course.</p>
+            {% endif %}
         </div>
-        {% else %}
-        <p>No current course.</p>
-        {% endif %}
-    </div>
-    <div class="course-grid">
-        <h2>All Courses</h2>
-        {% for course in all_courses %}
-        <div class="course-card">
-            <div class="course-card-header">
-                <div class="course-image">
-                    <img src="{{ course.image.url }}" alt="Course Image">
+        <div class="course-grid">
+            <h2>All Courses</h2>
+            {% for course in all_courses %}
+            <div class="course-card">
+                <div class="course-card-header">
+                    <div class="course-image">
+                        <img src="{{ course.image.url }}" alt="Course Image">
+                    </div>
+                    <div class="course-info">
+                        <h3>{{ course.title }}</h3>
+                    </div>
                 </div>
-                <div class="course-info">
-                    <h3>{{ course.title }}</h3>
-                </div>
+                <a href="{% url 'course_detail' course.id %}" class="view-btn">View Course</a>
             </div>
-            <a href="{% url 'course_detail' course.id %}" class="view-btn">View Course</a>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </div>
-</div>
+{% include 'myapp/course_list/footer_course.html' %}
 {% endblock %}

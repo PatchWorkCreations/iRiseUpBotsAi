@@ -104,6 +104,19 @@ def servicedetail5(request):
 from django.shortcuts import render, get_object_or_404
 from .models import Course, SubCourse, Lesson
 
+# views.py
+from django.shortcuts import render
+
+def profile_view(request):
+    user = request.user
+
+    context = {
+        'username': user.username if user.is_authenticated else "Guest",
+        'email': user.email if user.is_authenticated else "Not available",
+    }
+
+    return render(request, 'myapp/course_list/profile.html', context)
+
 def course_list(request):
     courses = Course.objects.all()
     return render(request, 'myapp/course_list/course_list.html', {'courses': courses})
@@ -1092,13 +1105,6 @@ def complete_paypal_payment(request):
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
 
-from django.contrib.auth.views import PasswordChangeView
-from django.urls import reverse_lazy
-
-class CustomPasswordChangeView(PasswordChangeView):
-    template_name = 'myapp/change_password.html'
-    success_url = reverse_lazy('coursemenu')  # Redirect to a profile page or wherever appropriate after a successful password change.
-
 
 from django.shortcuts import render
 
@@ -1154,6 +1160,7 @@ def preview_email(request):
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from myapp.models import EmailCollection
 
 def sign_in(request):
     if request.method == 'POST':
@@ -1165,13 +1172,78 @@ def sign_in(request):
         
         if user is not None:
             login(request, user)  # This should correctly log in the user
-            return redirect('coursemenu')  # Redirect to the course menu
+            
+            # Check if this is the user's first login
+            email_collection = EmailCollection.objects.filter(user=user).first()
+            if email_collection and not email_collection.first_login_completed:
+                return redirect('change_password')  # Redirect to change password page
+            else:
+                return redirect('coursemenu')  # Redirect to the course menu
         else:
             messages.error(request, 'Invalid email or password. Please try again.')
     
     return render(request, 'myapp/quiz/sign_in.html')
 
 
+
+To handle this properly, we’ll set up the authentication and password management views you’ve defined, ensuring that first-time logins and password resets are handled correctly. I’ll guide you through how to connect these views with the rest of your application, including how to manage first-time logins.
+
+Step 1: Update the Sign-In View to Check for First-Time Login
+First, we’ll modify the sign_in view to check if a user is logging in for the first time. This requires that we have a way to identify if a user has already logged in before.
+
+Assuming the first_login_completed field in the EmailCollection model tracks this:
+
+python
+Copy code
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from myapp.models import EmailCollection
+
+def sign_in(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Use Django's built-in authentication system
+        user = authenticate(request, username=email, password=password)
+        
+        if user is not None:
+            login(request, user)  # This should correctly log in the user
+            
+            # Check if this is the user's first login
+            email_collection = EmailCollection.objects.filter(user=user).first()
+            if email_collection and not email_collection.first_login_completed:
+                return redirect('change_password')  # Redirect to change password page
+            else:
+                return redirect('coursemenu')  # Redirect to the course menu
+        else:
+            messages.error(request, 'Invalid email or password. Please try again.')
+    
+    return render(request, 'myapp/quiz/sign_in.html')
+
+
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
+from django.shortcuts import redirect
+from django.contrib.auth import get_user_model
+from myapp.models import EmailCollection
+
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'myapp/change_password.html'
+    success_url = reverse_lazy('coursemenu')  # Redirect to course menu after password change
+
+    def form_valid(self, form):
+        # Update password
+        response = super().form_valid(form)
+        
+        # Mark first login as completed
+        email_collection = EmailCollection.objects.filter(user=self.request.user).first()
+        if email_collection:
+            email_collection.first_login_completed = True
+            email_collection.save()
+
+        return response
 
 
 from django.contrib.auth.views import PasswordResetView

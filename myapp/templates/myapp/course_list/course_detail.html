@@ -14,9 +14,9 @@
         width: 90%;
         max-width: 1200px;
         background: #fff;
-        padding: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        border-radius: 12px;
         margin: 20px auto;
     }
 
@@ -33,8 +33,8 @@
 
     .course-card {
         background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         padding: 20px;
         margin-bottom: 20px;
         cursor: pointer;
@@ -50,6 +50,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-bottom: 10px;
     }
 
     .course-info {
@@ -73,7 +74,7 @@
         margin-top: 15px;
         padding: 20px;
         background: #f7f9fc;
-        border-radius: 10px;
+        border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
@@ -96,12 +97,17 @@
         background: #fff;
         margin: 5px 0;
         padding: 15px;
-        border-radius: 5px;
+        border-radius: 8px;
         font-size: 14px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: background-color 0.3s ease;
+    }
+
+    .lessons ul li:hover {
+        background-color: #e9f7fe;
     }
 
     .lessons ul li h4 {
@@ -126,6 +132,7 @@
         background: #4caf50;
         height: 100%;
         border-radius: 5px;
+        transition: width 0.3s ease;
     }
 
     .continue-btn {
@@ -156,8 +163,34 @@
     .toggle-icon.rotate {
         transform: rotate(180deg);
     }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+        .container {
+            padding: 15px;
+        }
+
+        h1, h2 {
+            font-size: 24px;
+        }
+
+        .course-info h3 {
+            font-size: 16px;
+        }
+
+        .course-card-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .toggle-icon {
+            align-self: flex-end;
+        }
+    }
 </style>
+
 <div class="container">
+    {% include 'myapp/course_list/header_course.html' %}
     <h1>{{ course.title }}</h1>
     <p>{{ course.description }}</p>
 
@@ -209,4 +242,5 @@
         }
     }
 </script>
+{% include 'myapp/course_list/footer_course.html' %}
 {% endblock %}

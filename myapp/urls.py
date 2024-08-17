@@ -124,4 +124,7 @@ urlpatterns = [
     path('create-paypal-order/', views.create_paypal_order, name='create_paypal_order'),
     path('complete-paypal-payment/', views.complete_paypal_payment, name='complete_paypal_payment'),
 
+
+    path('profile/', views.profile_view, name='profile'),
+    # path('update-profile/', views.update_profile, name='update_profile'),
 ]
