@@ -872,22 +872,7 @@ def complete_paypal_payment(request):
                 del request.session['selected_plan']  # Ensure you delete the correct key
 
                 # Load the JSON content from the static directory
-                json_file_path = os.path.join(settings.BASE_DIR, 'static', 'myapp', 'json', 'success_page.json')
-                logger.info(f"Looking for success page JSON at: {json_file_path}")
-
-                try:
-                    with open(json_file_path, 'r') as file:
-                        success_page_json = json.load(file)
-                except FileNotFoundError:
-                    logger.error(f"Success JSON file not found at {json_file_path}")
-                    return JsonResponse({'success': False, 'error': 'Success page not found'}, status=500)
-                except json.JSONDecodeError:
-                    logger.error(f"Error decoding JSON content from {json_file_path}")
-                    return JsonResponse({'success': False, 'error': 'Error reading success page content'}, status=500)
-
-                # Return the JSON content
-                return JsonResponse(success_page_json)
-
+                return JsonResponse({'success': True, 'message': 'Payment completed successfully.'})
             else:
                 logger.error(f"Order not in a capturable state: {order_status}")
                 return JsonResponse({'success': False, 'error': f'Order not in a capturable state: {order_status}'}, status=400)
