@@ -1,4 +1,6 @@
 from django.shortcuts import render
+import os
+
 
 def about(request):
     return render(request, 'myapp/about.html')
