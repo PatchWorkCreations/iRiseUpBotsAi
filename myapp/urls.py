@@ -36,6 +36,7 @@ urlpatterns = [
     path('service-detail5/', views.servicedetail5, name='servicedetail5'),
     path('coursemenu/', views.coursemenu, name='coursemenu'),
 
+    path('quiz/', views.combined_quiz, name='combined_quiz'),
     path('sub_courses/<int:sub_course_id>/', views.sub_course_detail, name='sub_course_detail'),
     path('lessons/<int:lesson_id>/', views.lesson_detail, name='lesson_detail'),
     path('courses/', views.course_list, name='course_list'),
@@ -68,7 +69,7 @@ urlpatterns = [
     path('time-saved-use/', views.time_saved_use, name='time_saved_use'),
 
 
-    path('job-interest-question/', views.job_interest_question, name='job_interest_question'),
+    
     path('job_interest_match/', views.job_interest_match, name='job_interest_match'),
 
     path('absolutely-interest/', views.absolutely_interest, name='absolutely_interest'),

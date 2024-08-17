@@ -7,6 +7,7 @@
     <script src="https://www.paypal.com/sdk/js?client-id=AcO0pQSFgkyRPtmmgviw2lz2DCojtl28Y_Qr9bligTeR1kOZScy9jecX2eWixffPBqGDJJyxSWn5iT__&currency=USD"></script>
 </head>
 
+<div class="mobile-container">
 <div class="header-container d-flex justify-content-between align-items-center">
     <div id="countdown" class="countdown-timer">
         <span id="minutes">10</span>:<span id="seconds">00</span>
@@ -203,7 +204,7 @@
         
     </div>
 </div>
-
+</div>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('checkout-modal');
@@ -368,6 +369,39 @@ document.addEventListener('DOMContentLoaded', function () {
         plan.addEventListener('change', updateSelectedPlanPrice);
     });
 });
+
+// Initialize the timer duration (10 minutes)
+let duration = 10 * 60; // 10 minutes in seconds
+
+// Select the minutes and seconds elements
+const minutesElement = document.getElementById('minutes');
+const secondsElement = document.getElementById('seconds');
+
+// Function to start the countdown
+function startCountdown() {
+    const countdownInterval = setInterval(() => {
+        // Calculate minutes and seconds
+        const minutes = Math.floor(duration / 60);
+        const seconds = duration % 60;
+
+        // Update the HTML with the current minutes and seconds
+        minutesElement.textContent = minutes < 10 ? '0' + minutes : minutes;
+        secondsElement.textContent = seconds < 10 ? '0' + seconds : seconds;
+
+        // Check if the timer has finished
+        if (duration <= 0) {
+            clearInterval(countdownInterval); // Stop the timer
+            // You can trigger any action you want when the timer ends here
+            alert('Countdown finished!');
+        } else {
+            duration--; // Decrease the duration by 1 second
+        }
+    }, 1000); // Run the function every 1000 milliseconds (1 second)
+}
+
+// Start the countdown when the page loads
+window.onload = startCountdown;
+
 
 </script>
 

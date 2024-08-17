@@ -3,6 +3,7 @@
 {% block title %}AI Tools Familiarity{% endblock %}
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
+<div class="mobile-container">
 <div class="container text-center">
     <h2>What AI tools are you already familiar with?</h2>
     <form method="post">
@@ -92,54 +93,46 @@
 </div>
 
 <style>
-    .btn-follow {
-    position: fixed;
-    bottom: 15px; /* Distance from the bottom of the viewport */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Correct the centering alignment */
-    z-index: 1000; /* Ensure it stays on top of other elements */
-    padding: 15px 200px; /* Increase size */
-    font-size: 18px; /* Make the text bigger */
-    background-color: #007bff; /* Keeps your original primary button color */
-    color: white;
+     
+     .emoji {
+    font-size: 50px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.btn-ai-tools {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 20px;
     border: none;
-    border-radius: 5px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    font-size: 24px;
     cursor: pointer;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-.btn-follow:hover {
-    background-color: #0056b3; /* Slightly darker on hover */
+.btn-ai-tools:hover {
+    background-color: #e0e0e0; /* Light gray on hover */
+}
+
+.btn-ai-tools.active {
+    background-color: #c8e6c9 !important; /* Light green when active */
+    border-color: #c8e6c9 !important; /* Ensure the border color matches */
+    box-shadow: none !important; /* Remove any shadow if present */
+    transform: scale(1.05); /* Slightly enlarge the button */
 }
 
 
-    .emoji {
-        font-size: 50px;
-        display: block;
-        margin-bottom: 10px;
-    }
-    .btn-ai-tools {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 15px;
-        padding: 20px;
-        border: none;
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        font-size: 24px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    .btn-ai-tools.active {
-        background-color: #d4edda;
-    }
-    .btn-ai-tools span {
-        display: block;
-    }
+.btn-ai-tools span {
+    display: block;
+}
+
 </style>
 
 <script>

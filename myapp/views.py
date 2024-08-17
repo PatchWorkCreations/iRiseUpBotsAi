@@ -160,6 +160,215 @@ def next_lesson(request, lesson_id):
 
 from django.shortcuts import render, redirect
 
+from django.shortcuts import render, redirect
+from datetime import datetime, timedelta
+
+def combined_quiz(request):
+    current_step = request.session.get('current_step', 'start')
+    
+    if request.method == 'POST':
+        if current_step == 'start':
+            # Handle gender selection
+            request.session['gender'] = request.POST.get('gender')
+            request.session['current_step'] = 'age_selection'
+        
+        elif current_step == 'age_selection':
+            # Handle age selection
+            request.session['age_range'] = request.POST.get('age_range')
+            request.session['current_step'] = 'after_age_page'
+        
+        elif current_step == 'after_age_page':
+            # Move to main goal after age selection
+            request.session['current_step'] = 'main_goal'
+        
+        elif current_step == 'main_goal':
+            # Handle main goal selection
+            request.session['main_goal'] = request.POST.get('main_goal')
+            request.session['current_step'] = 'income_source'
+        
+        elif current_step == 'income_source':
+            # Handle income source selection
+            request.session['income_source'] = request.POST.get('income_source')
+            request.session['current_step'] = 'work_schedule'
+        
+        elif current_step == 'work_schedule':
+            # Handle work schedule selection
+            request.session['work_schedule'] = request.POST.get('work_schedule')
+            request.session['current_step'] = 'job_challenges'
+        
+        elif current_step == 'job_challenges':
+            # Handle job challenges selection
+            job_challenges = request.POST.getlist('job_challenges')
+            request.session['job_challenges'] = job_challenges
+            request.session['current_step'] = 'after_job_challenges_page'
+        
+        elif current_step == 'after_job_challenges_page':
+            # Move to financial situation after job challenges
+            request.session['current_step'] = 'financial_situation'
+        
+        elif current_step == 'financial_situation':
+            # Handle financial situation selection
+            financial_situation = request.POST.get('financial_situation')
+            request.session['financial_situation'] = financial_situation
+
+            if financial_situation == "I'm comfortable":
+                request.session['current_step'] = 'comfortable_financial'
+            elif financial_situation == "I would like to have more stability":
+                request.session['current_step'] = 'stability_financial'
+            elif financial_situation == "I'm struggling to meet my financial goals":
+                request.session['current_step'] = 'struggling_financial'
+        
+        elif current_step in ['comfortable_financial', 'stability_financial', 'struggling_financial']:
+            # After financial situation, move to annual income goal
+            request.session['current_step'] = 'annual_income_goal'
+        
+        elif current_step == 'annual_income_goal':
+            # Handle annual income goal selection
+            request.session['annual_income_goal'] = request.POST.get('annual_income_goal')
+            request.session['current_step'] = 'control_work_hours'
+        
+        elif current_step == 'control_work_hours':
+            # Handle control of work hours selection
+            request.session['control_work_hours'] = request.POST.get('control_work_hours')
+            request.session['current_step'] = 'routine_work'
+        
+        elif current_step == 'routine_work':
+            # Handle routine work selection
+            request.session['routine_work'] = request.POST.get('routine_work')
+            request.session['current_step'] = 'time_saved_use'
+        
+        elif current_step == 'time_saved_use':
+            # Handle time saved use selection
+            request.session['time_saved_use'] = request.POST.get('time_saved_use')
+            request.session['current_step'] = 'job_interest_match'
+        
+        elif current_step == 'job_interest_match':
+            # Handle job interest match selection
+            job_interest_question = request.POST.get('job_interest_question')
+            request.session['job_interest_question'] = job_interest_question
+
+            if job_interest_question == 'Absolutely':
+                request.session['current_step'] = 'absolutely_interest'
+            elif job_interest_question == 'Somewhat':
+                request.session['current_step'] = 'somewhat_interest'
+            elif job_interest_question == 'Maybe':
+                request.session['current_step'] = 'maybe_interest'
+            elif job_interest_question == 'Not necessarily':
+                request.session['current_step'] = 'not_necessarily_interest'
+        
+        elif current_step in ['absolutely_interest', 'somewhat_interest', 'maybe_interest', 'not_necessarily_interest']:
+            # After job interest match, move to digital business knowledge
+            request.session['current_step'] = 'digital_business_knowledge'
+        
+        elif current_step == 'digital_business_knowledge':
+            # Handle digital business knowledge selection
+            request.session['digital_business_knowledge'] = request.POST.get('digital_business_knowledge')
+            request.session['current_step'] = 'side_hustle_experience'
+        
+        elif current_step == 'side_hustle_experience':
+            # Handle side hustle experience selection
+            request.session['side_hustle_experience'] = request.POST.get('side_hustle_experience')
+            request.session['current_step'] = 'learning_new_skills'
+        
+        elif current_step == 'learning_new_skills':
+            # Handle learning new skills selection
+            request.session['learning_new_skills'] = request.POST.get('learning_new_skills')
+            request.session['current_step'] = 'ai_tools_familiarity'
+        
+        elif current_step == 'ai_tools_familiarity':
+            # Handle AI tools familiarity selection
+            ai_tools_familiarity = request.POST.getlist('ai_tools_familiarity')
+            request.session['ai_tools_familiarity'] = ai_tools_familiarity
+            request.session['current_step'] = 'content_writing_knowledge'
+        
+        elif current_step == 'content_writing_knowledge':
+            # Handle content writing knowledge selection
+            request.session['content_writing_knowledge'] = request.POST.get('content_writing_knowledge')
+            request.session['current_step'] = 'digital_marketing_knowledge'
+        
+        elif current_step == 'digital_marketing_knowledge':
+            # Handle digital marketing knowledge selection
+            request.session['digital_marketing_knowledge'] = request.POST.get('digital_marketing_knowledge')
+            request.session['current_step'] = 'ai_income_boost_awareness'
+        
+        elif current_step == 'ai_income_boost_awareness':
+            # Handle AI income boost awareness selection
+            request.session['ai_income_boost_awareness'] = request.POST.get('ai_income_boost_awareness')
+            request.session['current_step'] = 'fields_interest'
+        
+        elif current_step == 'fields_interest':
+            # Handle fields of interest selection
+            fields_interest = request.POST.getlist('fields_interest')
+            request.session['fields_interest'] = fields_interest
+            request.session['current_step'] = 'ai_mastery_readiness'
+        
+        elif current_step == 'ai_mastery_readiness':
+            # Handle AI mastery readiness selection
+            ai_mastery_readiness = request.POST.get('ai_mastery_readiness')
+            request.session['ai_mastery_readiness'] = ai_mastery_readiness
+
+            if ai_mastery_readiness == 'All set - I am fully prepared':
+                request.session['current_step'] = 'all_set'
+            elif ai_mastery_readiness == 'Ready - I feel confident':
+                request.session['current_step'] = 'ready'
+            elif ai_mastery_readiness == 'Somewhat Ready - I have some knowledge':
+                request.session['current_step'] = 'somewhat_ready'
+            elif ai_mastery_readiness == 'Not Ready - I need more preparation':
+                request.session['current_step'] = 'not_ready'
+        
+        elif current_step in ['all_set', 'ready', 'somewhat_ready', 'not_ready']:
+            # After AI mastery readiness, move to focus ability
+            request.session['current_step'] = 'focus_ability'
+        
+        elif current_step == 'focus_ability':
+            # Handle focus ability selection
+            request.session['focus_ability'] = request.POST.get('focus_ability')
+            request.session['current_step'] = 'summary'
+        
+        elif current_step == 'summary':
+            # Move to the special goal step
+            request.session['current_step'] = 'special_goal'
+        
+        elif current_step == 'special_goal':
+            # Handle special goal selection
+            request.session['special_goal'] = request.POST.get('special_goal')
+            request.session['current_step'] = 'time_to_achieve_goal'
+        
+        elif current_step == 'time_to_achieve_goal':
+            # Handle time to achieve goal selection
+            request.session['time_to_achieve_goal'] = request.POST.get('time_to_achieve_goal')
+            return redirect('results')  # Final step, redirect to results page
+
+    # Prepare context for rendering the current step
+    context = {
+        'current_step': current_step,
+        'gender': request.session.get('gender'),
+        'age_range': request.session.get('age_range'),
+        'main_goal': request.session.get('main_goal'),
+        'income_source': request.session.get('income_source'),
+        'work_schedule': request.session.get('work_schedule'),
+        'job_challenges': request.session.get('job_challenges'),
+        'financial_situation': request.session.get('financial_situation'),
+        'annual_income_goal': request.session.get('annual_income_goal'),
+        'control_work_hours': request.session.get('control_work_hours'),
+        'routine_work': request.session.get('routine_work'),
+        'time_saved_use': request.session.get('time_saved_use'),
+        'job_interest_question': request.session.get('job_interest_question'),
+        'digital_business_knowledge': request.session.get('digital_business_knowledge'),
+        'side_hustle_experience': request.session.get('side_hustle_experience'),
+        'learning_new_skills': request.session.get('learning_new_skills'),
+        'ai_tools_familiarity': request.session.get('ai_tools_familiarity'),
+        'content_writing_knowledge': request.session.get('content_writing_knowledge'),
+        'digital_marketing_knowledge': request.session.get('digital_marketing_knowledge'),
+        'ai_income_boost_awareness': request.session.get('ai_income_boost_awareness'),
+        'fields_interest': request.session.get('fields_interest'),
+        'ai_mastery_readiness': request.session.get('ai_mastery_readiness'),
+        'focus_ability': request.session.get('focus_ability'),
+    }
+    
+    return render(request, 'myapp/quiz/combined_quiz.html', context)
+
+
 def start_quiz(request):
     if request.method == 'POST':
         gender = request.POST.get('gender')
@@ -266,20 +475,19 @@ def routine_work(request):
 def time_saved_use(request):
     if request.method == 'POST':
         request.session['time_saved_use'] = request.POST.get('time_saved_use')
-        return redirect('job_interest_question')
-    return render(request, 'myapp/quiz/time_saved_use.html')
-
-def job_interest_question(request):
-    if request.method == 'POST':
-        request.session['job_interest_question'] = request.POST.get('job_interest_question')
         return redirect('job_interest_match')
-    return render(request, 'myapp/quiz/job_interest_question.html')
+    return render(request, 'myapp/quiz/time_saved_use.html')
 
 
 def job_interest_match(request):
-    job_interest_question = request.session.get('job_interest_question')
-    
     if request.method == 'POST':
+        # Get the value from the POST request
+        job_interest_question = request.POST.get('job_interest_question')
+        
+        # Store the selected value in the session if you need it for later use
+        request.session['job_interest_question'] = job_interest_question
+        
+        # Redirect based on the value of job_interest_question
         if job_interest_question == 'Absolutely':
             return redirect('absolutely_interest')
         elif job_interest_question == 'Somewhat':
@@ -288,7 +496,8 @@ def job_interest_match(request):
             return redirect('maybe_interest')
         elif job_interest_question == 'Not necessarily':
             return redirect('not_necessarily_interest')
-
+    
+    # Render the initial form if the request method is GET
     return render(request, 'myapp/quiz/job_interest_match.html')
 
 def absolutely_interest(request):

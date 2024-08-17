@@ -3,6 +3,7 @@
 {% block title %}Overcoming Financial Struggles{% endblock %}
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
+<div class="mobile-container">
 <div class="container text-center">
     <h2>Turn Struggles into Success</h2>
     <img src="{% static 'myapp/images/struggling_financial.png' %}" alt="Turn Struggles into Success" class="img-fluid mb-3">
@@ -11,5 +12,6 @@
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">Continue</button>
     </form>
+</div>
 </div>
 {% endblock %}

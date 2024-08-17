@@ -4,6 +4,7 @@
 
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
+<div class="mobile-container">
 <div class="container text-center">
     <h2>Enter your email to get your <strong>Personal AI-Driven Income Growth Challenge!</strong></h2>
     
@@ -39,25 +40,7 @@
 
 <style>
 
-.btn-follow {
-    position: fixed;
-    bottom: 15px; /* Distance from the bottom of the viewport */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Correct the centering alignment */
-    z-index: 1000; /* Ensure it stays on top of other elements */
-    padding: 15px 200px; /* Increase size */
-    font-size: 18px; /* Make the text bigger */
-    background-color: #007bff; /* Keeps your original primary button color */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.btn-follow:hover {
-    background-color: #0056b3; /* Slightly darker on hover */
-}
+ 
     .container {
         max-width: 500px;
         margin: 0 auto;
