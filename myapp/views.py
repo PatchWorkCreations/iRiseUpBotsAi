@@ -613,10 +613,11 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import UserCourseAccess, Course
 from square.client import Client
+from django.conf import settings
 
 # Initialize the Square Client
 client = Client(
-    access_token='EAAAlz5jWqFxF0gzV6PfCR-Xgu4hCsw85fhWpEapFt_E3ufGuBysx3xUoJW6RyII',  # Replace with your actual Sandbox access token
+    access_token=settings.SQUARE_ACCESS_TOKEN,  # Securely retrieved from environment variables
     environment='sandbox'  # Use 'production' for live transactions
 )
 

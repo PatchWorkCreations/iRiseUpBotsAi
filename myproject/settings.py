@@ -154,7 +154,17 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-# PayPal Configuration
-PAYPAL_MODE = 'sandbox'  # Or 'live' for production
-PAYPAL_CLIENT_ID = 'AcO0pQSFgkyRPtmmgviw2lz2DCojtl28Y_Qr9bligTeR1kOZScy9jecX2eWixffPBqGDJJyxSWn5iT__'
-PAYPAL_CLIENT_SECRET = 'ELbhk0AXF3pOlgiJ378aXLtHzonT4EzPXkvQzEPv7dpTUth6GJOx_C6okSLpJmW2xf-ipC2zBCZzP0hQ'
+import environ
+import os
+
+# Initialize environment variables
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# Access your variables
+PAYPAL_MODE = 'sandbox' 
+PAYPAL_CLIENT_ID = env('PAYPAL_CLIENT_ID')
+PAYPAL_CLIENT_SECRET = env('PAYPAL_CLIENT_SECRET')
+
+
+SQUARE_ACCESS_TOKEN = env('SQUARE_ACCESS_TOKEN')
