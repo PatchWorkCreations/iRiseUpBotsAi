@@ -811,6 +811,9 @@ def create_paypal_order(request):
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+import os
+from django.conf import settings
+
 
 @csrf_exempt
 def complete_paypal_payment(request):
@@ -870,6 +873,8 @@ def complete_paypal_payment(request):
 
                 # Load the JSON content from the static directory
                 json_file_path = os.path.join(settings.BASE_DIR, 'static', 'myapp', 'json', 'success_page.json')
+                logger.info(f"Looking for success page JSON at: {json_file_path}")
+
                 try:
                     with open(json_file_path, 'r') as file:
                         success_page_json = json.load(file)

@@ -66,18 +66,18 @@
 
 ***/
 
-@import url('global.css');
-@import url('header.css');
-@import url('footer.css');
-@import url('animate.css');
+@import url("global.c73e1b743a4d.css");
+@import url("header.b06c50115cc7.css");
+@import url("footer.305cc1d6f33e.css");
+@import url("animate.57fb9e2cfb31.css");
    
-@import url('swiper.min.css');
-@import url('icomoon-style.css');
-@import url('font-awesome.css');
-@import url('custom-animate.css');
-@import url('magnific-popup.css');
-@import url('odometer-theme-default.css');
-@import url('jquery.bootstrap-touchspin.css');
+@import url("swiper.min.a43186238c57.css");
+@import url("icomoon-style.59db7a87b38c.css");
+@import url("font-awesome.ae3a10c5261f.css");
+@import url("custom-animate.0c86ef1ee149.css");
+@import url("magnific-popup.30b593b71d76.css");
+@import url("odometer-theme-default.1c3c9b7eaa04.css");
+@import url("jquery.bootstrap-touchspin.c82a1dde47ad.css");
 
 /*** 
 
@@ -496,7 +496,7 @@
 	top: 0px;
 	right: 0px;
 	bottom: 0px;
-	background: url(../images/main-slider/percentage-bg.png);
+	background: url("../images/main-slider/percentage-bg.07038461d69b.png");
 	background-size: cover;
 }
 
@@ -2093,7 +2093,7 @@
     right: 0px;
     bottom: 0px;
     z-index: -1;
-    background: url(../images/background/social-one_blurr.png) no-repeat;
+    background: url("../images/background/social-one_blurr.e693f3ae9e0a.png") no-repeat;
     background-size: cover;
 }
 
@@ -3726,7 +3726,7 @@
 	top: 0px;
 	right: 0px;
 	bottom: 0px;
-	background: url(../images/background/tools-bg-1.png) repeat-x;
+	background: url("../images/background/tools-bg-1.6f3ec7b8d7d8.png") repeat-x;
 }
 
 .tools-one .social-block_one{
@@ -7730,7 +7730,7 @@
 }
 
 .register-form .check-box input[type="checkbox"]:checked + label:before{
-	background: var(--main-color) url(../images/icons/check.png) center center no-repeat;
+	background: var(--main-color) url("../images/icons/check.ac122a58e4e4.png") center center no-repeat;
 }
 
 .register-form .check-box input[type="checkbox"]:checked + label:after {
@@ -7786,101 +7786,101 @@
 /* Page title icon */
 
 .page-title-icon {
-    background-image: url('/static/myapp/images/icons/page-title_icon-1.png');
+    background-image: url("/static/myapp/images/icons/page-title_icon-1.c21251eeabc6.png");
 }
 
 .page-title-icon-two {
-    background-image: url('/static/myapp/images/icons/page-title_icon-2.png');
+    background-image: url("/static/myapp/images/icons/page-title_icon-2.7aa0c7089a42.png");
 }
 
 .page-title-shadow {
-    background-image: url('/static/myapp/images/background/page-title-1.png');
+    background-image: url("/static/myapp/images/background/page-title-1.dd22c17c167e.png");
 }
 
 .page-title-shadow-two {
-    background-image: url('/static/myapp/images/background/page-title-2.png');
+    background-image: url("/static/myapp/images/background/page-title-2.bb79e3b1c590.png");
 }
 
 .price-one_stars {
-    background-image: url('/static/myapp/images/icons/price-stars.png');
+    background-image: url("/static/myapp/images/icons/price-stars.aae3b3b69c67.png");
 }
 
 .blockquote_bg {
-    background-image: url('/static/myapp/images/background/blockquote-bg.png');
+    background-image: url("/static/myapp/images/background/blockquote-bg.68bd452b088d.png");
 }
 
 .error-one {
-    background-image: url('/static/myapp/images/background/error-bg.png');
+    background-image: url("/static/myapp/images/background/error-bg.00a5cf956ecc.png");
 }
 
 .steps-one_bg {
-    background-image: url('/static/myapp/images/background/step-1_bg.png');
+    background-image: url("/static/myapp/images/background/step-1_bg.944c96532b4a.png");
 }
 
 .steps-one_icon {
-    background-image: url('/static/myapp/images/icons/step.png');
+    background-image: url("/static/myapp/images/icons/step.34875ff2c6cb.png");
 }
 
 .service-block_two-sideicon {
-    background-image: url('/static/myapp/images/icons/service-1.png');
+    background-image: url("/static/myapp/images/icons/service-1.dbf9cdd83ed5.png");
 }
 
 .cta-icon_one {
-    background-image: url('/static/myapp/images/icons/cta-icon-1.png');
+    background-image: url("/static/myapp/images/icons/cta-icon-1.0f7640a2efa4.png");
 }
 
 .cta-icon_two {
-    background-image: url('/static/myapp/images/icons/cta-icon-2.png');
+    background-image: url("/static/myapp/images/icons/cta-icon-2.114a014bc85f.png");
 }
 
 
 .about-one_pattern {
-    background-image: url('/static/myapp/images/background/about-pattern.png');
+    background-image: url("/static/myapp/images/background/about-pattern.a3fb855d8397.png");
 }
 
 .about-one_icon {
-    background-image: url('/static/myapp/images/icons/about-1.png');
+    background-image: url("/static/myapp/images/icons/about-1.43426e15430e.png");
 }
 
 .about-one_icon-two {
-    background-image: url('/static/myapp/images/icons/about-2.png');
+    background-image: url("/static/myapp/images/icons/about-2.a56fa95a87e2.png");
 }
 
 .about-one_tab-shadow {
-    background-image: url('/static/myapp/images/background/tab-shadow.png');
+    background-image: url("/static/myapp/images/background/tab-shadow.212eb322f08a.png");
 }
 
 .answer-one_pattern {
-    background-image: url('/static/myapp/images/background/faq-shadow.png');
+    background-image: url("/static/myapp/images/background/faq-shadow.35c78615d5b5.png");
 }
 
 .price-one_bg {
-    background-image: url('/static/myapp/images/background/price-bg.png');
+    background-image: url("/static/myapp/images/background/price-bg.951ec3516888.png");
 }
 
 .faq-one_bg {
-    background-image: url('/static/myapp/images/background/faq-bg.png');
+    background-image: url("/static/myapp/images/background/faq-bg.caf2c50e5c44.png");
 }
 
 .faq-one_icon {
-    background-image: url('/static/myapp/images/icons/step.png');
+    background-image: url("/static/myapp/images/icons/step.34875ff2c6cb.png");
 }
 
 .social-one_bg-shadow {
-    background-image: url('/static/myapp/images/background/social-bg.png');
+    background-image: url("/static/myapp/images/background/social-bg.1f52c5813b8c.png");
 }
 
 
 
 
 .news-one_shadow {
-    background-image: url('/static/myapp/images/background/news-shadow-1.png');
+    background-image: url("/static/myapp/images/background/news-shadow-1.d3fcea6e6023.png");
 }
 
 .news-one_shadow-two {
-    background-image: url('/static/myapp/images/background/news-shadow-2.png');
+    background-image: url("/static/myapp/images/background/news-shadow-2.8fd7057442f6.png");
 }
 
 .footer-pattern {
-    background-image: url('/static/myapp/images/background/footer-pattern.png');
+    background-image: url("/static/myapp/images/background/footer-pattern.68d251a60a07.png");
 }

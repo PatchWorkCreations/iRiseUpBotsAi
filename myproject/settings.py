@@ -149,6 +149,10 @@ LOGGING = {
     },
 }
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # PayPal Configuration
 PAYPAL_MODE = 'sandbox'  # Or 'live' for production
