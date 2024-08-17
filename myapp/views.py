@@ -859,6 +859,7 @@ def complete_paypal_payment(request):
 
                 # Clear the selected plan from the session
                 del request.session['plan']
+                logger.info(f"Session plan value: {request.session.get('plan')}")
 
                 # Load the JSON content from the static directory
                 json_file_path = os.path.join(settings.BASE_DIR, 'static', 'myapp', 'json', 'success_page.json')
