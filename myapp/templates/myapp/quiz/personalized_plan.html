@@ -5,7 +5,6 @@
 <head>
     <script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
     <script src="https://www.paypal.com/sdk/js?client-id=AcO0pQSFgkyRPtmmgviw2lz2DCojtl28Y_Qr9bligTeR1kOZScy9jecX2eWixffPBqGDJJyxSWn5iT__&currency=USD"></script>
-
 </head>
 
 <div class="header-container d-flex justify-content-between align-items-center">
@@ -159,32 +158,74 @@
 
 <div id="checkout-modal" class="modal" style="display:none;">
     <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Complete Your Purchase</h2>
-        <div id="payment-options">
-            <div id="card-payment" class="payment-option">
-                <h3>Pay with Card</h3>
-                <form id="payment-form">
-                    <div id="card-container"></div> <!-- Square payment form container -->
-                    <button type="submit">Pay Now</button>
-                </form>
-            </div>
-            <div id="paypal-payment" class="payment-option">
-                <h3>Pay with PayPal</h3>
-                <div id="paypal-button-container"></div> <!-- PayPal button container -->
-            </div>
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Checkout</h2>
         </div>
+        <h3><span style="color: #5860F8;">91% of users </span>are satisfied with the plan and stay with us after its completion</h3>
+        
+        <div id="payment-selection">
+            <button id="card-button" class="payment-selection-btn">Pay with Card</button>
+            <button id="paypal-button" class="payment-selection-btn">Pay with PayPal</button>
+        </div>
+        
+        <div id="card-payment" class="payment-option" style="display:none;">
+            <h3 style="text-align: center;">Pay with Card</h3>
+            <!-- Inserting the six images here -->
+            <div class="card-icons">
+                <img src="{% static 'myapp/images/card_icons/1.svg' %}" alt="Card Icon 1" />
+                <img src="{% static 'myapp/images/card_icons/2.svg' %}" alt="Card Icon 2" />
+                <img src="{% static 'myapp/images/card_icons/3.svg' %}" alt="Card Icon 3" />
+                <img src="{% static 'myapp/images/card_icons/4.svg' %}" alt="Card Icon 4" />
+                <img src="{% static 'myapp/images/card_icons/5.svg' %}" alt="Card Icon 5" />
+                <img src="{% static 'myapp/images/card_icons/6.svg' %}" alt="Card Icon 6" />
+            </div>
+            <form id="payment-form">
+                <div id="card-container"></div> <!-- Square payment form container -->
+                <button type="submit">Pay Now</button>
+            </form>
+            <div class="pay-safe">
+                <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Safe Icon" class="safe-icon" />
+                <span>Pay safe & secure</span>
+            </div>            
+        </div>
+        
+        
+        <div id="paypal-payment" class="payment-option" style="display:none;">
+            <h3 style="text-align: center;">Pay with PayPal</h3>
+            <div id="paypal-button-container"></div> <!-- PayPal button container -->
+        </div>
+
+        <!-- Add the subscription terms language below the payment options -->
+        <div class="subscription-terms mt-4">
+            <p style="text-align: center; font-size: 12px;">You agree that <strong id="selected-plan-price">$39.99</strong> will be as an intro offer, then <strong id="selected-plan-renewal-price">$39.99</strong> will be automatically billed every 4-weeks until you cancel in settings. <a href="#">Subscription Terms</a>.</p>
+        </div>
+        
     </div>
 </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('checkout-modal');
-    const buttons = document.querySelectorAll('.card-button');
-    const span = document.getElementsByClassName('close')[0];
+    const getPlanButtons = document.querySelectorAll('.get-plan-btn');
+    const closeBtn = document.getElementsByClassName('close')[0];
+    const cardBtn = document.getElementById('card-button');
+    const paypalBtn = document.getElementById('paypal-button');
+    const cardPaymentSection = document.getElementById('card-payment');
+    const paypalPaymentSection = document.getElementById('paypal-payment');
     let squareInitialized = false;
     let paypalInitialized = false;
+
+    // Initialize payment options visibility
+    cardPaymentSection.style.display = 'none';
+    paypalPaymentSection.style.display = 'none';
+
+    // Show modal when "GET MY PLAN" buttons are clicked
+    getPlanButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            modal.style.display = 'block';
+        });
+    });
 
     // Square payment setup function
     async function setupSquarePayments() {
@@ -233,70 +274,298 @@ document.addEventListener('DOMContentLoaded', function () {
         if (paypalInitialized) return; // Prevent re-initialization
 
         paypal.Buttons({
-    createOrder: function(data, actions) {
-        const planValue = document.querySelector('input[name="plan"]:checked').value;
-        return actions.order.create({
-            purchase_units: [{
-                amount: {
-                    value: planValue === '1-week' ? '13.86' : 
-                           planValue === '4-week' ? '39.99' : 
-                           planValue === '12-week' ? '79.99' : '0.00'
-                }
-            }]
-        });
-    },
-    onApprove: function(data, actions) {
-        return actions.order.capture().then(async function(details) {
-            const response = await fetch(`/complete-paypal-payment/?token=${data.orderID}`, {
-                method: 'GET',
-            });
+            createOrder: function (data, actions) {
+                const planValue = document.querySelector('input[name="plan"]:checked').value;
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: planValue === '1-week' ? '13.86' :
+                                planValue === '4-week' ? '39.99' :
+                                    planValue === '12-week' ? '79.99' : '0.00'
+                        }
+                    }]
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(async function (details) {
+                    const response = await fetch(`/complete-paypal-payment/?token=${data.orderID}`, {
+                        method: 'GET',
+                    });
 
-            const jsonResult = await response.json();
-            if (jsonResult.success) {
-                window.location.href = '/success/';
-            } else {
-                alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+                    const jsonResult = await response.json();
+                    if (jsonResult.success) {
+                        window.location.href = '/success/';
+                    } else {
+                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+                    }
+                });
+            },
+            onError: function (err) {
+                console.error('PayPal error:', err);
+                alert('An error occurred during PayPal payment: ' + err);
             }
-        });
-    },
-    onError: function (err) {
-        console.error('PayPal error:', err);
-        alert('An error occurred during PayPal payment: ' + err);
-    }
-}).render('#paypal-button-container');
-
+        }).render('#paypal-button-container');
 
         paypalInitialized = true; // Set flag to prevent re-initialization
     }
 
-    // Show the modal and setup payment options when a button is clicked
-    buttons.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            modal.style.display = 'block';
-            setupSquarePayments(); // Setup Square payment
-            setupPayPalPayments(); // Setup PayPal payment
-        });
+    // Event listeners for payment method buttons
+    cardBtn.addEventListener('click', function () {
+        cardPaymentSection.style.display = 'block';
+        paypalPaymentSection.style.display = 'none';
+        setupSquarePayments(); // Initialize Square payment setup
     });
 
-    // Close the modal when the user clicks on <span> (x)
-    if (span) {
-        span.addEventListener('click', function () {
-            modal.style.display = 'none';
-        });
-    }
+    paypalBtn.addEventListener('click', function () {
+        paypalPaymentSection.style.display = 'block';
+        cardPaymentSection.style.display = 'none';
+        setupPayPalPayments(); // Initialize PayPal payment setup
+    });
 
-    // Close the modal when the user clicks outside of it
+    // Event listener to close the modal
+    closeBtn.addEventListener('click', function () {
+        modal.style.display = 'none';
+        cardPaymentSection.style.display = 'none';
+        paypalPaymentSection.style.display = 'none';
+    });
+
     window.addEventListener('click', function (event) {
         if (event.target == modal) {
             modal.style.display = 'none';
+            cardPaymentSection.style.display = 'none';
+            paypalPaymentSection.style.display = 'none';
         }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const planInputs = document.querySelectorAll('input[name="plan"]');
+    const selectedPlanPrice = document.getElementById('selected-plan-price');
+    const selectedPlanRenewalPrice = document.getElementById('selected-plan-renewal-price');
+
+    // Function to update the price in the modal
+    function updateSelectedPlanPrice() {
+        const selectedPlan = document.querySelector('input[name="plan"]:checked');
+        let price;
+
+        if (selectedPlan.value === '1-week') {
+            price = '13.86';
+        } else if (selectedPlan.value === '4-week') {
+            price = '39.99';
+        } else if (selectedPlan.value === '12-week') {
+            price = '79.99';
+        }
+
+        selectedPlanPrice.textContent = `$${price}`;
+        selectedPlanRenewalPrice.textContent = `$${price}`;
+    }
+
+    // Call update function when the page loads to set the initial price
+    updateSelectedPlanPrice();
+
+    // Add event listener to update the price whenever a plan is selected
+    planInputs.forEach(plan => {
+        plan.addEventListener('change', updateSelectedPlanPrice);
     });
 });
 
 </script>
 
-
 <style>
+
+.pay-safe {
+    text-align: center;
+    align-items: center;
+    background-color: #f4fdf4; /* Light green background color */
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #74b948; /* Green color for text */
+    margin-top: 10px; /* Space above the section */
+}
+
+.pay-safe .safe-icon {
+    width: 20px; /* Adjust the icon size as needed */
+    height: 20px;
+    margin-right: 8px; /* Space between the icon and the text */
+}
+
+
+.card-icons {
+    display: flex;
+    justify-content: space-between; /* Space out the icons evenly */
+    align-items: center; /* Align them vertically centered */
+    flex-wrap: wrap; /* Allow wrapping if needed on smaller screens */
+}
+
+.card-icons img {
+    width: 40px; /* Adjust the width as needed */
+    margin: 5px; /* Adjust the spacing between images */
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px; /* Adjust modal width as needed */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3{
+    padding-top: 8px;
+    font-size: 20px;
+    text-align: center;
+}
+
+
+/* Header styles */
+.modal-header {
+
+    display: flex;
+    justify-content: center; /* Center the h2 */
+    align-items: center; /* Align items vertically */
+    position: relative; /* Position elements within the header */
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+
+.modal-header .close {
+    padding: 10px 15px;
+    background-color: #f3f4f6;
+    position: absolute;
+    left: 15px; /* Adjust the position of the close button to the left */
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.modal-header .close:hover {
+    color: black;
+}
+
+
+/* Body styles */
+.modal-body {
+    padding: 15px;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+.modal-body h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.modal-body h2 .highlight {
+    color: #5860F8; /* Purple color */
+}
+
+/* Button styles */
+#payment-selection {
+    display: flex;
+    justify-content: space-between; /* Ensures the buttons have space between them */
+}
+
+.payment-selection-btn {
+    background-color: #f3f4f6;
+    border: 2px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    width: 48%; /* Make sure the buttons fit side by side */
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    box-sizing: border-box; /* Ensures padding and border are included in width calculation */
+}
+
+.payment-selection-btn:first-child {
+    margin-right: 4%; /* Add a small gap between the two buttons */
+}
+
+
+
+.payment-selection-btn:hover {
+    background-color: #e0e0e0;
+}
+
+#card-button {
+    background-color: #5860F8;
+    color: white;
+}
+
+#paypal-button {
+    background-color: #ffc439;
+    color: black;
+}
+
+.payment-option {
+    margin-top: 15px;
+}
+
+/* Card payment button styles */
+#card-payment button[type="submit"] {
+    background-color: #5860F8;
+    color: white;
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#card-payment button[type="submit"]:hover {
+    background-color: #3c4ab8;
+}
+
+/* Subscription terms styles */
+.subscription-terms {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #666;
+    text-align: left;
+}
+
+.subscription-terms a {
+    color: #5860F8;
+    text-decoration: underline;
+}
+
+.subscription-terms a:hover {
+    text-decoration: none;
+}
+
+/* General button styles */
 .get-plan-btn {
     background-color: #5860F8;
     border: none;
@@ -322,7 +591,7 @@ document.addEventListener('DOMContentLoaded', function () {
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Reduce the shadow during scaling down */
     }
     50% {
-        transform: scale(1.05); /* Slightly smaller scaling */
+        transform: scale(1.05); /* Slightly larger scaling */
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* Increase shadow during scaling up */
     }
     100% {
@@ -331,7 +600,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 }
 
-
+/* Header container styles */
 .header-container {
     padding: 10px;
 }
@@ -342,20 +611,7 @@ document.addEventListener('DOMContentLoaded', function () {
     color: #5860F8; /* Match the color of the logo */
 }
 
-.get-plan-btn {
-    background-color: #5860F8;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    color: white;
-}
-
-.get-plan-btn:hover {
-    background-color: #3c4ab8;
-}
-
-
+/* Money-back container styles */
 .money-back-container {
     background-color: #f3f8f1;
     border-radius: 10px;
@@ -395,6 +651,7 @@ document.addEventListener('DOMContentLoaded', function () {
     text-decoration: none;
 }
 
+/* Plan option styles */
 .plan-option {
     display: flex;
     align-items: center;
@@ -451,29 +708,7 @@ document.addEventListener('DOMContentLoaded', function () {
     margin-right: 5px;
 }
 
-.btn-get-plan {
-    background-color: #4e73df;
-    color: white;
-    border: none;
-    padding: 15px 20px;
-    font-size: 1.2em;
-    border-radius: 10px;
-    cursor: pointer;
-    width: 100%;
-}
-
-.subscription-info {
-    margin-top: 20px;
-    color: #666;
-    font-size: 0.9em;
-    text-align: center;
-}
-
-.subscription-info a {
-    color: #4e73df;
-    text-decoration: underline;
-}
-
+/* Progress bar styles */
 .progress-bar-container {
     position: relative;
     width: 100%;
@@ -514,6 +749,7 @@ document.addEventListener('DOMContentLoaded', function () {
     font-weight: bold;
 }
 
+/* Card styles */
 .card {
     border-radius: 15px;
     padding: 20px;
@@ -545,41 +781,6 @@ p {
     border-color: #324cdd;
 }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.4);
-    padding-top: 60px;
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
 
 </style>
 {% endblock %}
