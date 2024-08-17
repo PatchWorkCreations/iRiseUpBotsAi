@@ -759,7 +759,7 @@ def create_paypal_order(request):
                 return JsonResponse({"error": "Plan not provided"}, status=400)
 
             # Store the selected plan in the session
-            request.session['selected_plan'] = selected_plan
+            request.session['plan'] = selected_plan
 
             amount_cents = determine_amount_based_on_plan(selected_plan)
             if amount_cents <= 0:
@@ -858,7 +858,7 @@ def complete_paypal_payment(request):
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
 
                 # Clear the selected plan from the session
-                del request.session['selected_plan']
+                del request.session['plan']
 
                 # Load the JSON content from the static directory
                 json_file_path = os.path.join(settings.BASE_DIR, 'static', 'myapp', 'json', 'success_page.json')
