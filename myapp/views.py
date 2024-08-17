@@ -759,7 +759,7 @@ def create_paypal_order(request):
                 return JsonResponse({"error": "Plan not provided"}, status=400)
 
             # Store the selected plan in the session
-            request.session['selected_plan'] = selected_plan
+            request.session['selected_plan'] = selected_plan  # Ensure consistency here
             logger.info(f"Plan stored in session: {request.session.get('selected_plan')}")
 
             amount_cents = determine_amount_based_on_plan(selected_plan)
@@ -815,7 +815,7 @@ def complete_paypal_payment(request):
     if request.method == 'GET':
         try:
             order_id = request.GET.get('token')
-            selected_plan = request.session.get('selected_plan')  # Use the correct key
+            selected_plan = request.session.get('selected_plan')  # Ensure consistency here
             logger.info(f"Retrieved plan from session: {selected_plan}")
 
             if not order_id:
