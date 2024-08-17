@@ -228,46 +228,50 @@ document.addEventListener('DOMContentLoaded', function () {
         squareInitialized = true; // Set flag to prevent re-initialization
     }
 
-    // PayPal payment setup function
-    async function setupPayPalPayments() {
-        if (paypalInitialized) return; // Prevent re-initialization
+   // PayPal payment setup function
+async function setupPayPalPayments() {
+    if (paypalInitialized) return; // Prevent re-initialization
 
-        paypal.Buttons({
-    createOrder: function(data, actions) {
-        const planValue = document.querySelector('input[name="plan"]:checked').value;
-        return actions.order.create({
-            purchase_units: [{
-                amount: {
-                    value: planValue === '1-week' ? '13.86' : 
-                           planValue === '4-week' ? '39.99' : 
-                           planValue === '12-week' ? '79.99' : '0.00'
-                }
-            }]
-        });
-    },
-    onApprove: function(data, actions) {
-        return actions.order.capture().then(async function(details) {
-            const response = await fetch(`/complete-paypal-payment/?token=${data.orderID}`, {
-                method: 'GET',
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            const planValue = document.querySelector('input[name="plan"]:checked').value;
+            return fetch('/create-paypal-order/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({
+                    plan: planValue
+                }),
+            }).then(response => {
+                return response.json();
+            }).then(orderData => {
+                return orderData.approval_url;
             });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(async function(details) {
+                const response = await fetch(`/complete-paypal-payment/?token=${data.orderID}`, {
+                    method: 'GET',
+                });
 
-            const jsonResult = await response.json();
-            if (jsonResult.success) {
-                window.location.href = '/success/';
-            } else {
-                alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-            }
-        });
-    },
-    onError: function (err) {
-        console.error('PayPal error:', err);
-        alert('An error occurred during PayPal payment: ' + err);
-    }
-        }).render('#paypal-button-container');
+                const jsonResult = await response.json();
+                if (jsonResult.success) {
+                    window.location.href = '/success/';
+                } else {
+                    alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+                }
+            });
+        },
+        onError: function (err) {
+            console.error('PayPal error:', err);
+            alert('An error occurred during PayPal payment: ' + err);
+        }
+    }).render('#paypal-button-container');
 
-
-        paypalInitialized = true; // Set flag to prevent re-initialization
-    }
+    paypalInitialized = true; // Set flag to prevent re-initialization
+}
 
     // Show the modal and setup payment options when a button is clicked
     buttons.forEach(function (btn) {

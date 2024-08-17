@@ -753,13 +753,14 @@ paypal_client = PayPalClient(
 def create_paypal_order(request):
     if request.method == 'POST':
         try:
-            selected_plan = request.POST.get('plan')
+            data = json.loads(request.body)
+            selected_plan = data.get('plan')
 
             if not selected_plan:
                 return JsonResponse({"error": "Plan not provided"}, status=400)
 
             # Store the selected plan in the session
-            request.session['selected_plan'] = selected_plan  # Ensure consistency here
+            request.session['selected_plan'] = selected_plan
             logger.info(f"Plan stored in session: {request.session.get('selected_plan')}")
 
             amount_cents = determine_amount_based_on_plan(selected_plan)
@@ -782,7 +783,7 @@ def create_paypal_order(request):
                 }
             }
 
-            # Make the request to PayPal API
+            # Create PayPal order and return approval URL
             response = requests.post(
                 f"https://api-m.sandbox.paypal.com/v2/checkout/orders",
                 headers={
@@ -795,13 +796,7 @@ def create_paypal_order(request):
 
             order_response = response.json()
 
-            # Safely extract the approval URL
-            try:
-                approval_url = next(link['href'] for link in order_response['links'] if link['rel'] == 'approve')
-            except (KeyError, StopIteration):
-                logger.error("Approval URL not found in PayPal response")
-                return JsonResponse({"error": "Approval URL not found"}, status=500)
-
+            approval_url = next(link['href'] for link in order_response['links'] if link['rel'] == 'approve')
             return JsonResponse({"approval_url": approval_url})
 
         except Exception as e:
