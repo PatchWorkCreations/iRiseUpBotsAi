@@ -628,12 +628,18 @@ def determine_amount_based_on_plan(plan):
     else:
         return 0
 
+from django.utils import timezone
+from datetime import timedelta
+
 def grant_course_access(user, selected_plan):
     """
     This function grants the user access to all courses and sets an expiration date based on the selected plan.
     """
     # Get all courses available in the course menu
     courses = Course.objects.all()
+
+    # Set a default expiration date (optional)
+    expiration_date = None
 
     # Determine expiration date based on selected plan
     if selected_plan == '1-week':
@@ -642,12 +648,18 @@ def grant_course_access(user, selected_plan):
         expiration_date = timezone.now() + timedelta(weeks=4)
     elif selected_plan == '12-week':
         expiration_date = timezone.now() + timedelta(weeks=12)
+    else:
+        # Handle the case where the selected plan is not recognized
+        expiration_date = timezone.now() + timedelta(weeks=1)  # Default to 1 week if plan is unrecognized
+        # Optionally, log a warning or handle this situation differently
+        logger.warning(f"Unrecognized selected plan: {selected_plan}, defaulting to 1 week expiration.")
 
     # Grant access to all courses with the determined expiration date
     for course in courses:
         UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
 
     return True
+
 
 import logging
 
