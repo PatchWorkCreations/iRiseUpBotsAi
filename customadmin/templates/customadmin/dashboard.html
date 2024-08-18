@@ -26,39 +26,6 @@
         </ul>
     </section>
 
-    <section class="mt-5">
-        <h3>All Quizzes</h3>
-        <ul class="list-group mt-4">
-            {% for quiz in quizzes %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ quiz.title }}
-                    <div>
-                        <a href="{% url 'question_list' quiz.pk %}" class="btn btn-info btn-sm">View Questions</a>
-                        <a href="{% url 'edit_quiz' quiz.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="{% url 'add_question' quiz.pk %}" class="btn btn-primary btn-sm">Add Question</a>
-                        <a href="{% url 'preview_quiz' quiz.pk %}" class="btn btn-success btn-sm">Preview Quiz</a>  <!-- New Preview Button -->
-                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-item-id="{{ quiz.pk }}" data-item-title="{{ quiz.title }}" data-item-type="quiz">Delete</button>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-    </section>
-
-    <section class="mt-5">
-        <h3>All Questions</h3>
-        <ul class="list-group mt-4">
-            {% for question in questions %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ question.text }}
-                    <div>
-                        <a href="{% url 'view_question' question.pk %}" class="btn btn-info btn-sm">View</a>
-                        <a href="{% url 'edit_question' question.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-item-id="{{ question.pk }}" data-item-title="{{ question.text }}" data-item-type="question">Delete</button>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-    </section>
 </div>
 
 <!-- Delete Confirmation Modal -->

@@ -17,5 +17,9 @@ urlpatterns = [
     path('logout/', views.CustomLogoutView.as_view(), name='custom_logout'),
     path('upload-csv/', views.upload_csv, name='upload_csv'),
     path('send-password-reset/<int:user_id>/', views.send_password_reset, name='send_password_reset'),
-
+    path('user-management/edit/<int:user_id>/', views.edit_user, name='customadmin_edit_user'),
+    path('delete-user/<int:item_id>/', views.delete_user, name='delete_user'),
+    path('user-management/', views.user_management, name='user_management'),
+    path('view-user-quiz-details/<int:user_id>/', views.view_user_quiz_details, name='customadmin_view_user_quiz_details'),
+    path('delete-multiple-users/', views.delete_multiple_users, name='delete_multiple_users'),
 ]

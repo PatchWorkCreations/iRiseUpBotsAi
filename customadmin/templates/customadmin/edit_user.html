@@ -1,0 +1,17 @@
+<!-- /Users/Julia/Downloads/braine-package/customadmin/templates/customadmin/edit_user.html -->
+
+{% extends "customadmin/base.html" %}
+{% block title %}Edit User{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Edit User</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email" class="form-control" id="email" value="{{ user.email }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

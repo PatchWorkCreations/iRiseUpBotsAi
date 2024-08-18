@@ -1186,15 +1186,6 @@ def sign_in(request):
 
 
 
-To handle this properly, we’ll set up the authentication and password management views you’ve defined, ensuring that first-time logins and password resets are handled correctly. I’ll guide you through how to connect these views with the rest of your application, including how to manage first-time logins.
-
-Step 1: Update the Sign-In View to Check for First-Time Login
-First, we’ll modify the sign_in view to check if a user is logging in for the first time. This requires that we have a way to identify if a user has already logged in before.
-
-Assuming the first_login_completed field in the EmailCollection model tracks this:
-
-python
-Copy code
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages

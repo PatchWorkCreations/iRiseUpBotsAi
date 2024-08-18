@@ -13,7 +13,8 @@ from django.urls import reverse_lazy
 
 def dashboard(request):
     courses = Course.objects.all()
-    return render(request, 'customadmin/dashboard.html')
+    return render(request, 'customadmin/dashboard.html', {'courses': courses})
+
 
 def course_list(request):
     courses = Course.objects.all()
@@ -179,6 +180,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from myapp.forms import CSVUploadForm
 from myapp.models import Course, SubCourse, Lesson
+import csv
+
 
 def upload_csv(request):
     if request.method == 'POST':
@@ -244,3 +247,63 @@ def send_password_reset(request, user_id):
     message = f'Click the link below to reset your password:\n\n{request.build_absolute_uri(reverse("password_reset_confirm", args=[user.id]))}'
     send_mail(subject, message, 'from@example.com', [user.email])
     return redirect('user_management')
+
+
+# customadmin/views.py
+
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.models import User
+from myapp.models import EmailCollection, QuizResponse  # Import the QuizResponse model
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.models import User
+from myapp.models import QuizResponse
+
+def view_user_quiz_details(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    
+    try:
+        quiz_response = QuizResponse.objects.get(user=user)
+    except QuizResponse.DoesNotExist:
+        quiz_response = None  # Handle the case where there's no QuizResponse
+
+    return render(request, 'customadmin/view_user_quiz_details.html', {
+        'user': user,
+        'quiz_response': quiz_response,
+    })
+
+
+def edit_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        # Handle user update logic here
+        user.email = request.POST.get('email', user.email)
+        user.save()
+        return redirect('customadmin_user_management')
+    return render(request, 'customadmin/edit_user.html', {'user': user})
+
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.models import User  # Assuming User is the model you're deleting
+
+def delete_user(request, item_id):
+    item = get_object_or_404(User, id=item_id)  # Adjust the model as needed
+    if request.method == 'POST':
+        item.delete()
+        return redirect('user_management')  # Replace with the correct redirect URL
+    return render(request, 'customadmin/delete_user.html', {'item': item})
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.models import User
+from django.http import HttpResponseBadRequest
+
+def delete_multiple_users(request):
+    if request.method == 'POST':
+        user_ids = request.POST.getlist('user_ids')
+        if not user_ids:
+            return HttpResponseBadRequest('No users selected')
+
+        User.objects.filter(id__in=user_ids).delete()
+        return redirect('user_management')
+    return HttpResponseBadRequest('Invalid request method')
