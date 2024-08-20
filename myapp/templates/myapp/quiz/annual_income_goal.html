@@ -6,36 +6,32 @@
 <div class="mobile-container">
     <div class="container text-center">
         <h2>What annual income level do you want to achieve?</h2>
-        <div class="row justify-content-between align-items-left">
-            <div class="col-12 col-md-6 d-flex flex-column align-items-start">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col-12 mb-3">
-                            <button type="submit" name="annual_income_goal" value="30,000 – $50,000" class="btn btn-light btn-income">
-                                <span>30,000 – $50,000</span>
-                            </button>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <button type="submit" name="annual_income_goal" value="$50,000 – $100,000" class="btn btn-light btn-income">
-                                <span>$50,000 – $100,000</span>
-                            </button>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <button type="submit" name="annual_income_goal" value="More than $100,000" class="btn btn-light btn-income">
-                                <span>More than $100,000</span>
-                            </button>
-                        </div>
-                    </div>
-                </form>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="annual_income_goal" value="30,000 – $50,000" class="btn btn-light btn-income">
+                        <span>30,000 – $50,000</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="annual_income_goal" value="$50,000 – $100,000" class="btn btn-light btn-income">
+                        <span>$50,000 – $100,000</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="annual_income_goal" value="More than $100,000" class="btn btn-light btn-income">
+                        <span>More than $100,000</span>
+                    </button>
+                </div>
             </div>
-            <div class="col-12 col-md-6 d-flex justify-content-end position-relative">
-                {% if gender == 'Male' %}
-                    <img src="{% static 'myapp/images/quiz/5.webp' %}" alt="Annual Income Goal" class="img-fluid income-goal-image">
-                {% elif gender == 'Female' %}
-                    <img src="{% static 'myapp/images/quiz/female_5.webp' %}" alt="Annual Income Goal" class="img-fluid income-goal-image">
-                {% endif %}
-            </div>
+        </form>
+        <div class="d-flex justify-content-center mt-4">
+            {% if gender == 'Male' %}
+                <img src="{% static 'myapp/images/quiz/5.webp' %}" alt="Annual Income Goal" class="img-fluid income-goal-image">
+            {% elif gender == 'Female' %}
+                <img src="{% static 'myapp/images/quiz/female_5.webp' %}" alt="Annual Income Goal" class="img-fluid income-goal-image">
+            {% endif %}
         </div>
     </div>
 </div>
@@ -48,38 +44,45 @@
     }
 
     .btn-income {
-        width: 70%; /* Smaller width for buttons */
-        padding: 12px 18px; /* Adjust padding for more height */
-        border-radius: 10px; /* Adjust border-radius for rounded corners */
-        background-color: #f4f4f4; /* Light grey background color */
-        font-size: 1.1rem; /* Adjust font size */
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        text-align: left;
+        padding: 15px 20px;
+        border-radius: 10px;
+        background-color: #f4f4f4;
+        font-size: 1.1rem;
         font-weight: bold;
-        border: 1px solid #dcdcdc; /* Add a subtle border */
-        transition: background-color 0.3s ease, transform 0.3s ease;
-        text-align: left; /* Align text to the left */
+        border: 1px solid #dcdcdc;
+        transition: background-color 0.3s ease;
     }
 
     .btn-income:hover {
         background-color: #e2e2e2;
-        transform: translateY(-2px);
+    }
+
+    .btn-income span {
+        display: block;
+        font-weight: bold;
     }
 
     .income-goal-image {
         max-width: 60%;
         height: auto;
         border-radius: 8px;
-        margin-top: -50px; /* Use negative margin to move image up */
+        margin-top: 20px;
     }
 
-    @media (min-width: 768px) {
-        .income-goal-image {
-            max-width: 50%;
-            margin-top: -10px; /* Adjust margin for larger screens */
+    @media (max-width: 767px) {
+        .btn-income {
+            max-width: 100%;
+            text-align: center;
         }
 
-        .row {
-            align-items: flex-start;
-            justify-content: space-between;
+        .income-goal-image {
+            max-width: 100%;
+            margin-top: 10px;
         }
     }
 </style>

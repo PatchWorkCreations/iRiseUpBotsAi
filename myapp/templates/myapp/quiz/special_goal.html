@@ -10,13 +10,13 @@
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="special_goal" value="Buy a house" class="btn btn-light btn-goal d-flex align-items-center">
                     <span class="emoji">🏠</span>
                     <span>Buy a house</span>
                 </button>
             </div>
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="special_goal" value="A perfect wedding" class="btn btn-light btn-goal d-flex align-items-center">
                     <span class="emoji">💍</span>
                     <span>A perfect wedding</span>
@@ -24,13 +24,13 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="special_goal" value="Vacation" class="btn btn-light btn-goal d-flex align-items-center">
                     <span class="emoji">✈️</span>
                     <span>Vacation</span>
                 </button>
             </div>
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="special_goal" value="Buy a car" class="btn btn-light btn-goal d-flex align-items-center">
                     <span class="emoji">🚗</span>
                     <span>Buy a car</span>
@@ -38,13 +38,13 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="special_goal" value="Worry-free retirement" class="btn btn-light btn-goal d-flex align-items-center">
                     <span class="emoji">🏖️</span>
                     <span>Worry-free retirement</span>
                 </button>
             </div>
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="special_goal" value="Other" class="btn btn-light btn-goal d-flex align-items-center">
                     <span class="emoji">🎯</span>
                     <span>Other</span>
@@ -56,25 +56,31 @@
 
 <style>
     .emoji {
-        font-size: 50px; /* Adjust size as needed */
-        display: block;
-        margin-bottom: 10px;
+        font-size: 50px;
+        margin-right: 15px; /* Space between emoji and text */
     }
+
     .btn-goal {
         display: flex;
-        flex-direction: column; /* Stacks emoji and text vertically */
+        flex-direction: row; /* Aligns emoji and text horizontally */
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
-        text-align: center;
-        padding: 20px;
+        text-align: left;
+        padding: 15px 20px; /* Adjust padding for consistency */
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
-        font-size: 24px; /* Larger text size */
+        font-size: 20px;
+        transition: background-color 0.3s ease;
     }
+
+    .btn-goal:hover {
+        background-color: #e2e6ea; /* Hover effect */
+    }
+
     .btn-goal span {
-        display: block;
+        font-weight: normal;
     }
 </style>
 {% endblock %}

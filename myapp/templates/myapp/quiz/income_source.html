@@ -4,56 +4,61 @@
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
-<div class="container text-center">
-    <h2>What is your current income source?</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-8 mb-3">
-                <button type="submit" name="income_source" value="Full-time job" class="btn btn-light btn-income">
-                    <span class="emoji">💼</span>
-                    <span>Full-time job</span>
-                </button>
+    <div class="container text-center">
+        <h2>What is your current income source?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="income_source" value="Full-time job" class="btn btn-light btn-income">
+                        <span class="emoji">💼</span>
+                        <span>Full-time job</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="income_source" value="Passive income" class="btn btn-light btn-income">
+                        <span class="emoji">📝</span>
+                        <span>Passive income</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="income_source" value="Other" class="btn btn-light btn-income">
+                        <span class="emoji">🤔</span>
+                        <span>Other</span>
+                    </button>
+                </div>
             </div>
-            <div class="col-12 col-md-8 mb-3">
-                <button type="submit" name="income_source" value="Passive income" class="btn btn-light btn-income">
-                    <span class="emoji">📝</span>
-                    <span>Passive income</span>
-                </button>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-8 mb-3">
-                <button type="submit" name="income_source" value="Other" class="btn btn-light btn-income">
-                    <span class="emoji">🤔</span>
-                    <span>Other</span>
-                </button>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 <style>
     .emoji {
-        font-size: 50px; /* Further increased size */
-        display: block;
-        margin-bottom: 10px;
+        font-size: 50px;
+        margin-right: 15px; /* Space between emoji and text */
     }
+
     .btn-income {
         display: flex;
-        flex-direction: column; /* Stacks emoji and text vertically */
+        flex-direction: row; /* Aligns emoji and text horizontally */
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
-        text-align: center;
-        padding: 20px;
+        text-align: left;
+        padding: 15px 20px; /* Adjust padding for consistency */
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
-        font-size: 24px; /* Larger text size */
+        font-size: 20px;
+        transition: background-color 0.3s ease;
     }
+
+    .btn-income:hover {
+        background-color: #e2e6ea;
+    }
+
     .btn-income span {
-        display: block;
+        font-weight: normal;
     }
 </style>
 {% endblock %}

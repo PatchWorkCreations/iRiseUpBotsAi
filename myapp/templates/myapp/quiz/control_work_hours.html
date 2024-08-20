@@ -4,56 +4,61 @@
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
-<div class="container text-center">
-    <h2>Do you wish you had more control over your work hours and location?</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="control_work_hours" value="Yes" class="btn btn-light btn-control d-flex align-items-center">
-                    <span class="emoji">🕒</span>
-                    <span>Yes</span>
-                </button>
+    <div class="container text-center">
+        <h2>Do you wish you had more control over your work hours and location?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="control_work_hours" value="Yes" class="btn btn-light btn-control">
+                        <span class="emoji">🕒</span>
+                        <span>Yes</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="control_work_hours" value="No" class="btn btn-light btn-control">
+                        <span class="emoji">🚫</span>
+                        <span>No</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="control_work_hours" value="Hm, not sure" class="btn btn-light btn-control">
+                        <span class="emoji">🤔</span>
+                        <span>Hm, not sure</span>
+                    </button>
+                </div>
             </div>
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="control_work_hours" value="No" class="btn btn-light btn-control d-flex align-items-center">
-                    <span class="emoji">🚫</span>
-                    <span>No</span>
-                </button>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="control_work_hours" value="Hm, not sure" class="btn btn-light btn-control d-flex align-items-center">
-                    <span class="emoji">🤔</span>
-                    <span>Hm, not sure</span>
-                </button>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 <style>
     .emoji {
-        font-size: 50px; /* Adjust size as needed */
-        display: block;
-        margin-bottom: 10px;
+        font-size: 50px;
+        margin-right: 15px; /* Space between emoji and text */
     }
+
     .btn-control {
         display: flex;
-        flex-direction: column; /* Stacks emoji and text vertically */
+        flex-direction: row; /* Aligns emoji and text horizontally */
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
-        text-align: center;
-        padding: 20px;
+        text-align: left;
+        padding: 15px 20px; /* Adjust padding for consistency */
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
-        font-size: 24px; /* Larger text size */
+        font-size: 20px;
+        transition: background-color 0.3s ease;
     }
+
+    .btn-control:hover {
+        background-color: #e2e6ea;
+    }
+
     .btn-control span {
-        display: block;
+        font-weight: normal;
     }
 </style>
 {% endblock %}

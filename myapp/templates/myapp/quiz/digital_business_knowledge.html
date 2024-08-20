@@ -9,21 +9,19 @@
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="digital_business_knowledge" value="I'm well-informed about it" class="btn btn-light btn-knowledge">
                     <span class="emoji">📘</span>
                     <span>I'm well-informed about it</span>
                 </button>
             </div>
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="digital_business_knowledge" value="I'm familiar with some aspects" class="btn btn-light btn-knowledge">
                     <span class="emoji">🔍</span>
                     <span>I'm familiar with some aspects</span>
                 </button>
             </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="digital_business_knowledge" value="My knowledge is limited" class="btn btn-light btn-knowledge">
                     <span class="emoji">📄</span>
                     <span>My knowledge is limited</span>
@@ -35,26 +33,31 @@
 
 <style>
     .emoji {
-        font-size: 50px;
-        display: block;
-        margin-bottom: 10px;
+        font-size: 50px; /* Larger emoji size */
+        margin-right: 15px; /* Space between emoji and text */
     }
+
     .btn-knowledge {
         display: flex;
-        flex-direction: column;
+        flex-direction: row; /* Aligns emoji and text horizontally */
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
-        text-align: center;
-        margin-bottom: 15px;
-        padding: 20px;
+        text-align: left;
+        padding: 15px 20px; /* Adjust padding */
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
-        font-size: 24px;
+        font-size: 20px;
+        transition: background-color 0.3s ease;
     }
+
+    .btn-knowledge:hover {
+        background-color: #e2e6ea; /* Hover effect */
+    }
+
     .btn-knowledge span {
-        display: block;
+        font-weight: normal;
     }
 </style>
 {% endblock %}

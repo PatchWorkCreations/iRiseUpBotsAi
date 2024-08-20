@@ -4,56 +4,61 @@
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
-<div class="container text-center">
-    <h2>How would you describe your financial situation?</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="financial_situation" value="I'm comfortable" class="btn btn-light btn-situation d-flex align-items-center">
-                    <span class="emoji">😌</span>
-                    <span>I'm comfortable</span>
-                </button>
+    <div class="container text-center">
+        <h2>How would you describe your financial situation?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="financial_situation" value="I'm comfortable" class="btn btn-light btn-situation">
+                        <span class="emoji">😌</span>
+                        <span>I'm comfortable</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="financial_situation" value="I would like to have more stability" class="btn btn-light btn-situation">
+                        <span class="emoji">🔧</span>
+                        <span>I would like to have more stability</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="financial_situation" value="I'm struggling to meet my financial goals" class="btn btn-light btn-situation">
+                        <span class="emoji">😟</span>
+                        <span>I'm struggling to meet my financial goals</span>
+                    </button>
+                </div>
             </div>
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="financial_situation" value="I would like to have more stability" class="btn btn-light btn-situation d-flex align-items-center">
-                    <span class="emoji">🔧</span>
-                    <span>I would like to have more stability</span>
-                </button>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="financial_situation" value="I'm struggling to meet my financial goals" class="btn btn-light btn-situation d-flex align-items-center">
-                    <span class="emoji">😟</span>
-                    <span>I'm struggling to meet my financial goals</span>
-                </button>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 <style>
     .emoji {
         font-size: 50px; /* Adjust size as needed */
-        display: block;
-        margin-bottom: 10px;
+        margin-right: 15px; /* Space between emoji and text */
     }
+
     .btn-situation {
         display: flex;
-        flex-direction: column; /* Stacks emoji and text vertically */
+        flex-direction: row; /* Aligns emoji and text horizontally */
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
-        text-align: center;
-        padding: 20px;
+        text-align: left;
+        padding: 15px 20px; /* Adjust padding for consistency */
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
-        font-size: 24px; /* Larger text size */
+        font-size: 20px;
+        transition: background-color 0.3s ease;
     }
+
+    .btn-situation:hover {
+        background-color: #e2e6ea;
+    }
+
     .btn-situation span {
-        display: block;
+        font-weight: normal;
     }
 </style>
 {% endblock %}

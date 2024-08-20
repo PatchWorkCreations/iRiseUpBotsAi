@@ -9,22 +9,20 @@
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="side_hustle_experience" value="Yes, occasional side gigs" class="btn btn-light btn-hustle">
+            <div class="col-12 col-md-10 mb-3">
+                <button type="submit" name="side_hustle_experience" value="Yes, occasional side gigs" class="btn btn-light btn-hustle d-flex align-items-center">
                     <span class="emoji">💼</span>
                     <span>Yes, occasional side gigs</span>
                 </button>
             </div>
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="side_hustle_experience" value="No, just a regular job" class="btn btn-light btn-hustle">
+            <div class="col-12 col-md-10 mb-3">
+                <button type="submit" name="side_hustle_experience" value="No, just a regular job" class="btn btn-light btn-hustle d-flex align-items-center">
                     <span class="emoji">🛠️</span>
                     <span>No, just a regular job</span>
                 </button>
             </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="side_hustle_experience" value="Freelanced for extra income" class="btn btn-light btn-hustle">
+            <div class="col-12 col-md-10 mb-3">
+                <button type="submit" name="side_hustle_experience" value="Freelanced for extra income" class="btn btn-light btn-hustle d-flex align-items-center">
                     <span class="emoji">🧑‍💻</span>
                     <span>Freelanced for extra income</span>
                 </button>
@@ -36,25 +34,30 @@
 <style>
     .emoji {
         font-size: 50px;
-        display: block;
-        margin-bottom: 10px;
+        margin-right: 15px; /* Space between emoji and text */
     }
+
     .btn-hustle {
         display: flex;
-        flex-direction: column;
+        flex-direction: row; /* Aligns emoji and text horizontally */
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
-        text-align: center;
-        margin-bottom: 15px;
-        padding: 20px;
+        text-align: left;
+        padding: 15px 20px; /* Adjust padding */
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
-        font-size: 24px;
+        font-size: 20px;
+        transition: background-color 0.3s ease;
     }
+
+    .btn-hustle:hover {
+        background-color: #e2e6ea; /* Hover effect */
+    }
+
     .btn-hustle span {
-        display: block;
+        font-weight: normal;
     }
 </style>
 {% endblock %}

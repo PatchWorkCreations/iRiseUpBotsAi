@@ -9,13 +9,13 @@
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="ai_mastery_readiness" value="All set - I am fully prepared" class="btn btn-light btn-readiness d-flex align-items-center">
                     <span class="emoji">🚀</span>
                     <span>All set - I am fully prepared</span>
                 </button>
             </div>
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="ai_mastery_readiness" value="Ready - I feel confident" class="btn btn-light btn-readiness d-flex align-items-center">
                     <span class="emoji">👍</span>
                     <span>Ready - I feel confident</span>
@@ -23,13 +23,13 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="ai_mastery_readiness" value="Somewhat Ready - I have some knowledge" class="btn btn-light btn-readiness d-flex align-items-center">
                     <span class="emoji">🤔</span>
                     <span>Somewhat Ready - I have some knowledge</span>
                 </button>
             </div>
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-10 mb-3">
                 <button type="submit" name="ai_mastery_readiness" value="Not Ready - I need more preparation" class="btn btn-light btn-readiness d-flex align-items-center">
                     <span class="emoji">⚠️</span>
                     <span>Not Ready - I need more preparation</span>
@@ -42,24 +42,30 @@
 <style>
     .emoji {
         font-size: 50px; /* Size of the emojis */
-        display: block;
-        margin-bottom: 10px;
+        margin-right: 15px; /* Space between emoji and text */
     }
+
     .btn-readiness {
         display: flex;
-        flex-direction: column; /* Stacks emoji and text vertically */
+        flex-direction: row; /* Aligns emoji and text horizontally */
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
-        text-align: center;
-        padding: 20px;
+        text-align: left;
+        padding: 15px 20px; /* Adjust padding for consistency */
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
-        font-size: 24px; /* Larger text size */
+        font-size: 20px;
+        transition: background-color 0.3s ease;
     }
+
+    .btn-readiness:hover {
+        background-color: #e2e6ea; /* Add a hover effect */
+    }
+
     .btn-readiness span {
-        display: block;
+        font-weight: normal;
     }
 </style>
 {% endblock %}

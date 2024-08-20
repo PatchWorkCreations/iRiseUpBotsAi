@@ -4,63 +4,70 @@
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
-<div class="container text-center">
-    <h2>Rate your knowledge in content writing</h2>
-    <p>According to Upwork, a freelance content writer makes around $42,000 annually.</p>
-    <form method="post">
-        {% csrf_token %}
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="content_writing_knowledge" value="Expert - I have extensive knowledge" class="btn btn-light btn-knowledge d-flex align-items-center">
-                    <span class="emoji">💡</span>
-                    <span>Expert - I have extensive knowledge</span>
-                </button>
+    <div class="container text-center">
+        <h2>Rate your knowledge in content writing</h2>
+        <p>According to Upwork, a freelance content writer makes around $42,000 annually.</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="content_writing_knowledge" value="Expert - I have extensive knowledge" class="btn btn-light btn-knowledge d-flex align-items-center">
+                        <span class="emoji">💡</span>
+                        <span>Expert - I have extensive knowledge</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="content_writing_knowledge" value="Proficient - I am skilled" class="btn btn-light btn-knowledge d-flex align-items-center">
+                        <span class="emoji">📝</span>
+                        <span>Proficient - I am skilled</span>
+                    </button>
+                </div>
             </div>
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="content_writing_knowledge" value="Proficient - I am skilled" class="btn btn-light btn-knowledge d-flex align-items-center">
-                    <span class="emoji">📝</span>
-                    <span>Proficient - I am skilled</span>
-                </button>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="content_writing_knowledge" value="Intermediate - I have some knowledge" class="btn btn-light btn-knowledge d-flex align-items-center">
+                        <span class="emoji">✏️</span>
+                        <span>Intermediate - I have some knowledge</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-10 mb-3">
+                    <button type="submit" name="content_writing_knowledge" value="Novice - I have limited knowledge" class="btn btn-light btn-knowledge d-flex align-items-center">
+                        <span class="emoji">📚</span>
+                        <span>Novice - I have limited knowledge</span>
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="content_writing_knowledge" value="Intermediate - I have some knowledge" class="btn btn-light btn-knowledge d-flex align-items-center">
-                    <span class="emoji">✏️</span>
-                    <span>Intermediate - I have some knowledge</span>
-                </button>
-            </div>
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="content_writing_knowledge" value="Novice - I have limited knowledge" class="btn btn-light btn-knowledge d-flex align-items-center">
-                    <span class="emoji">📚</span>
-                    <span>Novice - I have limited knowledge</span>
-                </button>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 <style>
     .emoji {
-        font-size: 50px; /* Size of the emojis */
-        display: block;
-        margin-bottom: 10px;
+        font-size: 50px;
+        margin-right: 15px; /* Space between emoji and text */
     }
+
     .btn-knowledge {
         display: flex;
-        flex-direction: column; /* Stacks emoji and text vertically */
+        flex-direction: row; /* Aligns emoji and text horizontally */
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
-        text-align: center;
-        padding: 20px;
+        text-align: left;
+        padding: 15px 20px; /* Adjust padding */
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
-        font-size: 24px; /* Larger text size */
+        font-size: 20px;
+        transition: background-color 0.3s ease;
     }
+
+    .btn-knowledge:hover {
+        background-color: #e2e6ea; /* Hover effect */
+    }
+
     .btn-knowledge span {
-        display: block;
+        font-weight: normal;
     }
 </style>
 {% endblock %}
