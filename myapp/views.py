@@ -406,10 +406,17 @@ def after_age_page(request):
 
 
 def main_goal(request):
+    # Ensure that gender is stored in the session
+    gender = request.session.get('gender')
+    
     if request.method == 'POST':
+        # Save the main goal to the session
         request.session['main_goal'] = request.POST.get('main_goal')
         return redirect('income_source')
-    return render(request, 'myapp/quiz/main_goal.html')
+    
+    # Pass the gender to the template
+    return render(request, 'myapp/quiz/main_goal.html', {'gender': gender})
+
 
 def income_source(request):
     if request.method == 'POST':
@@ -452,26 +459,37 @@ def financial_situation(request):
 
 
 def comfortable_financial(request):
+    gender = request.session.get('gender')  # Retrieve gender from session
     if request.method == 'POST':
         return redirect('annual_income_goal')
-    return render(request, 'myapp/quiz/comfortable_financial.html')
+    return render(request, 'myapp/quiz/comfortable_financial.html', {'gender': gender})
 
 def stability_financial(request):
+    gender = request.session.get('gender')  # Retrieve gender from session
     if request.method == 'POST':
         return redirect('annual_income_goal')
-    return render(request, 'myapp/quiz/stability_financial.html')
+    return render(request, 'myapp/quiz/stability_financial.html', {'gender': gender})
 
 def struggling_financial(request):
+    gender = request.session.get('gender')  # Retrieve gender from session
     if request.method == 'POST':
         return redirect('annual_income_goal')
-    return render(request, 'myapp/quiz/struggling_financial.html')
+    return render(request, 'myapp/quiz/struggling_financial.html', {'gender': gender})
 
 
 def annual_income_goal(request):
+    # Retrieve gender from the session, assuming it was set earlier in the quiz flow
+    gender = request.session.get('gender')
+
     if request.method == 'POST':
+        # Save the user's selected annual income goal to the session
         request.session['annual_income_goal'] = request.POST.get('annual_income_goal')
+
+        # Redirect to the next step in the quiz flow
         return redirect('control_work_hours')
-    return render(request, 'myapp/quiz/annual_income_goal.html')
+
+    # Render the template with the gender context to conditionally show the correct image
+    return render(request, 'myapp/quiz/annual_income_goal.html', {'gender': gender})
 
 def control_work_hours(request):
     if request.method == 'POST':
@@ -479,11 +497,19 @@ def control_work_hours(request):
         return redirect('routine_work')
     return render(request, 'myapp/quiz/control_work_hours.html')
 
+from django.shortcuts import render, redirect
+
 def routine_work(request):
+    gender = request.session.get('gender')
     if request.method == 'POST':
+        # Capture the user's response and store it in the session
         request.session['routine_work'] = request.POST.get('routine_work')
+        
+        # Redirect to the next step in the quiz, which is 'time_saved_use'
         return redirect('time_saved_use')
-    return render(request, 'myapp/quiz/routine_work.html')
+    
+    # If it's a GET request, render the routine work quiz page
+    return render(request, 'myapp/quiz/routine_work.html', {'gender': gender})
 
 def time_saved_use(request):
     if request.method == 'POST':
@@ -514,10 +540,14 @@ def job_interest_match(request):
     return render(request, 'myapp/quiz/job_interest_match.html')
 
 def absolutely_interest(request):
+    # Assuming 'gender' is stored in the session from a previous step
+    gender = request.session.get('gender', 'Male')  # Default to 'Male' if not set
+
     if request.method == 'POST':
         return redirect('digital_business_knowledge')  # Replace with the next logical step in your flow
-    return render(request, 'myapp/quiz/absolutely_interest.html')
 
+    # Pass the gender to the template
+    return render(request, 'myapp/quiz/absolutely_interest.html', {'gender': gender})
 
 def somewhat_interest(request):
     if request.method == 'POST':
@@ -606,22 +636,22 @@ def ai_mastery_readiness(request):
 def all_set(request):
     if request.method == 'POST':
         return redirect('focus_ability')
-    return render(request, 'myapp/quiz/all_set.html')
+    return render(request, 'myapp/quiz/all_set.html', {'gender': request.session.get('gender')})
 
 def ready(request):
     if request.method == 'POST':
         return redirect('focus_ability')
-    return render(request, 'myapp/quiz/ready.html')
+    return render(request, 'myapp/quiz/ready.html', {'gender': request.session.get('gender')})
 
 def somewhat_ready(request):
     if request.method == 'POST':
         return redirect('focus_ability')
-    return render(request, 'myapp/quiz/somewhat_ready.html')
+    return render(request, 'myapp/quiz/somewhat_ready.html', {'gender': request.session.get('gender')})
 
 def not_ready(request):
     if request.method == 'POST':
         return redirect('focus_ability')
-    return render(request, 'myapp/quiz/not_ready.html')
+    return render(request, 'myapp/quiz/not_ready.html', {'gender': request.session.get('gender')})
 
 
 def focus_ability(request):
@@ -632,15 +662,16 @@ def focus_ability(request):
 
 def summary(request):
     gender = request.session.get('gender', 'male').lower()
-    age_range = request.session.get('age_range', '35-44')
-    age_group = '35' if '35' in age_range else '45'
-
-    # Determine the image path
-    image_path = f"myapp/images/quiz/{gender}{age_group}.png"
+    
+    # Determine the appropriate image path based on gender
+    if gender == 'male':
+        image_path = "myapp/images/quiz/male_be_my_own_boss.webp"
+    else:  # Assuming the only other option is female
+        image_path = "myapp/images/quiz/female_be_my_own_boss.webp"
 
     context = {
         'gender': gender,
-        'age_range': age_range,
+        'age_range': request.session.get('age_range', '35-44'),
         'main_goal': request.session.get('main_goal', ''),
         'income_source': request.session.get('income_source', ''),
         'work_schedule': request.session.get('work_schedule', ''),
@@ -664,6 +695,12 @@ def summary(request):
         'special_goal': request.session.get('special_goal', ''),
         'time_to_achieve_goal': request.session.get('time_to_achieve_goal', ''),
         'profile_image': image_path,
+
+        # Assuming these are derived or stored session values
+        'motivation': request.session.get('motivation', 'High'),
+        'potential': request.session.get('potential', 'High'),
+        'focus': request.session.get('focus', 'Limited'),
+        'ai_knowledge': request.session.get('ai_knowledge', 'Low'),
     }
     
     if request.method == 'POST':

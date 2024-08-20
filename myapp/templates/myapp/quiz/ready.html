@@ -6,7 +6,11 @@
 <div class="mobile-container">
 <div class="container text-center">
     <h2>Boost Your AI Confidence!</h2>
-    <img src="{% static 'myapp/images/ready.png' %}" alt="Boost Your AI Confidence" class="img-fluid mb-3">
+    {% if gender == 'Male' %}
+        <img src="{% static 'myapp/images/quiz/2.webp' %}" alt="Boost Your AI Confidence" class="img-fluid mb-3 confidence-image">
+    {% elif gender == 'Female' %}
+        <img src="{% static 'myapp/images/quiz/female_2.webp' %}" alt="Boost Your AI Confidence" class="img-fluid mb-3 confidence-image">
+    {% endif %}
     <p>You're confident and ready—our learning challenge will enhance your knowledge and skills. Join the 70% of professionals who see a boost in their career with advanced AI training.</p>
     <form method="post">
         {% csrf_token %}
@@ -14,4 +18,11 @@
     </form>
 </div>
 </div>
+
+<style>
+    .confidence-image {
+        max-width: 60%;
+        margin: 20px auto;
+    }
+</style>
 {% endblock %}

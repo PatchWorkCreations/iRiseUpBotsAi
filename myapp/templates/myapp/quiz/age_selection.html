@@ -9,28 +9,28 @@
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
-            <div class="col-6 col-md-4">
+            <div class="col-6 col-md-6">
                 {% if gender == 'Male' %}
                     <button type="submit" name="age_range" value="35-44" class="btn btn-light btn-age">
-                        <img src="{% static 'myapp/images/quiz/Male35.png' %}" alt="Age 35-44" class="img-fluid age-image" />
+                        <img src="{% static 'myapp/images/quiz/male_age_35-44.webp' %}" alt="Age 35-44" class="img-fluid age-image" />
                         <p>Age: 35-44</p>
                     </button>
                 {% elif gender == 'Female' %}
                     <button type="submit" name="age_range" value="35-44" class="btn btn-light btn-age">
-                        <img src="{% static 'myapp/images/quiz/Female35.png' %}" alt="Age 35-44" class="img-fluid age-image" />
+                        <img src="{% static 'myapp/images/quiz/female_age 35-44.webp' %}" alt="Age 35-44" class="img-fluid age-image" />
                         <p>Age: 35-44</p>
                     </button>
                 {% endif %}
             </div>
-            <div class="col-6 col-md-4">
+            <div class="col-6 col-md-6">
                 {% if gender == 'Male' %}
                     <button type="submit" name="age_range" value="45+" class="btn btn-light btn-age">
-                        <img src="{% static 'myapp/images/quiz/Male55.png' %}" alt="Age 45+" class="img-fluid age-image" />
+                        <img src="{% static 'myapp/images/quiz/male_age_45+.webp' %}" alt="Age 45+" class="img-fluid age-image" />
                         <p>Age: 45+</p>
                     </button>
                 {% elif gender == 'Female' %}
                     <button type="submit" name="age_range" value="45+" class="btn btn-light btn-age">
-                        <img src="{% static 'myapp/images/quiz/Female45.png' %}" alt="Age 45+" class="img-fluid age-image" />
+                        <img src="{% static 'myapp/images/quiz/female_45+.webp' %}" alt="Age 45+" class="img-fluid age-image" />
                         <p>Age: 45+</p>
                     </button>
                 {% endif %}

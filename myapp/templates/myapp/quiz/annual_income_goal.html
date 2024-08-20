@@ -4,56 +4,83 @@
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
-<div class="container text-center">
-    <h2>What annual income level do you want to achieve?</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="annual_income_goal" value="30,000 – $50,000" class="btn btn-light btn-income d-flex align-items-center">
-                    <span class="emoji">💵</span>
-                    <span>30,000 – $50,000</span>
-                </button>
+    <div class="container text-center">
+        <h2>What annual income level do you want to achieve?</h2>
+        <div class="row justify-content-between align-items-left">
+            <div class="col-12 col-md-6 d-flex flex-column align-items-start">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <button type="submit" name="annual_income_goal" value="30,000 – $50,000" class="btn btn-light btn-income">
+                                <span>30,000 – $50,000</span>
+                            </button>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <button type="submit" name="annual_income_goal" value="$50,000 – $100,000" class="btn btn-light btn-income">
+                                <span>$50,000 – $100,000</span>
+                            </button>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <button type="submit" name="annual_income_goal" value="More than $100,000" class="btn btn-light btn-income">
+                                <span>More than $100,000</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="annual_income_goal" value="$50,000 – $100,000" class="btn btn-light btn-income d-flex align-items-center">
-                    <span class="emoji">💰</span>
-                    <span>$50,000 – $100,000</span>
-                </button>
+            <div class="col-12 col-md-6 d-flex justify-content-end position-relative">
+                {% if gender == 'Male' %}
+                    <img src="{% static 'myapp/images/quiz/5.webp' %}" alt="Annual Income Goal" class="img-fluid income-goal-image">
+                {% elif gender == 'Female' %}
+                    <img src="{% static 'myapp/images/quiz/female_5.webp' %}" alt="Annual Income Goal" class="img-fluid income-goal-image">
+                {% endif %}
             </div>
         </div>
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
-                <button type="submit" name="annual_income_goal" value="More than $100,000" class="btn btn-light btn-income d-flex align-items-center">
-                    <span class="emoji">🏦</span>
-                    <span>More than $100,000</span>
-                </button>
-            </div>
-        </div>
-    </form>
+    </div>
 </div>
 
 <style>
-    .emoji {
-        font-size: 50px; /* Adjust size as needed */
-        display: block;
-        margin-bottom: 10px;
+    h2 {
+        font-size: 1.75rem;
+        font-weight: bold;
+        margin-bottom: 30px;
     }
+
     .btn-income {
-        display: flex;
-        flex-direction: column; /* Stacks emoji and text vertically */
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        text-align: center;
-        padding: 20px;
-        border: none;
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        font-size: 24px; /* Larger text size */
+        width: 70%; /* Smaller width for buttons */
+        padding: 12px 18px; /* Adjust padding for more height */
+        border-radius: 10px; /* Adjust border-radius for rounded corners */
+        background-color: #f4f4f4; /* Light grey background color */
+        font-size: 1.1rem; /* Adjust font size */
+        font-weight: bold;
+        border: 1px solid #dcdcdc; /* Add a subtle border */
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        text-align: left; /* Align text to the left */
     }
-    .btn-income span {
-        display: block;
+
+    .btn-income:hover {
+        background-color: #e2e2e2;
+        transform: translateY(-2px);
+    }
+
+    .income-goal-image {
+        max-width: 60%;
+        height: auto;
+        border-radius: 8px;
+        margin-top: -50px; /* Use negative margin to move image up */
+    }
+
+    @media (min-width: 768px) {
+        .income-goal-image {
+            max-width: 50%;
+            margin-top: -10px; /* Adjust margin for larger screens */
+        }
+
+        .row {
+            align-items: flex-start;
+            justify-content: space-between;
+        }
     }
 </style>
 {% endblock %}

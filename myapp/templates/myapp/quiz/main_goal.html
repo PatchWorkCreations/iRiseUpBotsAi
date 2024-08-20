@@ -11,13 +11,21 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="main_goal" value="Grow wealth" class="btn btn-light btn-goal">
-                    <span class="emoji">💰</span>
+                    {% if gender == 'Male' %}
+                        <img src="{% static 'myapp/images/quiz/male_grow_wealth.webp' %}" alt="Grow Wealth" class="img-fluid goal-image" />
+                    {% elif gender == 'Female' %}
+                        <img src="{% static 'myapp/images/quiz/female_grow_wealth.webp' %}" alt="Grow Wealth" class="img-fluid goal-image" />
+                    {% endif %}
                     <span>Grow wealth</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="main_goal" value="Be my own boss" class="btn btn-light btn-goal">
-                    <span class="emoji">🧑‍💼</span>
+                    {% if gender == 'Male' %}
+                        <img src="{% static 'myapp/images/quiz/male_be_my_own_boss.webp' %}" alt="Be My Own Boss" class="img-fluid goal-image" />
+                    {% elif gender == 'Female' %}
+                        <img src="{% static 'myapp/images/quiz/female_be_my_own_boss.webp' %}" alt="Be My Own Boss" class="img-fluid goal-image" />
+                    {% endif %}
                     <span>Be my own boss</span>
                 </button>
             </div>
@@ -25,13 +33,21 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="main_goal" value="Financial freedom" class="btn btn-light btn-goal">
-                    <span class="emoji">💸</span>
+                    {% if gender == 'Male' %}
+                        <img src="{% static 'myapp/images/quiz/male_financial_freedom.webp' %}" alt="Financial Freedom" class="img-fluid goal-image" />
+                    {% elif gender == 'Female' %}
+                        <img src="{% static 'myapp/images/quiz/female_financial_freedom.webp' %}" alt="Financial Freedom" class="img-fluid goal-image" />
+                    {% endif %}
                     <span>Financial freedom</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="main_goal" value="Travel the world" class="btn btn-light btn-goal">
-                    <span class="emoji">🌍</span>
+                    {% if gender == 'Male' %}
+                        <img src="{% static 'myapp/images/quiz/male_travel_the_world.webp' %}" alt="Travel the World" class="img-fluid goal-image" />
+                    {% elif gender == 'Female' %}
+                        <img src="{% static 'myapp/images/quiz/female_travel_the_world.webp' %}" alt="Travel the World" class="img-fluid goal-image" />
+                    {% endif %}
                     <span>Travel the world</span>
                 </button>
             </div>
@@ -39,13 +55,21 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="main_goal" value="Professional growth" class="btn btn-light btn-goal">
-                    <span class="emoji">📈</span>
+                    {% if gender == 'Male' %}
+                        <img src="{% static 'myapp/images/quiz/male_professional_growth.webp' %}" alt="Professional Growth" class="img-fluid goal-image" />
+                    {% elif gender == 'Female' %}
+                        <img src="{% static 'myapp/images/quiz/female_professional_growth.webp' %}" alt="Professional Growth" class="img-fluid goal-image" />
+                    {% endif %}
                     <span>Professional growth</span>
                 </button>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <button type="submit" name="main_goal" value="Work-life balance" class="btn btn-light btn-goal">
-                    <span class="emoji">⚖️</span>
+                    {% if gender == 'Male' %}
+                        <img src="{% static 'myapp/images/quiz/male_work-life_balance.webp' %}" alt="Work-Life Balance" class="img-fluid goal-image" />
+                    {% elif gender == 'Female' %}
+                        <img src="{% static 'myapp/images/quiz/female_work_life_balance.webp' %}" alt="Work-Life Balance" class="img-fluid goal-image" />
+                    {% endif %}
                     <span>Work-life balance</span>
                 </button>
             </div>
@@ -53,29 +77,34 @@
     </form>
 </div>
 
-
-
 <style>
-    .emoji {
-        font-size: 50px; /* Adjust size as needed */
-        display: block;
-        margin-bottom: 10px;
+    .goal-image {
+        max-width: 80px; /* Adjust size to match the image size shown */
+        height: auto;
+        margin-right: 20px;
+        border-radius: 8px;
     }
     .btn-goal {
         display: flex;
-        flex-direction: column; /* Stacks emoji and text vertically */
+        flex-direction: row; /* Aligns image and text horizontally */
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
-        text-align: center;
+        text-align: left;
         padding: 20px;
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
-        font-size: 24px; /* Larger text size */
+        font-size: 24px;
+        transition: background-color 0.3s ease;
+    }
+    .btn-goal:hover {
+        background-color: #e2e6ea; /* Add a hover effect */
     }
     .btn-goal span {
         display: block;
+        flex-grow: 1;
+        font-weight: bold;
     }
 </style>
 {% endblock %}

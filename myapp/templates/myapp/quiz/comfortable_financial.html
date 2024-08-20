@@ -6,16 +6,44 @@
 <div class="mobile-container">
 <div class="container text-center">
     <h2>You're on the Right Track!</h2>
-    <img src="{% static 'myapp/images/comfortable_financial.png' %}" alt="You're on the Right Track" class="img-fluid mb-3">
+    {% if gender == 'Male' %}
+        <img src="{% static 'myapp/images/quiz/male_financial.webp' %}" alt="You're on the Right Track" class="img-fluid mb-3">
+    {% elif gender == 'Female' %}
+        <img src="{% static 'myapp/images/quiz/female_financial.webp' %}" alt="You're on the Right Track" class="img-fluid mb-3">
+    {% endif %}
     <p>Keep up the great work and discover how to make your financial journey even more rewarding. According to a Gallup poll, only 29% of Americans are financially comfortable. Join the elite group that’s pushing towards even greater success.</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary btn-follow">Continue</button>
+        <button type="submit" class="btn btn-primary">Continue</button>
     </form>
 </div>
 
 <style>
 
- 
+    .text-center h2 {
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+    }
+
+    .img-fluid {
+        max-width: 80%; /* Reduced size for better text visibility */
+        height: auto;
+        margin-bottom: 20px;
+        border-radius: 8px; /* Optional: for a more polished look */
+    }
+
+    p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 30px; /* Increased margin to ensure space between text and button */
+        padding: 0 10px;
+    }
+
+    
+    /* Ensure scrollability for small screens */
+    .container.text-center {
+        max-height: calc(100vh - 100px); /* Adjust height to leave room for padding */
+        overflow-y: auto;
+    }
 </style>
 {% endblock %}

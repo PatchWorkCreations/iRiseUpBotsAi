@@ -6,7 +6,11 @@
 <div class="mobile-container">
 <div class="container text-center">
     <h2>Stability Is Within Reach</h2>
-    <img src="{% static 'myapp/images/stability_financial.png' %}" alt="Stability Is Within Reach" class="img-fluid mb-3">
+    {% if gender == 'Male' %}
+        <img src="{% static 'myapp/images/quiz/male_financial.webp' %}" alt="Stability Is Within Reach" class="img-fluid mb-3">
+    {% elif gender == 'Female' %}
+        <img src="{% static 'myapp/images/quiz/female_financial.webp' %}" alt="Stability Is Within Reach" class="img-fluid mb-3">
+    {% endif %}
     <p>Learn the strategies to build a stable and secure financial future, starting today. Did you know that 63% of people feel anxious about their financial future? It’s time to turn that anxiety into confidence.</p>
     <form method="post">
         {% csrf_token %}
@@ -14,4 +18,32 @@
     </form>
 </div>
 </div>
+<style>
+
+    .text-center h2 {
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+    }
+
+    .img-fluid {
+        max-width: 80%; /* Reduced size for better text visibility */
+        height: auto;
+        margin-bottom: 20px;
+        border-radius: 8px; /* Optional: for a more polished look */
+    }
+
+    p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 30px; /* Increased margin to ensure space between text and button */
+        padding: 0 10px;
+    }
+
+    
+    /* Ensure scrollability for small screens */
+    .container.text-center {
+        max-height: calc(100vh - 100px); /* Adjust height to leave room for padding */
+        overflow-y: auto;
+    }
+</style>
 {% endblock %}

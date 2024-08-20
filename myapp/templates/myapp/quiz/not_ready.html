@@ -6,7 +6,11 @@
 <div class="mobile-container">
 <div class="container text-center">
     <h2>Start Your AI Journey</h2>
-    <img src="{% static 'myapp/images/not_ready.png' %}" alt="Start Your AI Journey" class="img-fluid mb-3">
+    {% if gender == 'Male' %}
+        <img src="{% static 'myapp/images/quiz/2.webp' %}" alt="Strengthen Your AI Foundation" class="img-fluid mb-3 foundation-image">
+    {% elif gender == 'Female' %}
+        <img src="{% static 'myapp/images/quiz/female_2.webp' %}" alt="Strengthen Your AI Foundation" class="img-fluid mb-3 foundation-image">
+    {% endif %}    
     <p>No worries if you're not ready yet—everyone starts somewhere. Our learning challenge will guide you step by step, helping you gain the knowledge and confidence you need to succeed with AI.</p>
     <form method="post">
         {% csrf_token %}
@@ -15,7 +19,10 @@
 </div>
 
 <style>
-
+.foundation-image {
+        max-width: 60%;
+        margin: 20px auto;
+    }
  
 </style>
 {% endblock %}

@@ -10,7 +10,7 @@
     <div class="card mb-4 profile-card">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center profile-content">
-                <h4 class="card-title mb-0">Readiness Score</h4>
+                <h5 class="card-title mb-0">Readiness Score</h5>
                 <p class="card-text mb-0"><strong>Result:</strong> Perfect</p>
             </div>
             <div class="progress-bar-container">
@@ -27,25 +27,21 @@
             </div>
             <div class="impressive-score mt-4">
                 <div class="d-flex align-items-center">
-                    
                     <p class="mb-0"><span class="emoji me-2">👍</span><strong>Impressive score to succeed in AI:</strong> A study in 2022 found that workers who use AI tools in their work have 10-20% higher hourly rates than those who don't.</p>
                 </div>
             </div>
             <div class="d-flex justify-content-center align-items-center profile-content">
                 <div class="profile-summary">
-                    <p><span class="emoji">🔥</span> <strong>Motivation:</strong> High</p>
-                    <p><span class="emoji">🚀</span> <strong>Potential:</strong> High</p>
-                    <p><span class="emoji">🎯</span> <strong>Focus:</strong> Limited</p>
-                    <p><span class="emoji">🤖</span> <strong>AI Knowledge:</strong> Low</p>
+                    <p><span class="emoji">🔥</span> <strong>Motivation:</strong> {{ motivation|default:"High" }}</p>
+                    <p><span class="emoji">🚀</span> <strong>Potential:</strong> {{ potential|default:"High" }}</p>
+                    <p><span class="emoji">🎯</span> <strong>Focus:</strong> {{ focus|default:"Limited" }}</p>
+                    <p><span class="emoji">🤖</span> <strong>AIKnowledge:</strong> {{ ai_knowledge|default:"Low" }}</p>
                 </div>
                 <img src="{% static profile_image %}" alt="Profile Picture" class="img-fluid profile-image" />
             </div>
-            
-            
         </div>
     </div>
     
-    <!-- Updated Anchor Tag for Navigation -->
     <a href="{% url 'special_goal' %}" class="btn btn-primary btn-continue">Continue</a>
 </div>
 </div>
@@ -54,7 +50,7 @@
         font-size: 20px; /* Size of the thumbs-up emoji */
     }
     .profile-container {
-        max-width: 800px;
+        max-width: 900px;
         margin: 0 auto;
         padding-bottom: 30px;
     }
@@ -149,7 +145,6 @@
         margin-top: 20px;
         margin-bottom: 35px;
     }
-
 
     .summary-list .list-group-item {
         border: none;
