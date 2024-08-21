@@ -1,0 +1,96 @@
+{% load static %}
+<style>
+    
+    .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        background-color: #f9f9f9;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .header-container .logo {
+        display: flex;
+        align-items: center;
+    }
+
+    .header-container .logo img {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+    }
+
+    .header-container .logo h1 {
+        font-size: 1.5rem;
+        color: #0d2233;
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-links a {
+        color: #0d2233;
+        text-decoration: none;
+        margin: 0 15px;
+        font-size: 1rem;
+    }
+
+    .nav-links a:hover {
+        color: #1e6dfb;
+    }
+
+    .submit-request {
+        padding: 5px 15px;
+        border: 1px solid #e0e0e0;
+        background-color: #fff;
+        border-radius: 5px;
+        font-size: 1rem;
+        color: #0d2233;
+        text-decoration: none;
+    }
+
+    .submit-request:hover {
+        background-color: #1e6dfb;
+        color: #fff;
+        border-color: #1e6dfb;
+    }
+
+    .language-selector {
+        position: relative;
+        display: inline-block;
+        font-size: 1rem;
+    }
+
+    .language-selector select {
+        padding: 5px 10px;
+        font-size: 1rem;
+        border: 1px solid #e0e0e0;
+        background-color: #fff;
+        border-radius: 5px;
+        color: #0d2233;
+    }
+
+    .language-selector select:hover {
+        border-color: #1e6dfb;
+    }
+
+</style>
+
+
+
+<div class="header-container">
+    <div class="logo">
+        <img src="{% static 'myapp/images/quiz/iriseuplogo.svg' %}" alt="iRiseUp Logo">
+        <h1>iRiseUp</h1>
+    </div>
+    <div class="nav-links">
+        <a href="{% url 'support_center' %}">Home</a>
+        <a href="{% url 'knowledge_base' %}">Knowledge Base</a>
+        <a href="#">Submit a request</a>
+    </div>
+</div>

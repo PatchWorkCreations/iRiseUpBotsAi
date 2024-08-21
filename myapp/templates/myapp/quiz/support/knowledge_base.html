@@ -1,0 +1,138 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Knowledge Base | iRiseUp.Ai{% endblock %}
+{% block content %}
+{% include 'myapp/quiz/support/header_support.html' %}
+
+<style>
+.hero {
+    background-color: #6c63ff;
+    color: white;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 30px;
+    border: none;
+    width: 50%;
+    max-width: 500px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.knowledge-base-category {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    padding: 20px;
+}
+
+.category-header {
+    border-bottom: 1px solid #f1f1f1;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.category-header h3 {
+    font-size: 1.5rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.category-header h3 i {
+    font-size: 2rem;
+}
+
+.category-body {
+    margin-top: 15px;
+}
+
+.subcategory {
+    margin-bottom: 20px;
+}
+
+.subcategory h4 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.subcategory h4 i {
+    font-size: 1.5rem;
+}
+
+.subcategory ul {
+    list-style: none;
+    padding: 0;
+    margin-left: 20px;
+}
+
+.subcategory ul li {
+    margin-bottom: 8px;
+}
+
+.subcategory ul li a {
+    color: #6c63ff;
+    text-decoration: none;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.subcategory ul li a:hover {
+    text-decoration: underline;
+}
+
+.subcategory ul li a i {
+    font-size: 1.2rem;
+}
+</style>
+
+<section class="hero">
+    <h2>Knowledge Base</h2>
+    <input type="text" class="search-bar" placeholder="Find some solutions here...">
+</section>
+
+<div class="container">
+    {% for category in categories %}
+        <div class="knowledge-base-category">
+            <div class="category-header">
+                <h3><i class="icon-subscription"></i> {{ category.title }} ({{ category.subcategories.count }})</h3>
+            </div>
+            <div class="category-body">
+                {% for subcategory in category.subcategories.all %}
+                    <div class="subcategory">
+                        <h4><i class="icon-sub"></i> {{ subcategory.title }} ({{ subcategory.articles.count }})</h4>
+                        <ul>
+                            {% for article in subcategory.articles.all %}
+                                <li><a href="{% url 'article_detail' article.id %}"><i class="icon-article"></i> {{ article.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

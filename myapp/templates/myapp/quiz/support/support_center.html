@@ -1,0 +1,312 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Center - iRiseUp.AI</title>
+    {% include 'myapp/quiz/support/header_support.html' %}
+
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Knowledge Base Section */
+        .knowledge-base-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #000;
+            text-align: center;
+        }
+
+        .view-all {
+            color: #6c63ff;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 40px;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+        }
+
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .category {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .category:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .category a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .icon-container {
+            margin-bottom: 20px;
+        }
+
+        .icon-container img {
+            max-width: 80px;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+
+        .category h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        /* Most Popular Articles Section */
+
+        .popular-articles {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .popular-articles li {
+            margin-bottom: 15px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .popular-articles a {
+            color: #6c63ff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .popular-articles a:hover {
+            text-decoration: underline;
+        }
+
+        .popular-articles i {
+            color: #6c63ff;
+            margin-right: 10px;
+        }
+
+        .modified-date {
+            display: block;
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 5px;
+            text-align: left;
+        }
+
+        .articles-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .articles-column {
+            width: 48%; /* Ensures the columns take up the full width and are centered */
+        }
+
+        .most-popular-title {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #0d2233;
+        }
+
+        .row-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .article-block {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .article-block:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .article-content {
+            padding: 20px;
+            text-align: left;
+        }
+
+        .article-time {
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .article-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .article-title a {
+            text-decoration: none;
+            color: #0d2233;
+        }
+
+        .article-title a:hover {
+            color: #1e6dfb;
+        }
+
+        .article-content p {
+            margin-bottom: 20px;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .article-more {
+            font-size: 1rem;
+            color: #1e6dfb;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .article-more i {
+            margin-left: 5px;
+        }
+
+        .article-more:hover {
+            text-decoration: underline;
+        }
+
+        /* Blog/Article Blocks */
+        .roww {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.category-description {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+    </style>
+    
+</head>
+{% load static %}
+
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-md-8">
+                <h2 class="knowledge-base-title">Knowledge Base</h2>
+                <a href="#" class="view-all">View all articles</a>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="categories d-flex justify-content-between">
+                <div class="category">
+                    <a href="#">
+                        <div class="icon-container">
+                            <img src="{% static 'myapp/images/quiz/icons/subscription.png' %}" alt="Subscription and Payments">
+                        </div>
+                        <h3>Subscription and Payments</h3>
+                    </a>
+                </div>
+                <div class="category">
+                    <a href="#">
+                        <div class="icon-container">
+                            <img src="{% static 'myapp/images/quiz/icons/onboarding.png' %}" alt="User Onboarding">
+                        </div>
+                        <h3>User Onboarding</h3>
+                    </a>
+                </div>
+                <div class="category">
+                    <a href="#">
+                        <div class="icon-container">
+                            <img src="{% static 'myapp/images/quiz/icons/tech_support.png' %}" alt="Tech Support">
+                        </div>
+                        <h3>Tech Support</h3>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="popular row-between mt-5">
+            <h4 class="most-popular-title">Most popular articles</h4>
+            <a href="#" class="view-all">View all articles</a>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="categories d-flex justify-content-between">
+                <div class="category">
+                    <a href="#">
+                        <div class="icon-container">
+                            <img src="{% static 'myapp/images/quiz/icons/subscription.png' %}" alt="Subscription and Payments">
+                        </div>
+                        <h3>How can I apply for a refund?</h3>
+                        <p class="category-description">Manage your subscriptions and payments with ease. Get help with billing, cancellations, and more.</p>
+                    </a>
+                </div>
+                <div class="category">
+                    <a href="#">
+                        <div class="icon-container">
+                            <img src="{% static 'myapp/images/quiz/icons/onboarding.png' %}" alt="User Onboarding">
+                        </div>
+                        <h3>How do I unsubscribe?</h3>
+                        <p class="category-description">Start your journey with us by learning the basics of our platform and services.</p>
+                    </a>
+                </div>
+                <div class="category">
+                    <a href="#">
+                        <div class="icon-container">
+                            <img src="{% static 'myapp/images/quiz/icons/tech_support.png' %}" alt="Tech Support">
+                        </div>
+                        <h3>Do you have an app?</h3>
+                        <p class="category-description">Get technical assistance and resolve any issues you might encounter.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+
+        
+</div>
+
+
+  
+        
+</body>
+</html>

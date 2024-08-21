@@ -23,3 +23,21 @@ class CSVUploadForm(forms.Form):
         label='Select a CSV file',
         help_text='Max. 10 megabytes'
     )
+
+
+from .models import KnowledgeBaseCategory, KnowledgeBaseSubCategory, KnowledgeBaseArticle
+
+class KnowledgeBaseCategoryForm(forms.ModelForm):
+    class Meta:
+        model = KnowledgeBaseCategory
+        fields = ['title', 'description']
+
+class KnowledgeBaseSubCategoryForm(forms.ModelForm):
+    class Meta:
+        model = KnowledgeBaseSubCategory
+        fields = ['category', 'title', 'description']
+
+class KnowledgeBaseArticleForm(forms.ModelForm):
+    class Meta:
+        model = KnowledgeBaseArticle
+        fields = ['subcategory', 'title', 'content']

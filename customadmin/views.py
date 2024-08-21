@@ -307,3 +307,172 @@ def delete_multiple_users(request):
         User.objects.filter(id__in=user_ids).delete()
         return redirect('user_management')
     return HttpResponseBadRequest('Invalid request method')
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from myapp.models import KnowledgeBaseCategory, KnowledgeBaseSubCategory, KnowledgeBaseArticle
+from myapp.forms import KnowledgeBaseCategoryForm, KnowledgeBaseSubCategoryForm, KnowledgeBaseArticleForm
+
+# Manage Knowledge Base View
+def manage_knowledge_base(request):
+    categories = KnowledgeBaseCategory.objects.all()
+    subcategories = KnowledgeBaseSubCategory.objects.all()
+    articles = KnowledgeBaseArticle.objects.all()
+
+    # Debugging prints
+    print("Categories:", categories)
+    print("Subcategories:", subcategories)
+    print("Articles:", articles)
+
+    context = {
+        'categories': categories,
+        'subcategories': subcategories,
+        'articles': articles,
+    }
+    return render(request, 'customadmin/manage_knowledge_base.html', context)
+
+# Add Category View
+def add_category(request):
+    if request.method == 'POST':
+        form = KnowledgeBaseCategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_knowledge_base')
+    else:
+        form = KnowledgeBaseCategoryForm()
+    return render(request, 'customadmin/add_category.html', {'form': form})
+
+# Edit Category View
+def edit_category(request, id):
+    category = get_object_or_404(KnowledgeBaseCategory, id=id)
+    if request.method == 'POST':
+        form = KnowledgeBaseCategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_knowledge_base')
+    else:
+        form = KnowledgeBaseCategoryForm(instance=category)
+    return render(request, 'customadmin/edit_category.html', {'form': form})
+
+# Add Subcategory View
+def add_subcategory(request):
+    categories = KnowledgeBaseCategory.objects.all()
+
+    if request.method == 'POST':
+        category_id = request.POST['category']
+        title = request.POST['title']
+        description = request.POST['description']
+        icon = request.FILES.get('icon')
+
+        category = get_object_or_404(KnowledgeBaseCategory, id=category_id)
+        KnowledgeBaseSubCategory.objects.create(
+            category=category,
+            title=title,
+            description=description,
+            icon=icon
+        )
+        return redirect('manage_knowledge_base')
+
+    return render(request, 'customadmin/add_subcategory.html', {'categories': categories})
+
+# Edit Subcategory View
+def edit_subcategory(request, id):
+    subcategory = get_object_or_404(KnowledgeBaseSubCategory, id=id)
+    if request.method == 'POST':
+        form = KnowledgeBaseSubCategoryForm(request.POST, instance=subcategory)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_knowledge_base')
+    else:
+        form = KnowledgeBaseSubCategoryForm(instance=subcategory)
+    return render(request, 'customadmin/edit_subcategory.html', {'form': form})
+
+# Add Article View
+def add_article(request):
+    subcategories = KnowledgeBaseSubCategory.objects.all()
+    if request.method == 'POST':
+        form = KnowledgeBaseArticleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_knowledge_base')
+    else:
+        form = KnowledgeBaseArticleForm()
+    return render(request, 'customadmin/add_article.html', {'form': form, 'subcategories': subcategories})
+
+# Edit Article View
+
+from django.shortcuts import render, get_object_or_404, redirect
+from myapp.models import KnowledgeBaseArticle
+from myapp.forms import KnowledgeBaseArticleForm
+import json
+
+def edit_article(request, id):
+    article = get_object_or_404(KnowledgeBaseArticle, id=id)
+    
+    if request.method == 'POST':
+        form = KnowledgeBaseArticleForm(request.POST, instance=article)
+        if form.is_valid():
+            # Save the basic form data
+            article = form.save(commit=False)
+            
+            # Process the content blocks
+            block_count = int(request.POST.get('block_count', 0))
+            content_blocks = []
+            for i in range(block_count):
+                block_type = request.POST.get(f'block_type_{i}')
+                if block_type == 'paragraph':
+                    content = request.POST.get(f'content_{i}', '')
+                    content_blocks.append({'type': 'paragraph', 'content': content})
+                elif block_type == 'image':
+                    image = request.FILES.get(f'image_{i}')
+                    if image:
+                        # Handle image upload and get the URL
+                        image_url = handle_uploaded_file(image)  # Assuming this is defined elsewhere
+                        content_blocks.append({'type': 'image', 'content': image_url})
+                elif block_type == 'header':
+                    content = request.POST.get(f'content_{i}', '')
+                    content_blocks.append({'type': 'header', 'content': content})
+            
+            # Save the content blocks as JSON in the article's content field
+            article.content = json.dumps(content_blocks)
+            article.save()
+
+            return redirect('manage_knowledge_base')
+    else:
+        form = KnowledgeBaseArticleForm(instance=article)
+
+    try:
+        content_blocks = json.loads(article.content)  # Assuming content is stored as JSON
+    except json.JSONDecodeError:
+        content_blocks = []
+
+    context = {
+        'form': form,
+        'article': article,
+        'content_blocks': content_blocks,
+    }
+
+    return render(request, 'customadmin/edit_article.html', context)
+
+
+from django.shortcuts import redirect, get_object_or_404
+from myapp.models import KnowledgeBaseCategory, KnowledgeBaseSubCategory, KnowledgeBaseArticle
+
+
+def delete_category(request, category_id):
+    category = get_object_or_404(KnowledgeBaseCategory, id=category_id)
+    if request.method == 'POST':
+        category.delete()
+    return redirect('manage_knowledge_base')
+
+def delete_subcategory(request, id):
+    subcategory = get_object_or_404(KnowledgeBaseSubCategory, id=id)
+    if request.method == 'POST':
+        subcategory.delete()
+    return redirect('manage_knowledge_base')
+
+def delete_article(request, article_id):
+    article = get_object_or_404(KnowledgeBaseArticle, id=article_id)
+    if request.method == 'POST':
+        article.delete()
+    return redirect('manage_knowledge_base')

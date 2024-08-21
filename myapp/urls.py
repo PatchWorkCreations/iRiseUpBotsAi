@@ -106,8 +106,12 @@ urlpatterns = [
     path('subscription-terms/', views.subscription_terms, name='subscription_terms'),
     path('terms-conditions/', views.terms_conditions, name='terms_conditions'),
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),  # Privacy Policy URL
-    path('support-center/', views.support_center, name='support_center'),  # Support Center URL
 
+    path('support-center/', views.support_center, name='support_center'),  # Support Center URL
+    path('knowledge-base/', views.knowledge_base, name='knowledge_base'),
+    path('subcategory/<int:id>/', views.subcategory_detail, name='subcategory_detail'),
+    path('article/<int:article_id>/', views.article_detail, name='article_detail'),
+    
     path('personalized-plan/', views.personalized_plan, name='personalized_plan'),
     path('process-payment/', views.process_payment, name='process_payment'),
      # URL pattern for the payment page

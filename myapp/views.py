@@ -1163,7 +1163,48 @@ def privacy_policy(request):
     return render(request, 'myapp/quiz/privacy_policy.html')  # Privacy Policy view
 
 def support_center(request):
-    return render(request, 'myapp/quiz/support_center.html')  # Support Center view
+    return render(request, 'myapp/quiz/support/support_center.html')  # Support Center view
+
+from myapp.models import KnowledgeBaseCategory
+from django.shortcuts import render
+
+def knowledge_base(request):
+    categories = KnowledgeBaseCategory.objects.prefetch_related('subcategories__articles').all()
+    return render(request, 'myapp/quiz/support/knowledge_base.html', {'categories': categories})
+
+from django.shortcuts import render, get_object_or_404
+from myapp.models import KnowledgeBaseSubCategory
+
+def subcategory_detail(request, id):
+    subcategory = get_object_or_404(KnowledgeBaseSubCategory, id=id)
+    articles = subcategory.articles.all()
+    return render(request, 'myapp/quiz/support/subcategory_detail.html', {'subcategory': subcategory, 'articles': articles})
+
+
+from django.shortcuts import render, get_object_or_404
+from myapp.models import KnowledgeBaseArticle
+import json
+
+def article_detail(request, article_id):
+    article = get_object_or_404(KnowledgeBaseArticle, id=article_id)
+    try:
+        article.content_parsed = json.loads(article.content)
+    except json.JSONDecodeError:
+        article.content_parsed = []
+    same_subcategory_articles = KnowledgeBaseArticle.objects.filter(
+        subcategory=article.subcategory
+    ).exclude(id=article.id)
+
+    # Optionally, get related articles from other subcategories
+    related_articles = KnowledgeBaseArticle.objects.exclude(
+        subcategory=article.subcategory
+    ).exclude(id=article.id)[:4]  # Limit to 4 related articles
+
+    return render(request, 'myapp/quiz/support/article_detail.html', {
+        'article': article,
+        'same_subcategory_articles': same_subcategory_articles,
+        'related_articles': related_articles,
+    })
 
 
 def coursemenu(request):
