@@ -82,7 +82,7 @@ class EmailCollection(models.Model):
     payment_status = models.CharField(max_length=20, choices=[('Paid', 'Paid'), ('Delayed', 'Delayed')], default='Delayed')
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    first_login_completed = models.BooleanField(default=True)  # New field to track first login completion
+    first_login_completed = models.BooleanField(default=False)  # New field to track first login completion
 
     def __str__(self):
         return self.email
