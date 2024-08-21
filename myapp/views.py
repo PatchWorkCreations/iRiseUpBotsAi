@@ -1272,10 +1272,11 @@ def preview_email(request):
     return render(request, 'welcome_email.html', {'user_email': user_email})
 
 
-from django.shortcuts import render, redirect
+
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from myapp.models import EmailCollection
+from django.shortcuts import render, redirect
+from .models import EmailCollection  # Make sure to import your model
 
 def sign_in(request):
     if request.method == 'POST':
@@ -1298,10 +1299,13 @@ def sign_in(request):
             else:
                 return redirect('coursemenu')  # Redirect to the course menu
         else:
-            messages.error(request, 'Invalid email or password. Please try again.')
+            # Check if the email exists in the system
+            if EmailCollection.objects.filter(user__username=email).exists():
+                messages.error(request, 'Incorrect password. Please try again.')
+            else:
+                messages.error(request, 'No account found with this email. Please sign up.')
     
     return render(request, 'myapp/quiz/sign_in.html')
-
 
 from django.contrib.auth import logout
 from django.shortcuts import redirect
@@ -1310,10 +1314,10 @@ def sign_out(request):
     logout(request)  # This logs the user out
     return redirect('sign_in')  # Redirect to the sign-in page after logging out
 
-from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from myapp.models import EmailCollection
+from django.shortcuts import render, redirect
+from .models import EmailCollection  # Make sure to import your model
 
 def sign_in(request):
     if request.method == 'POST':
@@ -1324,24 +1328,26 @@ def sign_in(request):
         user = authenticate(request, username=email, password=password)
         
         if user is not None:
-            login(request, user)  # This should correctly log in the user
+            login(request, user)  # This logs in the user
             
             # Check if this is the user's first login
             email_collection = EmailCollection.objects.filter(user=user).first()
             if email_collection and not email_collection.first_login_completed:
-                return redirect('change_password')  # Redirect to change password page
+                # Redirect to change password page if it's the first login
+                return redirect('change_password')
             else:
-                return redirect('coursemenu')  # Redirect to the course menu
+                # Otherwise, redirect to course menu
+                return redirect('coursemenu')
         else:
+            # Handle authentication failure
             messages.error(request, 'Invalid email or password. Please try again.')
     
     return render(request, 'myapp/quiz/sign_in.html')
 
 
+
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from django.contrib.auth import get_user_model
 from myapp.models import EmailCollection
 
 class CustomPasswordChangeView(PasswordChangeView):
@@ -1352,7 +1358,7 @@ class CustomPasswordChangeView(PasswordChangeView):
         # Update password
         response = super().form_valid(form)
         
-        # Mark first login as completed
+        # Mark first login as completed after password change
         email_collection = EmailCollection.objects.filter(user=self.request.user).first()
         if email_collection:
             email_collection.first_login_completed = True

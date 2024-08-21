@@ -3,6 +3,7 @@
 {% block title %}Sign In{% endblock %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% block content %}
+
 <div class="container">
     <h2>Welcome Back</h2>
     <form method="post" action="{% url 'sign_in' %}">
@@ -20,6 +21,13 @@
                 </span>
             </div>
         </div>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+         {% endif %}
         <p><a href="{% url 'password_reset' %}" style="color: #6c63ff;">Forgot password?</a></p>
         <button type="submit" class="btn btn-primary btn-lg w-100">Sign In</button>
         <p>Don't have an account? <a href="{% url 'start_quiz' %}" style="color: #6c63ff;">Start the quiz</a></p>
