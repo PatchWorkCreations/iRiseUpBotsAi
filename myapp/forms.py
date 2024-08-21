@@ -41,3 +41,21 @@ class KnowledgeBaseArticleForm(forms.ModelForm):
     class Meta:
         model = KnowledgeBaseArticle
         fields = ['subcategory', 'title', 'content']
+
+
+from django import forms
+
+class SubmitRequestForm(forms.Form):
+    REQUEST_TYPES = [
+        ('subscription', 'Subscription'),
+        ('payments', 'Payments'),
+        ('sign_in', 'Sign-In Help'),
+        ('other', 'Other'),
+    ]
+
+    requester = forms.CharField(max_length=100, required=True)
+    subject = forms.CharField(max_length=100, required=True)
+    query_type = forms.ChoiceField(choices=REQUEST_TYPES, required=True)
+    description = forms.CharField(widget=forms.Textarea, required=True)
+    attachment = forms.FileField(required=False)
+    email = forms.EmailField(required=True)

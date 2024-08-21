@@ -1329,4 +1329,66 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'myapp/password_reset_done.html'
 
 
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.shortcuts import render, redirect
+from .forms import SubmitRequestForm
 
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from .forms import SubmitRequestForm
+
+def submit_request(request):
+    if request.method == 'POST':
+        form = SubmitRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Process the form data
+            requester = form.cleaned_data['requester']
+            subject = form.cleaned_data['subject']
+            query_type = form.cleaned_data['query_type']
+            description = form.cleaned_data['description']
+            attachment = form.cleaned_data.get('attachment')
+            email = form.cleaned_data['email']
+
+            # Prepare the email content
+            email_subject = f"{query_type}: {subject}"
+            html_message = render_to_string('myapp/quiz/support/submit_request_email.html', {
+                'requester': requester,
+                'subject': subject,
+                'query_type': query_type,
+                'description': description,
+                'email': email,
+            })
+            plain_message = strip_tags(html_message)
+            from_email = 'juliavictorio16@gmail.com'  # Replace with your email
+            to = email = 'juliavictorio16@gmail.com'
+
+            # Send the email
+            send_mail(
+                email_subject,
+                plain_message,
+                from_email,
+                [to],
+                html_message=html_message,
+                fail_silently=False,
+            )
+
+            # Redirect to the success page and pass the data as context
+            return render(request, 'myapp/quiz/support/submit_request_success.html', {
+                'requester': requester,
+                'subject': subject,
+                'query_type': query_type,
+                'description': description
+            })
+
+    else:
+        form = SubmitRequestForm()
+
+    return render(request, 'myapp/quiz/support/submit_request.html', {'form': form})
+
+
+def submit_request_success(request):
+    return render(request, 'myapp/quiz/support/submit_request_success.html')
