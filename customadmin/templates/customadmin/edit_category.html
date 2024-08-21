@@ -2,9 +2,16 @@
 {% block title %}Add/Edit Category{% endblock %}
 {% block content %}
 <h2>{% if category %}Edit{% else %}Add{% endif %} Category</h2>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
+    <div class="form-group">
+        <label for="icon">Upload Icon</label>
+        <input type="file" name="icon" id="icon" class="form-control-file">
+        {% if category.icon %}
+            <img src="{{ category.icon.url }}" alt="Current Icon" style="max-width: 150px; margin-top: 10px;">
+        {% endif %}
+    </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 {% endblock %}

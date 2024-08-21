@@ -44,6 +44,9 @@
                             {% for article in subcategory.articles.all %}
                             <li class="list-group-item">
                                 {{ article.title }}
+                                {% if article.is_popular %}
+                                    <span class="badge badge-success">Popular</span>
+                                {% endif %}
                                 <a href="{% url 'edit_article' article.id %}" class="btn btn-sm btn-warning float-right ml-2">Edit</a>
                                 <form method="post" action="{% url 'delete_article' article.id %}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this article? This action cannot be undone.');">
                                     {% csrf_token %}

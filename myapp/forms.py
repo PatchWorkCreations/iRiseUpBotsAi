@@ -30,7 +30,8 @@ from .models import KnowledgeBaseCategory, KnowledgeBaseSubCategory, KnowledgeBa
 class KnowledgeBaseCategoryForm(forms.ModelForm):
     class Meta:
         model = KnowledgeBaseCategory
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'icon']
+
 
 class KnowledgeBaseSubCategoryForm(forms.ModelForm):
     class Meta:
@@ -40,7 +41,8 @@ class KnowledgeBaseSubCategoryForm(forms.ModelForm):
 class KnowledgeBaseArticleForm(forms.ModelForm):
     class Meta:
         model = KnowledgeBaseArticle
-        fields = ['subcategory', 'title', 'content']
+        fields = ['subcategory', 'title', 'content', 'is_popular']
+
 
 
 from django import forms

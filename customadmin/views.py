@@ -343,16 +343,23 @@ def add_category(request):
     return render(request, 'customadmin/add_category.html', {'form': form})
 
 # Edit Category View
-def edit_category(request, id):
-    category = get_object_or_404(KnowledgeBaseCategory, id=id)
+def edit_category(request, id=None):
+    category = None
+    if id:
+        category = get_object_or_404(KnowledgeBaseCategory, id=id)
+
     if request.method == 'POST':
-        form = KnowledgeBaseCategoryForm(request.POST, instance=category)
+        form = KnowledgeBaseCategoryForm(request.POST, request.FILES, instance=category)
         if form.is_valid():
             form.save()
             return redirect('manage_knowledge_base')
     else:
         form = KnowledgeBaseCategoryForm(instance=category)
-    return render(request, 'customadmin/edit_category.html', {'form': form})
+
+    return render(request, 'customadmin/edit_category.html', {
+        'form': form,
+        'category': category,
+    })
 
 # Add Subcategory View
 def add_subcategory(request):

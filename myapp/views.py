@@ -1162,8 +1162,24 @@ def terms_conditions(request):
 def privacy_policy(request):
     return render(request, 'myapp/quiz/privacy_policy.html')  # Privacy Policy view
 
+from django.shortcuts import render, get_object_or_404
+from myapp.models import KnowledgeBaseCategory, KnowledgeBaseArticle
+
+from django.shortcuts import render, get_object_or_404
+from myapp.models import KnowledgeBaseCategory, KnowledgeBaseArticle, KnowledgeBaseSubCategory
+
 def support_center(request):
-    return render(request, 'myapp/quiz/support/support_center.html')  # Support Center view
+    # Get all categories
+    categories = KnowledgeBaseCategory.objects.prefetch_related('subcategories__articles').all()
+
+    # Get articles marked as popular
+    popular_articles = KnowledgeBaseArticle.objects.filter(is_popular=True)  # Assuming 'is_popular' is a boolean field in KnowledgeBaseArticle
+
+    context = {
+        'categories': categories,
+        'popular_articles': popular_articles,
+    }
+    return render(request, 'myapp/quiz/support/support_center.html', context)
 
 from myapp.models import KnowledgeBaseCategory
 from django.shortcuts import render
@@ -1205,6 +1221,27 @@ def article_detail(request, article_id):
         'same_subcategory_articles': same_subcategory_articles,
         'related_articles': related_articles,
     })
+
+
+from django.shortcuts import render, get_object_or_404
+from myapp.models import KnowledgeBaseCategory, KnowledgeBaseArticle
+
+def category_detail(request, id):
+    category = get_object_or_404(KnowledgeBaseCategory, id=id)
+    
+    # Get all subcategories for this category
+    subcategories = category.subcategories.all()
+    
+    # Get all articles under all subcategories of this category
+    articles = KnowledgeBaseArticle.objects.filter(subcategory__in=subcategories)
+    
+    context = {
+        'category': category,
+        'subcategories': subcategories,
+        'articles': articles,
+    }
+    return render(request, 'myapp/quiz/support/category_detail.html', context)
+
 
 
 def coursemenu(request):

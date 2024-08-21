@@ -111,7 +111,7 @@ urlpatterns = [
     path('knowledge-base/', views.knowledge_base, name='knowledge_base'),
     path('subcategory/<int:id>/', views.subcategory_detail, name='subcategory_detail'),
     path('article/<int:article_id>/', views.article_detail, name='article_detail'),
-
+    path('category/<int:id>/', views.category_detail, name='category_detail'),
     path('personalized-plan/', views.personalized_plan, name='personalized_plan'),
     path('process-payment/', views.process_payment, name='process_payment'),
      # URL pattern for the payment page
@@ -134,5 +134,5 @@ urlpatterns = [
     
     path('submit-request/', views.submit_request, name='submit_request'),
     path('submit-request/success/', views.submit_request_success, name='submit_request_success'),
-    
+
 ]

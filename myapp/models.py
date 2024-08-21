@@ -138,6 +138,7 @@ class KnowledgeBaseCategory(models.Model):
     def __str__(self):
         return self.title
 
+
 class KnowledgeBaseSubCategory(models.Model):
     category = models.ForeignKey(KnowledgeBaseCategory, related_name='subcategories', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
@@ -152,6 +153,8 @@ class KnowledgeBaseArticle(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     date_modified = models.DateField(auto_now=True)
+    is_popular = models.BooleanField(default=False)  # New field
 
     def __str__(self):
         return self.title
+

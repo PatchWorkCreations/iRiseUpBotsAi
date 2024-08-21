@@ -1,0 +1,160 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% block title %}{{ category.title }}{% endblock %}
+{% block content %}
+{% include 'myapp/quiz/support/header_support.html' %}
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    h2 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+        text-align: center;
+    }
+
+    p {
+        font-size: 1.125rem;
+        color: #666;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .knowledge-base-category {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        padding: 20px;
+    }
+
+    .category-header {
+        border-bottom: 1px solid #f1f1f1;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .category-header h4 {
+        font-size: 1.75rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .category-header h4 a {
+        color: #6c63ff; /* Set the color to purple */
+        text-decoration: none;
+    }
+
+    .category-header h4 a:hover {
+        text-decoration: underline;
+    }
+
+    .category-header h4 .category-title {
+        color: #6c63ff; /* Set the color to purple */
+        margin-left: 5px; /* Optional: add some spacing */
+    }
+
+    .category-header h3 i {
+        font-size: 2rem;
+    }
+
+    .category-body {
+        margin-top: 15px;
+    }
+
+    .subcategory {
+        margin-bottom: 20px;
+    }
+
+    .subcategory h4 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .subcategory h4 i {
+        font-size: 1.5rem;
+    }
+
+    .subcategory ul {
+        list-style: none;
+        padding: 0;
+        margin-left: 20px;
+    }
+
+    .subcategory ul li {
+        margin-bottom: 8px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .subcategory ul li:hover {
+        background-color: #f8f9fa;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .subcategory ul li a {
+        color: #1e6dfb;
+        text-decoration: none;
+        font-size: 1.25rem;
+        font-weight: bold;
+        display: block;
+    }
+
+    .subcategory ul li a:hover {
+        color: #0d2233;
+    }
+
+    .empty-message {
+        font-size: 1.125rem;
+        color: #999;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container">
+    <h2>{{ category.title }}</h2>
+    <p>{{ category.description }}</p>
+
+    {% if subcategories %}
+        <div class="knowledge-base-category">
+            <div class="category-header">
+                <h4>
+                    <a href="{% url 'knowledge_base' %}">Knowledge Base</a> > 
+                    <span class="category-title">{{ category.title }}</span>
+                </h4>
+            </div>
+            <div class="category-body">
+                {% for subcategory in subcategories %}
+                    <div class="subcategory">
+                        <h4>{{ subcategory.title }}</h4>
+                        <ul>
+                            {% for article in subcategory.articles.all %}
+                                <li>
+                                    <a href="{% url 'article_detail' article.id %}">{{ article.title }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p class="empty-message">No subcategories available.</p>
+    {% endif %}
+</div>
+{% endblock %}
