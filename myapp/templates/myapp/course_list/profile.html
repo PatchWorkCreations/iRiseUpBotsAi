@@ -87,7 +87,7 @@
     <div class="profile-header">
         <h2>Profile</h2>
         {% if user.is_authenticated %}
-            <a href="{% url 'profile_settings' %}" class="profile-settings">
+            <a href="{% url 'support_center' %}" class="profile-settings">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-.99 1.51v.1a2 2 0 01-2 2h-1.5a2 2 0 01-2-2v-.1a1.65 1.65 0 00-.99-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-.99H3.5a2 2 0 01-2-2v-1.5a2 2 0 012-2h.1c.7 0 1.35-.38 1.51-.99a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06c.47.47 1.14.6 1.82.33h.1a1.65 1.65 0 001.51-.99V3.5a2 2 0 012-2h1.5a2 2 0 012 2v.1c0 .7.38 1.35.99 1.51.68.27 1.35.14 1.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v.1c.61.68 1.26 1.03 1.99 1.03z"></path></svg>
             </a>
         {% endif %}
@@ -102,10 +102,10 @@
             Help
         </a>
         {% if user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="profile-action logout">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out"><path d="M9 21h6a2 2 0 002-2V5a2 2 0 00-2-2H9a2 2 0 00-2 2v14a2 2 0 002 2z"></path><path d="M16 17l5-5-5-5M15 12h9"></path></svg>
-                Log Out
-            </a>
+        <a href="{% url 'sign_out' %}" class="profile-action logout">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out"><path d="M9 21h6a2 2 0 002-2V5a2 2 0 00-2-2H9a2 2 0 00-2 2v14a2 2 0 002 2z"></path><path d="M16 17l5-5-5-5M15 12h9"></path></svg>
+            Sign Out
+        </a>
         {% endif %}
     </div>
 </div>

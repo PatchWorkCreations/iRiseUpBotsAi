@@ -1291,6 +1291,9 @@ def sign_in(request):
             # Check if this is the user's first login
             email_collection = EmailCollection.objects.filter(user=user).first()
             if email_collection and not email_collection.first_login_completed:
+                # Mark first login as completed after redirecting
+                email_collection.first_login_completed = True
+                email_collection.save()
                 return redirect('change_password')  # Redirect to change password page
             else:
                 return redirect('coursemenu')  # Redirect to the course menu
@@ -1300,6 +1303,12 @@ def sign_in(request):
     return render(request, 'myapp/quiz/sign_in.html')
 
 
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+def sign_out(request):
+    logout(request)  # This logs the user out
+    return redirect('sign_in')  # Redirect to the sign-in page after logging out
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
