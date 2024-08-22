@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views
+from django.urls import path
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     path('', views.sign_in, name='sign_in'),
@@ -123,10 +126,13 @@ urlpatterns = [
     path('success/', views.success_page, name='success_page'),
     path('preview-email/', views.preview_email, name='preview_email'),
 
-    path('forgot-password/', views.CustomPasswordResetView.as_view(), name='password_reset'),
-    # URL for password reset done (you can create a similar page like the above for this):
-    path('password-reset-done/', views.CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('password_reset/', views.CustomPasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', views.CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', views.CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('change-password/', views.CustomPasswordChangeView.as_view(), name='password_change'),
+    
+    
     path('create-paypal-order/', views.create_paypal_order, name='create_paypal_order'),
     path('complete-paypal-payment/', views.complete_paypal_payment, name='complete_paypal_payment'),
 
