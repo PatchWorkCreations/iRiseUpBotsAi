@@ -1338,31 +1338,35 @@ class CustomPasswordChangeView(PasswordChangeView):
         return response
 
 
-from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView, PasswordChangeView, PasswordChangeDoneView
 from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from .forms import SubmitRequestForm
 
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'myapp/forgot_password.html'
     email_template_name = 'myapp/password_reset_email.html'
     success_url = reverse_lazy('password_reset_done')
 
-from django.contrib.auth.views import PasswordResetDoneView
-
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'myapp/password_reset_done.html'
 
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'myapp/password_reset_confirm.html'
+    success_url = reverse_lazy('password_reset_complete')
 
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.shortcuts import render, redirect
-from .forms import SubmitRequestForm
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'myapp/password_reset_complete.html'
 
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from .forms import SubmitRequestForm
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'myapp/change_password.html'
+    success_url = reverse_lazy('password_change_done')
+
+class CustomPasswordChangeDoneView(PasswordChangeDoneView):
+    template_name = 'myapp/password_change_done.html'
 
 def submit_request(request):
     if request.method == 'POST':
@@ -1387,14 +1391,14 @@ def submit_request(request):
             })
             plain_message = strip_tags(html_message)
             from_email = 'juliavictorio16@gmail.com'  # Replace with your email
-            to = email = 'juliavictorio16@gmail.com'
+            to = 'juliavictorio16@gmail.com'  # Send to yourself
 
             # Send the email
             send_mail(
                 email_subject,
                 plain_message,
                 from_email,
-                [to],
+                [to],  # Ensure to pass as a list
                 html_message=html_message,
                 fail_silently=False,
             )
@@ -1411,7 +1415,6 @@ def submit_request(request):
         form = SubmitRequestForm()
 
     return render(request, 'myapp/quiz/support/submit_request.html', {'form': form})
-
 
 def submit_request_success(request):
     return render(request, 'myapp/quiz/support/submit_request_success.html')

@@ -1,7 +1,7 @@
-from django.urls import path
-from . import views
-from django.urls import path
+from django.urls import path, include
+from myapp import views
 from django.contrib.auth import views as auth_views
+
 
 
 urlpatterns = [
@@ -46,7 +46,6 @@ urlpatterns = [
     path('lessons/<int:lesson_id>/', views.lesson_detail, name='lesson_detail'),
     path('courses/', views.course_list, name='course_list'),
     path('courses/<int:course_id>/', views.course_detail, name='course_detail'),
-    path('lessons/<int:lesson_id>/', views.lesson_detail, name='lesson_detail'),
     path('lessons/<int:lesson_id>/next/', views.next_lesson, name='next_lesson'),
 
 
@@ -131,7 +130,7 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', views.CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('change-password/', views.CustomPasswordChangeView.as_view(), name='password_change'),
-    
+
     
     path('create-paypal-order/', views.create_paypal_order, name='create_paypal_order'),
     path('complete-paypal-payment/', views.complete_paypal_payment, name='complete_paypal_payment'),
