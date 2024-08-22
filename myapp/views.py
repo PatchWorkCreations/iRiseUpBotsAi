@@ -1273,39 +1273,36 @@ def preview_email(request):
 
 
 
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from .models import EmailCollection  # Make sure to import your model
+import logging
+logger = logging.getLogger(__name__)
 
 def sign_in(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
+        logger.debug(f"Attempting login for email: {email}")
 
-        # Use Django's built-in authentication system
         user = authenticate(request, username=email, password=password)
         
         if user is not None:
-            login(request, user)  # This should correctly log in the user
-            
-            # Check if this is the user's first login
+            login(request, user)
             email_collection = EmailCollection.objects.filter(user=user).first()
             if email_collection and not email_collection.first_login_completed:
-                # Mark first login as completed after redirecting
-                email_collection.first_login_completed = True
-                email_collection.save()
-                return redirect('change_password')  # Redirect to change password page
+                logger.debug(f"First login detected for user: {user.username}")
+                return redirect('change_password')
             else:
-                return redirect('coursemenu')  # Redirect to the course menu
+                logger.debug(f"Redirecting to course menu for user: {user.username}")
+                return redirect('coursemenu')
         else:
-            # Check if the email exists in the system
             if EmailCollection.objects.filter(user__username=email).exists():
+                logger.error(f"Incorrect password for email: {email}")
                 messages.error(request, 'Incorrect password. Please try again.')
             else:
+                logger.error(f"No account found for email: {email}")
                 messages.error(request, 'No account found with this email. Please sign up.')
     
     return render(request, 'myapp/quiz/sign_in.html')
+
 
 from django.contrib.auth import logout
 from django.shortcuts import redirect
@@ -1313,37 +1310,6 @@ from django.shortcuts import redirect
 def sign_out(request):
     logout(request)  # This logs the user out
     return redirect('sign_in')  # Redirect to the sign-in page after logging out
-
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from .models import EmailCollection  # Make sure to import your model
-
-def sign_in(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        # Use Django's built-in authentication system
-        user = authenticate(request, username=email, password=password)
-        
-        if user is not None:
-            login(request, user)  # This logs in the user
-            
-            # Check if this is the user's first login
-            email_collection = EmailCollection.objects.filter(user=user).first()
-            if email_collection and not email_collection.first_login_completed:
-                # Redirect to change password page if it's the first login
-                return redirect('change_password')
-            else:
-                # Otherwise, redirect to course menu
-                return redirect('coursemenu')
-        else:
-            # Handle authentication failure
-            messages.error(request, 'Invalid email or password. Please try again.')
-    
-    return render(request, 'myapp/quiz/sign_in.html')
-
 
 
 from django.contrib.auth.views import PasswordChangeView
