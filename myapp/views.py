@@ -1362,10 +1362,9 @@ from django.urls import reverse_lazy
 
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'myapp/change_password.html'
-    success_url = reverse_lazy('coursemenu')  # Redirect to course menu after password change
+    success_url = reverse_lazy('password_change_done')  # Redirect to course menu after password change
 
     def form_valid(self, form):
-        # Update password
         response = super().form_valid(form)
         
         # Mark first login as completed after password change
@@ -1375,6 +1374,11 @@ class CustomPasswordChangeView(PasswordChangeView):
             email_collection.save()
 
         return response
+    
+
+class CustomPasswordChangeDoneView(PasswordChangeDoneView):
+    template_name = 'myapp/password_change_done.html'
+
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -1439,12 +1443,6 @@ def custom_password_reset_confirm(request, uidb64=None, token=None):
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'myapp/password_reset_complete.html'
 
-class CustomPasswordChangeView(PasswordChangeView):
-    template_name = 'myapp/change_password.html'
-    success_url = reverse_lazy('password_change_done')
-
-class CustomPasswordChangeDoneView(PasswordChangeDoneView):
-    template_name = 'myapp/password_change_done.html'
 
 from django.views.generic import TemplateView
 
