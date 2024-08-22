@@ -760,6 +760,14 @@ def email_collection(request):
         email = request.POST.get('email')
         receive_offers = request.POST.get('receive_offers') == 'on'  # Convert "on" to True, otherwise False
 
+        # Check if the email is empty or default@example.com before proceeding
+        if not email or email == 'default@example.com':
+            messages.error(request, "Invalid email address. Please provide a valid email.")
+            return render(request, 'myapp/quiz/email_collection.html', {
+                'email': email,
+                'receive_offers': receive_offers,
+            })
+
         try:
             # Attempt to get or create the email record
             email_collection, created = EmailCollection.objects.get_or_create(
