@@ -63,10 +63,30 @@ class SubmitRequestForm(forms.Form):
     email = forms.EmailField(required=True)
 
 from django import forms
-from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
-class CustomSetPasswordForm(SetPasswordForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['new_password1'].widget.attrs.update({'class': 'form-control'})
-        self.fields['new_password2'].widget.attrs.update({'class': 'form-control'})
+class CustomPasswordResetForm(forms.Form):
+    new_password1 = forms.CharField(
+        label="New password",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        min_length=8
+    )
+    new_password2 = forms.CharField(
+        label="New password confirmation",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        min_length=8
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("new_password1")
+        password2 = cleaned_data.get("new_password2")
+
+        if password1 and password2 and password1 != password2:
+            raise ValidationError("The two password fields must match.")
+        
+        if len(password1) < 8:
+            raise ValidationError("Password must be at least 8 characters long.")
+        
+        return cleaned_data

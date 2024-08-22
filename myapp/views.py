@@ -1354,13 +1354,35 @@ class CustomPasswordResetView(PasswordResetView):
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'myapp/password_reset_done.html'
 
-from django.contrib.auth.views import PasswordResetConfirmView
-from .forms import CustomSetPasswordForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import User
+from django.utils.encoding import force_str
+from .forms import CustomPasswordResetForm
 
-class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-    form_class = CustomSetPasswordForm
-    template_name = 'myapp/password_reset_confirm.html'
-    success_url = reverse_lazy('password_reset_complete')
+def custom_password_reset_confirm(request, uidb64=None, token=None):
+    assert uidb64 is not None and token is not None  # Ensure both are provided
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            form = CustomPasswordResetForm(request.POST)
+            if form.is_valid():
+                user.set_password(form.cleaned_data['new_password1'])
+                user.save()
+                return redirect('password_reset_complete')
+        else:
+            form = CustomPasswordResetForm()
+        return render(request, 'myapp/password_reset_confirm.html', {'form': form})
+    else:
+        # Invalid link
+        return render(request, 'myapp/password_reset_invalid.html')
+
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'myapp/password_reset_complete.html'
@@ -1422,3 +1444,30 @@ def submit_request(request):
 
 def submit_request_success(request):
     return render(request, 'myapp/quiz/support/submit_request_success.html')
+
+from django.shortcuts import render
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.models import User
+from django.utils.encoding import force_str
+
+def password_reset_invalid_link(request, uidb64=None, token=None):
+    # Decode the user ID from the URL
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    # Check if the token is valid
+    if user is not None and default_token_generator.check_token(user, token):
+        # If the token is valid, redirect to password reset confirm page
+        # This would only happen in cases where you are checking the link before displaying the form
+        # It's not required if you're just displaying an invalid link message
+        pass
+    else:
+        # If the token is invalid or the user does not exist, render the invalid link template
+        return render(request, 'myapp/quiz/password_reset_invalid_link.html')
+
+# Add this to your urls.py
+# path('password-reset/invalid/', views.password_reset_invalid_link, name='password_reset_invalid_link'),
