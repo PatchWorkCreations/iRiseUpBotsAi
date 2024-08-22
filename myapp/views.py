@@ -962,14 +962,17 @@ def process_payment(request):
 
             if result.is_success():
                 user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
-                if user_email:
-                    random_password = get_random_string(8)
 
+                if user_email:
+                    # Check if the user already exists to avoid duplication
                     user, created = User.objects.get_or_create(
                         username=user_email.email,
-                        email=user_email.email,
+                        defaults={'email': user_email.email}
                     )
+
                     if created:
+                        # If user was created, set a random password and send an email
+                        random_password = get_random_string(8)
                         user.set_password(random_password)
                         user.save()
 
@@ -977,10 +980,15 @@ def process_payment(request):
                         grant_course_access(user, selected_plan)
 
                         subject = 'Your Account Has Been Created'
-                        message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
+                        message = (f'Your account has been created. Your temporary password is: {random_password}\n'
+                                   'Please log in and change your password.\n'
+                                   'You now have access to the course menu based on your selected plan.')
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
+                    else:
+                        logger.info(f"User {user_email.email} already exists. Skipping creation.")
 
                 return JsonResponse({"success": True})
+
             else:
                 error_messages = [error['detail'] for error in result.errors]
                 logger.error("Payment Error: %s", error_messages)
@@ -1024,7 +1032,7 @@ def create_paypal_order(request):
                 return JsonResponse({"error": "Plan not provided"}, status=400)
 
             # Store the selected plan in the session
-            request.session['selected_plan'] = selected_plan  # Ensure consistency here
+            request.session['selected_plan'] = selected_plan
             logger.info(f"Plan stored in session: {request.session.get('selected_plan')}")
 
             amount_cents = determine_amount_based_on_plan(selected_plan)
@@ -1074,6 +1082,7 @@ def create_paypal_order(request):
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
 import os
 from django.conf import settings
 
@@ -1083,7 +1092,7 @@ def complete_paypal_payment(request):
     if request.method == 'GET':
         try:
             order_id = request.GET.get('token')
-            selected_plan = request.session.get('selected_plan')  # Ensure consistency here
+            selected_plan = request.session.get('selected_plan')
             logger.info(f"Retrieved plan from session: {selected_plan}")
 
             if not order_id:
@@ -1117,7 +1126,7 @@ def complete_paypal_payment(request):
                     # Create or retrieve the user
                     user, created = User.objects.get_or_create(
                         username=user_email.email,
-                        email=user_email.email,
+                        defaults={'email': user_email.email}
                     )
                     if created:
                         user.set_password(random_password)
@@ -1128,11 +1137,15 @@ def complete_paypal_payment(request):
 
                         # Send email notification
                         subject = 'Your Account Has Been Created'
-                        message = f'Your account has been created. Your temporary password is: {random_password}\nPlease log in and change your password.\nYou now have access to the course menu based on your selected plan.'
+                        message = (f'Your account has been created. Your temporary password is: {random_password}\n'
+                                   'Please log in and change your password.\n'
+                                   'You now have access to the course menu based on your selected plan.')
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
+                    else:
+                        logger.info(f"User {user_email.email} already exists. Skipping creation.")
 
                 # Clear the selected plan from the session
-                del request.session['selected_plan']  # Ensure you delete the correct key
+                request.session.pop('selected_plan', None)
 
                 return JsonResponse({'success': True, 'message': 'Payment completed successfully.'})
             else:
