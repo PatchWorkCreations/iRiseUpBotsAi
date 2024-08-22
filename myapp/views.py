@@ -753,7 +753,6 @@ from django.utils.html import strip_tags
 from .models import EmailCollection
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.contrib import messages
 
 def email_collection(request):
@@ -761,43 +760,32 @@ def email_collection(request):
         email = request.POST.get('email')
         receive_offers = request.POST.get('receive_offers') == 'on'  # Convert "on" to True, otherwise False
 
-        # Check if the user exists
-        user = User.objects.filter(email=email).first()
+        try:
+            # Attempt to create the email record
+            email_collection = EmailCollection.objects.create(
+                receive_offers=receive_offers
+            )
+            
+            # Prepare the email content
+            subject = 'Welcome to iRiseUp.Ai!'
+            html_message = render_to_string('welcome_email.html', {'email': email})
+            plain_message = strip_tags(html_message)
+            from_email = 'your-email@example.com'
+            to = email
 
-        if user:
-            try:
-                # Attempt to create the email record
-                email_collection, created = EmailCollection.objects.get_or_create(
-                    user=user,
-                    defaults={'receive_offers': receive_offers}
-                )
-                
-                if created:
-                    # Prepare the email content
-                    subject = 'Welcome to iRiseUp.Ai!'
-                    html_message = render_to_string('welcome_email.html', {'email': email})
-                    plain_message = strip_tags(html_message)
-                    from_email = 'your-email@example.com'
-                    to = email
+            # Send the welcome email
+            send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
-                    # Send the welcome email
-                    send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+            # Redirect to the readiness level page
+            return redirect('readiness_level')
 
-                    # Redirect to the readiness level page
-                    return redirect('readiness_level')
-                else:
-                    messages.info(request, "This email is already registered. Please log in.")
-
-            except IntegrityError:
-                # Handle any unexpected IntegrityErrors
-                messages.error(request, "An error occurred. Please try again.")
-        else:
-            messages.error(request, "No user found with this email.")
-
-        return render(request, 'myapp/quiz/email_collection.html', {
-            'email': email,
-            'receive_offers': receive_offers,
-        })
+        except IntegrityError:
+            # Handle the case where the email already exists
+            messages.error(request, "This email is already registered. Please use a different email or log in.")
+            return render(request, 'myapp/quiz/email_collection.html', {
+                'email': email,
+                'receive_offers': receive_offers,
+            })
 
     return render(request, 'myapp/quiz/email_collection.html')
 
