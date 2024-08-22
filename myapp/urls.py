@@ -131,6 +131,8 @@ urlpatterns = [
     path('reset/done/', views.CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
     #path('change-password/', views.CustomPasswordChangeView.as_view(), name='password_change'),
     path('change-password/', views.CustomPasswordChangeView.as_view(), name='password_change'),
+    path('change-password/done/', views.CustomPasswordChangeDoneView.as_view(), name='password_change_done'),
+    
     path('password-reset/invalid/', views.password_reset_invalid_link, name='password_reset_invalid_link'),
     
 

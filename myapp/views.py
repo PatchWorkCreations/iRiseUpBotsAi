@@ -1441,9 +1441,14 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'myapp/change_password.html'
-    success_url = reverse_lazy('password_reset_done')
+    success_url = reverse_lazy('password_change_done')
 
 class CustomPasswordChangeDoneView(PasswordChangeDoneView):
+    template_name = 'myapp/password_change_done.html'
+
+from django.views.generic import TemplateView
+
+class CustomPasswordChangeDoneView(TemplateView):
     template_name = 'myapp/password_change_done.html'
 
 def submit_request(request):
