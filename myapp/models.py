@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from django.db import models
+from django.contrib.auth.models import User
+
 
 class Course(models.Model):
     title = models.CharField(max_length=200)
@@ -22,6 +26,8 @@ class Lesson(models.Model):
     parent_sub_course = models.ForeignKey(SubCourse, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=200)
     content = models.TextField()
+
+
 
 class UserCourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -100,8 +106,7 @@ class KnowledgeBaseArticle(models.Model):
     def __str__(self):
         return self.title
     
-from django.db import models
-from django.contrib.auth.models import User
+
 
 class EmailCollection(models.Model):
     email = models.EmailField(unique=True)  # Remove any default here
