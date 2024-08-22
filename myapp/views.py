@@ -1310,11 +1310,9 @@ def preview_email(request):
     return render(request, 'welcome_email.html', {'user_email': user_email})
 
 
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from .models import EmailCollection
 import logging
 
@@ -1330,9 +1328,9 @@ def sign_in(request):
 
         if user is not None:
             login(request, user)
-            try:
-                email_collection = user.email_collection
-            except EmailCollection.DoesNotExist:
+            email_collection = EmailCollection.objects.filter(user=user).first()
+
+            if email_collection is None:
                 messages.error(request, 'No account associated with this email.')
                 return redirect('sign_in')
 
@@ -1350,7 +1348,18 @@ def sign_in(request):
             return redirect('sign_in')
     else:
         return render(request, 'myapp/quiz/sign_in.html')
-    
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .models import EmailCollection
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 
 def sign_out(request):
     logout(request)  # This logs the user out
@@ -1362,7 +1371,7 @@ from django.urls import reverse_lazy
 
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'myapp/change_password.html'
-    success_url = reverse_lazy('password_change')  # Redirect to course menu after password change
+    success_url = reverse_lazy('password_change_done')  # Redirect to course menu after password change
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -1375,6 +1384,7 @@ class CustomPasswordChangeView(PasswordChangeView):
 
         return response
     
+from django.contrib.auth.views import PasswordChangeDoneView
 
 class CustomPasswordChangeDoneView(PasswordChangeDoneView):
     template_name = 'myapp/password_change_done.html'
