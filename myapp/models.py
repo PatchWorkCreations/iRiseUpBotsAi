@@ -104,7 +104,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class EmailCollection(models.Model):
-    email = models.EmailField(unique=True, default='default@example.com')
+    email = models.EmailField(unique=True)  # Remove any default here
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='email_collection')
     receive_offers = models.BooleanField(default=False)
     payment_status = models.CharField(max_length=20, choices=[('Paid', 'Paid'), ('Delayed', 'Delayed')], default='Delayed')
@@ -113,4 +113,5 @@ class EmailCollection(models.Model):
 
     def __str__(self):
         return self.email
+
 
