@@ -1354,7 +1354,11 @@ class CustomPasswordResetView(PasswordResetView):
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'myapp/password_reset_done.html'
 
+from django.contrib.auth.views import PasswordResetConfirmView
+from .forms import CustomSetPasswordForm
+
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = CustomSetPasswordForm
     template_name = 'myapp/password_reset_confirm.html'
     success_url = reverse_lazy('password_reset_complete')
 
