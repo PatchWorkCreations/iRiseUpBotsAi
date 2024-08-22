@@ -1362,7 +1362,7 @@ from django.urls import reverse_lazy
 
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'myapp/change_password.html'
-    success_url = reverse_lazy('password_change_done')  # Redirect to course menu after password change
+    success_url = reverse_lazy('password_change')  # Redirect to course menu after password change
 
     def form_valid(self, form):
         response = super().form_valid(form)
