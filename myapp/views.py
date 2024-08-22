@@ -1273,6 +1273,11 @@ def preview_email(request):
 
 
 
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import EmailCollection  # Make sure to import your model
+
 import logging
 logger = logging.getLogger(__name__)
 
