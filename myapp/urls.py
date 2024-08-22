@@ -129,9 +129,11 @@ urlpatterns = [
     path('password_reset/done/', views.CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', views.custom_password_reset_confirm, name='password_reset_confirm'),
     path('reset/done/', views.CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    #path('change-password/', views.CustomPasswordChangeView.as_view(), name='password_change'),
     path('change-password/', views.CustomPasswordChangeView.as_view(), name='password_change'),
     path('password-reset/invalid/', views.password_reset_invalid_link, name='password_reset_invalid_link'),
     
+
     path('create-paypal-order/', views.create_paypal_order, name='create_paypal_order'),
     path('complete-paypal-payment/', views.complete_paypal_payment, name='complete_paypal_payment'),
 

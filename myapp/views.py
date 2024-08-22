@@ -1273,12 +1273,13 @@ def preview_email(request):
 
 
 
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
 from django.shortcuts import render, redirect
-from .models import EmailCollection  # Make sure to import your model
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .models import EmailCollection
 import logging
+
 logger = logging.getLogger(__name__)
 
 def sign_in(request):
@@ -1288,26 +1289,30 @@ def sign_in(request):
         logger.debug(f"Attempting login for email: {email}")
 
         user = authenticate(request, username=email, password=password)
-        
+
         if user is not None:
             login(request, user)
-            email_collection = EmailCollection.objects.filter(user=user).first()
-            if email_collection and not email_collection.first_login_completed:
+            try:
+                email_collection = user.email_collection
+            except EmailCollection.DoesNotExist:
+                messages.error(request, 'No account associated with this email.')
+                return redirect('sign_in')
+
+            if not email_collection.first_login_completed:
                 logger.debug(f"First login detected for user: {user.username}")
-                return redirect('change_password')
+                messages.info(request, 'Please change your password to continue.')
+                return redirect('password_change')
             else:
                 logger.debug(f"Redirecting to course menu for user: {user.username}")
-                return redirect('coursemenu')
+                messages.success(request, f'Welcome back, {user.username}!')
+                return redirect('course_menu')
         else:
-            if EmailCollection.objects.filter(user__username=email).exists():
-                logger.error(f"Incorrect password for email: {email}")
-                messages.error(request, 'Incorrect password. Please try again.')
-            else:
-                logger.error(f"No account found for email: {email}")
-                messages.error(request, 'No account found with this email. Please sign up.')
+            logger.error(f"Authentication failed for email: {email}")
+            messages.error(request, 'Invalid email or password. Please try again.')
+            return redirect('sign_in')
+    else:
+        return render(request, 'myapp/quiz/sign_in.html')
     
-    return render(request, 'myapp/quiz/sign_in.html')
-
 
 from django.contrib.auth import logout
 from django.shortcuts import redirect
