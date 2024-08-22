@@ -760,34 +760,20 @@ def email_collection(request):
         email = request.POST.get('email')
         receive_offers = request.POST.get('receive_offers') == 'on'  # Convert "on" to True, otherwise False
 
-        # Check if the email is empty or default@example.com before proceeding
-        if not email or email == 'default@example.com':
-            messages.error(request, "Invalid email address. Please provide a valid email.")
+        if not email:
+            messages.error(request, "Email address is required.")
             return render(request, 'myapp/quiz/email_collection.html', {
                 'email': email,
                 'receive_offers': receive_offers,
             })
 
         try:
-            # Attempt to get or create the email record
-            email_collection, created = EmailCollection.objects.get_or_create(
+            # Attempt to create the email record
+            email_collection = EmailCollection.objects.create(
                 email=email,
-                defaults={'receive_offers': receive_offers}
+                receive_offers=receive_offers
             )
-
-            if not created:
-                # If the email exists and payment is complete, block further action
-                if email_collection.payment_status == 'Paid':
-                    messages.error(request, "This email is already registered. Please use a different email or log in.")
-                    return render(request, 'myapp/quiz/email_collection.html', {
-                        'email': email,
-                        'receive_offers': receive_offers,
-                    })
-                else:
-                    # Update the receive_offers field if the record already exists and payment is not complete
-                    email_collection.receive_offers = receive_offers
-                    email_collection.save()
-
+            
             # Prepare the email content
             subject = 'Welcome to iRiseUp.Ai!'
             html_message = render_to_string('welcome_email.html', {'email': email})
@@ -802,7 +788,7 @@ def email_collection(request):
             return redirect('readiness_level')
 
         except IntegrityError:
-            # Handle the case where the email already exists due to a race condition or other issue
+            # Handle the case where the email already exists
             messages.error(request, "This email is already registered. Please use a different email or log in.")
             return render(request, 'myapp/quiz/email_collection.html', {
                 'email': email,
@@ -810,7 +796,6 @@ def email_collection(request):
             })
 
     return render(request, 'myapp/quiz/email_collection.html')
-
 
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
