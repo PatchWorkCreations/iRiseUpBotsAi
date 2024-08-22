@@ -1326,7 +1326,7 @@ def sign_in(request):
             else:
                 logger.debug(f"Redirecting to course menu for user: {user.username}")
                 messages.success(request, f'Welcome back, {user.username}!')
-                return redirect('course_menu')
+                return redirect('coursemenu')
         else:
             logger.error(f"Authentication failed for email: {email}")
             messages.error(request, 'Invalid email or password. Please try again.')
