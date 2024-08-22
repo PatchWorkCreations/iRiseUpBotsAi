@@ -28,6 +28,11 @@ from django.contrib import admin
 from .models import EmailCollection
 
 class EmailCollectionAdmin(admin.ModelAdmin):
-    list_display = ['email', 'receive_offers', 'created_at']  # Updated field name
+    list_display = ['user_email', 'receive_offers', 'created_at']  # Updated field name
+
+    def user_email(self, obj):
+        return obj.user.email if obj.user else None
+    user_email.short_description = 'Email'  # This will change the column header in the admin
 
 admin.site.register(EmailCollection, EmailCollectionAdmin)
+

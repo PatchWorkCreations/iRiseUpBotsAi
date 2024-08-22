@@ -1314,9 +1314,6 @@ def sign_in(request):
         return render(request, 'myapp/quiz/sign_in.html')
     
 
-from django.contrib.auth import logout
-from django.shortcuts import redirect
-
 def sign_out(request):
     logout(request)  # This logs the user out
     return redirect('sign_in')  # Redirect to the sign-in page after logging out
@@ -1324,7 +1321,6 @@ def sign_out(request):
 
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
-from myapp.models import EmailCollection
 
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'myapp/change_password.html'
@@ -1341,6 +1337,19 @@ class CustomPasswordChangeView(PasswordChangeView):
             email_collection.save()
 
         return response
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
+
+@receiver(post_save, sender=User)
+def create_email_collection(sender, instance, created, **kwargs):
+    if created:
+        EmailCollection.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_email_collection(sender, instance, **kwargs):
+    instance.email_collection.save()  # Use the related_name 'email_collection'
 
 
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView, PasswordChangeView, PasswordChangeDoneView

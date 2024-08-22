@@ -76,17 +76,19 @@ class QuizResponse(models.Model):
 
 from django.db import models
 
+from django.contrib.auth.models import User
+from django.db import models
+
 class EmailCollection(models.Model):
-    email = models.EmailField(unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='email_collection')
     receive_offers = models.BooleanField(default=False)
     payment_status = models.CharField(max_length=20, choices=[('Paid', 'Paid'), ('Delayed', 'Delayed')], default='Delayed')
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     first_login_completed = models.BooleanField(default=False)  # New field to track first login completion
 
     def __str__(self):
-        return self.email
-    
+        return self.user.email  # Assuming you want to return the email associated with the user
+
     
 
 from django.db import migrations, models
