@@ -764,9 +764,17 @@ def results(request):
 def loading_page(request):
     return render(request, 'myapp/quiz/loading_page.html')
 
+from django.db import IntegrityError
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import EmailCollection
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 def email_collection(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        email = request.POST.get('email').strip()  # Strip any leading/trailing spaces
         receive_offers = request.POST.get('receive_offers') == 'on'  # Convert "on" to True, otherwise False
 
         if not email:
@@ -776,12 +784,20 @@ def email_collection(request):
             })
 
         try:
-            # Attempt to create the email record
-            email_collection = EmailCollection.objects.create(
+            # Check if the email already exists
+            email_collection, created = EmailCollection.objects.get_or_create(
                 email=email,
-                receive_offers=receive_offers
+                defaults={'receive_offers': receive_offers}
             )
-            
+
+            if not created:
+                # Handle the case where the email already exists
+                messages.error(request, "This email is already registered. Please use a different email or log in.")
+                return render(request, 'myapp/quiz/email_collection.html', {
+                    'email': email,
+                    'receive_offers': receive_offers,
+                })
+
             # Prepare the email content
             subject = 'Welcome to iRiseUp.Ai!'
             html_message = render_to_string('welcome_email.html', {'email': email})
@@ -796,14 +812,15 @@ def email_collection(request):
             return redirect('readiness_level')
 
         except IntegrityError:
-            # Handle the case where the email already exists
-            messages.error(request, "This email is already registered. Please use a different email or log in.")
+            # Handle unexpected integrity errors
+            messages.error(request, "An error occurred while processing your request. Please try again later.")
             return render(request, 'myapp/quiz/email_collection.html', {
                 'email': email,
                 'receive_offers': receive_offers,
             })
 
     return render(request, 'myapp/quiz/email_collection.html')
+
 
 
 def send_welcome_email(user_email):
@@ -1513,3 +1530,21 @@ def quiz_results(request):
 
 def no_quiz_results(request):
     return render(request, 'myapp/course_list/no_results.html')
+
+from django.db.models import Count
+from myapp.models import EmailCollection
+
+def remove_all_duplicates():
+    duplicates = EmailCollection.objects.values('email').annotate(email_count=Count('email')).filter(email_count__gt=1)
+
+    
+    for duplicate in duplicates:
+        email = duplicate['email']
+        email_entries = EmailCollection.objects.filter(email=email)
+        email_entries.exclude(id=email_entries.first().id).delete()
+
+# Run the function
+
+def remove_all_duplicates():
+    duplicates = EmailCollection.objects.values('email').annotate(email_count=Count('email')).filter(email_count__gt=1)
+
