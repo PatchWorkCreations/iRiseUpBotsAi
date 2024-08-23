@@ -761,9 +761,8 @@ def email_collection(request):
         receive_offers = request.POST.get('receive_offers') == 'on'  # Convert "on" to True, otherwise False
 
         if not email:
-            messages.error(request, "Email address is required.")
+            messages.error(request, "Email cannot be empty.")
             return render(request, 'myapp/quiz/email_collection.html', {
-                'email': email,
                 'receive_offers': receive_offers,
             })
 
@@ -796,6 +795,7 @@ def email_collection(request):
             })
 
     return render(request, 'myapp/quiz/email_collection.html')
+
 
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
