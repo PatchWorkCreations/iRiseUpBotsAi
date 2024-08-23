@@ -51,7 +51,6 @@ class SubmitRequestForm(forms.Form):
     REQUEST_TYPES = [
         ('subscription', 'Subscription'),
         ('payments', 'Payments'),
-        ('sign_in', 'Sign-In Help'),
         ('other', 'Other'),
     ]
 
@@ -168,23 +167,25 @@ class StandardPasswordChangeForm(PasswordChangeForm):
 
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
-class UserProfileForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'email']
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
+class SignInForm(forms.Form):
+    login_identifier = forms.CharField(
+        label="Username or Email",
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter username or email'})
+    )
+    password = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'}),
+        required=True
+    )
 
-        # Check if this is a new user or if the username is being changed
-        if self.instance.pk is None or self.instance.username != username:
-            # Apply validation to ensure no spaces in the username
-            if ' ' in username:
-                raise forms.ValidationError("Usernames cannot contain spaces.")
-            
-            # Check if the username is already in use by another user
-            if User.objects.filter(username=username).exists():
-                raise forms.ValidationError('This username is already in use.')
-            
-        return username
+    def clean_login_identifier(self):
+        login_identifier = self.cleaned_data.get('login_identifier')
+        if ' ' in login_identifier:
+            raise ValidationError("Invalid login identifier. Usernames cannot contain spaces.")
+        return login_identifier
+

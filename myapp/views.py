@@ -1250,6 +1250,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .forms import SignInForm  # Import the form
 from .models import EmailCollection  # Ensure EmailCollection is imported
+import logging
 
 logger = logging.getLogger(__name__)
 
