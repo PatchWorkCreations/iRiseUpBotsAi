@@ -1,0 +1,213 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block title %}Profile Settings{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Your existing CSS for the profile settings */
+    .profile-settings-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        color: #333333;
+        border: 1px solid #dddddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .btn-primary {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        color: #ffffff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .modal-content {
+        border-radius: 8px;
+    }
+    .modal-header {
+        border-bottom: 1px solid #eeeeee;
+    }
+    .modal-title {
+        font-size: 18px;
+        color: #333333;
+    }
+    .modal-body {
+        padding: 20px;
+    }
+    .modal-footer {
+        border-top: 1px solid #eeeeee;
+        padding: 15px;
+    }
+    .close {
+        font-size: 24px;
+        color: #333333;
+        opacity: 0.6;
+    }
+    .close:hover {
+        opacity: 1;
+    }
+
+    .btn-link-custom {
+    color: #ffffff;
+    background-color: #3ea863;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;  /* Added margin-bottom to space out buttons */
+    width: 100%; /* Make the button full width to match the other buttons */
+    }
+
+    .btn-link-custom:hover {
+        background-color: #3a8b57;
+    }
+
+    .btn-link-custom:focus {
+        outline: none;
+        background-color: #35714a;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        color: #ffffff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 10px; /* Add margin-top for separation */
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+
+</style>
+
+<div class="profile-settings-container">
+    <h2>Profile Settings</h2>
+
+    <!-- Display success or error messages -->
+    {% if messages %}
+        <div class="alert alert-success">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'profile_settings' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="created_at">Member Since</label>
+            <input type="text" id="created_at" name="created_at" value="{{ user.email_collection.created_at|date:'Y-m-d' }}" class="form-control" readonly>
+        </div> 
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+        <button type="button" class="btn btn-link-custom" data-toggle="modal" data-target="#passwordChangeModal">
+            Change Password
+        </button>
+        <div id="passwordChangeSuccess"></div>            
+    </form>
+</div>
+
+<!-- Password Change Modal -->
+<div class="modal fade" id="passwordChangeModal" tabindex="-1" role="dialog" aria-labelledby="passwordChangeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="passwordChangeModalLabel">Change Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="passwordChangeForm" method="POST" action="{% url 'password_change' %}">
+                {% csrf_token %}
+                <div id="passwordChangeError"></div> <!-- Error message will be shown here -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="old_password">Current Password</label>
+                        <input type="password" id="old_password" name="old_password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_password1">New Password</label>
+                        <input type="password" id="new_password1" name="new_password1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_password2">Confirm New Password</label>
+                        <input type="password" id="new_password2" name="new_password2" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Then include Bootstrap's JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Your custom scripts -->
+<script src="{% static 'myapp/js/script.js' %}"></script>
+<script>
+
+    $(document).ready(function(){
+        $('#passwordChangeForm').on('submit', function(event){
+            event.preventDefault();
+    
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
+                success: function(response){
+                    $('#passwordChangeModal').modal('hide'); // Hide the modal
+                    $('#passwordChangeSuccess').html('<div class="alert alert-success">Password changed successfully!</div>'); // Show success message
+                },
+                error: function(xhr){
+                    let errors = JSON.parse(xhr.responseText).errors;
+                    $('#passwordChangeError').html('<div class="alert alert-danger">An error occurred: ' + errors + '</div>'); // Show error message in modal
+                }
+            });
+        });
+    });
+
+
+</script>
+{% include 'myapp/course_list/footer_course.html' %}
+{% endblock %}

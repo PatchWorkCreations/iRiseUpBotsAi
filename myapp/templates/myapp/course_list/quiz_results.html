@@ -1,0 +1,33 @@
+{% extends "myapp/base.html" %}
+{% block title %}Your Quiz Answers{% endblock %}
+
+{% block content %}
+<div class="quiz-results-container">
+    <h1>Quiz Results</h1>
+    <p><strong>Gender:</strong> {{ quiz_response.gender }}</p>
+    <p><strong>Age Range:</strong> {{ quiz_response.age_range }}</p>
+    <p><strong>Main Goal:</strong> {{ quiz_response.main_goal }}</p>
+    <p><strong>Income Source:</strong> {{ quiz_response.income_source }}</p>
+    <p><strong>Work Schedule:</strong> {{ quiz_response.work_schedule }}</p>
+    <p><strong>Job Challenges:</strong> {{ quiz_response.job_challenges }}</p>
+    <p><strong>Financial Situation:</strong> {{ quiz_response.financial_situation }}</p>
+    <p><strong>Annual Income Goal:</strong> {{ quiz_response.annual_income_goal }}</p>
+    <p><strong>Control Work Hours:</strong> {{ quiz_response.control_work_hours }}</p>
+    <p><strong>Enjoy Routine Job:</strong> {{ quiz_response.enjoy_routine_job }}</p>
+    <p><strong>Time Saved Use:</strong> {{ quiz_response.time_saved_use }}</p>
+    <p><strong>Job Interest Match:</strong> {{ quiz_response.job_interest_match }}</p>
+    <p><strong>Digital Business Knowledge:</strong> {{ quiz_response.digital_business_knowledge }}</p>
+    <p><strong>Side Hustle Experience:</strong> {{ quiz_response.side_hustle_experience }}</p>
+    <p><strong>Learning New Skills:</strong> {{ quiz_response.learning_new_skills }}</p>
+    <p><strong>AI Tools Familiarity:</strong> {{ quiz_response.ai_tools_familiarity }}</p>
+    <p><strong>Content Writing Knowledge:</strong> {{ quiz_response.content_writing_knowledge }}</p>
+    <p><strong>Digital Marketing Knowledge:</strong> {{ quiz_response.digital_marketing_knowledge }}</p>
+    <p><strong>AI Income Boost Awareness:</strong> {{ quiz_response.ai_income_boost_awareness }}</p>
+    <p><strong>Fields of Interest:</strong> {{ quiz_response.fields_interest }}</p>
+    <p><strong>AI Mastery Readiness:</strong> {{ quiz_response.ai_mastery_readiness }}</p>
+    <p><strong>Focus Ability:</strong> {{ quiz_response.focus_ability }}</p>
+    <p><strong>Special Goal:</strong> {{ quiz_response.special_goal }}</p>
+    <p><strong>Time to Achieve Goal:</strong> {{ quiz_response.time_to_achieve_goal }}</p>
+
+</div>
+{% endblock %}

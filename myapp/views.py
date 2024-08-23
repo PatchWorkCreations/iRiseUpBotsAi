@@ -1,5 +1,43 @@
-from django.shortcuts import render
-import os
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.models import User
+from django.utils.encoding import force_str
+from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.views import (
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+    PasswordChangeView,
+    PasswordChangeDoneView
+)
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from django.utils.crypto import get_random_string
+from django.utils import timezone
+from datetime import datetime, timedelta
+import logging
+import requests
+import uuid
+import json
+
+from myapp.forms import CustomPasswordResetForm, SubmitRequestForm, CustomPasswordChangeForm
+from myapp.models import EmailCollection, Course, UserCourseAccess, KnowledgeBaseCategory, KnowledgeBaseArticle, KnowledgeBaseSubCategory
+from myapp.services.paypal_client import PayPalClient
+from square.client import Client
+
 
 
 def about(request):
@@ -97,16 +135,6 @@ def servicedetail4(request):
 def servicedetail5(request):
     return render(request, 'myapp/service-detail5.html')
 
-
-# myapp/views.py
-
-
-from django.shortcuts import render, get_object_or_404
-from .models import Course, SubCourse, Lesson
-
-# views.py
-from django.shortcuts import render
-
 def profile_view(request):
     user = request.user
 
@@ -134,10 +162,7 @@ def sub_course_detail(request, sub_course_id):
 def lesson_detail(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     return render(request, 'myapp/course_list/lesson_detail.html', {'lesson': lesson})
-from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
-from .models import Lesson
-import json
+
 
 def lesson_detail(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
@@ -170,11 +195,6 @@ def next_lesson(request, lesson_id):
     else:
         return redirect('course_detail', course_id=current_lesson.parent_sub_course.parent_course.id)  # Redirect to course detail page
     
-
-from django.shortcuts import render, redirect
-
-from django.shortcuts import render, redirect
-from datetime import datetime, timedelta
 
 def combined_quiz(request):
     current_step = request.session.get('current_step', 'start')
@@ -497,7 +517,6 @@ def control_work_hours(request):
         return redirect('routine_work')
     return render(request, 'myapp/quiz/control_work_hours.html')
 
-from django.shortcuts import render, redirect
 
 def routine_work(request):
     gender = request.session.get('gender')
@@ -720,8 +739,6 @@ def time_to_achieve_goal(request):
         return redirect('results')  
     return render(request, 'myapp/quiz/time_to_achieve_goal.html')
 
-from datetime import datetime, timedelta
-from django.shortcuts import render, redirect
 
 def results(request):
     # Get the current date
@@ -746,14 +763,6 @@ def results(request):
 
 def loading_page(request):
     return render(request, 'myapp/quiz/loading_page.html')
-
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from .models import EmailCollection
-from django.db import IntegrityError
-from django.shortcuts import render, redirect
-from django.contrib import messages
 
 def email_collection(request):
     if request.method == 'POST':
@@ -797,10 +806,6 @@ def email_collection(request):
     return render(request, 'myapp/quiz/email_collection.html')
 
 
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-
 def send_welcome_email(user_email):
     subject = 'Welcome to iRiseUp.Ai!'
     from_email = 'juliavictorio16@gmail.com'  # Replace with your actual email address
@@ -826,7 +831,6 @@ def readiness_level(request):
     return render(request, 'myapp/quiz/readiness_level.html')  # Replace with the correct template path
 
 
-from django.shortcuts import render
 
 def personalized_plan(request):
     # Retrieve session data
@@ -866,24 +870,6 @@ def personalized_plan(request):
     return render(request, 'myapp/quiz/personalized_plan.html', context)
 
 
-
-from django.core.mail import send_mail
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import uuid
-import json
-from .models import EmailCollection, Course, UserCourseAccess
-from django.utils.crypto import get_random_string
-from django.contrib.auth.models import User
-from django.utils import timezone
-from datetime import timedelta
-import logging
-from django.utils import timezone
-from datetime import timedelta
-from .models import UserCourseAccess, Course
-from square.client import Client
-from django.conf import settings
-
 # Initialize the Square Client
 client = Client(
     access_token=settings.SQUARE_ACCESS_TOKEN,  # Securely retrieved from environment variables
@@ -900,8 +886,6 @@ def determine_amount_based_on_plan(plan):
     else:
         return 0
 
-from django.utils import timezone
-from datetime import timedelta
 
 def grant_course_access(user, selected_plan):
     """
@@ -932,8 +916,6 @@ def grant_course_access(user, selected_plan):
 
     return True
 
-
-import logging
 
 # Get an instance of a logger
 logger = logging.getLogger('myapp')
@@ -1008,17 +990,6 @@ def process_payment(request):
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
 
-from django.conf import settings
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import logging
-import requests  # Ensure you have this imported
-from myapp.services.paypal_client import PayPalClient
-from myapp.models import EmailCollection, User
-from django.core.mail import send_mail
-from django.utils.crypto import get_random_string
-
 # Initialize the logger
 logger = logging.getLogger(__name__)
 
@@ -1088,10 +1059,6 @@ def create_paypal_order(request):
             logger.error("Failed to create PayPal order: %s", str(e))
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method."}, status=405)
-
-
-import os
-from django.conf import settings
 
 
 @csrf_exempt
@@ -1166,8 +1133,6 @@ def complete_paypal_payment(request):
 
 
 
-from django.shortcuts import render
-
 def payment_page(request):
     return render(request, 'myapp/quiz/process_payment.html')
 
@@ -1185,12 +1150,6 @@ def terms_conditions(request):
 def privacy_policy(request):
     return render(request, 'myapp/quiz/privacy_policy.html')  # Privacy Policy view
 
-from django.shortcuts import render, get_object_or_404
-from myapp.models import KnowledgeBaseCategory, KnowledgeBaseArticle
-
-from django.shortcuts import render, get_object_or_404
-from myapp.models import KnowledgeBaseCategory, KnowledgeBaseArticle, KnowledgeBaseSubCategory
-
 def support_center(request):
     # Get all categories
     categories = KnowledgeBaseCategory.objects.prefetch_related('subcategories__articles').all()
@@ -1204,25 +1163,17 @@ def support_center(request):
     }
     return render(request, 'myapp/quiz/support/support_center.html', context)
 
-from myapp.models import KnowledgeBaseCategory
-from django.shortcuts import render
 
 def knowledge_base(request):
     categories = KnowledgeBaseCategory.objects.prefetch_related('subcategories__articles').all()
     return render(request, 'myapp/quiz/support/knowledge_base.html', {'categories': categories})
 
-from django.shortcuts import render, get_object_or_404
-from myapp.models import KnowledgeBaseSubCategory
 
 def subcategory_detail(request, id):
     subcategory = get_object_or_404(KnowledgeBaseSubCategory, id=id)
     articles = subcategory.articles.all()
     return render(request, 'myapp/quiz/support/subcategory_detail.html', {'subcategory': subcategory, 'articles': articles})
 
-
-from django.shortcuts import render, get_object_or_404
-from myapp.models import KnowledgeBaseArticle
-import json
 
 def article_detail(request, article_id):
     article = get_object_or_404(KnowledgeBaseArticle, id=article_id)
@@ -1245,9 +1196,6 @@ def article_detail(request, article_id):
         'related_articles': related_articles,
     })
 
-
-from django.shortcuts import render, get_object_or_404
-from myapp.models import KnowledgeBaseCategory, KnowledgeBaseArticle
 
 def category_detail(request, id):
     category = get_object_or_404(KnowledgeBaseCategory, id=id)
@@ -1295,12 +1243,6 @@ def preview_email(request):
     return render(request, 'welcome_email.html', {'user_email': user_email})
 
 
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from .models import EmailCollection
-import logging
-
 logger = logging.getLogger(__name__)
 
 def sign_in(request):
@@ -1335,13 +1277,6 @@ def sign_in(request):
         return render(request, 'myapp/quiz/sign_in.html')
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from .models import EmailCollection
-import logging
-
 logger = logging.getLogger(__name__)
 
 
@@ -1350,11 +1285,6 @@ def sign_out(request):
     logout(request)  # This logs the user out
     return redirect('sign_in')  # Redirect to the sign-in page after logging out
 
-
-from django.contrib.auth.views import PasswordChangeView
-from django.urls import reverse_lazy
-from .forms import CustomPasswordChangeForm
-from .models import EmailCollection
 
 class CustomPasswordChangeView(PasswordChangeView):
     form_class = CustomPasswordChangeForm
@@ -1373,15 +1303,9 @@ class CustomPasswordChangeView(PasswordChangeView):
         return response
 
     
-from django.contrib.auth.views import PasswordChangeDoneView
-
 class CustomPasswordChangeDoneView(PasswordChangeDoneView):
     template_name = 'myapp/password_change_done.html'
 
-
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.contrib.auth.models import User
 
 @receiver(post_save, sender=User)
 def create_email_collection(sender, instance, created, **kwargs):
@@ -1393,14 +1317,6 @@ def save_email_collection(sender, instance, **kwargs):
     instance.email_collection.save()  # Use the related_name 'email_collection'
 
 
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView, PasswordChangeView, PasswordChangeDoneView
-from django.urls import reverse_lazy
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from .forms import SubmitRequestForm
-
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'myapp/forgot_password.html'
     email_template_name = 'myapp/password_reset_email.html'
@@ -1409,12 +1325,6 @@ class CustomPasswordResetView(PasswordResetView):
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'myapp/password_reset_done.html'
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.http import urlsafe_base64_decode
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.models import User
-from django.utils.encoding import force_str
-from .forms import CustomPasswordResetForm
 
 def custom_password_reset_confirm(request, uidb64=None, token=None):
     assert uidb64 is not None and token is not None  # Ensure both are provided
@@ -1442,8 +1352,6 @@ def custom_password_reset_confirm(request, uidb64=None, token=None):
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'myapp/password_reset_complete.html'
 
-
-from django.views.generic import TemplateView
 
 class CustomPasswordChangeDoneView(TemplateView):
     template_name = 'myapp/password_change_done.html'
@@ -1499,11 +1407,6 @@ def submit_request(request):
 def submit_request_success(request):
     return render(request, 'myapp/quiz/support/submit_request_success.html')
 
-from django.shortcuts import render
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_decode
-from django.contrib.auth.models import User
-from django.utils.encoding import force_str
 
 def password_reset_invalid_link(request, uidb64=None, token=None):
     # Decode the user ID from the URL
@@ -1523,5 +1426,69 @@ def password_reset_invalid_link(request, uidb64=None, token=None):
         # If the token is invalid or the user does not exist, render the invalid link template
         return render(request, 'myapp/quiz/password_reset_invalid_link.html')
 
-# Add this to your urls.py
-# path('password-reset/invalid/', views.password_reset_invalid_link, name='password_reset_invalid_link'),
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import StandardPasswordChangeForm
+from .models import EmailCollection
+from django.db import IntegrityError
+
+@login_required
+def profile_settings(request):
+    user = request.user
+
+    # Ensure EmailCollection exists for the user
+    if not hasattr(user, 'email_collection'):
+        email_collection = EmailCollection.objects.filter(email=user.email).first()
+        if not email_collection:
+            EmailCollection.objects.create(user=user, email=user.email)
+        else:
+            email_collection.user = user
+            email_collection.save()
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+
+        try:
+            user.username = username
+            user.email = email
+            user.email_collection.email = email
+            user.email_collection.save()
+
+            user.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('profile_settings')
+        except IntegrityError:
+            messages.error(request, 'This email is already associated with another account.')
+            return redirect('profile_settings')
+    else:
+        # Use the standard password change form
+        password_form = StandardPasswordChangeForm(user=request.user)
+
+    return render(request, 'myapp/course_list/profile_settings.html', {
+        'password_form': password_form,
+    })
+
+from django.shortcuts import render, redirect
+from .models import QuizResponse
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def quiz_results(request):
+    try:
+        # Fetch the quiz response for the logged-in user
+        quiz_response = QuizResponse.objects.get(user=request.user)
+        
+        context = {
+            'quiz_response': quiz_response,
+        }
+        
+        return render(request, 'myapp/course_list/quiz_results.html', context)
+    
+    except QuizResponse.DoesNotExist:
+        # If no quiz response is found for the user, redirect to the no results page or prompt them to take the quiz
+        return redirect('no_quiz_results')
+
+def no_quiz_results(request):
+    return render(request, 'myapp/course_list/no_results.html')

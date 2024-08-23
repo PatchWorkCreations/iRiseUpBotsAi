@@ -108,9 +108,8 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         fields = ['username', 'old_password', 'new_password1', 'new_password2']
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.get('user')
-        super().__init__(user, *args, **kwargs)
-        self.fields['username'].initial = user.username
+        super().__init__(*args, **kwargs)
+        self.fields['username'].initial = self.user.username
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -119,3 +118,42 @@ class CustomPasswordChangeForm(PasswordChangeForm):
             user.save()
         return user
 
+
+from django import forms
+from django.contrib.auth.models import User
+from .models import EmailCollection
+
+class UpdateProfileForm(forms.ModelForm):
+    username = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter your username'
+    }))
+    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter your email'
+    }))
+    
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exclude(username=self.instance.username).exists():
+            raise forms.ValidationError('This email address is already in use.')
+        return email
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exclude(email=self.instance.email).exists():
+            raise forms.ValidationError('This username is already in use.')
+        return username
+
+
+from django import forms
+from django.contrib.auth.forms import PasswordChangeForm
+
+class StandardPasswordChangeForm(PasswordChangeForm):
+    class Meta:
+        model = User
+        fields = ['old_password', 'new_password1', 'new_password2']

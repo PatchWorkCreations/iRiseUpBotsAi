@@ -132,7 +132,7 @@ urlpatterns = [
     #path('change-password/', views.CustomPasswordChangeView.as_view(), name='password_change'),
     path('change-password/', views.CustomPasswordChangeView.as_view(), name='password_change'),
     path('change-password/done/', views.CustomPasswordChangeDoneView.as_view(), name='password_change_done'),
-    
+
     path('password-reset/invalid/', views.password_reset_invalid_link, name='password_reset_invalid_link'),
     
 
@@ -142,7 +142,10 @@ urlpatterns = [
 
     path('profile/', views.profile_view, name='profile'),
     # path('update-profile/', views.update_profile, name='update_profile'),
-    
+    path('profile/settings/', views.profile_settings, name='profile_settings'),
+    path('quiz-results/', views.quiz_results, name='quiz_results'),
+    path('no-quiz-results/', views.no_quiz_results, name='no_quiz_results'),
+
     path('submit-request/', views.submit_request, name='submit_request'),
     path('submit-request/success/', views.submit_request_success, name='submit_request_success'),
 
