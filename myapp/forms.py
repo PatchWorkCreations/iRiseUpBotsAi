@@ -145,8 +145,16 @@ class UpdateProfileForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
+
+        # Apply space validation only if the username is new or being changed
+        if self.instance.pk is None or self.instance.username != username:
+            if ' ' in username:
+                raise forms.ValidationError("Usernames cannot contain spaces.")
+
+        # Ensure the new username isn't already taken
         if User.objects.filter(username=username).exclude(email=self.instance.email).exists():
             raise forms.ValidationError('This username is already in use.')
+
         return username
 
 
@@ -157,3 +165,26 @@ class StandardPasswordChangeForm(PasswordChangeForm):
     class Meta:
         model = User
         fields = ['old_password', 'new_password1', 'new_password2']
+
+from django import forms
+from django.contrib.auth.models import User
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+
+        # Check if this is a new user or if the username is being changed
+        if self.instance.pk is None or self.instance.username != username:
+            # Apply validation to ensure no spaces in the username
+            if ' ' in username:
+                raise forms.ValidationError("Usernames cannot contain spaces.")
+            
+            # Check if the username is already in use by another user
+            if User.objects.filter(username=username).exists():
+                raise forms.ValidationError('This username is already in use.')
+            
+        return username

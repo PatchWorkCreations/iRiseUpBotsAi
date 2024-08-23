@@ -1245,39 +1245,59 @@ def preview_email(request):
 
 logger = logging.getLogger(__name__)
 
-def sign_in(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        logger.debug(f"Attempting login for email: {email}")
-
-        user = authenticate(request, username=email, password=password)
-
-        if user is not None:
-            login(request, user)
-            email_collection = EmailCollection.objects.filter(user=user).first()
-
-            if email_collection is None:
-                messages.error(request, 'No account associated with this email.')
-                return redirect('sign_in')
-
-            if not email_collection.first_login_completed:
-                logger.debug(f"First login detected for user: {user.username}")
-                messages.info(request, 'Please change your password to continue.')
-                return redirect('password_change')
-            else:
-                logger.debug(f"Redirecting to course menu for user: {user.username}")
-                messages.success(request, f'Welcome back, {user.username}!')
-                return redirect('coursemenu')
-        else:
-            logger.error(f"Authentication failed for email: {email}")
-            messages.error(request, 'Invalid email or password. Please try again.')
-            return redirect('sign_in')
-    else:
-        return render(request, 'myapp/quiz/sign_in.html')
-
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from .forms import SignInForm  # Import the form
+from .models import EmailCollection  # Ensure EmailCollection is imported
 
 logger = logging.getLogger(__name__)
+
+def sign_in(request):
+    if request.method == 'POST':
+        form = SignInForm(request.POST)  # Bind the form to the POST data
+
+        if form.is_valid():
+            login_identifier = form.cleaned_data.get('login_identifier')
+            password = form.cleaned_data.get('password')
+            logger.debug(f"Attempting login for identifier: {login_identifier}")
+
+            # Authenticate using username or email
+            user = authenticate(request, username=login_identifier, password=password)
+
+            if user is None:
+                # If authentication fails using the username, try using the email
+                try:
+                    user = User.objects.get(email=login_identifier)
+                    user = authenticate(request, username=user.username, password=password)
+                except User.DoesNotExist:
+                    user = None
+
+            if user is not None:
+                login(request, user)
+                email_collection = EmailCollection.objects.filter(user=user).first()
+
+                if email_collection is None:
+                    messages.error(request, 'No account associated with this email.')
+                    return redirect('sign_in')
+
+                if not email_collection.first_login_completed:
+                    logger.debug(f"First login detected for user: {user.username}")
+                    messages.info(request, 'Please change your password to continue.')
+                    return redirect('password_change')
+                else:
+                    logger.debug(f"Redirecting to course menu for user: {user.username}")
+                    messages.success(request, f'Welcome back, {user.username}!')
+                    return redirect('coursemenu')
+            else:
+                logger.error(f"Authentication failed for identifier: {login_identifier}")
+                messages.error(request, 'Invalid username/email or password. Please try again.')
+                return redirect('sign_in')
+
+    else:
+        form = SignInForm()  # Render an empty form
+
+    return render(request, 'myapp/quiz/sign_in.html', {'form': form})
 
 
 

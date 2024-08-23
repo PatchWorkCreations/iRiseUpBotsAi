@@ -8,19 +8,8 @@
     <h2>Welcome Back</h2>
     <form method="post" action="{% url 'sign_in' %}">
         {% csrf_token %}
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="form-control" required placeholder="example@gmail.com">
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <div class="input-group">
-                <input type="password" id="password" name="password" class="form-control" required placeholder="Enter your password">
-                <span class="input-group-text" onclick="togglePasswordVisibility()">
-                    <i id="password-eye" class="fas fa-eye"></i>
-                </span>
-            </div>
-        </div>
+        {{ form.as_p }}  <!-- Render the form fields -->
+        
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -33,7 +22,6 @@
         <p>Don't have an account? <a href="{% url 'start_quiz' %}" style="color: #6c63ff;">Start the quiz</a></p>
     </form>
 </div>
-
 
 <style>
 .container {
