@@ -1014,8 +1014,11 @@ def process_payment(request):
             card_token = data.get('source_id')
             selected_plan = data.get('plan')
 
-            # Fetch the latest EmailCollection object
-            user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+            # Ensure the correct email is being used from the user's current session or latest entry
+            user_email = request.session.get('email')
+            if not user_email:
+                # Fallback to the most recent entry if session email is not set
+                user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
 
             if not user_email or not user_email.email:
                 logger.error("Email is missing or invalid. Cannot proceed with payment.")
@@ -1081,6 +1084,7 @@ def process_payment(request):
             return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 # Initialize the logger
 logger = logging.getLogger(__name__)
