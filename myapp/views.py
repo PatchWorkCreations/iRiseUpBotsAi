@@ -1178,30 +1178,35 @@ def complete_paypal_payment(request):
                         return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
 
                 # Handle email notification and user account creation
-                user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
-                if user_email:
-                    random_password = get_random_string(8)
+                user_email = request.session.get('email')
+                if not user_email:
+                    logger.error("Email is missing from session.")
+                    return JsonResponse({'success': False, 'error': 'Email is missing from session.'}, status=400)
 
-                    # Create or retrieve the user
-                    user, created = User.objects.get_or_create(
-                        username=user_email.email,
-                        defaults={'email': user_email.email}
+                random_password = get_random_string(8)
+
+                # Create or retrieve the user
+                user, created = User.objects.get_or_create(
+                    username=user_email,
+                    defaults={'email': user_email}
+                )
+                if created:
+                    user.set_password(random_password)
+                    user.save()
+
+                    # Grant access to the course
+                    grant_course_access(user, selected_plan)
+
+                    # Send email notification
+                    subject = 'Your Account Has Been Created'
+                    message = (
+                        f'Your account has been created. Your temporary password is: {random_password}\n'
+                        'Please log in and change your password.\n'
+                        'You now have access to the course menu based on your selected plan.'
                     )
-                    if created:
-                        user.set_password(random_password)
-                        user.save()
-
-                        # Grant access to the course
-                        grant_course_access(user, selected_plan)
-
-                        # Send email notification
-                        subject = 'Your Account Has Been Created'
-                        message = (f'Your account has been created. Your temporary password is: {random_password}\n'
-                                   'Please log in and change your password.\n'
-                                   'You now have access to the course menu based on your selected plan.')
-                        send_mail(subject, message, 'your-email@example.com', [user_email.email])
-                    else:
-                        logger.info(f"User {user_email.email} already exists. Skipping creation.")
+                    send_mail(subject, message, 'your-email@example.com', [user_email])
+                else:
+                    logger.info(f"User {user_email} already exists. Skipping creation.")
 
                 # Clear the selected plan from the session
                 request.session.pop('selected_plan', None)
@@ -1215,7 +1220,6 @@ def complete_paypal_payment(request):
             logger.error("Error capturing PayPal order: %s", str(e))
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
-
 
 
 def payment_page(request):
