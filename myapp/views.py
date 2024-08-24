@@ -37,7 +37,9 @@ from myapp.forms import CustomPasswordResetForm, SubmitRequestForm, CustomPasswo
 from myapp.models import EmailCollection, Course, UserCourseAccess, KnowledgeBaseCategory, KnowledgeBaseArticle, KnowledgeBaseSubCategory
 from myapp.services.paypal_client import PayPalClient
 from square.client import Client
-
+from django.shortcuts import render, get_object_or_404
+from .models import Lesson, SubCourse, UserSubCourseAccess
+from django.urls import reverse
 
 
 def about(request):
@@ -152,7 +154,24 @@ def course_list(request):
 def course_detail(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     sub_courses = course.sub_courses.all()  # Use the related name
-    return render(request, 'myapp/course_list/course_detail.html', {'course': course, 'sub_courses': sub_courses})
+    user_progress = {}
+
+    if request.user.is_authenticated:
+        for sub_course in sub_courses:
+            lessons = sub_course.lessons.all()
+            completed_lessons = lessons.filter(userlessonprogress__user=request.user, userlessonprogress__completed=True).count()
+            user_progress[sub_course.id] = {
+                'completed_lessons': completed_lessons,
+                'total_lessons': lessons.count(),
+                'sub_course_progress': UserSubCourseAccess.objects.filter(user=request.user, sub_course=sub_course).first()
+            }
+
+    context = {
+        'course': course,
+        'sub_courses': sub_courses,
+        'user_progress': user_progress,
+    }
+    return render(request, 'myapp/course_list/course_detail.html', context)
 
 def sub_course_detail(request, sub_course_id):
     sub_course = get_object_or_404(SubCourse, id=sub_course_id)
@@ -195,6 +214,43 @@ def next_lesson(request, lesson_id):
     else:
         return redirect('course_detail', course_id=current_lesson.parent_sub_course.parent_course.id)  # Redirect to course detail page
     
+def coursemenu(request):
+    all_courses = Course.objects.all()
+    current_course_access = None
+    current_course = None
+    course_progress = {}
+
+    if request.user.is_authenticated:
+        current_course_access = UserCourseAccess.objects.filter(user=request.user, progress__gt=0).first()
+
+        if current_course_access and current_course_access.has_expired():
+            # Access has expired, remove access
+            current_course_access.delete()
+            current_course_access = None
+        else:
+            current_course = current_course_access.course if current_course_access else None
+
+        for course in all_courses:
+            sub_courses = course.sub_courses.all()
+            sub_course_progress = {}
+            for sub_course in sub_courses:
+                lessons = sub_course.lessons.all()
+                completed_lessons = lessons.filter(userlessonprogress__user=request.user, userlessonprogress__completed=True).count()
+                sub_course_progress[sub_course.id] = {
+                    'completed_lessons': completed_lessons,
+                    'total_lessons': lessons.count(),
+                    'progress': completed_lessons / lessons.count() * 100 if lessons.count() > 0 else 0
+                }
+            course_progress[course.id] = sub_course_progress
+
+    context = {
+        'all_courses': all_courses,
+        'current_course': current_course,
+        'current_course_access': current_course_access,
+        'course_progress': course_progress,
+    }
+    return render(request, 'myapp/coursemenu.html', context)
+
 
 def combined_quiz(request):
     current_step = request.session.get('current_step', 'start')
@@ -1309,29 +1365,6 @@ def category_detail(request, id):
     }
     return render(request, 'myapp/quiz/support/category_detail.html', context)
 
-
-
-def coursemenu(request):
-    all_courses = Course.objects.all()
-    current_course_access = None
-    current_course = None
-
-    if request.user.is_authenticated:
-        current_course_access = UserCourseAccess.objects.filter(user=request.user).first()
-
-        if current_course_access and current_course_access.has_expired():
-            # Access has expired, remove access
-            current_course_access.delete()
-            current_course_access = None
-        else:
-            current_course = current_course_access.course if current_course_access else None
-
-    context = {
-        'all_courses': all_courses,
-        'current_course': current_course,
-        'current_course_access': current_course_access,
-    }
-    return render(request, 'myapp/coursemenu.html', context)
 
 
 def preview_email(request):

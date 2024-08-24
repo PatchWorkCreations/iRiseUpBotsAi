@@ -2,6 +2,53 @@
 {% block title %}Your Quiz Answers{% endblock %}
 
 {% block content %}
+<style>
+.quiz-results-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 80px; /* Add extra padding at the bottom */
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.quiz-results-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.quiz-results-container p {
+    font-size: 1em;
+    margin: 10px 0;
+    line-height: 1.5;
+    color: #555;
+}
+
+.quiz-results-container p strong {
+    font-weight: 600;
+    color: #333;
+}
+
+@media (max-width: 600px) {
+    .quiz-results-container {
+        padding: 15px;
+        padding-bottom: 80px; /* Ensure padding at the bottom for smaller screens as well */
+    }
+
+    .quiz-results-container h1 {
+        font-size: 1.5em;
+    }
+
+    .quiz-results-container p {
+        font-size: 0.9em;
+    }
+}
+
+</style>
 <div class="quiz-results-container">
     <h1>Quiz Results</h1>
     <p><strong>Gender:</strong> {{ quiz_response.gender }}</p>
@@ -30,4 +77,5 @@
     <p><strong>Time to Achieve Goal:</strong> {{ quiz_response.time_to_achieve_goal }}</p>
 
 </div>
+{% include 'myapp/course_list/footer_course.html' %}
 {% endblock %}

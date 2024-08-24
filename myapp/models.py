@@ -27,6 +27,14 @@ class Lesson(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
 
+class UserLessonProgress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
+    completed_on = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.lesson.title} (Completed: {self.completed})"
 
 
 class UserCourseAccess(models.Model):
@@ -39,7 +47,15 @@ class UserCourseAccess(models.Model):
         return f"{self.user.username} - {self.course.title}"
 
     def has_expired(self):
-        return timezone.now() > self.expiration_date
+        return self.expiration_date is not None and timezone.now() > self.expiration_date
+
+    def update_progress(self):
+        # Automatically calculate progress based on completed sub-courses or lessons
+        total_sub_courses = self.course.sub_courses.count()
+        if total_sub_courses > 0:
+            completed_sub_courses = UserSubCourseAccess.objects.filter(user=self.user, sub_course__parent_course=self.course, progress=100.0).count()
+            self.progress = (completed_sub_courses / total_sub_courses) * 100
+            self.save()
 
 class UserSubCourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -48,6 +64,15 @@ class UserSubCourseAccess(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.sub_course.title}"
+
+    def update_progress(self):
+        # Automatically calculate progress based on completed lessons
+        total_lessons = self.sub_course.lessons.count()
+        if total_lessons > 0:
+            completed_lessons = UserLessonProgress.objects.filter(user=self.user, lesson__parent_sub_course=self.sub_course, completed=True).count()
+            self.progress = (completed_lessons / total_lessons) * 100
+            self.save()
+
 
 from django.contrib.auth.models import User
 from django.db import models
