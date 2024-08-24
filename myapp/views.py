@@ -739,8 +739,69 @@ def time_to_achieve_goal(request):
         return redirect('results')  
     return render(request, 'myapp/quiz/time_to_achieve_goal.html')
 
+from .models import QuizResponse
+
+def save_quiz_response(request):
+    # Retrieve all the session data
+    gender = request.session.get('gender', '')
+    age_range = request.session.get('age_range', '')
+    main_goal = request.session.get('main_goal', '')
+    income_source = request.session.get('income_source', '')
+    work_schedule = request.session.get('work_schedule', '')
+    job_challenges = request.session.get('job_challenges', [])
+    financial_situation = request.session.get('financial_situation', '')
+    annual_income_goal = request.session.get('annual_income_goal', '')
+    control_work_hours = request.session.get('control_work_hours', '')
+    routine_work = request.session.get('routine_work', '')
+    time_saved_use = request.session.get('time_saved_use', '')
+    job_interest_match = request.session.get('job_interest_question', '')
+    digital_business_knowledge = request.session.get('digital_business_knowledge', '')
+    side_hustle_experience = request.session.get('side_hustle_experience', '')
+    learning_new_skills = request.session.get('learning_new_skills', '')
+    ai_tools_familiarity = request.session.get('ai_tools_familiarity', [])
+    content_writing_knowledge = request.session.get('content_writing_knowledge', '')
+    digital_marketing_knowledge = request.session.get('digital_marketing_knowledge', '')
+    ai_income_boost_awareness = request.session.get('ai_income_boost_awareness', '')
+    fields_interest = request.session.get('fields_interest', [])
+    ai_mastery_readiness = request.session.get('ai_mastery_readiness', '')
+    focus_ability = request.session.get('focus_ability', '')
+    special_goal = request.session.get('special_goal', '')
+    time_to_achieve_goal = request.session.get('time_to_achieve_goal', '')
+
+    # Save the response to the database
+    QuizResponse.objects.create(
+        user=request.user,
+        gender=gender,
+        age_range=age_range,
+        main_goal=main_goal,
+        income_source=income_source,
+        work_schedule=work_schedule,
+        job_challenges=job_challenges,
+        financial_situation=financial_situation,
+        annual_income_goal=annual_income_goal,
+        control_work_hours=control_work_hours,
+        enjoy_routine_job=routine_work,
+        time_saved_use=time_saved_use,
+        job_interest_match=job_interest_match,
+        digital_business_knowledge=digital_business_knowledge,
+        side_hustle_experience=side_hustle_experience,
+        learning_new_skills=learning_new_skills,
+        ai_tools_familiarity=ai_tools_familiarity,
+        content_writing_knowledge=content_writing_knowledge,
+        digital_marketing_knowledge=digital_marketing_knowledge,
+        ai_income_boost_awareness=ai_income_boost_awareness,
+        fields_interest=fields_interest,
+        ai_mastery_readiness=ai_mastery_readiness,
+        focus_ability=focus_ability,
+        special_goal=special_goal,
+        time_to_achieve_goal=time_to_achieve_goal
+    )
+
 
 def results(request):
+    # Save the quiz response to the database
+    save_quiz_response(request)
+
     # Get the current date
     current_date = datetime.now()
 
@@ -1512,7 +1573,6 @@ def profile_settings(request):
 
 from django.shortcuts import render, redirect
 from .models import QuizResponse
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def quiz_results(request):
@@ -1528,10 +1588,8 @@ def quiz_results(request):
     
     except QuizResponse.DoesNotExist:
         # If no quiz response is found for the user, redirect to the no results page or prompt them to take the quiz
-        return redirect('no_quiz_results')
+        return redirect('no_results')
 
-def no_quiz_results(request):
-    return render(request, 'myapp/course_list/no_results.html')
 
 from django.db.models import Count
 from myapp.models import EmailCollection
