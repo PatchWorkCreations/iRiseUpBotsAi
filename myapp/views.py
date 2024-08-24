@@ -741,7 +741,7 @@ def time_to_achieve_goal(request):
 
 from .models import QuizResponse
 
-def save_quiz_response(request):
+def save_quiz_response(request, user):
     # Retrieve all the session data
     gender = request.session.get('gender', '')
     age_range = request.session.get('age_range', '')
@@ -768,9 +768,9 @@ def save_quiz_response(request):
     special_goal = request.session.get('special_goal', '')
     time_to_achieve_goal = request.session.get('time_to_achieve_goal', '')
 
-    # Create the QuizResponse instance
+    # Create the QuizResponse instance associated with the authenticated user
     quiz_response = QuizResponse(
-        user=request.user,  # Set the user here
+        user=user,  # Use the user object passed to the function
         gender=gender,
         age_range=age_range,
         main_goal=main_goal,
@@ -795,7 +795,7 @@ def save_quiz_response(request):
         focus_ability=focus_ability,
         special_goal=special_goal,
         time_to_achieve_goal=time_to_achieve_goal,
-        email=request.session.get('email', ''),  # Assuming the email is stored in the session
+        email=request.session.get('email', ''),  # Email from session
         receive_offers=request.session.get('receive_offers', False)
     )
 
@@ -1036,8 +1036,7 @@ def process_payment(request):
             logger.info("Square API Response: %s", result)
 
             if result.is_success():
-                save_quiz_response(request)
-                # Only create an auth_user without touching EmailCollection
+                # Create or retrieve the user
                 user, created = User.objects.get_or_create(
                     username=user_email,
                     defaults={'email': user_email}
@@ -1060,11 +1059,11 @@ def process_payment(request):
                         'You now have access to the course menu based on your selected plan.'
                     )
                     send_mail(subject, message, 'your-email@example.com', [user_email])
-                else:
-                    logger.info(f"User {user_email} already exists. Skipping creation.")
 
-                # Save the quiz response to the database
-                
+                logger.info(f"User {user_email} processed for payment.")
+
+                # Save the quiz response to the database linked with the user
+                save_quiz_response(request, user)
 
                 return JsonResponse({"success": True})
 
@@ -1080,6 +1079,7 @@ def process_payment(request):
             return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 # Initialize the logger
 logger = logging.getLogger(__name__)
