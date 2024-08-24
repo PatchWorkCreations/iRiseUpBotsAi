@@ -1338,7 +1338,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .forms import SignInForm  # Import the form
-from .models import EmailCollection  # Ensure EmailCollection is imported
 import logging
 
 logger = logging.getLogger(__name__)
@@ -1365,13 +1364,9 @@ def sign_in(request):
 
             if user is not None:
                 login(request, user)
-                email_collection = EmailCollection.objects.filter(user=user).first()
 
-                if email_collection is None:
-                    messages.error(request, 'No account associated with this email.')
-                    return redirect('sign_in')
-
-                if not email_collection.first_login_completed:
+                # Check if the user's password needs to be changed (e.g., if this is their first login)
+                if user.last_login is None:
                     logger.debug(f"First login detected for user: {user.username}")
                     messages.info(request, 'Please change your password to continue.')
                     return redirect('password_change')
