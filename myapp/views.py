@@ -802,7 +802,7 @@ def email_collection(request):
             subject = 'Welcome to iRiseUp.Ai!'
             html_message = render_to_string('welcome_email.html', {'email': email})
             plain_message = strip_tags(html_message)
-            from_email = 'your-email@example.com'  # Replace with your actual sender email
+            from_email = 'juliavictorio16@gmail.com'  # Replace with your actual sender email
             to = email
 
             # Send the welcome email
