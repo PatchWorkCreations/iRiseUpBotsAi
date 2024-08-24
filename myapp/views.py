@@ -1018,9 +1018,10 @@ def process_payment(request):
             user_email = request.session.get('email')
             if not user_email:
                 # Fallback to the most recent entry if session email is not set
-                user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+                latest_email_entry = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+                user_email = latest_email_entry.email if latest_email_entry else None
 
-            if not user_email or not user_email.email:
+            if not user_email:
                 logger.error("Email is missing or invalid. Cannot proceed with payment.")
                 return JsonResponse({"error": "Email is missing or invalid."}, status=400)
 
@@ -1046,8 +1047,8 @@ def process_payment(request):
             if result.is_success():
                 # Check if the user already exists to avoid duplication
                 user, created = User.objects.get_or_create(
-                    username=user_email.email,
-                    defaults={'email': user_email.email}
+                    username=user_email,
+                    defaults={'email': user_email}
                 )
 
                 if created:
@@ -1066,9 +1067,9 @@ def process_payment(request):
                         'Please log in and change your password.\n'
                         'You now have access to the course menu based on your selected plan.'
                     )
-                    send_mail(subject, message, 'your-email@example.com', [user_email.email])
+                    send_mail(subject, message, 'your-email@example.com', [user_email])
                 else:
-                    logger.info(f"User {user_email.email} already exists. Skipping creation.")
+                    logger.info(f"User {user_email} already exists. Skipping creation.")
 
                 return JsonResponse({"success": True})
 
