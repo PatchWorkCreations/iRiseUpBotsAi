@@ -1057,6 +1057,22 @@ def process_payment(request):
                     user.set_password(random_password)
                     user.save()
 
+                    # Properly handle the EmailCollection entry
+                    email_collection, email_created = EmailCollection.objects.get_or_create(
+                        user=user,
+                        defaults={
+                            'email': user_email,
+                            'receive_offers': False,  # Or whatever logic applies here
+                            'payment_status': 'Delayed',
+                            'first_login_completed': False
+                        }
+                    )
+
+                    if not email_created:
+                        # Update email collection if already exists
+                        email_collection.email = user_email
+                        email_collection.save()
+
                     # Grant access to the course
                     grant_course_access(user, selected_plan)
 
@@ -1070,6 +1086,15 @@ def process_payment(request):
                     send_mail(subject, message, 'your-email@example.com', [user_email])
                 else:
                     logger.info(f"User {user_email} already exists. Skipping creation.")
+                    # Ensure the existing user has a corresponding email collection
+                    email_collection, email_created = EmailCollection.objects.get_or_create(
+                        user=user,
+                        defaults={'email': user_email}
+                    )
+                    if not email_created:
+                        # Update email collection if already exists
+                        email_collection.email = user_email
+                        email_collection.save()
 
                 return JsonResponse({"success": True})
 
