@@ -999,8 +999,6 @@ def grant_course_access(user, selected_plan):
 # Get an instance of a logger
 logger = logging.getLogger('myapp')
 
-from django.db import connection
-
 @csrf_exempt
 def process_payment(request):
     if request.method == "POST":
@@ -1035,15 +1033,7 @@ def process_payment(request):
             logger.info("Square API Response: %s", result)
 
             if result.is_success():
-                # Manually insert the email into EmailCollection, ignoring uniqueness constraint
-                with connection.cursor() as cursor:
-                    cursor.execute("""
-                        INSERT INTO myapp_emailcollection (email, receive_offers, created_at)
-                        VALUES (%s, %s, NOW())
-                        ON CONFLICT (email) DO NOTHING
-                    """, [user_email, False])
-
-                # Check if the user already exists to avoid duplication
+                # Only create an auth_user without touching EmailCollection
                 user, created = User.objects.get_or_create(
                     username=user_email,
                     defaults={'email': user_email}
