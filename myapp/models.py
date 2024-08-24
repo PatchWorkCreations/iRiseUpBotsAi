@@ -49,14 +49,12 @@ class UserSubCourseAccess(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.sub_course.title}"
 
-class QuizResponse(models.Model):
-    GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
-        ('other', 'Other'),
-    ]
+from django.contrib.auth.models import User
+from django.db import models
 
-    gender = models.CharField(max_length=50, choices=GENDER_CHOICES)
+class QuizResponse(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)  # Add this line
+    gender = models.CharField(max_length=50)
     age_range = models.CharField(max_length=50)
     main_goal = models.CharField(max_length=50)
     income_source = models.CharField(max_length=50)

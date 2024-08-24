@@ -770,7 +770,7 @@ def save_quiz_response(request):
 
     # Create the QuizResponse instance
     quiz_response = QuizResponse(
-        user=request.user,  # Assuming the user is authenticated
+        user=request.user,  # Set the user here
         gender=gender,
         age_range=age_range,
         main_goal=main_goal,
@@ -1036,6 +1036,7 @@ def process_payment(request):
             logger.info("Square API Response: %s", result)
 
             if result.is_success():
+                save_quiz_response(request)
                 # Only create an auth_user without touching EmailCollection
                 user, created = User.objects.get_or_create(
                     username=user_email,
@@ -1063,7 +1064,7 @@ def process_payment(request):
                     logger.info(f"User {user_email} already exists. Skipping creation.")
 
                 # Save the quiz response to the database
-                save_quiz_response(request)
+                
 
                 return JsonResponse({"success": True})
 
