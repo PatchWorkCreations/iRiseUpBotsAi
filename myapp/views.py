@@ -1011,7 +1011,9 @@ def process_payment(request):
             user_email = request.session.get('email')
             if not user_email:
                 # Fallback to the most recent entry if session email is not set
-                user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first().email
+                user_email_entry = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+                if user_email_entry:
+                    user_email = user_email_entry.email
 
             if not user_email:
                 logger.error("Email is missing or invalid. Cannot proceed with payment.")
