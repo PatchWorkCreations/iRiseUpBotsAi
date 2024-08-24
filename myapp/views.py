@@ -739,69 +739,8 @@ def time_to_achieve_goal(request):
         return redirect('results')  
     return render(request, 'myapp/quiz/time_to_achieve_goal.html')
 
-from .models import QuizResponse
-
-def save_quiz_response(request):
-    # Retrieve all the session data
-    gender = request.session.get('gender', '')
-    age_range = request.session.get('age_range', '')
-    main_goal = request.session.get('main_goal', '')
-    income_source = request.session.get('income_source', '')
-    work_schedule = request.session.get('work_schedule', '')
-    job_challenges = request.session.get('job_challenges', [])
-    financial_situation = request.session.get('financial_situation', '')
-    annual_income_goal = request.session.get('annual_income_goal', '')
-    control_work_hours = request.session.get('control_work_hours', '')
-    routine_work = request.session.get('routine_work', '')
-    time_saved_use = request.session.get('time_saved_use', '')
-    job_interest_match = request.session.get('job_interest_question', '')
-    digital_business_knowledge = request.session.get('digital_business_knowledge', '')
-    side_hustle_experience = request.session.get('side_hustle_experience', '')
-    learning_new_skills = request.session.get('learning_new_skills', '')
-    ai_tools_familiarity = request.session.get('ai_tools_familiarity', [])
-    content_writing_knowledge = request.session.get('content_writing_knowledge', '')
-    digital_marketing_knowledge = request.session.get('digital_marketing_knowledge', '')
-    ai_income_boost_awareness = request.session.get('ai_income_boost_awareness', '')
-    fields_interest = request.session.get('fields_interest', [])
-    ai_mastery_readiness = request.session.get('ai_mastery_readiness', '')
-    focus_ability = request.session.get('focus_ability', '')
-    special_goal = request.session.get('special_goal', '')
-    time_to_achieve_goal = request.session.get('time_to_achieve_goal', '')
-
-    # Save the response to the database
-    QuizResponse.objects.create(
-        user=request.user,
-        gender=gender,
-        age_range=age_range,
-        main_goal=main_goal,
-        income_source=income_source,
-        work_schedule=work_schedule,
-        job_challenges=job_challenges,
-        financial_situation=financial_situation,
-        annual_income_goal=annual_income_goal,
-        control_work_hours=control_work_hours,
-        enjoy_routine_job=routine_work,
-        time_saved_use=time_saved_use,
-        job_interest_match=job_interest_match,
-        digital_business_knowledge=digital_business_knowledge,
-        side_hustle_experience=side_hustle_experience,
-        learning_new_skills=learning_new_skills,
-        ai_tools_familiarity=ai_tools_familiarity,
-        content_writing_knowledge=content_writing_knowledge,
-        digital_marketing_knowledge=digital_marketing_knowledge,
-        ai_income_boost_awareness=ai_income_boost_awareness,
-        fields_interest=fields_interest,
-        ai_mastery_readiness=ai_mastery_readiness,
-        focus_ability=focus_ability,
-        special_goal=special_goal,
-        time_to_achieve_goal=time_to_achieve_goal
-    )
-
 
 def results(request):
-    # Save the quiz response to the database
-    save_quiz_response(request)
-
     # Get the current date
     current_date = datetime.now()
 
@@ -1000,55 +939,57 @@ def grant_course_access(user, selected_plan):
 logger = logging.getLogger('myapp')
 
 @csrf_exempt
-def process_payment(request):
-    if request.method == "POST":
+def complete_paypal_payment(request):
+    if request.method == 'GET':
         try:
-            data = json.loads(request.body)
-            card_token = data.get('source_id')
-            selected_plan = data.get('plan')
+            order_id = request.GET.get('token')
+            selected_plan = request.session.get('selected_plan')
+            logger.info(f"Retrieved plan from session: {selected_plan}")
 
-            # Ensure the correct email is being used from the user's current session
-            user_email = request.session.get('email')
-            if not user_email:
-                logger.error("Email is missing from session. Cannot proceed with payment.")
-                return JsonResponse({"error": "Email is missing from session."}, status=400)
+            if not order_id:
+                logger.error("Missing order_id")
+                return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
 
-            # Ensure the amount is valid based on the selected plan
-            amount = determine_amount_based_on_plan(selected_plan)
-            if amount <= 0:
-                return JsonResponse({"error": "Invalid plan selected."}, status=400)
+            if not selected_plan:
+                logger.error("Selected plan not found in session.")
+                return JsonResponse({'success': False, 'error': 'Selected plan not found in session.'}, status=400)
 
-            # Prepare the payment body for Square API
-            body = {
-                "source_id": card_token,
-                "idempotency_key": str(uuid.uuid4()),
-                "amount_money": {
-                    "amount": amount,
-                    "currency": "USD"
-                }
-            }
+            # Check the order status before capturing
+            order_details = paypal_client.get_order(order_id)
+            order_status = order_details.get('status')
+            logger.info(f"Order status: {order_status}")
 
-            # Make the payment request to Square
-            result = client.payments.create_payment(body)
-            logger.info("Square API Response: %s", result)
+            if order_status == 'COMPLETED' or order_status == 'APPROVED':
+                # Capture the order if not already completed
+                if order_status == 'APPROVED':
+                    capture_response = paypal_client.capture_order(order_id)
+                    logger.info(f"Capture response: {capture_response}")
 
-            if result.is_success():
-                # Only create an auth_user without touching EmailCollection
+                    if capture_response.get('status') != 'COMPLETED':
+                        logger.error("Payment not completed: %s", capture_response)
+                        return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
+
+                # Handle email notification and user account creation
+                user_email = request.session.get('email')
+                if not user_email:
+                    logger.error("Email is missing from session.")
+                    return JsonResponse({'success': False, 'error': 'Email is missing from session.'}, status=400)
+
+                random_password = get_random_string(8)
+
+                # Create or retrieve the user
                 user, created = User.objects.get_or_create(
                     username=user_email,
                     defaults={'email': user_email}
                 )
-
                 if created:
-                    # If user was created, set a random password and send an email
-                    random_password = get_random_string(8)
                     user.set_password(random_password)
                     user.save()
 
                     # Grant access to the course
                     grant_course_access(user, selected_plan)
 
-                    # Send a welcome email with the temporary password
+                    # Send email notification
                     subject = 'Your Account Has Been Created'
                     message = (
                         f'Your account has been created. Your temporary password is: {random_password}\n'
@@ -1059,20 +1000,21 @@ def process_payment(request):
                 else:
                     logger.info(f"User {user_email} already exists. Skipping creation.")
 
-                return JsonResponse({"success": True})
+                # Save the quiz response after successful payment
+                save_quiz_response(request)
 
+                # Clear the selected plan from the session
+                request.session.pop('selected_plan', None)
+
+                return JsonResponse({'success': True, 'message': 'Payment completed successfully.'})
             else:
-                # Handle payment errors returned by the Square API
-                error_messages = [error['detail'] for error in result.errors]
-                logger.error("Payment Error: %s", error_messages)
-                return JsonResponse({"error": error_messages}, status=400)
+                logger.error(f"Order not in a capturable state: {order_status}")
+                return JsonResponse({'success': False, 'error': f'Order not in a capturable state: {order_status}'}, status=400)
 
         except Exception as e:
-            # Handle unexpected errors and log them
-            logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
-            return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
-
-    return JsonResponse({"error": "Invalid request method."}, status=405)
+            logger.error("Error capturing PayPal order: %s", str(e))
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
 
 # Initialize the logger

@@ -50,8 +50,13 @@ class UserSubCourseAccess(models.Model):
         return f"{self.user.username} - {self.sub_course.title}"
 
 class QuizResponse(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    gender = models.CharField(max_length=50)
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('other', 'Other'),
+    ]
+
+    gender = models.CharField(max_length=50, choices=GENDER_CHOICES)
     age_range = models.CharField(max_length=50)
     main_goal = models.CharField(max_length=50)
     income_source = models.CharField(max_length=50)
@@ -73,7 +78,7 @@ class QuizResponse(models.Model):
     fields_interest = models.TextField()
     ai_mastery_readiness = models.CharField(max_length=50)
     focus_ability = models.CharField(max_length=50)
-    special_goal = models.CharField(max_length=50)  # Corrected max_length
+    special_goal = models.CharField(max_length=50)
     time_to_achieve_goal = models.CharField(max_length=50)
     email = models.EmailField()
     receive_offers = models.BooleanField(default=False)
