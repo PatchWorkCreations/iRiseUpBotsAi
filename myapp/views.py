@@ -1007,18 +1007,22 @@ def process_payment(request):
             card_token = data.get('source_id')
             selected_plan = data.get('plan')
 
-            # Retrieve the email from the session
+            # Ensure the correct email is being used from the user's current session or latest entry
             user_email = request.session.get('email')
             if not user_email:
-                logger.error("Email is missing. Cannot proceed with payment.")
-                return JsonResponse({"error": "Email is missing."}, status=400)
+                # Fallback to the most recent entry if session email is not set
+                email_entry = EmailCollection.objects.filter(email=user_email).order_by('-id').first()
 
-            # Determine the payment amount
+            if not user_email or not email_entry:
+                logger.error("Email is missing or invalid. Cannot proceed with payment.")
+                return JsonResponse({"error": "Email is missing or invalid."}, status=400)
+
+            # Ensure the amount is valid based on the selected plan
             amount = determine_amount_based_on_plan(selected_plan)
             if amount <= 0:
                 return JsonResponse({"error": "Invalid plan selected."}, status=400)
 
-            # Prepare and make the payment request to Square
+            # Prepare the payment body for Square API
             body = {
                 "source_id": card_token,
                 "idempotency_key": str(uuid.uuid4()),
@@ -1028,39 +1032,40 @@ def process_payment(request):
                 }
             }
 
+            # Make the payment request to Square
             result = client.payments.create_payment(body)
             logger.info("Square API Response: %s", result)
 
             if result.is_success():
-                # Check if the user exists in the auth_user table
+                # Check if the user already exists to avoid duplication
                 user, created = User.objects.get_or_create(
                     username=user_email,
                     defaults={'email': user_email}
                 )
 
                 if created:
-                    # If the user is newly created, set a random password and send a welcome email
+                    # If user was created, set a random password and send an email
                     random_password = get_random_string(8)
                     user.set_password(random_password)
                     user.save()
 
-                    # Update the EmailCollection entry with the user ID
-                    EmailCollection.objects.filter(email=user_email).update(
-                        user=user,
-                        payment_status='Paid'  # Assuming payment is successful
-                    )
-
-                    # Grant course access
+                    # Grant access to the course
                     grant_course_access(user, selected_plan)
 
-                    # Send the welcome email
+                    # Send a welcome email with the temporary password
                     subject = 'Your Account Has Been Created'
-                    message = (f'Your account has been created. Your temporary password is: {random_password}\n'
-                               'Please log in and change your password.\n'
-                               'You now have access to the course menu based on your selected plan.')
+                    message = (
+                        f'Your account has been created. Your temporary password is: {random_password}\n'
+                        'Please log in and change your password.\n'
+                        'You now have access to the course menu based on your selected plan.'
+                    )
                     send_mail(subject, message, 'your-email@example.com', [user_email])
-                else:
-                    logger.info(f"User {user_email} already exists. Skipping creation.")
+
+                # Update the existing EmailCollection record with user_id and other details
+                EmailCollection.objects.filter(email=user_email).update(
+                    user=user,
+                    payment_status='Paid',
+                )
 
                 return JsonResponse({"success": True})
 
@@ -1071,6 +1076,7 @@ def process_payment(request):
                 return JsonResponse({"error": error_messages}, status=400)
 
         except Exception as e:
+            # Handle unexpected errors and log them
             logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
             return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
 
