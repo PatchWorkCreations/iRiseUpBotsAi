@@ -825,13 +825,16 @@ def results(request):
 def loading_page(request):
     return render(request, 'myapp/quiz/loading_page.html')
 
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from .models import EmailCollection
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+import logging
+
+logger = logging.getLogger(__name__)
 
 def email_collection(request):
     if request.method == 'POST':
@@ -845,19 +848,22 @@ def email_collection(request):
             })
 
         try:
-            # Check if the email already exists or create a new record
-            email_collection, created = EmailCollection.objects.get_or_create(
-                email=email,
-                defaults={'receive_offers': receive_offers}
-            )
+            with transaction.atomic():
+                # Check if the email already exists or create a new record
+                email_collection, created = EmailCollection.objects.get_or_create(
+                    email=email,
+                    defaults={'receive_offers': receive_offers}
+                )
 
-            if not created:
-                # If the email already exists, inform the user
-                messages.error(request, "This email is already registered. Please use a different email or log in.")
-                return render(request, 'myapp/quiz/email_collection.html', {
-                    'email': email,
-                    'receive_offers': receive_offers,
-                })
+                if created:
+                    logger.info(f"New email entry created: {email}")
+                else:
+                    # If the email already exists, inform the user
+                    messages.error(request, "This email is already registered. Please use a different email or log in.")
+                    return render(request, 'myapp/quiz/email_collection.html', {
+                        'email': email,
+                        'receive_offers': receive_offers,
+                    })
 
             # Prepare the welcome email content
             subject = 'Welcome to iRiseUp.Ai!'
@@ -873,6 +879,7 @@ def email_collection(request):
             return redirect('readiness_level')
 
         except IntegrityError as e:
+            logger.error(f"IntegrityError occurred: {str(e)}")
             # Handle any unexpected integrity errors
             messages.error(request, "An error occurred while processing your request. Please try again later.")
             return render(request, 'myapp/quiz/email_collection.html', {
@@ -882,7 +889,6 @@ def email_collection(request):
 
     # Render the email collection form for GET requests
     return render(request, 'myapp/quiz/email_collection.html')
-
 
 
 
