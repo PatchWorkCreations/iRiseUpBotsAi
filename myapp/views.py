@@ -1007,15 +1007,19 @@ def process_payment(request):
             card_token = data.get('source_id')
             selected_plan = data.get('plan')
 
-            # Ensure the correct email is being used from the user's current session or latest entry
+            # Retrieve the email from the session
             user_email = request.session.get('email')
+            
             if not user_email:
-                # Fallback to the most recent entry if session email is not set
-                email_entry = EmailCollection.objects.filter(email=user_email).order_by('-id').first()
-
-            if not user_email or not email_entry:
-                logger.error("Email is missing or invalid. Cannot proceed with payment.")
+                logger.error("Email is missing from session. Cannot proceed with payment.")
                 return JsonResponse({"error": "Email is missing or invalid."}, status=400)
+
+            # Attempt to retrieve the corresponding EmailCollection entry
+            email_entry = EmailCollection.objects.filter(email=user_email).first()
+
+            if not email_entry:
+                logger.error("EmailCollection entry is missing. Cannot proceed with payment.")
+                return JsonResponse({"error": "EmailCollection entry is missing or invalid."}, status=400)
 
             # Ensure the amount is valid based on the selected plan
             amount = determine_amount_based_on_plan(selected_plan)
@@ -1062,10 +1066,9 @@ def process_payment(request):
                     send_mail(subject, message, 'your-email@example.com', [user_email])
 
                 # Update the existing EmailCollection record with user_id and other details
-                EmailCollection.objects.filter(email=user_email).update(
-                    user=user,
-                    payment_status='Paid',
-                )
+                email_entry.user = user
+                email_entry.payment_status = 'Paid'
+                email_entry.save()
 
                 return JsonResponse({"success": True})
 
