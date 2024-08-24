@@ -768,9 +768,9 @@ def save_quiz_response(request):
     special_goal = request.session.get('special_goal', '')
     time_to_achieve_goal = request.session.get('time_to_achieve_goal', '')
 
-    # Save the response to the database
-    QuizResponse.objects.create(
-        user=request.user,
+    # Create the QuizResponse instance
+    quiz_response = QuizResponse(
+        user=request.user,  # Assuming the user is authenticated
         gender=gender,
         age_range=age_range,
         main_goal=main_goal,
@@ -794,8 +794,13 @@ def save_quiz_response(request):
         ai_mastery_readiness=ai_mastery_readiness,
         focus_ability=focus_ability,
         special_goal=special_goal,
-        time_to_achieve_goal=time_to_achieve_goal
+        time_to_achieve_goal=time_to_achieve_goal,
+        email=request.session.get('email', ''),  # Assuming the email is stored in the session
+        receive_offers=request.session.get('receive_offers', False)
     )
+
+    # Save the instance to the database
+    quiz_response.save()
 
 
 def results(request):
@@ -1210,7 +1215,7 @@ def complete_paypal_payment(request):
 
                 # Clear the selected plan from the session
                 request.session.pop('selected_plan', None)
-                
+
                 save_quiz_response(request)
                 return JsonResponse({'success': True, 'message': 'Payment completed successfully.'})
             else:
