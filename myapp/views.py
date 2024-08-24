@@ -1014,7 +1014,14 @@ def process_payment(request):
             card_token = data.get('source_id')
             selected_plan = data.get('plan')
 
-            # Determine the amount to be charged based on the selected plan
+            # Fetch the latest EmailCollection object
+            user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+
+            if not user_email or not user_email.email:
+                logger.error("Email is missing or invalid. Cannot proceed with payment.")
+                return JsonResponse({"error": "Email is missing or invalid."}, status=400)
+
+            # Ensure the amount is valid based on the selected plan
             amount = determine_amount_based_on_plan(selected_plan)
             if amount <= 0:
                 return JsonResponse({"error": "Invalid plan selected."}, status=400)
@@ -1034,37 +1041,31 @@ def process_payment(request):
             logger.info("Square API Response: %s", result)
 
             if result.is_success():
-                # Fetch the latest EmailCollection object (you might adjust the filter criteria as needed)
-                user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
+                # Check if the user already exists to avoid duplication
+                user, created = User.objects.get_or_create(
+                    username=user_email.email,
+                    defaults={'email': user_email.email}
+                )
 
-                if user_email:
-                    # Check if the user already exists to avoid duplication
-                    user, created = User.objects.get_or_create(
-                        username=user_email.email,
-                        defaults={'email': user_email.email}
+                if created:
+                    # If user was created, set a random password and send an email
+                    random_password = get_random_string(8)
+                    user.set_password(random_password)
+                    user.save()
+
+                    # Grant access to the course
+                    grant_course_access(user, selected_plan)
+
+                    # Send a welcome email with the temporary password
+                    subject = 'Your Account Has Been Created'
+                    message = (
+                        f'Your account has been created. Your temporary password is: {random_password}\n'
+                        'Please log in and change your password.\n'
+                        'You now have access to the course menu based on your selected plan.'
                     )
-
-                    if created:
-                        # If the user is created for the first time, set a random password and notify them via email
-                        random_password = get_random_string(8)
-                        user.set_password(random_password)
-                        user.save()
-
-                        # Grant the user access to the courses based on the selected plan
-                        grant_course_access(user, selected_plan)
-
-                        # Send a welcome email with the temporary password
-                        subject = 'Your Account Has Been Created'
-                        message = (
-                            f'Your account has been created. Your temporary password is: {random_password}\n'
-                            'Please log in and change your password.\n'
-                            'You now have access to the course menu based on your selected plan.'
-                        )
-                        send_mail(subject, message, 'your-email@example.com', [user_email.email])
-
-                    else:
-                        # If the user already exists, log the information (no need to recreate or re-send email)
-                        logger.info(f"User {user_email.email} already exists. Skipping creation.")
+                    send_mail(subject, message, 'your-email@example.com', [user_email.email])
+                else:
+                    logger.info(f"User {user_email.email} already exists. Skipping creation.")
 
                 return JsonResponse({"success": True})
 
