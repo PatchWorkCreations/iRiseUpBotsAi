@@ -1391,6 +1391,10 @@ def sign_out(request):
     return redirect('sign_in')  # Redirect to the sign-in page after logging out
 
 
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
+from .forms import CustomPasswordChangeForm
+
 class CustomPasswordChangeView(PasswordChangeView):
     form_class = CustomPasswordChangeForm
     template_name = 'myapp/change_password.html'
@@ -1398,16 +1402,17 @@ class CustomPasswordChangeView(PasswordChangeView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        
-        # Mark first login as completed after password change
-        email_collection = EmailCollection.objects.filter(user=self.request.user).first()
-        if email_collection:
-            email_collection.first_login_completed = True
-            email_collection.save()
+
+        # Mark first login as completed by setting the last_login attribute
+        self.request.user.last_login = timezone.now()
+        self.request.user.save()
 
         return response
 
+
     
+from django.contrib.auth.views import PasswordChangeDoneView
+
 class CustomPasswordChangeDoneView(PasswordChangeDoneView):
     template_name = 'myapp/password_change_done.html'
 
