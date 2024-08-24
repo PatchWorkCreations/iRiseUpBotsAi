@@ -1594,7 +1594,13 @@ def quiz_results(request):
     
     except QuizResponse.DoesNotExist:
         # If no quiz response is found for the user, redirect to the no results page or prompt them to take the quiz
-        return redirect('no_results')
+        return redirect('no_quiz_results')
+    
+from django.shortcuts import render
+
+def no_quiz_results(request):
+    return render(request, 'myapp/course_list/no_quiz_results.html')
+
 
 
 from django.db.models import Count
