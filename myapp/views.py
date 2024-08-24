@@ -774,7 +774,7 @@ from django.utils.html import strip_tags
 
 def email_collection(request):
     if request.method == 'POST':
-        email = request.POST.get('email').strip()  # Strip any leading/trailing spaces
+        email = request.POST.get('email', '').strip()  # Strip any leading/trailing spaces
         receive_offers = request.POST.get('receive_offers') == 'on'  # Convert "on" to True, otherwise False
 
         if not email:
@@ -811,7 +811,7 @@ def email_collection(request):
             # Redirect to the readiness level page upon successful email collection
             return redirect('readiness_level')
 
-        except IntegrityError:
+        except IntegrityError as e:
             # Handle any unexpected integrity errors
             messages.error(request, "An error occurred while processing your request. Please try again later.")
             return render(request, 'myapp/quiz/email_collection.html', {
@@ -821,6 +821,7 @@ def email_collection(request):
 
     # Render the email collection form for GET requests
     return render(request, 'myapp/quiz/email_collection.html')
+
 
 
 
