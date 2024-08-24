@@ -1007,17 +1007,11 @@ def process_payment(request):
             card_token = data.get('source_id')
             selected_plan = data.get('plan')
 
-            # Ensure the correct email is being used from the user's current session or latest entry
+            # Ensure the correct email is being used from the user's current session
             user_email = request.session.get('email')
             if not user_email:
-                # Fallback to the most recent entry if session email is not set
-                user_email_entry = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
-                if user_email_entry:
-                    user_email = user_email_entry.email
-
-            if not user_email:
-                logger.error("Email is missing or invalid. Cannot proceed with payment.")
-                return JsonResponse({"error": "Email is missing or invalid."}, status=400)
+                logger.error("Email is missing from session. Cannot proceed with payment.")
+                return JsonResponse({"error": "Email is missing from session."}, status=400)
 
             # Ensure the amount is valid based on the selected plan
             amount = determine_amount_based_on_plan(selected_plan)
@@ -1062,9 +1056,8 @@ def process_payment(request):
                         'You now have access to the course menu based on your selected plan.'
                     )
                     send_mail(subject, message, 'your-email@example.com', [user_email])
-
-                # Update the related EmailCollection entry, if it exists
-                EmailCollection.objects.filter(email=user_email).update(user_id=user.id, payment_status='Paid')
+                else:
+                    logger.info(f"User {user_email} already exists. Skipping creation.")
 
                 return JsonResponse({"success": True})
 
