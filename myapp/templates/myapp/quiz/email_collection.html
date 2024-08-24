@@ -39,8 +39,6 @@
 </div>
 
 <style>
-
- 
     .container {
         max-width: 500px;
         margin: 0 auto;
@@ -81,4 +79,17 @@
         border-color: #324cdd;
     }
 </style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.querySelector("form");
+        const submitButton = form.querySelector("button[type='submit']");
+
+        form.addEventListener("submit", function() {
+            submitButton.disabled = true;
+            submitButton.textContent = "Processing..."; // Optional: change button text while processing
+        });
+    });
+</script>
+
 {% endblock %}

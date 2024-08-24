@@ -784,41 +784,42 @@ def email_collection(request):
             })
 
         try:
-            # Check if the email already exists
+            # Check if the email already exists or create a new record
             email_collection, created = EmailCollection.objects.get_or_create(
                 email=email,
                 defaults={'receive_offers': receive_offers}
             )
 
             if not created:
-                # Handle the case where the email already exists
+                # If the email already exists, inform the user
                 messages.error(request, "This email is already registered. Please use a different email or log in.")
                 return render(request, 'myapp/quiz/email_collection.html', {
                     'email': email,
                     'receive_offers': receive_offers,
                 })
 
-            # Prepare the email content
+            # Prepare the welcome email content
             subject = 'Welcome to iRiseUp.Ai!'
             html_message = render_to_string('welcome_email.html', {'email': email})
             plain_message = strip_tags(html_message)
-            from_email = 'your-email@example.com'
+            from_email = 'your-email@example.com'  # Replace with your actual sender email
             to = email
 
             # Send the welcome email
             send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
-            # Redirect to the readiness level page
+            # Redirect to the readiness level page upon successful email collection
             return redirect('readiness_level')
 
         except IntegrityError:
-            # Handle unexpected integrity errors
+            # Handle any unexpected integrity errors
             messages.error(request, "An error occurred while processing your request. Please try again later.")
             return render(request, 'myapp/quiz/email_collection.html', {
                 'email': email,
                 'receive_offers': receive_offers,
             })
 
+    # Render the email collection form for GET requests
     return render(request, 'myapp/quiz/email_collection.html')
 
 
