@@ -836,10 +836,14 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 def email_collection(request):
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()  # Strip any leading/trailing spaces
-        receive_offers = request.POST.get('receive_offers') == 'on'  # Convert "on" to True, otherwise False
+        receive_offers = request.POST.get('receive_offers') == 'on'
 
         if not email:
             messages.error(request, "Email cannot be empty.")
@@ -847,49 +851,38 @@ def email_collection(request):
                 'receive_offers': receive_offers,
             })
 
-        try:
-            with transaction.atomic():
-                # Check if the email already exists or create a new record
-                email_collection, created = EmailCollection.objects.get_or_create(
-                    email=email,
-                    defaults={'receive_offers': receive_offers}
-                )
+        # Check if the email already exists
+        email_collection, created = EmailCollection.objects.get_or_create(
+            email=email,
+            defaults={'receive_offers': receive_offers}
+        )
 
-                if created:
-                    logger.info(f"New email entry created: {email}")
-                else:
-                    # If the email already exists, inform the user
-                    messages.error(request, "This email is already registered. Please use a different email or log in.")
-                    return render(request, 'myapp/quiz/email_collection.html', {
-                        'email': email,
-                        'receive_offers': receive_offers,
-                    })
-
-            # Prepare the welcome email content
-            subject = 'Welcome to iRiseUp.Ai!'
-            html_message = render_to_string('welcome_email.html', {'email': email})
-            plain_message = strip_tags(html_message)
-            from_email = 'juliavictorio16@gmail.com'  # Replace with your actual sender email
-            to = email
-
-            # Send the welcome email
-            send_mail(subject, plain_message, from_email, [to], html_message=html_message)
-
-            # Redirect to the readiness level page upon successful email collection
-            return redirect('readiness_level')
-
-        except IntegrityError as e:
-            logger.error(f"IntegrityError occurred: {str(e)}")
-            # Handle any unexpected integrity errors
-            messages.error(request, "An error occurred while processing your request. Please try again later.")
+        if not created:
+            # Inform the user if the email already exists
+            messages.error(request, "This email is already registered. Please use a different email or log in.")
             return render(request, 'myapp/quiz/email_collection.html', {
                 'email': email,
                 'receive_offers': receive_offers,
             })
 
+        # Prepare the welcome email content
+        subject = 'Welcome to iRiseUp.Ai!'
+        html_message = render_to_string('welcome_email.html', {'email': email})
+        plain_message = strip_tags(html_message)
+        from_email = 'juliavictorio16@gmail.com'  # Replace with your actual sender email
+        to = email
+
+        # Send the welcome email
+        send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+        # Store the email in the session for later use during payment
+        request.session['email'] = email
+
+        # Proceed to the readiness level or next step
+        return redirect('readiness_level')
+
     # Render the email collection form for GET requests
     return render(request, 'myapp/quiz/email_collection.html')
-
 
 
 def send_welcome_email(user_email):
@@ -1014,23 +1007,18 @@ def process_payment(request):
             card_token = data.get('source_id')
             selected_plan = data.get('plan')
 
-            # Ensure the correct email is being used from the user's current session or latest entry
+            # Retrieve the email from the session
             user_email = request.session.get('email')
             if not user_email:
-                # Fallback to the most recent entry if session email is not set
-                latest_email_entry = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
-                user_email = latest_email_entry.email if latest_email_entry else None
+                logger.error("Email is missing. Cannot proceed with payment.")
+                return JsonResponse({"error": "Email is missing."}, status=400)
 
-            if not user_email:
-                logger.error("Email is missing or invalid. Cannot proceed with payment.")
-                return JsonResponse({"error": "Email is missing or invalid."}, status=400)
-
-            # Ensure the amount is valid based on the selected plan
+            # Determine the payment amount
             amount = determine_amount_based_on_plan(selected_plan)
             if amount <= 0:
                 return JsonResponse({"error": "Invalid plan selected."}, status=400)
 
-            # Prepare the payment body for Square API
+            # Prepare and make the payment request to Square
             body = {
                 "source_id": card_token,
                 "idempotency_key": str(uuid.uuid4()),
@@ -1040,61 +1028,39 @@ def process_payment(request):
                 }
             }
 
-            # Make the payment request to Square
             result = client.payments.create_payment(body)
             logger.info("Square API Response: %s", result)
 
             if result.is_success():
-                # Check if the user already exists to avoid duplication
+                # Check if the user exists in the auth_user table
                 user, created = User.objects.get_or_create(
                     username=user_email,
                     defaults={'email': user_email}
                 )
 
                 if created:
-                    # If user was created, set a random password and send an email
+                    # If the user is newly created, set a random password and send a welcome email
                     random_password = get_random_string(8)
                     user.set_password(random_password)
                     user.save()
 
-                    # Properly handle the EmailCollection entry
-                    email_collection, email_created = EmailCollection.objects.get_or_create(
+                    # Update the EmailCollection entry with the user ID
+                    EmailCollection.objects.filter(email=user_email).update(
                         user=user,
-                        defaults={
-                            'email': user_email,
-                            'receive_offers': False,  # Or whatever logic applies here
-                            'payment_status': 'Delayed',
-                            'first_login_completed': False
-                        }
+                        payment_status='Paid'  # Assuming payment is successful
                     )
 
-                    if not email_created:
-                        # Update email collection if already exists
-                        email_collection.email = user_email
-                        email_collection.save()
-
-                    # Grant access to the course
+                    # Grant course access
                     grant_course_access(user, selected_plan)
 
-                    # Send a welcome email with the temporary password
+                    # Send the welcome email
                     subject = 'Your Account Has Been Created'
-                    message = (
-                        f'Your account has been created. Your temporary password is: {random_password}\n'
-                        'Please log in and change your password.\n'
-                        'You now have access to the course menu based on your selected plan.'
-                    )
+                    message = (f'Your account has been created. Your temporary password is: {random_password}\n'
+                               'Please log in and change your password.\n'
+                               'You now have access to the course menu based on your selected plan.')
                     send_mail(subject, message, 'your-email@example.com', [user_email])
                 else:
                     logger.info(f"User {user_email} already exists. Skipping creation.")
-                    # Ensure the existing user has a corresponding email collection
-                    email_collection, email_created = EmailCollection.objects.get_or_create(
-                        user=user,
-                        defaults={'email': user_email}
-                    )
-                    if not email_created:
-                        # Update email collection if already exists
-                        email_collection.email = user_email
-                        email_collection.save()
 
                 return JsonResponse({"success": True})
 
@@ -1105,7 +1071,6 @@ def process_payment(request):
                 return JsonResponse({"error": error_messages}, status=400)
 
         except Exception as e:
-            # Handle unexpected errors and log them
             logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
             return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
 
