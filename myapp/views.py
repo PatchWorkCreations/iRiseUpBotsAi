@@ -1540,21 +1540,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import StandardPasswordChangeForm
-from .models import EmailCollection
 from django.db import IntegrityError
 
 @login_required
 def profile_settings(request):
     user = request.user
-
-    # Ensure EmailCollection exists for the user
-    if not hasattr(user, 'email_collection'):
-        email_collection = EmailCollection.objects.filter(email=user.email).first()
-        if not email_collection:
-            EmailCollection.objects.create(user=user, email=user.email)
-        else:
-            email_collection.user = user
-            email_collection.save()
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -1563,10 +1553,8 @@ def profile_settings(request):
         try:
             user.username = username
             user.email = email
-            user.email_collection.email = email
-            user.email_collection.save()
-
             user.save()
+
             messages.success(request, 'Profile updated successfully!')
             return redirect('profile_settings')
         except IntegrityError:
