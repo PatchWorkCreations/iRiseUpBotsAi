@@ -1341,10 +1341,9 @@ from .forms import SignInForm  # Import the form
 import logging
 
 logger = logging.getLogger(__name__)
-
 def sign_in(request):
     if request.method == 'POST':
-        form = SignInForm(request.POST)  # Bind the form to the POST data
+        form = SignInForm(request.POST)
 
         if form.is_valid():
             login_identifier = form.cleaned_data.get('login_identifier')
@@ -1355,7 +1354,6 @@ def sign_in(request):
             user = authenticate(request, username=login_identifier, password=password)
 
             if user is None:
-                # If authentication fails using the username, try using the email
                 try:
                     user = User.objects.get(email=login_identifier)
                     user = authenticate(request, username=user.username, password=password)
@@ -1363,14 +1361,14 @@ def sign_in(request):
                     user = None
 
             if user is not None:
-                login(request, user)
-
-                # Check if the user's password needs to be changed (e.g., if this is their first login)
+                # Check if the user has logged in before
                 if user.last_login is None:
                     logger.debug(f"First login detected for user: {user.username}")
+                    login(request, user)
                     messages.info(request, 'Please change your password to continue.')
                     return redirect('password_change')
                 else:
+                    login(request, user)
                     logger.debug(f"Redirecting to course menu for user: {user.username}")
                     messages.success(request, f'Welcome back, {user.username}!')
                     return redirect('coursemenu')
@@ -1380,10 +1378,9 @@ def sign_in(request):
                 return redirect('sign_in')
 
     else:
-        form = SignInForm()  # Render an empty form
+        form = SignInForm()
 
     return render(request, 'myapp/quiz/sign_in.html', {'form': form})
-
 
 
 def sign_out(request):
@@ -1402,8 +1399,8 @@ class CustomPasswordChangeView(PasswordChangeView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-
-        # Mark first login as completed by setting the last_login attribute
+        
+        # Update the last_login attribute manually if needed
         self.request.user.last_login = timezone.now()
         self.request.user.save()
 
