@@ -1062,8 +1062,9 @@ def process_payment(request):
                         'You now have access to the course menu based on your selected plan.'
                     )
                     send_mail(subject, message, 'your-email@example.com', [user_email])
-                else:
-                    logger.info(f"User {user_email} already exists. Skipping creation.")
+
+                # Update the related EmailCollection entry, if it exists
+                EmailCollection.objects.filter(email=user_email).update(user_id=user.id, payment_status='Paid')
 
                 return JsonResponse({"success": True})
 
