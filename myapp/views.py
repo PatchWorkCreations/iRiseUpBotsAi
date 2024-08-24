@@ -1006,7 +1006,6 @@ def grant_course_access(user, selected_plan):
 # Get an instance of a logger
 logger = logging.getLogger('myapp')
 
-# Then your process_payment function should work as expected:
 @csrf_exempt
 def process_payment(request):
     if request.method == "POST":
@@ -1015,11 +1014,12 @@ def process_payment(request):
             card_token = data.get('source_id')
             selected_plan = data.get('plan')
 
+            # Determine the amount to be charged based on the selected plan
             amount = determine_amount_based_on_plan(selected_plan)
-
             if amount <= 0:
                 return JsonResponse({"error": "Invalid plan selected."}, status=400)
 
+            # Prepare the payment body for Square API
             body = {
                 "source_id": card_token,
                 "idempotency_key": str(uuid.uuid4()),
@@ -1029,13 +1029,12 @@ def process_payment(request):
                 }
             }
 
-            # Make the API request to Square
+            # Make the payment request to Square
             result = client.payments.create_payment(body)
-
-            # Log the raw response from Square API
             logger.info("Square API Response: %s", result)
 
             if result.is_success():
+                # Fetch the latest EmailCollection object (you might adjust the filter criteria as needed)
                 user_email = EmailCollection.objects.filter(receive_offers=True).order_by('-id').first()
 
                 if user_email:
@@ -1046,35 +1045,41 @@ def process_payment(request):
                     )
 
                     if created:
-                        # If user was created, set a random password and send an email
+                        # If the user is created for the first time, set a random password and notify them via email
                         random_password = get_random_string(8)
                         user.set_password(random_password)
                         user.save()
 
-                        # Grant access to the course
+                        # Grant the user access to the courses based on the selected plan
                         grant_course_access(user, selected_plan)
 
+                        # Send a welcome email with the temporary password
                         subject = 'Your Account Has Been Created'
-                        message = (f'Your account has been created. Your temporary password is: {random_password}\n'
-                                   'Please log in and change your password.\n'
-                                   'You now have access to the course menu based on your selected plan.')
+                        message = (
+                            f'Your account has been created. Your temporary password is: {random_password}\n'
+                            'Please log in and change your password.\n'
+                            'You now have access to the course menu based on your selected plan.'
+                        )
                         send_mail(subject, message, 'your-email@example.com', [user_email.email])
+
                     else:
+                        # If the user already exists, log the information (no need to recreate or re-send email)
                         logger.info(f"User {user_email.email} already exists. Skipping creation.")
 
                 return JsonResponse({"success": True})
 
             else:
+                # Handle payment errors returned by the Square API
                 error_messages = [error['detail'] for error in result.errors]
                 logger.error("Payment Error: %s", error_messages)
                 return JsonResponse({"error": error_messages}, status=400)
 
         except Exception as e:
+            # Handle unexpected errors and log them
             logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
             return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
-
 
 # Initialize the logger
 logger = logging.getLogger(__name__)
