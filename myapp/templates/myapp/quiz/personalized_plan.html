@@ -397,22 +397,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Event listeners for payment method buttons
-    document.addEventListener('DOMContentLoaded', function () {
-        const cardBtn = document.getElementById('card-button');
-        const cardPaymentSection = document.getElementById('card-payment');
-        const paypalPaymentSection = document.getElementById('paypal-payment');
+    cardBtn.addEventListener('click', function () {
+        cardPaymentSection.style.display = 'block';
+        paypalPaymentSection.style.display = 'none';
+        setupSquarePayments(); // Initialize Square payment setup
+    });
 
-        cardBtn.addEventListener('click', function () {
-            cardPaymentSection.style.display = 'block';
-            paypalPaymentSection.style.display = 'none';
-            setupSquarePayments(); // Initialize Square payment setup
-        });
-
-        paypalBtn.addEventListener('click', function () {
-            paypalPaymentSection.style.display = 'block';
-            cardPaymentSection.style.display = 'none';
-            setupPayPalPayments(); // Initialize PayPal payment setup
-        });
+    paypalBtn.addEventListener('click', function () {
+        paypalPaymentSection.style.display = 'block';
+        cardPaymentSection.style.display = 'none';
+        setupPayPalPayments(); // Initialize PayPal payment setup
     });
 
     // Event listener to close the modal
@@ -493,6 +487,7 @@ function startCountdown() {
 
 // Start the countdown when the page loads
 window.onload = startCountdown;
+
 
 </script>
 
