@@ -1067,7 +1067,9 @@ import uuid
 import logging
 from square.client import Client
 from .models import User  # Adjust according to your user model
-from .utils import determine_amount_based_on_plan, grant_course_access, save_quiz_response  # Ensure these functions are correctly imported
+from django.contrib.auth.models import User  # For User model
+from django.utils.crypto import get_random_string  # For generating random passwords
+from django.core.mail import send_mail  # For sending emails
 
 logger = logging.getLogger(__name__)
 
