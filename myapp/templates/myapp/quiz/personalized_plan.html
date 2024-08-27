@@ -190,10 +190,6 @@
                     <input type="text" id="addressLine1" name="addressLine1" required>
                 </div>
                 <div>
-                    <label for="addressLine2">Address Line 2</label>
-                    <input type="text" id="addressLine2" name="addressLine2">
-                </div>
-                <div>
                     <label for="city">City</label>
                     <input type="text" id="city" name="city" required>
                 </div>
@@ -286,7 +282,6 @@
                                     givenName: document.getElementById('givenName').value,
                                     familyName: document.getElementById('familyName').value,
                                     addressLine1: document.getElementById('addressLine1').value,
-                                    addressLine2: document.getElementById('addressLine2').value,
                                     city: document.getElementById('city').value,
                                     state: document.getElementById('state').value,
                                     countryCode: document.getElementById('countryCode').value,
@@ -326,31 +321,31 @@
         }
     
         async function verifyBuyer(payments, token, amount) {
-            const verificationDetails = {
-                amount: (amount / 100).toFixed(2),  // Convert cents to dollars
-                billingContact: {
-                    addressLines: [
-                document.getElementById('addressLine1').value.trim(),
-                ...(addressLine2Value ? [addressLine2Value] : [])
-                ],
-                    familyName: document.getElementById('familyName').value,
-                    givenName: document.getElementById('givenName').value,
-                    email: document.getElementById('email').value,
-                    countryCode: document.getElementById('countryCode').value,
-                    phone: document.getElementById('phone').value,
-                    state: document.getElementById('state').value,
-                    city: document.getElementById('city').value,
-                },
-                currencyCode: 'USD',  // Ensure this matches the currency used in the transaction
-                intent: 'CHARGE',
-            };
-    
-            const verificationResults = await payments.verifyBuyer(
-                token,
-                verificationDetails
-            );
-            return verificationResults.token;
-        }
+    const addressLine1Value = document.getElementById('addressLine1').value.trim();
+
+    const verificationDetails = {
+        amount: (amount / 100).toFixed(2),  // Convert cents to dollars
+        billingContact: {
+            addressLines: [addressLine1Value],
+            familyName: document.getElementById('familyName').value.trim(),
+            givenName: document.getElementById('givenName').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            countryCode: document.getElementById('countryCode').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            state: document.getElementById('state').value.trim(),
+            city: document.getElementById('city').value.trim(),
+        },
+        currencyCode: 'USD',  // Ensure this matches the currency used in the transaction
+        intent: 'CHARGE',
+    };
+
+    const verificationResults = await payments.verifyBuyer(
+        token,
+        verificationDetails
+    );
+    return verificationResults.token;
+    }
+
     
         // PayPal payment setup function
         async function setupPayPalPayments() {
