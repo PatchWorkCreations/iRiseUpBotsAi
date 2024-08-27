@@ -1070,7 +1070,7 @@ from .models import User  # Adjust according to your user model
 from django.contrib.auth.models import User  # For User model
 from django.utils.crypto import get_random_string  # For generating random passwords
 from django.core.mail import send_mail  # For sending emails
-from django.contrib.auth.models import SquareCustomer
+
 
 logger = logging.getLogger(__name__)
 
