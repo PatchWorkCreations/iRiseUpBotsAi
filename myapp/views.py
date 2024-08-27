@@ -1058,6 +1058,15 @@ def grant_course_access(user, selected_plan):
 # Get an instance of a logger
 logger = logging.getLogger('myapp')
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+import uuid
+import logging
+from square.client import Client
+
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
 def process_payment(request):
     if request.method == "POST":
@@ -1065,6 +1074,7 @@ def process_payment(request):
             data = json.loads(request.body)
             card_token = data.get('source_id')
             selected_plan = data.get('plan')
+            verification_token = data.get('verification_token')
 
             # Ensure the correct email is being used from the user's current session
             user_email = request.session.get('email')
@@ -1086,6 +1096,10 @@ def process_payment(request):
                     "currency": "USD"
                 }
             }
+
+            # Include the verification_token if it exists
+            if verification_token:
+                body["verification_token"] = verification_token
 
             # Make the payment request to Square
             result = client.payments.create_payment(body)
@@ -1135,6 +1149,7 @@ def process_payment(request):
             return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 
 # Initialize the logger

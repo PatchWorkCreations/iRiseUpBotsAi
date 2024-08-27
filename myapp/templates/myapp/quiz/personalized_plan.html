@@ -241,6 +241,9 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const result = await card.tokenize();
                 if (result.status === 'OK') {
+                    // New: Verify the buyer using SCA
+                    const verificationToken = await verifyBuyer(payments, result.token);
+                    // Send the payment request with the verification token
                     const response = await fetch('/process-payment/', {
                         method: 'POST',
                         headers: {
@@ -249,7 +252,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         },
                         body: JSON.stringify({
                             source_id: result.token,
-                            plan: document.querySelector('input[name="plan"]:checked').value
+                            plan: document.querySelector('input[name="plan"]:checked').value,
+                            verification_token: verificationToken  // New: Include verification token
                         }),
                     });
 
@@ -268,6 +272,31 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
         squareInitialized = true; // Set flag to prevent re-initialization
+    }
+
+    // New: Add the verifyBuyer function
+    async function verifyBuyer(payments, token) {
+        const verificationDetails = {
+            amount: '1.00',
+            billingContact: {
+                addressLines: ['123 Main Street', 'Apartment 1'],
+                familyName: 'Doe',
+                givenName: 'John',
+                email: 'jondoe@gmail.com',
+                countryCode: 'GB',
+                phone: '3214563987',
+                state: 'LND',
+                city: 'London',
+            },
+            currencyCode: 'GBP',
+            intent: 'CHARGE',
+        };
+
+        const verificationResults = await payments.verifyBuyer(
+            token,
+            verificationDetails
+        );
+        return verificationResults.token;
     }
 
     // PayPal payment setup function
