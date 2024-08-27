@@ -1060,12 +1060,22 @@ logger = logging.getLogger('myapp')
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
 import json
 import uuid
 import logging
 from square.client import Client
+from .models import User  # Adjust according to your user model
+from .utils import determine_amount_based_on_plan, grant_course_access, save_quiz_response  # Ensure these functions are correctly imported
 
 logger = logging.getLogger(__name__)
+
+# Initialize Square client
+client = Client(
+    access_token=settings.SQUARE_ACCESS_TOKEN,
+    environment='sandbox',  # Change to 'production' when you're ready
+)
 
 @csrf_exempt
 def process_payment(request):
@@ -1087,61 +1097,89 @@ def process_payment(request):
             if amount <= 0:
                 return JsonResponse({"error": "Invalid plan selected."}, status=400)
 
-            # Prepare the payment body for Square API
-            body = {
-                "source_id": card_token,
-                "idempotency_key": str(uuid.uuid4()),
-                "amount_money": {
-                    "amount": amount,
-                    "currency": "USD"
+            # Step 1: Create a new customer or retrieve the existing one
+            customer_result = client.customers.create_customer(
+                body={
+                    "given_name": data.get('givenName'),
+                    "family_name": data.get('familyName'),
+                    "email_address": user_email,
                 }
-            }
+            )
+            if customer_result.is_error():
+                logger.error("Customer creation failed: %s", customer_result.errors)
+                return JsonResponse({"error": "Failed to create customer profile."}, status=400)
 
-            # Include the verification_token if it exists
-            if verification_token:
-                body["verification_token"] = verification_token
+            customer_id = customer_result.body['customer']['id']
 
-            # Make the payment request to Square
-            result = client.payments.create_payment(body)
-            logger.info("Square API Response: %s", result)
+            # Step 2: Make the payment request with the verification token and store the card on file
+            payment_result = client.payments.create_payment(
+                body={
+                    "source_id": card_token,
+                    "idempotency_key": str(uuid.uuid4()),
+                    "amount_money": {
+                        "amount": amount,
+                        "currency": "USD"
+                    },
+                    "verification_token": verification_token,
+                    "autocomplete": True,
+                    "customer_id": customer_id,  # Link the payment to the customer
+                }
+            )
+            logger.info("Square API Payment Response: %s", payment_result)
 
-            if result.is_success():
-                # Create or retrieve the user
-                user, created = User.objects.get_or_create(
-                    username=user_email,
-                    defaults={'email': user_email}
-                )
-
-                if created:
-                    # If user was created, set a random password and send an email
-                    random_password = get_random_string(8)
-                    user.set_password(random_password)
-                    user.save()
-
-                    # Grant access to the course
-                    grant_course_access(user, selected_plan)
-
-                    # Send a welcome email with the temporary password
-                    subject = 'Your Account Has Been Created'
-                    message = (
-                        f'Your account has been created. Your temporary password is: {random_password}\n'
-                        'Please log in and change your password.\n'
-                        'You now have access to the course menu based on your selected plan.'
-                    )
-                    send_mail(subject, message, 'your-email@example.com', [user_email])
-
-                logger.info(f"User {user_email} processed for payment.")
-
-                # Save the quiz response to the database linked with the user
-                save_quiz_response(request, user)
-
-                return JsonResponse({"success": True})
-
-            else:
-                # Handle payment errors returned by the Square API
-                error_messages = [error['detail'] for error in result.errors]
+            if payment_result.is_error():
+                error_messages = [error['detail'] for error in payment_result.errors]
                 logger.error("Payment Error: %s", error_messages)
                 return JsonResponse({"error": error_messages}, status=400)
+
+            payment_id = payment_result.body['payment']['id']
+
+            # Step 3: Store the card on file for the customer
+            card_result = client.cards.create_card(
+                body={
+                    "idempotency_key": str(uuid.uuid4()),
+                    "source_id": payment_id,
+                    "verification_token": verification_token,
+                    "card": {
+                        "cardholder_name": f"{data.get('givenName')} {data.get('familyName')}",
+                        "customer_id": customer_id,
+                    }
+                }
+            )
+            if card_result.is_error():
+                logger.error("Card storage failed: %s", card_result.errors)
+                return JsonResponse({"error": "Failed to store card on file."}, status=400)
+
+            # Step 4: Create or retrieve the user in the Django application
+            user, created = User.objects.get_or_create(
+                username=user_email,
+                defaults={'email': user_email}
+            )
+
+            if created:
+                # If user was created, set a random password and send an email
+                random_password = get_random_string(8)
+                user.set_password(random_password)
+                user.save()
+
+                # Grant access to the course based on the selected plan
+                grant_course_access(user, selected_plan)
+
+                # Send a welcome email with the temporary password
+                subject = 'Your Account Has Been Created'
+                message = (
+                    f'Your account has been created. Your temporary password is: {random_password}\n'
+                    'Please log in and change your password.\n'
+                    'You now have access to the course menu based on your selected plan.'
+                )
+                send_mail(subject, message, 'your-email@example.com', [user_email])
+
+            logger.info(f"User {user_email} processed for payment.")
+
+            # Step 5: Save the quiz response to the database linked with the user
+            save_quiz_response(request, user)
+
+            return JsonResponse({"success": True})
 
         except Exception as e:
             # Handle unexpected errors and log them

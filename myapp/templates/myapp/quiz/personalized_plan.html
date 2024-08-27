@@ -163,7 +163,7 @@
             <span class="close">&times;</span>
             <h2>Checkout</h2>
         </div>
-        <h3><span style="color: #5860F8;">91% of users</span> are satisfied with the plan and stay with us after its completion</h3>
+        <h3><span style="color: #5860F8;">91% of users </span>are satisfied with the plan and stay with us after its completion</h3>
         
         <div id="payment-selection">
             <button id="card-button" class="payment-selection-btn">Pay with Card</button>
@@ -172,10 +172,17 @@
         
         <div id="card-payment" class="payment-option" style="display:none;">
             <h3 style="text-align: center;">Pay with Card</h3>
+            <!-- Inserting the six images here -->
             <div class="card-icons">
-                <!-- Card icons here -->
+                <img src="{% static 'myapp/images/card_icons/1.svg' %}" alt="Card Icon 1" />
+                <img src="{% static 'myapp/images/card_icons/2.svg' %}" alt="Card Icon 2" />
+                <img src="{% static 'myapp/images/card_icons/3.svg' %}" alt="Card Icon 3" />
+                <img src="{% static 'myapp/images/card_icons/4.svg' %}" alt="Card Icon 4" />
+                <img src="{% static 'myapp/images/card_icons/5.svg' %}" alt="Card Icon 5" />
+                <img src="{% static 'myapp/images/card_icons/6.svg' %}" alt="Card Icon 6" />
             </div>
-            <form id="payment-form" novalidate>
+            <form id="payment-form">
+                <!-- Square payment form container -->
                 <!-- Billing Information Fields -->
                 <div>
                     <label for="givenName">First Name</label>
@@ -212,262 +219,284 @@
                 <div id="card-container"></div>
                 <button type="submit">Pay Now</button>
             </form>
+            
             <div class="pay-safe">
                 <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Safe Icon" class="safe-icon" />
                 <span>Pay safe & secure</span>
             </div>            
         </div>
         
+        
         <div id="paypal-payment" class="payment-option" style="display:none;">
             <h3 style="text-align: center;">Pay with PayPal</h3>
-            <div id="paypal-button-container"></div>
+            <div id="paypal-button-container"></div> <!-- PayPal button container -->
         </div>
 
+        <!-- Add the subscription terms language below the payment options -->
         <div class="subscription-terms mt-4">
             <p style="text-align: center; font-size: 12px;">You agree that <strong id="selected-plan-price">$39.99</strong> will be as an intro offer, then <strong id="selected-plan-renewal-price">$39.99</strong> will be automatically billed every 4-weeks until you cancel in settings. <a href="#">Subscription Terms</a>.</p>
         </div>
         
     </div>
 </div>
+</div>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const modal = document.getElementById('checkout-modal');
-        const getPlanButtons = document.querySelectorAll('.get-plan-btn');
-        const closeBtn = document.getElementsByClassName('close')[0];
-        const cardBtn = document.getElementById('card-button');
-        const paypalBtn = document.getElementById('paypal-button');
-        const cardPaymentSection = document.getElementById('card-payment');
-        const paypalPaymentSection = document.getElementById('paypal-payment');
-        let squareInitialized = false;
-        let paypalInitialized = false;
-    
-        // Show modal when "GET MY PLAN" buttons are clicked
-        getPlanButtons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                modal.style.display = 'block';
-            });
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('checkout-modal');
+    const getPlanButtons = document.querySelectorAll('.get-plan-btn');
+    const closeBtn = document.getElementsByClassName('close')[0];
+    const cardBtn = document.getElementById('card-button');
+    const paypalBtn = document.getElementById('paypal-button');
+    const cardPaymentSection = document.getElementById('card-payment');
+    const paypalPaymentSection = document.getElementById('paypal-payment');
+    let squareInitialized = false;
+    let paypalInitialized = false;
+
+    // Initialize payment options visibility
+    cardPaymentSection.style.display = 'none';
+    paypalPaymentSection.style.display = 'none';
+
+    // Show modal when "GET MY PLAN" buttons are clicked
+    getPlanButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            modal.style.display = 'block';
         });
-    
-        // Square payment setup function
-        async function setupSquarePayments() {
-            if (squareInitialized) return; // Prevent re-initialization
-            const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
-            const card = await payments.card();
-            await card.attach('#card-container');
-    
-            const payButton = document.getElementById('payment-form').querySelector('button[type="submit"]');
-            payButton.addEventListener('click', async function (event) {
-                event.preventDefault();
-                try {
-                    const result = await card.tokenize();
-                    if (result.status === 'OK') {
-                        const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
-                        const amount = determineAmountBasedOnPlan(selectedPlan);
-    
-                        // Verify the buyer using SCA with collected billing information
-                        const verificationToken = await verifyBuyer(payments, result.token, amount);
-    
-                        const response = await fetch('/process-payment/', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': '{{ csrf_token }}',
-                            },
-                            body: JSON.stringify({
-                                source_id: result.token,
-                                plan: selectedPlan,
-                                amount: amount,
-                                verification_token: verificationToken,
-                                billing_details: {
-                                    givenName: document.getElementById('givenName').value,
-                                    familyName: document.getElementById('familyName').value,
-                                    addressLine1: document.getElementById('addressLine1').value,
-                                    city: document.getElementById('city').value,
-                                    state: document.getElementById('state').value,
-                                    countryCode: document.getElementById('countryCode').value,
-                                    phone: document.getElementById('phone').value,
-                                    email: document.getElementById('email').value
-                                }
-                            }),
-                        });
-    
-                        const jsonResult = await response.json();
-                        if (jsonResult.success) {
-                            window.location.href = '/success/';
-                        } else {
-                            alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-                        }
+    });
+
+    // Square payment setup function
+    async function setupSquarePayments() {
+        if (squareInitialized) return; // Prevent re-initialization
+        const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
+        const card = await payments.card();
+        await card.attach('#card-container');
+
+        const payButton = document.getElementById('payment-form').querySelector('button[type="submit"]');
+        payButton.addEventListener('click', async function (event) {
+            event.preventDefault();
+            try {
+                const result = await card.tokenize();
+                if (result.status === 'OK') {
+                    // Get selected plan and determine the amount
+                    const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+                    const amount = determineAmountBasedOnPlan(selectedPlan);
+
+                    // New: Verify the buyer using SCA with CHARGE_AND_STORE intent
+                    const verificationToken = await verifyBuyer(payments, result.token, amount);
+
+                    // Send the payment request with the verification token
+                    const response = await fetch('/process-payment/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify({
+                            source_id: result.token,
+                            plan: selectedPlan,
+                            amount: amount,
+                            verification_token: verificationToken  // New: Include verification token
+                        }),
+                    });
+
+                    const jsonResult = await response.json();
+                    if (jsonResult.success) {
+                        window.location.href = '/success/';
                     } else {
-                        alert('Tokenization failed: ' + result.errors[0].message);
+                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
                     }
-                } catch (e) {
-                    console.error(e.message);
-                    alert('Payment failed: ' + e.message);
+                } else {
+                    alert('Tokenization failed: ' + result.errors[0].message);
                 }
-            });
-            squareInitialized = true; // Set flag to prevent re-initialization
-        }
-    
-        function determineAmountBasedOnPlan(plan) {
-            if (plan === '1-week') {
-                return 1386;  // $13.86 in cents
-            } else if (plan === '4-week') {
-                return 3999;  // $39.99 in cents
-            } else if (plan === '12-week') {
-                return 7999;  // $79.99 in cents
-            } else {
-                return 0;
+            } catch (e) {
+                console.error(e.message);
+                alert('Payment failed: ' + e.message);
             }
-        }
-    
-        async function verifyBuyer(payments, token, amount) {
-    const addressLine1Value = document.getElementById('addressLine1').value.trim();
-
-    const verificationDetails = {
-        amount: (amount / 100).toFixed(2),  // Convert cents to dollars
-        billingContact: {
-            addressLines: [addressLine1Value],
-            familyName: document.getElementById('familyName').value.trim(),
-            givenName: document.getElementById('givenName').value.trim(),
-            email: document.getElementById('email').value.trim(),
-            countryCode: document.getElementById('countryCode').value.trim(),
-            phone: document.getElementById('phone').value.trim(),
-            state: document.getElementById('state').value.trim(),
-            city: document.getElementById('city').value.trim(),
-        },
-        currencyCode: 'USD',  // Ensure this matches the currency used in the transaction
-        intent: 'CHARGE',
-    };
-
-    const verificationResults = await payments.verifyBuyer(
-        token,
-        verificationDetails
-    );
-    return verificationResults.token;
+        });
+        squareInitialized = true; // Set flag to prevent re-initialization
     }
 
-    
-        // PayPal payment setup function
-        async function setupPayPalPayments() {
-            if (paypalInitialized) return; // Prevent re-initialization
-    
-            paypal.Buttons({
-                createOrder: function (data, actions) {
-                    const planValue = document.querySelector('input[name="plan"]:checked').value;
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: planValue === '1-week' ? '13.86' :
-                                    planValue === '4-week' ? '39.99' :
-                                        planValue === '12-week' ? '79.99' : '0.00'
-                            }
-                        }]
-                    });
-                },
-                onApprove: function (data, actions) {
-                    return actions.order.capture().then(async function (details) {
-                        const response = await fetch(`/complete-paypal-payment/?token=${data.orderID}`, {
-                            method: 'GET',
-                        });
-    
-                        const jsonResult = await response.json();
-                        if (jsonResult.success) {
-                            window.location.href = '/success/';
-                        } else {
-                            alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-                        }
-                    });
-                },
-                onError: function (err) {
-                    console.error('PayPal error:', err);
-                    alert('An error occurred during PayPal payment: ' + err);
-                }
-            }).render('#paypal-button-container');
-    
-            paypalInitialized = true; // Set flag to prevent re-initialization
+    // Function to determine the amount based on the selected plan
+    function determineAmountBasedOnPlan(plan) {
+        if (plan === '1-week') {
+            return 1386;  // $13.86 in cents
+        } else if (plan === '4-week') {
+            return 3999;  // $39.99 in cents
+        } else if (plan === '12-week') {
+            return 7999;  // $79.99 in cents
+        } else {
+            return 0;
         }
-    
+    }
+
+    // New: Add the verifyBuyer function with the correct amount and CHARGE_AND_STORE intent
+    async function verifyBuyer(payments, token, amount) {
+        const verificationDetails = {
+            amount: (amount / 100).toFixed(2),  // Convert cents to dollars
+            currencyCode: 'USD',  // Ensure this matches the currency used in the transaction
+            intent: 'CHARGE_AND_STORE',  // Intent for charging and storing the card
+            billingContact: {
+                // Collect billing details from the user input
+                addressLines: [
+                    document.getElementById('addressLine1').value,
+                ],
+                familyName: document.getElementById('familyName').value,
+                givenName: document.getElementById('givenName').value,
+                email: document.getElementById('email').value,
+                countryCode: document.getElementById('countryCode').value,
+                phone: document.getElementById('phone').value,
+                state: document.getElementById('state').value,
+                city: document.getElementById('city').value,
+            },
+        };
+
+        const verificationResults = await payments.verifyBuyer(
+            token,
+            verificationDetails
+        );
+        return verificationResults.token;
+    }
+
+    // PayPal payment setup function
+    async function setupPayPalPayments() {
+        if (paypalInitialized) return; // Prevent re-initialization
+
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                const planValue = document.querySelector('input[name="plan"]:checked').value;
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: planValue === '1-week' ? '13.86' :
+                                planValue === '4-week' ? '39.99' :
+                                    planValue === '12-week' ? '79.99' : '0.00'
+                        }
+                    }]
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(async function (details) {
+                    const response = await fetch(`/complete-paypal-payment/?token=${data.orderID}`, {
+                        method: 'GET',
+                    });
+
+                    const jsonResult = await response.json();
+                    if (jsonResult.success) {
+                        window.location.href = '/success/';
+                    } else {
+                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
+                    }
+                });
+            },
+            onError: function (err) {
+                console.error('PayPal error:', err);
+                alert('An error occurred during PayPal payment: ' + err);
+            }
+        }).render('#paypal-button-container');
+
+        paypalInitialized = true; // Set flag to prevent re-initialization
+    }
+
+    // Event listeners for payment method buttons
+    document.addEventListener('DOMContentLoaded', function () {
+        const cardBtn = document.getElementById('card-button');
+        const cardPaymentSection = document.getElementById('card-payment');
+        const paypalPaymentSection = document.getElementById('paypal-payment');
+
         cardBtn.addEventListener('click', function () {
-            console.log('Card button clicked, showing payment form');
             cardPaymentSection.style.display = 'block';
             paypalPaymentSection.style.display = 'none';
             setupSquarePayments(); // Initialize Square payment setup
         });
-    
+
         paypalBtn.addEventListener('click', function () {
             paypalPaymentSection.style.display = 'block';
             cardPaymentSection.style.display = 'none';
             setupPayPalPayments(); // Initialize PayPal payment setup
         });
-    
-        closeBtn.addEventListener('click', function () {
+    });
+
+    // Event listener to close the modal
+    closeBtn.addEventListener('click', function () {
+        modal.style.display = 'none';
+        cardPaymentSection.style.display = 'none';
+        paypalPaymentSection.style.display = 'none';
+    });
+
+    window.addEventListener('click', function (event) {
+        if (event.target == modal) {
             modal.style.display = 'none';
             cardPaymentSection.style.display = 'none';
             paypalPaymentSection.style.display = 'none';
-        });
-    
-        window.addEventListener('click', function (event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-                cardPaymentSection.style.display = 'none';
-                paypalPaymentSection.style.display = 'none';
-            }
-        });
-    });
-    
-    document.addEventListener('DOMContentLoaded', function () {
-        const planInputs = document.querySelectorAll('input[name="plan"]');
-        const selectedPlanPrice = document.getElementById('selected-plan-price');
-        const selectedPlanRenewalPrice = document.getElementById('selected-plan-renewal-price');
-    
-        function updateSelectedPlanPrice() {
-            const selectedPlan = document.querySelector('input[name="plan"]:checked');
-            let price;
-    
-            if (selectedPlan.value === '1-week') {
-                price = '13.86';
-            } else if (selectedPlan.value === '4-week') {
-                price = '39.99';
-            } else if (selectedPlan.value === '12-week') {
-                price = '79.99';
-            }
-    
-            selectedPlanPrice.textContent = `$${price}`;
-            selectedPlanRenewalPrice.textContent = `$${price}`;
         }
-    
-        updateSelectedPlanPrice(); // Set the initial price
-        planInputs.forEach(plan => {
-            plan.addEventListener('change', updateSelectedPlanPrice);
-        });
     });
-    
-    let duration = 10 * 60; // 10 minutes in seconds
-    const minutesElement = document.getElementById('minutes');
-    const secondsElement = document.getElementById('seconds');
-    
-    function startCountdown() {
-        const countdownInterval = setInterval(() => {
-            const minutes = Math.floor(duration / 60);
-            const seconds = duration % 60;
-    
-            minutesElement.textContent = minutes < 10 ? '0' + minutes : minutes;
-            secondsElement.textContent = seconds < 10 ? '0' + seconds : seconds;
-    
-            if (duration <= 0) {
-                clearInterval(countdownInterval);
-                alert('Countdown finished!');
-            } else {
-                duration--;
-            }
-        }, 1000);
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const planInputs = document.querySelectorAll('input[name="plan"]');
+    const selectedPlanPrice = document.getElementById('selected-plan-price');
+    const selectedPlanRenewalPrice = document.getElementById('selected-plan-renewal-price');
+
+    // Function to update the price in the modal
+    function updateSelectedPlanPrice() {
+        const selectedPlan = document.querySelector('input[name="plan"]:checked');
+        let price;
+
+        if (selectedPlan.value === '1-week') {
+            price = '13.86';
+        } else if (selectedPlan.value === '4-week') {
+            price = '39.99';
+        } else if (selectedPlan.value === '12-week') {
+            price = '79.99';
+        }
+
+        selectedPlanPrice.textContent = `$${price}`;
+        selectedPlanRenewalPrice.textContent = `$${price}`;
     }
-    
-    window.onload = startCountdown;
-    </script>
+
+    // Call update function when the page loads to set the initial price
+    updateSelectedPlanPrice();
+
+    // Add event listener to update the price whenever a plan is selected
+    planInputs.forEach(plan => {
+        plan.addEventListener('change', updateSelectedPlanPrice);
+    });
+});
+
+// Initialize the timer duration (10 minutes)
+let duration = 10 * 60; // 10 minutes in seconds
+
+// Select the minutes and seconds elements
+const minutesElement = document.getElementById('minutes');
+const secondsElement = document.getElementById('seconds');
+
+// Function to start the countdown
+function startCountdown() {
+    const countdownInterval = setInterval(() => {
+        // Calculate minutes and seconds
+        const minutes = Math.floor(duration / 60);
+        const seconds = duration % 60;
+
+        // Update the HTML with the current minutes and seconds
+        minutesElement.textContent = minutes < 10 ? '0' + minutes : minutes;
+        secondsElement.textContent = seconds < 10 ? '0' + seconds : seconds;
+
+        // Check if the timer has finished
+        if (duration <= 0) {
+            clearInterval(countdownInterval); // Stop the timer
+            // You can trigger any action you want when the timer ends here
+            alert('Countdown finished!');
+        } else {
+            duration--; // Decrease the duration by 1 second
+        }
+    }, 1000); // Run the function every 1000 milliseconds (1 second)
+}
+
+// Start the countdown when the page loads
+window.onload = startCountdown;
+
+</script>
 
 <style>
-
 .pay-safe {
     text-align: center;
     align-items: center;
@@ -875,7 +904,6 @@ p {
     background-color: #324cdd;
     border-color: #324cdd;
 }
-
-
 </style>
 {% endblock %}
+
