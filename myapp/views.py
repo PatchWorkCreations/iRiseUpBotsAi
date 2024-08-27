@@ -1070,6 +1070,7 @@ from .models import User  # Adjust according to your user model
 from django.contrib.auth.models import User  # For User model
 from django.utils.crypto import get_random_string  # For generating random passwords
 from django.core.mail import send_mail  # For sending emails
+from django.contrib.auth.models import SquareCustomer
 
 logger = logging.getLogger(__name__)
 
@@ -1152,6 +1153,8 @@ def process_payment(request):
                 logger.error("Card storage failed: %s", card_result.errors)
                 return JsonResponse({"error": "Failed to store card on file."}, status=400)
 
+            card_id = card_result.body['card']['id']
+
             # Step 4: Create or retrieve the user in the Django application
             user, created = User.objects.get_or_create(
                 username=user_email,
@@ -1181,6 +1184,12 @@ def process_payment(request):
             # Step 5: Save the quiz response to the database linked with the user
             save_quiz_response(request, user)
 
+            # Step 6: Store the customer_id and card_id in the database
+            SquareCustomer.objects.update_or_create(
+                user=user,
+                defaults={'customer_id': customer_id, 'card_id': card_id}
+            )
+
             return JsonResponse({"success": True})
 
         except Exception as e:
@@ -1189,7 +1198,6 @@ def process_payment(request):
             return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
-
 
 
 # Initialize the logger
