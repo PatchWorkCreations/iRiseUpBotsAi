@@ -241,8 +241,12 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const result = await card.tokenize();
                 if (result.status === 'OK') {
+                    // Get selected plan and determine the amount
+                    const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+                    const amount = determineAmountBasedOnPlan(selectedPlan);
+
                     // New: Verify the buyer using SCA
-                    const verificationToken = await verifyBuyer(payments, result.token);
+                    const verificationToken = await verifyBuyer(payments, result.token, amount);
                     // Send the payment request with the verification token
                     const response = await fetch('/process-payment/', {
                         method: 'POST',
@@ -252,7 +256,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         },
                         body: JSON.stringify({
                             source_id: result.token,
-                            plan: document.querySelector('input[name="plan"]:checked').value,
+                            plan: selectedPlan,
+                            amount: amount,
                             verification_token: verificationToken  // New: Include verification token
                         }),
                     });
@@ -274,10 +279,23 @@ document.addEventListener('DOMContentLoaded', function () {
         squareInitialized = true; // Set flag to prevent re-initialization
     }
 
-    // New: Add the verifyBuyer function
-    async function verifyBuyer(payments, token) {
+    // Function to determine the amount based on the selected plan
+    function determineAmountBasedOnPlan(plan) {
+        if (plan === '1-week') {
+            return 1386;  // $13.86 in cents
+        } else if (plan === '4-week') {
+            return 3999;  // $39.99 in cents
+        } else if (plan === '12-week') {
+            return 7999;  // $79.99 in cents
+        } else {
+            return 0;
+        }
+    }
+
+    // New: Add the verifyBuyer function with the correct amount
+    async function verifyBuyer(payments, token, amount) {
         const verificationDetails = {
-            amount: '1.00',
+            amount: (amount / 100).toFixed(2),  // Convert cents to dollars
             billingContact: {
                 addressLines: ['123 Main Street', 'Apartment 1'],
                 familyName: 'Doe',
@@ -288,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 state: 'LND',
                 city: 'London',
             },
-            currencyCode: 'GBP',
+            currencyCode: 'USD',  // Ensure this matches the currency used in the transaction
             intent: 'CHARGE',
         };
 
