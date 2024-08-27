@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    build: .
+    command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+  worker:
+    build: .
+    command: celery -A myproject worker --loglevel=info
+    depends_on:
+      - redis
+  redis:
+    image: redis:alpine
