@@ -48,11 +48,17 @@ class UserLessonProgress(models.Model):
         return f"{self.user.username} - {self.lesson.title} (Completed: {self.completed})"
 
 
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
+
 class UserCourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     progress = models.FloatField(default=0.0)
     expiration_date = models.DateTimeField(null=True, blank=True)
+    renewal_date = models.DateTimeField(null=True, blank=True)  # Added for renewal scheduling
 
     def __str__(self):
         return f"{self.user.username} - {self.course.title}"
@@ -67,6 +73,13 @@ class UserCourseAccess(models.Model):
             completed_sub_courses = UserSubCourseAccess.objects.filter(user=self.user, sub_course__parent_course=self.course, progress=100.0).count()
             self.progress = (completed_sub_courses / total_sub_courses) * 100
             self.save()
+
+    def set_renewal_date(self, plan_duration):
+        """Sets the renewal date based on the plan duration in weeks."""
+        if plan_duration:
+            self.renewal_date = timezone.now() + timedelta(weeks=plan_duration)
+            self.save()
+
 
 class UserSubCourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

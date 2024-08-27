@@ -1070,7 +1070,7 @@ from .models import User  # Adjust according to your user model
 from django.contrib.auth.models import User  # For User model
 from django.utils.crypto import get_random_string  # For generating random passwords
 from django.core.mail import send_mail  # For sending emails
-from .models import SquareCustomer, User
+from .models import SquareCustomer, User, UserCourseAccess
 
 logger = logging.getLogger(__name__)
 
@@ -1162,13 +1162,10 @@ def process_payment(request):
             )
 
             if created:
-                # If user was created, set a random password and send an email
+                # If the user was created, set a random password and send an email
                 random_password = get_random_string(8)
                 user.set_password(random_password)
                 user.save()
-
-                # Grant access to the course based on the selected plan
-                grant_course_access(user, selected_plan)
 
                 # Send a welcome email with the temporary password
                 subject = 'Your Account Has Been Created'
@@ -1177,7 +1174,7 @@ def process_payment(request):
                     'Please log in and change your password.\n'
                     'You now have access to the course menu based on your selected plan.'
                 )
-                send_mail(subject, message, 'your-email@example.com', [user_email])
+                send_mail(subject, message, 'juliavictorio16@Gmail.com', [user_email])
 
             logger.info(f"User {user_email} processed for payment.")
 
@@ -1189,6 +1186,14 @@ def process_payment(request):
                 user=user,
                 defaults={'customer_id': customer_id, 'card_id': card_id}
             )
+
+            # Step 7: Schedule the renewal if needed
+            if selected_plan in ['1-week', '4-week', '12-week']:
+                renewal_date = timezone.now() + timedelta(weeks=int(selected_plan.split('-')[0]))
+                user_course_access = UserCourseAccess.objects.create(
+                    user=user,
+                    expiration_date=renewal_date
+                )
 
             return JsonResponse({"success": True})
 
