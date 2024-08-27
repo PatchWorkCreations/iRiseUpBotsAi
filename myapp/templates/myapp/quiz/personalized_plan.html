@@ -330,9 +330,9 @@
                 amount: (amount / 100).toFixed(2),  // Convert cents to dollars
                 billingContact: {
                     addressLines: [
-                        document.getElementById('addressLine1').value,
-                        document.getElementById('addressLine2').value
-                    ],
+                document.getElementById('addressLine1').value.trim(),
+                ...(addressLine2Value ? [addressLine2Value] : [])
+                ],
                     familyName: document.getElementById('familyName').value,
                     givenName: document.getElementById('givenName').value,
                     email: document.getElementById('email').value,
