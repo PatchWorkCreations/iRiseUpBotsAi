@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'localhost',
