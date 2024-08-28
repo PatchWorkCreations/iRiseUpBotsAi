@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp.apps.MyAppConfig',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -184,5 +185,9 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
+from celery import Celery
+from celery.schedules import crontab
+app = Celery('myproject')
+app.conf.beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 

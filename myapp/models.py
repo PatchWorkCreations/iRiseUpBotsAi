@@ -173,4 +173,3 @@ class EmailCollection(models.Model):
         return self.email
 
 
-
