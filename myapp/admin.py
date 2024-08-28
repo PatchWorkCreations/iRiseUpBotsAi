@@ -36,3 +36,6 @@ class EmailCollectionAdmin(admin.ModelAdmin):
 
 admin.site.register(EmailCollection, EmailCollectionAdmin)
 
+
+
+
