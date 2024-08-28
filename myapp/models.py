@@ -55,7 +55,7 @@ from datetime import timedelta
 
 class UserCourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)  # Allow null values
     progress = models.FloatField(default=0.0)
     expiration_date = models.DateTimeField(null=True, blank=True)
     renewal_date = models.DateTimeField(null=True, blank=True)  # Added for renewal scheduling
@@ -70,7 +70,8 @@ class UserCourseAccess(models.Model):
         # Automatically calculate progress based on completed sub-courses or lessons
         total_sub_courses = self.course.sub_courses.count()
         if total_sub_courses > 0:
-            completed_sub_courses = UserSubCourseAccess.objects.filter(user=self.user, sub_course__parent_course=self.course, progress=100.0).count()
+            completed_sub_courses = UserSubCourseAccess.objects.filter(
+                user=self.user, sub_course__parent_course=self.course, progress=100.0).count()
             self.progress = (completed_sub_courses / total_sub_courses) * 100
             self.save()
 
