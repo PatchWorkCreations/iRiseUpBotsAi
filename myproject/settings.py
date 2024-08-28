@@ -8,10 +8,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
 DEBUG = True
 
+PORT = os.getenv('PORT', '8000')
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'iriseupai-production.up.railway.app',
+    '0.0.0.0',
     # Add any other domains or IPs as needed
 ]
 
