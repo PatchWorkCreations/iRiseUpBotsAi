@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
 DEBUG = True
 
-site_domain = os.env('RAILWAY_PUBLIC_DOMAIN', default='')
+site_domain = os.getenv('RAILWAY_PUBLIC_DOMAIN', default='')
 
 ALLOWED_HOSTS = [
     'localhost',
