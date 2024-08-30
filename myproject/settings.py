@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'myapp.apps.MyAppConfig',
     'django_celery_beat',
     'django_celery_results',
+    'django_celery_flower',
 ]
 
 MIDDLEWARE = [
