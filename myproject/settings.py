@@ -18,7 +18,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     site_domain,
-    '0.0.0.0',
+    '0.0.0.0:5555',
     # Add any other domains or IPs as needed
 ]
 
