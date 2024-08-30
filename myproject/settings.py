@@ -188,10 +188,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Celery Configuration
 # myproject/settings.py
 #CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
-if os.getenv('RAILWAY_ENVIRONMENT'):
-    CELERY_BROKER_URL = os.getenv('REDIS_URL') 
-else:
-    CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+#if os.getenv('RAILWAY_ENVIRONMENT'):
+ #   CELERY_BROKER_URL = os.getenv('REDIS_URL') 
+#else:
+ #   CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+
+CELERY_BROKER_URL = 'lGwEqNTvstKGbtAZqQlkSXYNeXWsvCXe:6379/0'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_RESULT_EXTENDED = True
 CELERY_ACCEPT_CONTENT = ['json']
