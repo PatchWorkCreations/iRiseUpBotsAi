@@ -10,15 +10,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
 DEBUG = True
 
+site_domain = os.env('RAILWAY_PUBLIC_DOMAIN', default='')
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'iriseupai-production.up.railway.app',
+    site_domain,
     # Add any other domains or IPs as needed
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://iriseupai-production.up.railway.app',
+    f'https://{site_domain}',
     'http://localhost:8000',  # Add other domains as needed
 ]
 
@@ -202,6 +204,9 @@ CELERY_TIMEZONE = 'Asia/Manila'
 TIME_ZONE = 'Asia/Manila'
 USE_TZ = True
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+
+
 
 
 
