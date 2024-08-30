@@ -91,6 +91,8 @@ def charge_card_for_renewal():
             user_access.expiration_date += renewal_period
             user_access.save()
 
+            
+
             logger.info(f"Successfully charged and extended access for user {user_access.user.email}")
 
         except SquareCustomer.DoesNotExist:
