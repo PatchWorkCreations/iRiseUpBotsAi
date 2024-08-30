@@ -205,6 +205,7 @@ CELERY_TIMEZONE = 'Asia/Manila'
 TIME_ZONE = 'Asia/Manila'
 USE_TZ = True
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 
 
