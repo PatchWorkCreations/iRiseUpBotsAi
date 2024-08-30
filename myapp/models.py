@@ -55,13 +55,15 @@ from datetime import timedelta
 
 class UserCourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)  # Allow null values
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
     progress = models.FloatField(default=0.0)
     expiration_date = models.DateTimeField(null=True, blank=True)
-    renewal_date = models.DateTimeField(null=True, blank=True)  # Added for renewal scheduling
+    renewal_date = models.DateTimeField(null=True, blank=True)  # For scheduling renewal
+    renewal_task_id = models.CharField(max_length=255, null=True, blank=True)  # Task ID for the scheduled charge
+    selected_plan = models.CharField(max_length=20, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.course.title}"
+        return f"{self.user.username} - {self.course.title if self.course else 'No course'}"
 
     def has_expired(self):
         return self.expiration_date is not None and timezone.now() > self.expiration_date

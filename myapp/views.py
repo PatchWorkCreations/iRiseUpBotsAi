@@ -895,13 +895,16 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
+# views.py
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from myapp.tasks import send_welcome_email  # Ensure this import is correct
+from .models import EmailCollection  # Assuming you have an EmailCollection model
 
 def email_collection(request):
     if request.method == 'POST':
-        email = request.POST.get('email', '').strip()  # Strip any leading/trailing spaces
+        email = request.POST.get('email', '').strip()
         receive_offers = request.POST.get('receive_offers') == 'on'
 
         if not email:
@@ -917,48 +920,22 @@ def email_collection(request):
         )
 
         if not created:
-            # Inform the user if the email already exists
             messages.error(request, "This email is already registered. Please use a different email or log in.")
             return render(request, 'myapp/quiz/email_collection.html', {
                 'email': email,
                 'receive_offers': receive_offers,
             })
 
-        # Prepare the welcome email content
-        subject = 'Welcome to iRiseUp.Ai!'
-        html_message = render_to_string('welcome_email.html', {'email': email})
-        plain_message = strip_tags(html_message)
-        from_email = 'juliavictorio16@gmail.com'  # Replace with your actual sender email
-        to = email
-
-        # Send the welcome email
-        send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+        # Send the welcome email asynchronously
+        send_welcome_email.delay(email)
 
         # Store the email in the session for later use during payment
         request.session['email'] = email
 
-        # Proceed to the readiness level or next step
         return redirect('readiness_level')
 
-    # Render the email collection form for GET requests
     return render(request, 'myapp/quiz/email_collection.html')
 
-
-def send_welcome_email(user_email):
-    subject = 'Welcome to iRiseUp.Ai!'
-    from_email = 'juliavictorio16@gmail.com'  # Replace with your actual email address
-    to_email = [user_email]
-
-    # Render HTML content from the template
-    html_content = render_to_string('welcome_email.html', {'user_email': user_email})
-    text_content = strip_tags(html_content)  # Strip the HTML tags for plain text alternative
-
-    # Create the email object and attach the HTML content
-    msg = EmailMultiAlternatives(subject, text_content, from_email, to_email)
-    msg.attach_alternative(html_content, "text/html")
-    
-    # Send the email
-    msg.send()
 
 
 def readiness_level(request):

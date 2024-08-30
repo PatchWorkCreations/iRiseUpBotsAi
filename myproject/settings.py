@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+from celery import Celery
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myapp.apps.MyAppConfig',
     'django_celery_beat',
+    'django_celery_results'
 ]
 
 MIDDLEWARE = [
@@ -147,6 +150,10 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'celery': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
     },
 }
 
@@ -179,16 +186,26 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Celery Configuration
-CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+# myproject/settings.py
+#CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+if os.getenv('RAILWAY_ENVIRONMENT'):
+    CELERY_BROKER_URL = os.getenv('REDIS_URL') 
+else:
+    CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_EXTENDED = True
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-
-from celery import Celery
-from celery.schedules import crontab
-
-app = Celery('myproject')
-app.conf.beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_TIMEZONE = 'Asia/Manila'
+TIME_ZONE = 'Asia/Manila'
+USE_TZ = True
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 
+
+#app = Celery('myproject')
+#app.conf.beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+
+#redis://default:lGwEqNTvstKGbtAZqQlkSXYNeXWsvCXe@junction.proxy.rlwy.net:23867 redis url
