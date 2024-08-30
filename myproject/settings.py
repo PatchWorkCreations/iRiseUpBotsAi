@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myapp.apps.MyAppConfig',
     'django_celery_beat',
-    'django_celery_results'
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
