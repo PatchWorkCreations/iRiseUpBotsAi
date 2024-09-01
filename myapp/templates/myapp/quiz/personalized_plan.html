@@ -142,14 +142,14 @@
                         </div>
                     </label>
                 </div>
-
+                
                 <div class="plan-option most-popular">
                     <input type="radio" id="4-week-plan" name="plan" value="4-week" checked>
                     <label for="4-week-plan">
                         <div class="most-popular-badge">
                             <span>👍 MOST POPULAR</span>
                         </div>
-                        <div class="plan-header">
+                        <div class="plan-header" style="padding-top: 55px;">
                             <span>4-WEEK PLAN</span>
                             <span>$39.99</span>
                         </div>
@@ -159,7 +159,7 @@
                         </div>
                     </label>
                 </div>
-
+                
                 <div class="plan-option">
                     <input type="radio" id="12-week-plan" name="plan" value="12-week">
                     <label for="12-week-plan">
@@ -173,6 +173,7 @@
                         </div>
                     </label>
                 </div>
+                
 
                 <div class="plan-info">
                     <p>🎯 People using plan for 3 months achieve twice as many results as for 1 month</p>
@@ -536,34 +537,43 @@ window.onload = startCountdown;
 
 <style>
 
+/* Goal Box Styles */
 .goals-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch; /* Ensure boxes stretch to the same height */
     gap: 10px; /* Space between the goal boxes */
     width: 100%; /* Ensure full width for the container */
+    padding-left: 23px;
+    padding-bottom: 20px;
 }
 
 .goal-box {
-    background-color: #f8f9fa; /* Light grey background */
+    background-color: #f8f9fa;
     padding: 15px 20px;
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 10px;
     text-align: center;
-    flex: 1; /* Flex-grow property to ensure both boxes take equal space */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for 3D effect */
-    margin: 5px; /* Ensure some spacing around boxes */
+    flex: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+    box-sizing: border-box;
 }
 
 .goal-box h4 {
-    font-size: 1rem; /* Slightly smaller heading */
-    color: #666; /* Subtle grey color */
+    font-size: 0.875rem; /* Smaller heading font size */
+    color: #666;
     margin-bottom: 5px;
 }
 
 .goal-box p {
-    font-size: 1.2rem; /* Slightly larger font for main text */
-    font-weight: bold; /* Bold text for emphasis */
-    color: #000; /* Black color for text */
+    font-size: 1rem; /* Smaller font size for main text */
+    font-weight: bold;
+    color: #000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -571,17 +581,11 @@ window.onload = startCountdown;
 }
 
 .goal-box .goal-icon, .goal-box .target-icon {
-    margin-right: 8px; /* Space between icon and text */
-    font-size: 1.5rem; /* Larger size for icon */
+    margin-right: 8px;
+    font-size: 1.25rem; /* Smaller size for the icon */
     color: #5860F8; /* Blue color for icons */
 }
 
-.goal-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
 
 
     .form-container {
@@ -1021,38 +1025,72 @@ window.onload = startCountdown;
 
 /* Plan option styles */
 .plan-option {
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
+    border: 2px solid #ddd; /* Default border color */
     border-radius: 10px;
     padding: 15px;
-    position: relative;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background: #fff;
-    border: 2px solid #ddd; /* Default border color */
-    transition: border-color 0.3s ease; /* Smooth transition for border color */
+    transition: border-color 0.3s ease;
 }
 
 .plan-option input[type="radio"] {
-    display: none; /* Hide the radio button itself */
+    display: none; /* Hide the default radio button */
 }
 
 .plan-option label {
     display: flex;
-    justify-content: space-between;
     width: 100%;
+    justify-content: space-between;
     cursor: pointer;
+    align-items: center;
+}
+
+.plan-option label:hover {
+    border-color: #4e73df; /* Change border color on hover */
 }
 
 .plan-option input[type="radio"]:checked + label {
-    border: 2px solid #4e73df; /* Highlight the entire border on selection */
+    border: 2px solid #4e73df; /* Highlight border when selected */
+    background: #f9fbff; /* Light background color for the selected option */
+    box-shadow: 0 0 10px rgba(78, 115, 223, 0.25); /* Add shadow for emphasis */
 }
 
-.most-popular {
-    border-radius: 10px;
-    position: relative;
-    padding-top: 30px;
+.plan-option.most-popular input[type="radio"]:checked + label {
+    background: #5860F8;
+    color: white;
 }
 
+.plan-option.most-popular input[type="radio"]:checked + label .most-popular-badge {
+    background: #fff;
+    color: #5860F8;
+    
+}
+
+.plan-header {
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.plan-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.plan-price span:last-child {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/* Specific styling for the "Most Popular" badge */
 .most-popular-badge {
     position: absolute;
     top: 0;
@@ -1071,10 +1109,23 @@ window.onload = startCountdown;
     align-items: center;
 }
 
-.most-popular-badge::before {
+.most-popular-badge span::before {
     content: "👍";
     margin-right: 5px;
 }
+
+.plan-option.most-popular {
+    position: relative;
+}
+
+.plan-option.most-popular label {
+    border-radius: 10px;
+    background-color: #f0f4ff; /* Change background color */
+    box-shadow: 0 0 15px rgba(78, 115, 223, 0.15); /* Add shadow for the most popular option */
+}
+
+
+
 
 /* Progress bar styles */
 .card {
