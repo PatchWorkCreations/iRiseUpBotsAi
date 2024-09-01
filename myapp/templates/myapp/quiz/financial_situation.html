@@ -5,26 +5,26 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
     <div class="container text-center">
-        <h2>How would you describe your financial situation?</h2>
+        <h2>How Would You Describe Your Financial Situation?</h2>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="financial_situation" value="I'm comfortable" class="btn btn-light btn-situation">
                         <span class="emoji">😌</span>
-                        <span>I'm comfortable</span>
+                        <span>I’m Financially Comfortable</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="financial_situation" value="I would like to have more stability" class="btn btn-light btn-situation">
                         <span class="emoji">🔧</span>
-                        <span>I would like to have more stability</span>
+                        <span>I’m Seeking More Stability</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="financial_situation" value="I'm struggling to meet my financial goals" class="btn btn-light btn-situation">
                         <span class="emoji">😟</span>
-                        <span>I'm struggling to meet my financial goals</span>
+                        <span>I’m Struggling to Reach My Goals</span>
                     </button>
                 </div>
             </div>

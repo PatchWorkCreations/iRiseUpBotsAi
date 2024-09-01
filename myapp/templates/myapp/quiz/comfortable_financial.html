@@ -11,10 +11,10 @@
     {% elif gender == 'Female' %}
         <img src="{% static 'myapp/images/quiz/female_financial.webp' %}" alt="You're on the Right Track" class="img-fluid mb-3">
     {% endif %}
-    <p>Keep up the great work and discover how to make your financial journey even more rewarding. According to a Gallup poll, only 29% of Americans are financially comfortable. Join the elite group that’s pushing towards even greater success.</p>
+    <p style="text-align: left;">Keep up the great work and discover how to make your financial journey even more rewarding. According to a Gallup poll, only 29% of Americans are financially comfortable. Join the elite group that’s pushing towards even greater success.</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Continue</button>
+        <button type="submit" class="btn btn-primary btn-follow">Continue</button>
     </form>
 </div>
 

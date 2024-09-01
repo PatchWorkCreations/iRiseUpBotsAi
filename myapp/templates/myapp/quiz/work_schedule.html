@@ -5,34 +5,35 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
     <div class="container text-center">
-        <h2>What is your work schedule like?</h2>
+        <h2>What’s Your Work Schedule?</h2>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="work_schedule" value="9 to 5" class="btn btn-light btn-schedule">
                         <span class="emoji">👔</span>
-                        <span>9 to 5</span>
+                        <span>Standard 9 to 5</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="work_schedule" value="Night shifts" class="btn btn-light btn-schedule">
                         <span class="emoji">🌙</span>
-                        <span>Night shifts</span>
+                        <span>Night Owl Hours</span>
                     </button>
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="work_schedule" value="My hours are flexible" class="btn btn-light btn-schedule">
                         <span class="emoji">👌</span>
-                        <span>My hours are flexible</span>
+                        <span>Flexible and On My Terms</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="work_schedule" value="I’m retired" class="btn btn-light btn-schedule">
                         <span class="emoji">🧶</span>
-                        <span>I’m retired</span>
+                        <span>Enjoying Retirement
+                        </span>
                     </button>
                 </div>
             </div>
@@ -52,15 +53,13 @@
         align-items: center;
         justify-content: flex-start;
         width: 100%;
-        max-width: 400px; /* Limit max width to make it look cleaner on large screens */
         text-align: left;
-        padding: 15px 20px;
+        padding: 15px 20px; /* Adjust padding for consistency */
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
         font-size: 20px;
         transition: background-color 0.3s ease;
-        margin: 10px auto; /* Center-align the button */
     }
 
     .btn-schedule:hover {

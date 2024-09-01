@@ -11,10 +11,10 @@
     {% elif gender == 'Female' %}
         <img src="{% static 'myapp/images/quiz/female_financial.webp' %}" alt="Stability Is Within Reach" class="img-fluid mb-3">
     {% endif %}
-    <p>Learn the strategies to build a stable and secure financial future, starting today. Did you know that 63% of people feel anxious about their financial future? It’s time to turn that anxiety into confidence.</p>
+    <p style="text-align: left;">Learn the strategies to build a stable and secure financial future, starting today. Did you know that 63% of people feel anxious about their financial future? It’s time to turn that anxiety into confidence.</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Continue</button>
+        <button type="submit" class="btn btn-primary btn-follow">Continue</button>
     </form>
 </div>
 </div>

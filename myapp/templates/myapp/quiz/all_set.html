@@ -11,7 +11,7 @@
     {% elif gender == 'Female' %}
         <img src="{% static 'myapp/images/quiz/female_2.webp' %}" alt="Elevate Your AI Mastery" class="img-fluid mb-3 mastery-image">
     {% endif %}
-    <p>You're already prepared—now take your skills to the next level with our advanced AI learning challenge. Join the top 10% who excel in AI!</p>
+    <p style="text-align: left;">You're already prepared—now take your skills to the next level with our advanced AI learning challenge. Join the top 10% who excel in AI!</p>
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary btn-follow">Continue</button>

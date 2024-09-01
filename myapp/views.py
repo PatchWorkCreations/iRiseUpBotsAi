@@ -624,20 +624,32 @@ def absolutely_interest(request):
     # Pass the gender to the template
     return render(request, 'myapp/quiz/absolutely_interest.html', {'gender': gender})
 
+
 def somewhat_interest(request):
+    gender = request.session.get('gender', 'Male')  # Default to 'Male' if not set
+
     if request.method == 'POST':
         return redirect('digital_business_knowledge')  # Replace with the next logical step in your flow
-    return render(request, 'myapp/quiz/somewhat_interest.html')
+
+    return render(request, 'myapp/quiz/somewhat_interest.html', {'gender': gender})
+
 
 def maybe_interest(request):
+    gender = request.session.get('gender', 'Male')  # Default to 'Male' if not set
+
     if request.method == 'POST':
         return redirect('digital_business_knowledge')  # Replace with the next logical step in your flow
-    return render(request, 'myapp/quiz/maybe_interest.html')
+
+    return render(request, 'myapp/quiz/maybe_interest.html', {'gender': gender})
+
 
 def not_necessarily_interest(request):
+    gender = request.session.get('gender', 'Male')  # Default to 'Male' if not set
+
     if request.method == 'POST':
         return redirect('digital_business_knowledge')  # Replace with the next logical step in your flow
-    return render(request, 'myapp/quiz/not_necessarily_interest.html')
+
+    return render(request, 'myapp/quiz/not_necessarily_interest.html', {'gender': gender})
 
 def digital_business_knowledge(request):
     if request.method == 'POST':
@@ -948,38 +960,30 @@ def readiness_level(request):
 
 
 def personalized_plan(request):
-    # Retrieve session data
-    age = request.session.get('age_range', '')
+    if request.method == 'POST':
+        gender = request.POST.get('gender')
+        special_goal = request.POST.get('special_goal')
+        main_goal = request.POST.get('main_goal')
+        
+        # Store data in the session
+        if gender:
+            request.session['gender'] = gender
+        if special_goal:
+            request.session['special_goal'] = special_goal
+        if main_goal:
+            request.session['main_goal'] = main_goal
+        
+        return redirect('next_view_name')  # Replace 'next_view_name' with the actual view name you want to redirect to
+
+    # If the request is GET, render the template with the current session data
     gender = request.session.get('gender', '')
     special_goal = request.session.get('special_goal', '')
-
-    # Convert age to integer for comparison
-    try:
-        age = int(age.split('-')[0])  # Extracts the starting age from the range, e.g., "35-44" -> 35
-    except (ValueError, IndexError):
-        age = None  # Set age to None if there's an issue with age processing
-
-    # Determine image path based on gender and age
-    if gender == 'male':
-        if age is not None and age < 30:
-            current_image_path = 'myapp/images/male_before_young.png'
-            goal_image_path = 'myapp/images/male_after_young.png'
-        else:
-            current_image_path = 'myapp/images/male_before_adult.png'
-            goal_image_path = 'myapp/images/male_after_adult.png'
-    else:
-        if age is not None and age < 30:
-            current_image_path = 'myapp/images/female_before_young.png'
-            goal_image_path = 'myapp/images/female_after_young.png'
-        else:
-            current_image_path = 'myapp/images/female_before_adult.png'
-            goal_image_path = 'myapp/images/female_after_adult.png'
-
-    # Pass context data to the template
+    main_goal = request.session.get('main_goal', '')
+    
     context = {
-        'current_image_path': current_image_path,
-        'goal_image_path': goal_image_path,
+        'gender': gender,
         'special_goal': special_goal,
+        'main_goal' : main_goal,
     }
 
     return render(request, 'myapp/quiz/personalized_plan.html', context)

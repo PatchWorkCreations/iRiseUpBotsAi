@@ -5,26 +5,26 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
     <div class="container text-center">
-        <h2>What is your current income source?</h2>
+        <h2>What’s Your Current Income Source?</h2>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="income_source" value="Full-time job" class="btn btn-light btn-income">
                         <span class="emoji">💼</span>
-                        <span>Full-time job</span>
+                        <span>Full-Time Job</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="income_source" value="Passive income" class="btn btn-light btn-income">
                         <span class="emoji">📝</span>
-                        <span>Passive income</span>
+                        <span>Earning Passively</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="income_source" value="Other" class="btn btn-light btn-income">
                         <span class="emoji">🤔</span>
-                        <span>Other</span>
+                        <span>Something Else</span>
                     </button>
                 </div>
             </div>

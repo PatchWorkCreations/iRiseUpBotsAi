@@ -10,13 +10,13 @@
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="I'm new to AI tools">
                         <span class="emoji">🆕</span>
                         <span>I'm new to AI tools</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="ChatGPT">
                         <span class="emoji">🤖</span>
                         <span>ChatGPT</span>
@@ -24,13 +24,13 @@
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Midjourney">
                         <span class="emoji">🎨</span>
                         <span>Midjourney</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Google Gemini">
                         <span class="emoji">🔮</span>
                         <span>Google Gemini</span>
@@ -38,13 +38,13 @@
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Otter.ai">
                         <span class="emoji">🦦</span>
                         <span>Otter.ai</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="AIVA">
                         <span class="emoji">🎵</span>
                         <span>AIVA</span>
@@ -52,13 +52,13 @@
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="DALL-E">
                         <span class="emoji">🖼️</span>
                         <span>DALL-E</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Jasper">
                         <span class="emoji">✍️</span>
                         <span>Jasper</span>
@@ -66,13 +66,13 @@
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="Copilot">
                         <span class="emoji">👨‍✈️</span>
                         <span>Copilot</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="button" class="btn btn-light btn-ai-tools d-flex align-items-center" data-value="OpenAI Playground">
                         <span class="emoji">🛠️</span>
                         <span>OpenAI Playground</span>
@@ -81,7 +81,7 @@
             </div>
             <input type="hidden" id="selected_ai_tools" name="selected_ai_tools">
             <div class="row justify-content-center mt-3">
-                <div class="col-12 col-md-10 mb-3">
+                <div class="col-12 col-md-11 mb-3">
                     <button type="submit" class="btn btn-primary btn-follow">Continue</button>
                 </div>
             </div>
@@ -112,6 +112,12 @@
 
     .btn-ai-tools:hover {
         background-color: #e2e6ea; /* Add a hover effect */
+    }
+
+    .btn-ai-tools.active {
+        background-color: #c8e6c9 !important; /* Light green when active */
+        border-color: #c8e6c9 !important; /* Ensure the border color matches */
+        transform: scale(1.05); /* Slightly enlarge the button */
     }
 
     .btn-ai-tools span {

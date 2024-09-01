@@ -208,10 +208,11 @@ USE_TZ = True
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
-
-
-
-
+#redis-server (to run redis server locally)
+#celery -A myproject flower (to run flower locally)
+#python manage.py shell (to run python shell)
+#celery -A myproject beat -l info (to run celery beat)
+#celery -A myproject worker -l info ( to run cleery worker)
 
 #app = Celery('myproject')
 #app.conf.beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'

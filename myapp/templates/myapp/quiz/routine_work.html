@@ -6,41 +6,37 @@
 <div class="mobile-container">
     <div class="container text-center">
         <h2>Would you enjoy a job where something else does the routine work for you?</h2>
-        <div class="row justify-content-center align-items-center">
-            <div class="col-12 col-md-6 d-flex flex-column align-items-center">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col-12 mb-3">
-                            <button type="submit" name="routine_work" value="It's a dream" class="btn btn-light btn-routine">
-                                <span>It's a dream</span>
-                            </button>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <button type="submit" name="routine_work" value="Somewhat" class="btn btn-light btn-routine">
-                                <span>Somewhat</span>
-                            </button>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <button type="submit" name="routine_work" value="Maybe" class="btn btn-light btn-routine">
-                                <span>Maybe</span>
-                            </button>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <button type="submit" name="routine_work" value="Not necessarily" class="btn btn-light btn-routine">
-                                <span>Not necessarily</span>
-                            </button>
-                        </div>
-                    </div>
-                </form>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="submit" name="routine_work" value="It's a dream" class="btn btn-light btn-routine">
+                        <span>It's a dream</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="submit" name="routine_work" value="Somewhat" class="btn btn-light btn-routine">
+                        <span>Somewhat</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="submit" name="routine_work" value="Maybe" class="btn btn-light btn-routine">
+                        <span>Maybe</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="submit" name="routine_work" value="Not necessarily" class="btn btn-light btn-routine">
+                        <span>Not necessarily</span>
+                    </button>
+                </div>
             </div>
-            <div class="col-12 col-md-6 d-flex justify-content-center">
-                {% if gender == 'Male' %}
-                    <img src="{% static 'myapp/images/quiz/6.webp' %}" alt="Routine Work" class="img-fluid routine-work-image">
-                {% elif gender == 'Female' %}
-                    <img src="{% static 'myapp/images/quiz/female_6.webp' %}" alt="Routine Work" class="img-fluid routine-work-image">
-                {% endif %}
-            </div>
+        </form>
+        <div class="d-flex justify-content-center mt-4">
+            {% if gender == 'Male' %}
+                <img src="{% static 'myapp/images/quiz/6.webp' %}" alt="Routine Work" class="img-fluid routine-work-image">
+            {% elif gender == 'Female' %}
+                <img src="{% static 'myapp/images/quiz/female_6.webp' %}" alt="Routine Work" class="img-fluid routine-work-image">
+            {% endif %}
         </div>
     </div>
 </div>
@@ -53,34 +49,46 @@
     }
 
     .btn-routine {
-        width: 100%; /* Full width for buttons */
-        padding: 15px 20px; /* Adjust padding for consistency */
-        border-radius: 10px; /* Adjust border-radius for rounded corners */
-        background-color: #f4f4f4; /* Light grey background color */
-        font-size: 1.2rem; /* Adjust font size */
-        font-weight: bold;
-        border: 1px solid #dcdcdc; /* Add a subtle border */
-        transition: background-color 0.3s ease, transform 0.3s ease;
-        text-align: left; /* Align text to the left */
+        display: flex;
+        flex-direction: row; /* Aligns emoji and text horizontally */
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        text-align: left;
+        padding: 15px 20px; /* Keep the same padding */
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        font-size: 20px;
+        transition: background-color 0.3s ease;
+        margin-bottom: 10px; /* Adjust this to reduce space between buttons if needed */
     }
 
     .btn-routine:hover {
         background-color: #e2e2e2;
-        transform: translateY(-2px);
+    }
+
+    .btn-routine span {
+        display: block;
+        font-weight: bold;
     }
 
     .routine-work-image {
-        max-width: 100%; /* Increase image size to be more prominent */
+        max-width: 60%;
         height: auto;
         border-radius: 8px;
-        margin-top: 20px; /* Adjust margin to ensure visibility */
+        margin-top: 20px;
     }
 
-    @media (min-width: 768px) {
-        /* For larger screens */
+    @media (max-width: 767px) {
+        .btn-routine {
+            max-width: 100%;
+            text-align: center;
+        }
+
         .routine-work-image {
-            max-width: 70%; /* Make the image larger on bigger screens */
-            margin-top: 0; /* Remove top margin on larger screens */
+            max-width: 100%;
+            margin-top: 10px;
         }
     }
 </style>

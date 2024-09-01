@@ -11,10 +11,10 @@
     {% elif gender == 'Female' %}
         <img src="{% static 'myapp/images/quiz/female_financial.webp' %}" alt="Turn Struggles into Success" class="img-fluid mb-3">
     {% endif %}
-    <p>Empower yourself with the tools and knowledge to overcome financial challenges and achieve your goals. Nearly 54% of adults struggle to meet their financial goals, but with the right guidance, you can transform your situation.</p>
+    <p style="text-align: left;">Empower yourself with the tools and knowledge to overcome financial challenges and achieve your goals. Nearly 54% of adults struggle to meet their financial goals, but with the right guidance, you can transform your situation.</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Continue</button>
+        <button type="submit" class="btn btn-primary btn-follow">Continue</button>
     </form>
 </div>
 </div>

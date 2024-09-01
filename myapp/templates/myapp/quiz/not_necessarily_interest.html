@@ -6,8 +6,12 @@
 <div class="mobile-container">
 <div class="container text-center">
     <h2>Discover New Opportunities</h2>
-    <img src="{% static 'myapp/images/not_necessarily_interest.png' %}" alt="Discover New Opportunities" class="img-fluid mb-3">
-    <p>There are hundreds of various work opportunities online that have a high-income potential. Moreover, our challenge shows practical examples of how AI may boost your work.</p>
+    {% if gender == 'Male' %}
+    <img src="{% static 'myapp/images/quiz/3.webp' %}" alt="Discover Your Ideal Career" class="img-fluid mb-3 reality-image">
+    {% elif gender == 'Female' %}
+        <img src="{% static 'myapp/images/quiz/female_3.webp' %}" alt="Discover Your Ideal Career" class="img-fluid mb-3 reality-image">
+    {% endif %}
+    <p style="text-align: left;">There are hundreds of various work opportunities online that have a high-income potential. Moreover, our challenge shows practical examples of how AI may boost your work.</p>
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary btn-follow">Continue</button>
@@ -15,7 +19,10 @@
 </div>
 
 <style>
-
+    .reality-image {
+        max-width: 50%; /* Adjust the size as needed */
+        height: auto;
+    }
  
 </style>
 {% endblock %}

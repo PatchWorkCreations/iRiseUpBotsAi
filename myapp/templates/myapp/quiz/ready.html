@@ -11,10 +11,10 @@
     {% elif gender == 'Female' %}
         <img src="{% static 'myapp/images/quiz/female_2.webp' %}" alt="Boost Your AI Confidence" class="img-fluid mb-3 confidence-image">
     {% endif %}
-    <p>You're confident and ready—our learning challenge will enhance your knowledge and skills. Join the 70% of professionals who see a boost in their career with advanced AI training.</p>
+    <p style="text-align: left;">You're confident and ready—our learning challenge will enhance your knowledge and skills. Join the 70% of professionals who see a boost in their career with advanced AI training.</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Continue</button>
+        <button type="submit" class="btn btn-primary btn-follow">Continue</button>
     </form>
 </div>
 </div>

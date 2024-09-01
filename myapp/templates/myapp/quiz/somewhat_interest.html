@@ -6,12 +6,22 @@
 <div class="mobile-container">
 <div class="container text-center">
     <h2>Discover Your Ideal Career</h2>
-    <img src="{% static 'myapp/images/somewhat_interest.png' %}" alt="Discover Your Ideal Career" class="img-fluid mb-3">
-    <p>Find the perfect balance between your interests and a successful career with our learning challenge. Unlock greater job satisfaction and take the first step towards your ideal job.</p>
+    {% if gender == 'Male' %}
+    <img src="{% static 'myapp/images/quiz/3.webp' %}" alt="Discover Your Ideal Career" class="img-fluid mb-3 reality-image">
+    {% elif gender == 'Female' %}
+        <img src="{% static 'myapp/images/quiz/female_3.webp' %}" alt="Discover Your Ideal Career" class="img-fluid mb-3 reality-image">
+    {% endif %}
+    <p style="text-align: left;">Find the perfect balance between your interests and a successful career with our learning challenge. Unlock greater job satisfaction and take the first step towards your ideal job.</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Continue</button>
+        <button type="submit" class="btn btn-primary btn-follow">Continue</button>
     </form>
 </div>
 </div>
+<style>
+    .reality-image {
+        max-width: 50%; /* Adjust the size as needed */
+        height: auto;
+    }
+</style>
 {% endblock %}

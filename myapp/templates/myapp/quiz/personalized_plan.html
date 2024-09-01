@@ -18,75 +18,116 @@
 </div>
 
 <div class="container text-center mt-5">
-    <h2>Your readiness: 83%</h2>
-    <p><strong>4-week</strong> program is enough for you to start your AI journey</p>
 
     <div class="d-flex justify-content-center mt-4">
         <div class="card">
-            <div class="row">
-                <div class="col-6">
+            <div class="row no-gutters">
+                <div class="col-6 text-center">
                     <h3>Now</h3>
-                    <img src="{% static 'myapp/images/male_before.png' %}" alt="Current" class="img-fluid">
+                    {% if gender == 'Male' %}
+                        <img src="{% static 'myapp/images/quiz/3.png' %}" alt="Current" class="img-fluid">
+                    {% elif gender == 'Female' %}
+                        <img src="{% static 'myapp/images/quiz/1.png' %}" alt="Current" class="img-fluid">
+                    {% endif %}
                     <div class="progress-bar-container mt-2">
                         <div class="progress-bar-wrapper">
                             <div class="progress-bar-label">Moderate</div>
-                            <div class="progress-bar-fill" style="width: 50%;"></div>
+                            <div class="progress-bar-fill moderate"></div>
                         </div>
                         <div class="progress-bar-labels">
-                            <span>LOW</span>
-                            <span>INTERMEDIATE</span>
-                            <span>HIGH</span>
+                             
+                        </div>
+                    </div>
+                    <div class="progress-bar-container mt-2">
+                        <h4>Income Potential</h4>
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar-fill limited"></div>
+                        </div>
+                        <div class="progress-bar-labels">
+                            <span>Limited</span>
+                            <span>High</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col-6 text-center">
                     <h3>Goal</h3>
-                    <img src="{% static 'myapp/images/male_after.png' %}" alt="Goal" class="img-fluid">
+                    {% if gender == 'Male' %}
+                        <img src="{% static 'myapp/images/quiz/4.png' %}" alt="Goal" class="img-fluid">
+                    {% elif gender == 'Female' %}
+                        <img src="{% static 'myapp/images/quiz/2.png' %}" alt="Goal" class="img-fluid">
+                    {% endif %}
                     <div class="progress-bar-container mt-2">
                         <div class="progress-bar-wrapper">
                             <div class="progress-bar-label">High</div>
-                            <div class="progress-bar-fill" style="width: 100%;"></div>
+                            <div class="progress-bar-fill high"></div>
                         </div>
                         <div class="progress-bar-labels">
-                            <span>LOW</span>
-                            <span>INTERMEDIATE</span>
-                            <span>HIGH</span>
+                             
                         </div>
                     </div>
-                </div>
+                    <div class="progress-bar-container mt-2">
+                        <h4>Income Potential</h4>
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar-fill high"></div>
+                        </div>
+                        <div class="progress-bar-labels">
+                            <span>Limited</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+                </div>                
             </div>
         </div>
     </div>
+    <p style="text-align: left; color: #aaa;">This is not a guarantee or promise of results.</p>
+    
 
-    <div class="card mt-4">
-        <div class="card-body">
-            <h3>AI is easier than you think</h3>
-            <ul class="list-unstyled">
-                <li>💡 No prior AI knowledge is required</li>
+    <div class="card mt-4" style="background-color: #f7f7fc; border-radius: 20px; padding: 30px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+        <div class="card-body text-center">
+            <h3 class="ai-title">AI is easier than you think</h3>
+            <div class="ai-content d-flex align-items-center justify-content-center">
+                <img src="{% static 'myapp/images/quiz/ai_image.png' %}" alt="Goal" class="img-fluid ai-image">
+                <div class="ai-days ms-4">
+                    <div class="ai-day">Day 1 <span class="ai-day-desc">Images</span></div>
+                    <div class="ai-day">Day 2 <span class="ai-day-desc">Writing</span></div>
+                    <div class="ai-day">Day 3 <span class="ai-day-desc">Speech</span></div>
+                </div>
+            </div>
+            <ul class="list-unstyled ai-benefits mt-4">
+                <li>👌 No prior AI knowledge is required</li>
                 <li>🎓 No need for a university degree</li>
                 <li>🕒 Work at your own pace and terms</li>
             </ul>
         </div>
     </div>
+    
+    <div class="readiness_level" style="padding-top: 20px;">    
+    <h2 class="readiness-title" style="text-align: left;">Your readiness: <span class="readiness-percentage">83%</span></h2>
+    <div class="readiness-box">
+        <p><strong class="highlighted-text">4-week</strong> program is enough for you to start your AI journey <span class="icon">💡</span></p>
+    </div>
+    </div>
 
-    <div class="card mt-4">
-        <div class="card-body">
-            <h3>Try our program and you will:</h3>
-            <ul class="list-unstyled">
+    <div style="padding-top: 30px;">
+        <div>
+            <h3 style="font-size: x-large;">Try our program and you will:</h3>
+            <ul class="list-unstyled" style="text-align: left;">
                 <li>✔️ Master AI tools that can boost your income</li>
                 <li>✔️ Discover new digital professions and income sources</li>
                 <li>✔️ Learn key AI terms and lessons</li>
             </ul>
-            <div class="row">
-                <div class="col-6">
-                    <h4>Your goal</h4>
-                    <p>{{ special_goal }}</p>
-                </div>
-                <div class="col-6">
-                    <h4>Your target</h4>
-                    <p>Buy a house</p>
-                </div>
+
+            <div class="row goals-container">
+            <div class="col-md-6 goal-box">
+                <h4>Your goal</h4>
+                <p><span class="goal-icon">🛡️</span><strong>{{ main_goal }}</strong></p>
             </div>
+            <div class="col-md-6 goal-box">
+                <h4>Your target</h4>
+                <p><span class="target-icon">📈</span><strong>{{ special_goal }}</strong></p>
+            </div>
+           </div>    
+
             <div class="plan-selection-container">
                 <div class="plan-option">
                     <input type="radio" id="1-week-plan" name="plan" value="1-week">
@@ -181,42 +222,46 @@
                 <img src="{% static 'myapp/images/card_icons/5.svg' %}" alt="Card Icon 5" />
                 <img src="{% static 'myapp/images/card_icons/6.svg' %}" alt="Card Icon 6" />
             </div>
-            <form id="payment-form">
-                <div>
-                    <label for="givenName">First Name</label>
-                    <input type="text" id="givenName" name="givenName" required>
-                </div>
-                <div>
-                    <label for="familyName">Last Name</label>
-                    <input type="text" id="familyName" name="familyName" required>
-                </div>
-                <div>
-                    <label for="addressLine1">Address Line 1</label>
-                    <input type="text" id="addressLine1" name="addressLine1" required>
-                </div>
-                <div>
-                    <label for="city">City</label>
-                    <input type="text" id="city" name="city" required>
-                </div>
-                <div>
-                    <label for="state">State</label>
-                    <input type="text" id="state" name="state" required>
-                </div>
-                <div>
-                    <label for="countryCode">Country Code</label>
-                    <input type="text" id="countryCode" name="countryCode" required>
-                </div>
-                <div>
-                    <label for="phone">Phone Number</label>
-                    <input type="text" id="phone" name="phone" required>
-                </div>
-                <div>
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div id="card-container"></div>
-                <button type="submit">Pay Now</button>
-            </form>
+            <div class="form-container">
+                <h2>Fill Out Your Information</h2>
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label for="givenName">First Name</label>
+                        <input type="text" id="givenName" name="givenName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="familyName">Last Name</label>
+                        <input type="text" id="familyName" name="familyName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addressLine1">Address Line 1</label>
+                        <input type="text" id="addressLine1" name="addressLine1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="countryCode">Country Code</label>
+                        <input type="text" id="countryCode" name="countryCode" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" id="phone" name="phone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                    <div id="card-container" class="form-group"></div>
+                    <button type="submit" class="btn-submit">Pay Now</button>
+                </form>
+            </div>
+            
             
             <div class="pay-safe">
                 <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Safe Icon" class="safe-icon" />
@@ -490,6 +535,212 @@ window.onload = startCountdown;
 </script>
 
 <style>
+
+.goals-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px; /* Space between the goal boxes */
+    width: 100%; /* Ensure full width for the container */
+}
+
+.goal-box {
+    background-color: #f8f9fa; /* Light grey background */
+    padding: 15px 20px;
+    border-radius: 10px; /* Rounded corners */
+    text-align: center;
+    flex: 1; /* Flex-grow property to ensure both boxes take equal space */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for 3D effect */
+    margin: 5px; /* Ensure some spacing around boxes */
+}
+
+.goal-box h4 {
+    font-size: 1rem; /* Slightly smaller heading */
+    color: #666; /* Subtle grey color */
+    margin-bottom: 5px;
+}
+
+.goal-box p {
+    font-size: 1.2rem; /* Slightly larger font for main text */
+    font-weight: bold; /* Bold text for emphasis */
+    color: #000; /* Black color for text */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.goal-box .goal-icon, .goal-box .target-icon {
+    margin-right: 8px; /* Space between icon and text */
+    font-size: 1.5rem; /* Larger size for icon */
+    color: #5860F8; /* Blue color for icons */
+}
+
+.goal-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+    .form-container {
+    background-color: #f9f9f9; /* Light grey background for the container */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for a 3D effect */
+    max-width: 500px;
+    margin: 0 auto; /* Center the container */
+}
+
+.form-container h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center; /* Center the heading */
+}
+
+.form-group {
+    margin-bottom: 15px; /* Adjusted for more compact spacing */
+}
+
+.form-group label {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    display: block;
+    color: #333; /* Darker text color for better contrast */
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc; /* Light grey border */
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    border-color: #5860F8; /* Change border color on focus */
+    outline: none;
+    box-shadow: 0 0 5px rgba(88, 96, 248, 0.5); /* Subtle shadow on focus */
+}
+
+.form-group input::placeholder {
+    color: #888; /* Placeholder color */
+    font-style: italic;
+}
+
+.btn-submit {
+    background-color: #5860F8;
+    color: white;
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.btn-submit:hover {
+    background-color: #3c4ab8;
+}
+
+
+    .readiness-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2c2e4a; /* Darker shade of text */
+}
+
+.readiness-percentage {
+    color: #83c441; /* Green color */
+    font-weight: bold;
+}
+
+.readiness-box {
+    background-color: #f8f9fa; /* Light grey background */
+    border-radius: 10px; /* Rounded corners */
+    padding: 15px;
+    border: 1px solid #e0e0e0; /* Light border */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    text-align: left;
+}
+
+.highlighted-text {
+    color: #83c441; /* Green color for highlighted text */
+}
+
+.icon {
+    font-size: 1.5rem; /* Adjust size of the icon */
+}
+
+
+.ai-title {
+        font-size: 2.5rem; /* Large and bold heading */
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    .ai-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ai-image {
+        max-width: 180px; /* Size of the AI image */
+        margin-right: 5px;
+    }
+
+    .ai-days {
+        text-align: left;
+    }
+
+    .ai-day {
+        font-size: 0.875rem;
+        font-weight: bold;
+        background-color: #fff;
+        padding: 10px 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .ai-day-desc {
+        font-size: 0.875rem;
+        color: #666;
+        margin-left: 10px;
+    }
+
+    .ai-benefits li {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .ai-benefits li::before {
+        content: attr(data-icon);
+        font-size: 1.5rem; /* Larger emoji size */
+        margin-right: 10px;
+    }
+
 .pay-safe {
     text-align: center;
     align-items: center;
@@ -826,23 +1077,51 @@ window.onload = startCountdown;
 }
 
 /* Progress bar styles */
+.card {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: auto;
+}
+
+.row.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+}
+
 .progress-bar-container {
     position: relative;
-    width: 100%;
-    height: 20px;
-    background: linear-gradient(to right, red, yellow, green);
-    border-radius: 10px;
-    margin-top: 10px;
+    width: 80%;  /* Adjust the width as necessary */
+    margin: 10px auto;
 }
 
 .progress-bar-wrapper {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 5px;
     position: relative;
-    height: 100%;
 }
 
 .progress-bar-fill {
     height: 100%;
-    background: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.moderate {
+    width: 50%;
+    background: linear-gradient(to right, #FF0000, #FFFF00); /* From red to yellow */
+}
+
+.high {
+    width: 100%;
+    background: linear-gradient(to right, #FFFF00, #00FF00); /* From yellow to green */
+}
+
+.limited {
+    width: 50%;
+    background: linear-gradient(to right, #d0d0ff, #0000ff); /* From light blue to blue */
 }
 
 .progress-bar-label {
@@ -866,37 +1145,19 @@ window.onload = startCountdown;
     font-weight: bold;
 }
 
-/* Card styles */
-.card {
-    border-radius: 15px;
-    padding: 20px;
-    background-color: #fff;
-}
-
-h2 {
-    font-size: 2rem;
-    font-weight: bold;
-}
-
 h3 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: bold;
 }
 
-p {
+h4 {
     font-size: 1rem;
-    color: #6c757d;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
 }
 
-.btn-primary {
-    background-color: #5e72e4;
-    border-color: #5e72e4;
-}
 
-.btn-primary:hover {
-    background-color: #324cdd;
-    border-color: #324cdd;
-}
 </style>
 {% endblock %}
 

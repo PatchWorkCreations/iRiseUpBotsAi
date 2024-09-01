@@ -9,13 +9,13 @@
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-11 mb-3">
                 <button type="submit" name="time_saved_use" value="Pursue creative passions" class="btn btn-light btn-time-saved">
                     <span class="emoji">🎨</span>
                     <span>Pursue creative passions</span>
                 </button>
             </div>
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-11 mb-3">
                 <button type="submit" name="time_saved_use" value="Deepen relationships with loved ones" class="btn btn-light btn-time-saved">
                     <span class="emoji">❤️</span>
                     <span>Deepen relationships with loved ones</span>
@@ -23,13 +23,13 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-11 mb-3">
                 <button type="submit" name="time_saved_use" value="Boost personal growth" class="btn btn-light btn-time-saved">
                     <span class="emoji">📈</span>
                     <span>Boost personal growth</span>
                 </button>
             </div>
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-11 mb-3">
                 <button type="submit" name="time_saved_use" value="Prioritize health and well-being" class="btn btn-light btn-time-saved">
                     <span class="emoji">💪</span>
                     <span>Prioritize health and well-being</span>
@@ -41,25 +41,30 @@
 
 <style>
     .emoji {
-        font-size: 50px; /* Larger emoji size */
-        display: block;
-        margin-bottom: 10px;
+        font-size: 50px; /* Size of the emojis */
+        margin-right: 15px;
     }
     .btn-time-saved {
         display: flex;
-        flex-direction: column; /* Stacks emoji and text vertically */
+        flex-direction: row; /* Aligns emoji and text horizontally */
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
-        text-align: center;
-        padding: 20px;
+        text-align: left;
+        padding: 15px 20px; /* Adjust padding for consistency */
         border: none;
         background-color: #f8f9fa;
         border-radius: 10px;
-        font-size: 20px; /* Larger text size */
+        font-size: 20px;
+        transition: background-color 0.3s ease;
     }
+
+    .btn-time-saved:hover {
+        background-color: #e2e6ea; /* Add a hover effect */
+    }
+
     .btn-time-saved span {
-        display: block;
+        font-weight: normal;
     }
 </style>
 {% endblock %}

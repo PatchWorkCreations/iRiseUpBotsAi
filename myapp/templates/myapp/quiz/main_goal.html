@@ -5,44 +5,44 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
     <div class="container text-center">
-        <h2>What is your main goal?</h2>
+        <h2>What’s your top priority?</h2>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
-                <div class="col-12 mb-3">
-                    <button type="submit" name="main_goal" value="Grow wealth" class="btn btn-light btn-goal">
+                <div class="col-12 col-md-12 mb-4">
+                    <button type="submit" name="main_goal" value="Grow wealth" class="btn btn-light btn-goal d-flex align-items-center">
                         <img src="{% if gender == 'Male' %}{% static 'myapp/images/quiz/male_grow_wealth.webp' %}{% else %}{% static 'myapp/images/quiz/female_grow_wealth.webp' %}{% endif %}" alt="Grow Wealth" class="img-fluid goal-image" />
-                        <span>Grow wealth</span>
+                        <span>Grow My Money</span>
                     </button>
                 </div>
-                <div class="col-12 mb-3">
-                    <button type="submit" name="main_goal" value="Be my own boss" class="btn btn-light btn-goal">
+                <div class="col-12 col-md-12 mb-4">
+                    <button type="submit" name="main_goal" value="Be my own boss" class="btn btn-light btn-goal d-flex align-items-center">
                         <img src="{% if gender == 'Male' %}{% static 'myapp/images/quiz/male_be_my_own_boss.webp' %}{% else %}{% static 'myapp/images/quiz/female_be_my_own_boss.webp' %}{% endif %}" alt="Be My Own Boss" class="img-fluid goal-image" />
-                        <span>Be my own boss</span>
+                        <span>Start My Own Business</span>
                     </button>
                 </div>
-                <div class="col-12 mb-3">
-                    <button type="submit" name="main_goal" value="Financial freedom" class="btn btn-light btn-goal">
+                <div class="col-12 col-md-12 mb-4">
+                    <button type="submit" name="main_goal" value="Financial freedom" class="btn btn-light btn-goal d-flex align-items-center">
                         <img src="{% if gender == 'Male' %}{% static 'myapp/images/quiz/male_financial_freedom.webp' %}{% else %}{% static 'myapp/images/quiz/female_financial_freedom.webp' %}{% endif %}" alt="Financial Freedom" class="img-fluid goal-image" />
-                        <span>Financial freedom</span>
+                        <span>Be Free with My Money</span>
                     </button>
                 </div>
-                <div class="col-12 mb-3">
-                    <button type="submit" name="main_goal" value="Travel the world" class="btn btn-light btn-goal">
+                <div class="col-12 col-md-12 mb-4">
+                    <button type="submit" name="main_goal" value="Travel the world" class="btn btn-light btn-goal d-flex align-items-center">
                         <img src="{% if gender == 'Male' %}{% static 'myapp/images/quiz/male_travel_the_world.webp' %}{% else %}{% static 'myapp/images/quiz/female_travel_the_world.webp' %}{% endif %}" alt="Travel the World" class="img-fluid goal-image" />
-                        <span>Travel the world</span>
+                        <span>Travel and See the World</span>
                     </button>
                 </div>
-                <div class="col-12 mb-3">
-                    <button type="submit" name="main_goal" value="Professional growth" class="btn btn-light btn-goal">
+                <div class="col-12 col-md-12 mb-4">
+                    <button type="submit" name="main_goal" value="Professional growth" class="btn btn-light btn-goal d-flex align-items-center">
                         <img src="{% if gender == 'Male' %}{% static 'myapp/images/quiz/male_professional_growth.webp' %}{% else %}{% static 'myapp/images/quiz/female_professional_growth.webp' %}{% endif %}" alt="Professional Growth" class="img-fluid goal-image" />
-                        <span>Professional growth</span>
+                        <span>Get Better at My Job</span>
                     </button>
                 </div>
-                <div class="col-12 mb-3">
-                    <button type="submit" name="main_goal" value="Work-life balance" class="btn btn-light btn-goal">
+                <div class="col-12 col-md-12 mb-4">
+                    <button type="submit" name="main_goal" value="Work-life balance" class="btn btn-light btn-goal d-flex align-items-center">
                         <img src="{% if gender == 'Male' %}{% static 'myapp/images/quiz/male_work_life_balance.webp' %}{% else %}{% static 'myapp/images/quiz/female_work_life_balance.webp' %}{% endif %}" alt="Work-Life Balance" class="img-fluid goal-image" />
-                        <span>Work-life balance</span>
+                        <span>Enjoy Work and Life</span>
                     </button>
                 </div>
             </div>
@@ -52,40 +52,54 @@
 
 <style>
     .goal-image {
-        width: 60px; /* Set a fixed width for consistency */
-        height: auto;
-        margin-right: 15px;
-        border-radius: 8px;
+        height: 100%; /* Ensure the image covers the full height of the button */
+        width: auto; /* Maintain aspect ratio */
+        margin-right: 20px;
+        border-radius: 10px 0 0 10px; /* Match the button's rounded corners on the left side */
+        object-fit: cover; /* Ensure the image covers the entire area without distortion */
     }
+
     .btn-goal {
         display: flex;
-        align-items: center;
+        flex-direction: row; /* Aligns image and text horizontally */
+        align-items: stretch; /* Align items to stretch vertically */
         justify-content: flex-start;
         width: 100%;
-        padding: 15px;
+        text-align: left;
+        padding: 0; /* Remove any padding inside the button */
         border: none;
         background-color: #f8f9fa;
-        border-radius: 10px;
-        font-size: 18px;
+        border-radius: 10px; /* Rounded corners */
+        font-size: 22px; /* Larger font size */
         transition: background-color 0.3s ease;
-        text-align: left;
+        height: 100px; /* Set a fixed height for the button */
+        overflow: hidden; /* Ensure nothing spills out of the button */
     }
+
     .btn-goal:hover {
         background-color: #e2e6ea;
     }
+
     .btn-goal span {
-        flex-grow: 1;
         font-weight: bold;
+        flex: 1; /* Make the text take up the remaining space */
+        text-align: left; /* Align text to the left */
+        padding-left: 20px; /* Space between text and image */
+        align-self: center; /* Center the text vertically */
     }
 
     @media (min-width: 768px) {
         .goal-image {
-            width: 50px; /* Slightly smaller image on larger screens */
+            height: 100%; /* Ensure the image height is full in larger screens as well */
+            width: auto; /* Maintain aspect ratio */
         }
         .btn-goal {
-            padding: 12px;
-            font-size: 16px;
+            font-size: 20px; /* Adjust font size */
+            height: 100px; /* Consistent height across screen sizes */
         }
     }
 </style>
+
+
+
 {% endblock %}
