@@ -1,0 +1,119 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block content %}
+{% include 'myapp/forum/forum_header.html' %}
+<style>
+    /* Container for the search results */
+    .search-results-container {
+        display: flex;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    /* Left column styling for search results */
+    .search-results {
+        flex: 3; /* This will take up more space than the right side */
+        padding: 10px;
+        background-color: #f7f7f7;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-results h2 {
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        color: #333;
+    }
+
+    .search-results ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .search-results li {
+        margin-bottom: 20px;
+    }
+
+    .search-results h3 {
+        margin-bottom: 5px;
+        font-size: 1.2rem;
+        color: #1e6dfb;
+    }
+
+    .search-results p {
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .search-results hr {
+        margin: 10px 0;
+    }
+
+    /* Right column styling for suggested posts */
+    .suggested-posts {
+        flex: 1; /* This will take up less space */
+        padding: 10px;
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .suggested-posts h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .suggested-posts ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .suggested-posts li {
+        margin-bottom: 15px;
+    }
+
+    .suggested-posts a {
+        font-size: 1rem;
+        color: #1e6dfb;
+        text-decoration: none;
+    }
+
+    .suggested-posts a:hover {
+        text-decoration: underline;
+    }
+
+</style>
+
+<div class="search-results-container">
+    <!-- Search Results -->
+    <div class="search-results">
+        <h2>Search Results for "{{ query }}"</h2>
+        <ul>
+            {% for post in results %}
+                <li>
+                    <h3><a href="{% url 'forum_post_detail' post.id %}">{{ post.title }}</a></h3>
+                    <p>{{ post.content|truncatewords:30 }}</p>
+                    <hr>
+                </li>
+            {% empty %}
+                <p>No posts found matching your query.</p>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <!-- Suggested Posts -->
+    <div class="suggested-posts">
+        <h2>Suggested Posts</h2>
+        <ul>
+            {% for suggested_post in suggested_posts %}
+                <li>
+                    <a href="{% url 'forum_post_detail' suggested_post.id %}">{{ suggested_post.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

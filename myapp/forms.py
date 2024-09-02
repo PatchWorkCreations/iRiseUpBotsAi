@@ -189,3 +189,41 @@ class SignInForm(forms.Form):
             raise ValidationError("Invalid login identifier. Usernames cannot contain spaces.")
         return login_identifier
 
+from django import forms
+from .models import ForumPost, ForumComment, ForumCategory
+
+class ForumPostForm(forms.ModelForm):
+    class Meta:
+        model = ForumPost
+        fields = ['title', 'content', 'category']  # Ensure 'category' is included
+
+class ForumCommentForm(forms.ModelForm):
+    class Meta:
+        model = ForumComment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'placeholder': 'Comment as {}'.format('Anonymous' if not 'user' in locals() else '{{ user.username }}'),
+                'rows': 3,  # Adjust the height of the textarea by setting the number of rows
+            }),
+        }
+
+
+from django import forms
+from .models import ForumPost, ForumCategory
+
+class ForumPostForm(forms.ModelForm):
+    new_category = forms.CharField(
+        max_length=100, required=False, 
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Suggest a new category'})
+    )
+
+    class Meta:
+        model = ForumPost
+        fields = ['title', 'content', 'category']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Enter post title'})
+        self.fields['content'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Write your content here'})
+

@@ -8,8 +8,8 @@
     <form method="post" action="{% url 'sign_in' %}">
         {% csrf_token %}
         <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="form-control" required placeholder="example@gmail.com">
+            <label for="login_identifier">Email or Username</label>
+            <input type="text" id="login_identifier" name="login_identifier" class="form-control" required placeholder="example@gmail.com or Username">
         </div>
         <div class="form-group">
             <label for="password">Password</label>
@@ -24,6 +24,7 @@
         <button type="submit" class="btn btn-primary btn-lg w-100">Sign In</button>
         <p>Don't have an account? <a href="{% url 'start_quiz' %}" style="color: #6c63ff;">Start the quiz</a></p>
     </form>
+    
 </div>
 
 

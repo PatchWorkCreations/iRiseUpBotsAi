@@ -89,8 +89,9 @@
         <h1>iRiseUp</h1>
     </div>
     <div class="nav-links">
-        <a href="{% url 'support_center' %}">Home</a>
-        <a href="{% url 'knowledge_base' %}">Knowledge Base</a>
-        <a href="{% url 'submit_request' %}">Submit a request</a>
-    </div>
+        <a href="{% url 'support_center' %}" class="{% if request.resolver_match.url_name == 'support_center' %}active{% endif %}">Home</a>
+        <a href="{% url 'knowledge_base' %}" class="{% if request.resolver_match.url_name == 'knowledge_base' %}active{% endif %}">Knowledge Base</a>
+        <a href="{% url 'submit_request' %}" class="{% if request.resolver_match.url_name == 'submit_request' %}active{% endif %}">Submit a request</a>
+        <a href="{% url 'forum_home' %}" class="{% if request.resolver_match.url_name == 'forum_home' %}active{% endif %}">Forum</a>
+    </div>    
 </div>

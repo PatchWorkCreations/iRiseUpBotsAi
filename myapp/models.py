@@ -175,3 +175,41 @@ class EmailCollection(models.Model):
         return self.email
 
 
+from django.db import models
+from django.contrib.auth.models import User
+
+class ForumCategory(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+class ForumPost(models.Model):
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(ForumCategory, on_delete=models.CASCADE, related_name='posts')  # Add this line
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
+    dislikes = models.ManyToManyField(User, related_name='post_dislikes', blank=True)
+
+    def total_likes(self):
+        return self.likes.count()
+
+    def total_dislikes(self):
+        return self.dislikes.count()
+
+    def total_comments(self):
+        return self.forum_comments.count()
+
+class ForumComment(models.Model):
+    post = models.ForeignKey(ForumPost, on_delete=models.CASCADE, related_name='forum_comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+
+    def __str__(self):
+        return f'Comment by {self.author} on {self.post}'

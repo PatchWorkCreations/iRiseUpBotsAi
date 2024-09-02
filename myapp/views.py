@@ -1697,3 +1697,135 @@ def remove_all_duplicates():
 def remove_all_duplicates():
     duplicates = EmailCollection.objects.values('email').annotate(email_count=Count('email')).filter(email_count__gt=1)
 
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import ForumPost, ForumComment, ForumCategory
+from .forms import ForumPostForm, ForumCommentForm
+from django.contrib.auth.decorators import login_required
+
+def forum_home(request):
+    posts = ForumPost.objects.all().order_by('-created_at').prefetch_related('forum_comments')
+    most_recent_post = posts.first() if posts.exists() else None
+    return render(request, 'myapp/forum/forum_home.html', {
+        'posts': posts,
+        'most_recent_post': most_recent_post
+    })
+
+
+def forum_category(request, category_id):
+    category = get_object_or_404(ForumCategory, id=category_id)
+    posts = category.forum_posts.all()
+    return render(request, 'myapp/forum/forum_category.html', {'category': category, 'posts': posts})
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import ForumPost, ForumComment
+from .forms import ForumCommentForm
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def forum_post_detail(request, post_id):
+    post = get_object_or_404(ForumPost, id=post_id)
+    comments = post.forum_comments.filter(parent=None)
+    form = ForumCommentForm()
+
+    if request.method == 'POST':
+        form = ForumCommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.post = post
+            new_comment.author = request.user
+            new_comment.save()
+            return redirect('forum_post_detail', post_id=post.id)
+
+    return render(request, 'myapp/forum/forum_post_detail.html', {
+        'post': post,
+        'comments': comments,
+        'form': form,
+    })
+
+
+from django.shortcuts import render, redirect
+from .models import ForumPost, ForumCategory
+from .forms import ForumPostForm
+from django.contrib import messages
+
+def create_forum_post(request):
+    if request.method == 'POST':
+        # Copy POST data to mutable data
+        post_data = request.POST.copy()
+        new_category_name = post_data.get('new_category')
+
+        if new_category_name:
+            # Create the new category if it doesn't exist
+            category, created = ForumCategory.objects.get_or_create(name=new_category_name)
+            # Set the category ID in the form data to the newly created category
+            post_data['category'] = category.id
+
+        # Bind the form with the modified data
+        form = ForumPostForm(post_data)
+
+        if form.is_valid():
+            form.instance.author = request.user
+            form.save()
+            messages.success(request, "Your post has been created successfully.")
+            return redirect('forum_post_detail', post_id=form.instance.id)
+        else:
+            messages.error(request, "There was an error with your submission. Please check the form.")
+            print(form.errors)  # For debugging
+    else:
+        form = ForumPostForm()
+
+    categories = ForumCategory.objects.all()
+    return render(request, 'myapp/forum/create_forum_post.html', {'form': form, 'categories': categories})
+
+
+def search(request):
+    query = request.GET.get('q')
+    results = ForumPost.objects.filter(title__icontains=query) | ForumPost.objects.filter(content__icontains=query)
+    return render(request, 'myapp/forum/search_results.html', {'results': results, 'query': query})
+
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import ForumPost
+
+@login_required
+def like_post(request, post_id):
+    post = ForumPost.objects.get(id=post_id)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+        post.dislikes.remove(request.user)  # Ensure a user can't like and dislike at the same time
+    return JsonResponse({'total_likes': post.total_likes()})
+
+@login_required
+def dislike_post(request, post_id):
+    post = ForumPost.objects.get(id=post_id)
+    if request.user in post.dislikes.all():
+        post.dislikes.remove(request.user)
+    else:
+        post.dislikes.add(request.user)
+        post.likes.remove(request.user)  # Ensure a user can't like and dislike at the same time
+    return JsonResponse({'total_dislikes': post.total_dislikes()})
+
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import ForumPost, ForumComment
+
+@login_required
+def reply_to_comment(request, post_id, comment_id):
+    post = get_object_or_404(ForumPost, id=post_id)
+    parent_comment = get_object_or_404(ForumComment, id=comment_id)
+
+    if request.method == "POST":
+        reply_content = request.POST.get('reply_content')
+        if reply_content:
+            new_reply = ForumComment.objects.create(
+                post=post,
+                author=request.user,
+                content=reply_content,
+                parent=parent_comment
+            )
+            new_reply.save()
+
+    return redirect('forum_post_detail', post_id=post.id)

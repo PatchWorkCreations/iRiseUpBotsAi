@@ -1,0 +1,12 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block content %}
+{% include 'myapp/forum/forum_header.html' %}
+<h2>Posts in {{ category.name }}</h2>
+<ul>
+    {% for post in posts %}
+        <li><a href="{% url 'forum_post_detail' post.id %}">{{ post.title }}</a></li>
+    {% endfor %}
+</ul>
+<a href="{% url 'create_forum_post' %}">Create New Post</a>
+{% endblock %}

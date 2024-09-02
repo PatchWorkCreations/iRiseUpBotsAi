@@ -37,5 +37,10 @@ class EmailCollectionAdmin(admin.ModelAdmin):
 admin.site.register(EmailCollection, EmailCollectionAdmin)
 
 
+from django.contrib import admin
+from .models import ForumCategory
+
+# Register the ForumCategory model
+admin.site.register(ForumCategory)
 
 

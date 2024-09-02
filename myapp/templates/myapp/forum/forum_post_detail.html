@@ -1,0 +1,272 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block content %}
+{% include 'myapp/forum/forum_header.html' %}
+
+<style>
+    /* Post Container */
+    .post-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .post-title {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .post-content {
+        font-size: 1.1rem;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .post-meta {
+        font-size: 0.9rem;
+        color: #888;
+        margin-bottom: 20px;
+    }
+
+    /* Interaction styles */
+    .post-interactions {
+        margin-bottom: 20px;
+        font-size: 1rem;
+        display: flex;
+        gap: 15px;
+    }
+
+    .post-interactions span {
+        display: inline-block;
+        color: #555;
+        cursor: pointer;
+    }
+
+    .post-interactions span:hover {
+        color: #1e6dfb;
+    }
+
+    /* Comments Section */
+    .comments-section {
+        margin-top: 40px;
+    }
+
+    .comments-section h3 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .comments-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .comment-item {
+        background-color: #f9f9f9;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    .comment-author {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .comment-content {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 10px;
+    }
+
+    .comment-meta {
+        font-size: 0.8rem;
+        color: #888;
+    }
+
+    /* Reply Section */
+    .reply-button {
+        font-size: 0.9rem;
+        color: #1e6dfb;
+        cursor: pointer;
+    }
+
+    .add-comment-form {
+        margin-top: 10px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .reply-form {
+        display: none;
+        margin-top: 10px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .reply-form textarea,
+    .add-comment-form textarea {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+    }
+
+    .reply-form button,
+    .add-comment-form button {
+        background-color: #007bff;
+        color: white;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .reply-form button:hover,
+    .add-comment-form button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Share Icon */
+    .share-icon {
+        font-size: 1.2rem;
+        color: #555;
+        cursor: pointer;
+    }
+
+    .share-icon:hover {
+        color: #1e6dfb;
+    }
+
+    .comment-box {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        resize: vertical; /* Allows users to resize the textarea vertically if needed */
+    }
+
+    .comment-box::placeholder {
+    color: #888; /* Placeholder color */
+    opacity: 1;  /* Ensures that the placeholder is fully opaque */
+}
+
+    .comment-box {
+        background-color: #fff; /* Ensure the background is white */
+        color: #000;  /* Ensure the text color is black */
+    }
+
+
+</style>
+
+<div class="post-container">
+    <h2 class="post-title">{{ post.title }}</h2>
+    <p class="post-content">{{ post.content }}</p>
+    <p class="post-meta">Posted by {{ post.author }} on {{ post.created_at|date:"F j, Y, g:i a" }}</p>
+
+    <!-- Likes, Dislikes, Share -->
+    <div class="post-interactions" id="post-{{ post.id }}">
+        <span class="likes" onclick="likePost('{{ post.id }}')">👍 {{ post.total_likes }}</span>
+        <span class="dislikes" onclick="dislikePost('{{ post.id }}')">👎 {{ post.total_dislikes }}</span>
+        <span class="share-icon" onclick="sharePost('{{ post.id }}')">↗️</span>
+    </div>
+</div>
+
+<div class="comments-section">
+    <h3>Comments</h3>
+    <div class="add-comment-form">
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="content" placeholder="Comment as {% if user.is_authenticated %}{{ user.username }}{% else %}Guest{% endif %}" rows="3" class="comment-box">{{ form.content.value }}</textarea>
+            <button type="submit">Post Comment</button>
+        </form>
+    </div>            
+    <ul class="comments-list">
+        {% for comment in comments %}
+            <li class="comment-item">
+                <p class="comment-author">{{ comment.author }}</p>
+                <p class="comment-content">{{ comment.content }}</p>
+                <p class="comment-meta">Posted on {{ comment.created_at|date:"F j, Y, g:i a" }}</p>
+
+                <span class="reply-button" onclick="toggleReplyForm('{{ comment.id }}')">Reply</span>
+                <div class="reply-form" id="reply-form-{{ comment.id }}">
+                    <form method="post" action="{% url 'reply_to_comment' post.id comment.id %}">
+                        {% csrf_token %}
+                        <textarea name="reply_content" placeholder="Write your reply..."></textarea>
+                        <button type="submit">Post Reply</button>
+                    </form>
+                </div>
+
+                {% if comment.replies.all %}
+                    <ul class="comments-list">
+                        {% for reply in comment.replies.all %}
+                            <li class="comment-item">
+                                <p class="comment-author">{{ reply.author }}</p>
+                                <p class="comment-content">{{ reply.content }}</p>
+                                <p class="comment-meta">Posted on {{ reply.created_at|date:"F j, Y, g:i a" }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+function likePost(postId) {
+    fetch(`/like/${postId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.querySelector(`#post-${postId} .likes`).textContent = `👍 ${data.total_likes}`;
+    });
+}
+
+function dislikePost(postId) {
+    fetch(`/dislike/${postId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.querySelector(`#post-${postId} .dislikes`).textContent = `👎 ${data.total_dislikes}`;
+    });
+}
+
+function sharePost(postId) {
+    const url = window.location.origin + '/forum/post/' + postId;
+    navigator.clipboard.writeText(url).then(() => {
+        alert('Post URL copied to clipboard!');
+    }, () => {
+        alert('Failed to copy the URL. Please try manually.');
+    });
+}
+
+function toggleReplyForm(commentId) {
+    const replyForm = document.getElementById(`reply-form-${commentId}`);
+    replyForm.style.display = replyForm.style.display === 'none' || replyForm.style.display === '' ? 'block' : 'none';
+}
+</script>
+
+{% endblock %}

@@ -149,4 +149,19 @@ urlpatterns = [
     path('submit-request/', views.submit_request, name='submit_request'),
     path('submit-request/success/', views.submit_request_success, name='submit_request_success'),
 
+    #forum
+    path('forum/', views.forum_home, name='forum_home'),
+
+    # Forum Category - Lists all posts in a category
+    path('forum/category/<int:category_id>/', views.forum_category, name='forum_category'),
+
+    # Forum Post Detail - View a single post and its comments
+    path('forum/post/<int:post_id>/', views.forum_post_detail, name='forum_post_detail'),
+
+    # Create Forum Post - Form to create a new post
+    path('forum/new-post/', views.create_forum_post, name='create_forum_post'),
+    path('search/', views.search, name='search'),
+    path('like/<int:post_id>/', views.like_post, name='like_post'),
+    path('dislike/<int:post_id>/', views.dislike_post, name='dislike_post'),
+    path('forum/post/<int:post_id>/reply/<int:comment_id>/', views.reply_to_comment, name='reply_to_comment'),
 ]
