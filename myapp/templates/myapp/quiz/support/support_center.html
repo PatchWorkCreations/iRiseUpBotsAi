@@ -233,22 +233,22 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            {% for category in categories %}
-                <div class="category">
-                    <a href="{% url 'category_detail' category.id %}">
-                        <div class="icon-container">
-                            {% if category.icon %}
-                                <img src="{{ category.icon.url }}" alt="{{ category.title }}">
-                            {% else %}
-                                <img src="{% static 'myapp/images/default_icon.png' %}" alt="{{ category.title }}">
-                            {% endif %}
-                        </div>
-                        <h3>{{ category.title }}</h3>
-                    </a>
+    {% for category in categories %}
+        <div class="category">
+            <a href="{% url 'category_detail' category.id %}">
+                <div class="icon-container">
+                    {% if category.icon %}
+                        <img src="{{ category.icon.url }}" alt="{{ category.title }}">
+                    {% else %}
+                        <img src="{% static 'myapp/images/default_icon.png' %}" alt="{{ category.title }}">
+                    {% endif %}
                 </div>
-            {% endfor %}
+                <h3>{{ category.title }}</h3>
+            </a>
         </div>
-              
+    {% endfor %}
+</div>
+      
         
         <div class="popular row-between mt-5">
             <h4 class="most-popular-title">Most popular articles</h4>

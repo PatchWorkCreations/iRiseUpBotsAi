@@ -154,12 +154,14 @@ class KnowledgeBaseSubCategory(models.Model):
 class KnowledgeBaseArticle(models.Model):
     subcategory = models.ForeignKey(KnowledgeBaseSubCategory, related_name='articles', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)  # Add this line
     content = models.TextField()
     date_modified = models.DateField(auto_now=True)
     is_popular = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
+
     
 
 
@@ -236,10 +238,10 @@ class UserProfile(models.Model):
                 ('female_avatar2', 'Female Avatar 2'),
                 ('female_avatar3', 'Female Avatar 3'),
                 ('female_avatar4', 'Female Avatar 4'),
-                ('Female_Avatar5', 'Female Avatar 5'),
-                ('Female_Avatar7', 'Female Avatar 7'),
-                ('Female_Avatar8', 'Female Avatar 8'),
-                ('Female_Avatar9', 'Female Avatar 9')
+                ('female_avatar5', 'Female Avatar 5'),
+                ('female_avatar7', 'Female Avatar 7'),
+                ('female_avatar8', 'Female Avatar 8'),
+                ('female_avatar9', 'Female Avatar 9')
             ]
         else:
             return [
@@ -247,6 +249,7 @@ class UserProfile(models.Model):
                 ('neutral_avatar2', 'Neutral Avatar 2'),
                 ('neutral_avatar3', 'Neutral Avatar 3')
             ]
+
 
     def __str__(self):
         return self.user.username
