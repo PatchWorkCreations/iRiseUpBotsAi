@@ -164,4 +164,9 @@ urlpatterns = [
     path('like/<int:post_id>/', views.like_post, name='like_post'),
     path('dislike/<int:post_id>/', views.dislike_post, name='dislike_post'),
     path('forum/post/<int:post_id>/reply/<int:comment_id>/', views.reply_to_comment, name='reply_to_comment'),
+
+
+    path('forum/profile/', views.forum_profile_view, name='forum_profile'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('profile/edit-avatar/', views.edit_avatar, name='edit_avatar'),
 ]

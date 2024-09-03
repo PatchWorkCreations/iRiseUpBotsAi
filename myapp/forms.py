@@ -227,3 +227,27 @@ class ForumPostForm(forms.ModelForm):
         self.fields['title'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Enter post title'})
         self.fields['content'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Write your content here'})
 
+
+from django import forms
+from .models import UserProfile
+
+class AvatarForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['avatar']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(AvatarForm, self).__init__(*args, **kwargs)
+        
+        # If user is provided, customize the avatar choices based on the user
+        if user:
+            self.fields['avatar'].choices = self.instance.get_avatar_choices()
+
+from django import forms
+from .models import UserProfile
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['avatar', 'bio']  # Include other fields as necessary

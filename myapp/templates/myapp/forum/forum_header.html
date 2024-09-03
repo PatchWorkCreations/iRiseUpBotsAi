@@ -171,6 +171,6 @@
             <button type="submit" class="search-button">Search</button>
         </form>
         <a href="{% url 'create_forum_post' %}" class="add-post-btn {% if request.resolver_match.url_name == 'create_forum_post' %}active{% endif %}">Add Post</a>
-        <a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">Profile</a>
+        <a href="{% url 'forum_profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">Profile</a>
     </div>    
 </div>

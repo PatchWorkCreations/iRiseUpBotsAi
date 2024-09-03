@@ -213,3 +213,40 @@ class ForumComment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.CharField(max_length=255, default='female_avatar1')
+    bio = models.TextField(blank=True, null=True)
+    
+    def get_avatar_choices(self):
+        quiz_response = QuizResponse.objects.filter(user=self.user).first()
+        if quiz_response and quiz_response.gender == 'Male':
+            return [
+                ('male_avatar1', 'Male Avatar 1'),
+                ('male_avatar2', 'Male Avatar 2'),
+                ('male_avatar3', 'Male Avatar 3')
+            ]
+        elif quiz_response and quiz_response.gender == 'Female':
+            return [
+                ('female_avatar1', 'Female Avatar 1'),
+                ('female_avatar2', 'Female Avatar 2'),
+                ('female_avatar3', 'Female Avatar 3'),
+                ('female_avatar4', 'Female Avatar 4'),
+                ('Female_Avatar5', 'Female Avatar 5'),
+                ('Female_Avatar7', 'Female Avatar 7'),
+                ('Female_Avatar8', 'Female Avatar 8'),
+                ('Female_Avatar9', 'Female Avatar 9')
+            ]
+        else:
+            return [
+                ('neutral_avatar1', 'Neutral Avatar 1'),
+                ('neutral_avatar2', 'Neutral Avatar 2'),
+                ('neutral_avatar3', 'Neutral Avatar 3')
+            ]
+
+    def __str__(self):
+        return self.user.username

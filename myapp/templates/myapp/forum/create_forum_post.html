@@ -92,35 +92,34 @@
 
 </style>
 
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-
-{% if form.errors %}
-    <div class="form-errors">
-        <ul>
-            {% for field in form %}
-                {% if field.errors %}
-                    <li><strong>{{ field.label }}:</strong> {{ field.errors }}</li>
-                {% endif %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endif %}
-
 <div class="form-container">
     <h2>Create a New Post</h2>
+    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if form.errors %}
+            <div class="form-errors">
+                <ul>
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <li><strong>{{ field.label }}:</strong> {{ field.errors }}</li>
+                        {% endif %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label for="category">Select Category:</label>
+            <label for="category">Select a Topic Group:</label>
             <select name="category" id="category" class="form-control" onchange="toggleNewCategory(this)">
                 <option value="" disabled selected>Select a category</option>
                 {% for category in categories %}

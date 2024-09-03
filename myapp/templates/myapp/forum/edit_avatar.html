@@ -1,0 +1,19 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block content %}
+{% include 'myapp/forum/forum_header.html' %}
+<h2>Choose Your Avatar</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        {% for choice in form.avatar.field.choices %}
+        <label>
+            <input type="radio" name="avatar" value="{{ choice.0 }}" {% if choice.0 == form.avatar.value %}checked{% endif %}>
+            <img src="{% static 'myapp/avatars/' %}{{ choice.0 }}.png" alt="{{ choice.1 }}" style="width: 100px; height: 100px;">
+            {{ choice.1 }}
+        </label>
+        {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary">Save Avatar</button>
+</form>
+{% endblock %}

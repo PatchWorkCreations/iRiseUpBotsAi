@@ -137,6 +137,7 @@ def servicedetail4(request):
 def servicedetail5(request):
     return render(request, 'myapp/service-detail5.html')
 
+@login_required
 def profile_view(request):
     user = request.user
 
@@ -1829,3 +1830,75 @@ def reply_to_comment(request, post_id, comment_id):
             new_reply.save()
 
     return redirect('forum_post_detail', post_id=post.id)
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .models import UserProfile  # Assuming UserProfile is in the same app
+from .forms import UserProfileForm  # Assuming you have a form called UserProfileForm in your forms.py
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import UserProfile, ForumPost, ForumComment
+from .forms import UserProfileForm, AvatarForm
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .models import UserProfile, ForumPost, ForumComment
+from .forms import AvatarForm
+
+@login_required
+def forum_profile_view(request):
+    # Retrieve or create the user profile
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    
+    # Retrieve the user's posts and comments
+    user_posts = ForumPost.objects.filter(author=request.user)
+    user_comments = ForumComment.objects.filter(author=request.user)
+
+    if request.method == 'POST':
+        # Process the avatar form submission
+        form = AvatarForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('forum_profile')
+    else:
+        # Initialize the avatar form with the current user's profile
+        form = AvatarForm(instance=user_profile)
+
+    # Context data to pass to the template
+    context = {
+        'form': form,
+        'user_profile': user_profile,
+        'user_posts': user_posts,
+        'user_comments': user_comments,
+    }
+    
+    # Render the profile page template
+    return render(request, 'myapp/forum/profile.html', context)
+
+
+@login_required
+def edit_profile(request):
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = UserProfileForm(instance=user_profile)
+    return render(request, 'myapp/forum/edit_profile.html', {'form': form})
+
+@login_required
+def edit_avatar(request):
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    if request.method == 'POST':
+        form = AvatarForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = AvatarForm(instance=user_profile)
+    return render(request, 'myapp/forum/edit_avatar.html', {'form': form, 'user_profile': user_profile})
