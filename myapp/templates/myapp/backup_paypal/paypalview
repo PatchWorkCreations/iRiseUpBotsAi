@@ -1,0 +1,145 @@
+logger = logging.getLogger(__name__)
+
+# Initialize PayPal client
+paypal_client = PayPalClient(
+    client_id=settings.PAYPAL_CLIENT_ID,
+    client_secret=settings.PAYPAL_CLIENT_SECRET
+)
+
+
+@csrf_exempt
+def create_paypal_order(request):
+    if request.method == 'POST':
+        try:
+            selected_plan = request.POST.get('plan')
+
+            if not selected_plan:
+                return JsonResponse({"error": "Plan not provided"}, status=400)
+
+            # Store the selected plan in the session
+            request.session['selected_plan'] = selected_plan
+            logger.info(f"Plan stored in session: {request.session.get('selected_plan')}")
+
+            amount_cents = determine_amount_based_on_plan(selected_plan)
+            if amount_cents <= 0:
+                return JsonResponse({"error": "Invalid plan selected"}, status=400)
+
+            amount_dollars = "{:.2f}".format(amount_cents / 100)
+
+            order = {
+                "intent": "CAPTURE",
+                "purchase_units": [{
+                    "amount": {
+                        "currency_code": "USD",
+                        "value": amount_dollars
+                    }
+                }],
+                "application_context": {
+                    "return_url": "https://iriseupai-production.up.railway.app/complete-paypal-payment/",
+                    "cancel_url": "https://iriseupai-production.up.railway.app/payment/"
+                }
+            }
+
+            # Make the request to PayPal API
+            response = requests.post(
+                f"https://api-m.sandbox.paypal.com/v2/checkout/orders",
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {paypal_client.access_token}"
+                },
+                json=order
+            )
+            response.raise_for_status()
+
+            order_response = response.json()
+
+            # Safely extract the approval URL
+            try:
+                approval_url = next(link['href'] for link in order_response['links'] if link['rel'] == 'approve')
+            except (KeyError, StopIteration):
+                logger.error("Approval URL not found in PayPal response")
+                return JsonResponse({"error": "Approval URL not found"}, status=500)
+
+            return JsonResponse({"approval_url": approval_url})
+
+        except Exception as e:
+            logger.error("Failed to create PayPal order: %s", str(e))
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+
+@csrf_exempt
+def complete_paypal_payment(request):
+    if request.method == 'GET':
+        try:
+            order_id = request.GET.get('token')
+            selected_plan = request.session.get('selected_plan')
+            logger.info(f"Retrieved plan from session: {selected_plan}")
+
+            if not order_id:
+                logger.error("Missing order_id")
+                return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
+
+            if not selected_plan:
+                logger.error("Selected plan not found in session.")
+                return JsonResponse({'success': False, 'error': 'Selected plan not found in session.'}, status=400)
+
+            # Check the order status before capturing
+            order_details = paypal_client.get_order(order_id)
+            order_status = order_details.get('status')
+            logger.info(f"Order status: {order_status}")
+
+            if order_status == 'COMPLETED' or order_status == 'APPROVED':
+                # Capture the order if not already completed
+                if order_status == 'APPROVED':
+                    capture_response = paypal_client.capture_order(order_id)
+                    logger.info(f"Capture response: {capture_response}")
+
+                    if capture_response.get('status') != 'COMPLETED':
+                        logger.error("Payment not completed: %s", capture_response)
+                        return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
+
+                # Handle email notification and user account creation
+                user_email = request.session.get('email')
+                if not user_email:
+                    logger.error("Email is missing from session.")
+                    return JsonResponse({'success': False, 'error': 'Email is missing from session.'}, status=400)
+
+                random_password = get_random_string(8)
+
+                # Create or retrieve the user
+                user, created = User.objects.get_or_create(
+                    username=user_email,
+                    defaults={'email': user_email}
+                )
+                if created:
+                    user.set_password(random_password)
+                    user.save()
+
+                    # Grant access to the course
+                    grant_course_access(user, selected_plan)
+
+                    # Send email notification
+                    subject = 'Your Account Has Been Created'
+                    message = (
+                        f'Your account has been created. Your temporary password is: {random_password}\n'
+                        'Please log in and change your password.\n'
+                        'You now have access to the course menu based on your selected plan.'
+                    )
+                    send_mail(subject, message, 'your-email@example.com', [user_email])
+                else:
+                    logger.info(f"User {user_email} already exists. Skipping creation.")
+
+                # Clear the selected plan from the session
+                request.session.pop('selected_plan', None)
+
+                save_quiz_response(request)
+                return JsonResponse({'success': True, 'message': 'Payment completed successfully.'})
+            else:
+                logger.error(f"Order not in a capturable state: {order_status}")
+                return JsonResponse({'success': False, 'error': f'Order not in a capturable state: {order_status}'}, status=400)
+
+        except Exception as e:
+            logger.error("Error capturing PayPal order: %s", str(e))
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)

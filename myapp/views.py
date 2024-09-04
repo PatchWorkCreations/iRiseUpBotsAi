@@ -1197,143 +1197,104 @@ paypal_client = PayPalClient(
 )
 
 
-@csrf_exempt
-def create_paypal_order(request):
-    if request.method == 'POST':
-        try:
-            selected_plan = request.POST.get('plan')
+from django.http import JsonResponse
+from .paypal_utils import create_paypal_product, create_paypal_subscription_plan
 
-            if not selected_plan:
-                return JsonResponse({"error": "Plan not provided"}, status=400)
-
-            # Store the selected plan in the session
-            request.session['selected_plan'] = selected_plan
-            logger.info(f"Plan stored in session: {request.session.get('selected_plan')}")
-
-            amount_cents = determine_amount_based_on_plan(selected_plan)
-            if amount_cents <= 0:
-                return JsonResponse({"error": "Invalid plan selected"}, status=400)
-
-            amount_dollars = "{:.2f}".format(amount_cents / 100)
-
-            order = {
-                "intent": "CAPTURE",
-                "purchase_units": [{
-                    "amount": {
-                        "currency_code": "USD",
-                        "value": amount_dollars
-                    }
-                }],
-                "application_context": {
-                    "return_url": "https://iriseupai-production.up.railway.app/complete-paypal-payment/",
-                    "cancel_url": "https://iriseupai-production.up.railway.app/payment/"
-                }
-            }
-
-            # Make the request to PayPal API
-            response = requests.post(
-                f"https://api-m.sandbox.paypal.com/v2/checkout/orders",
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": f"Bearer {paypal_client.access_token}"
-                },
-                json=order
-            )
-            response.raise_for_status()
-
-            order_response = response.json()
-
-            # Safely extract the approval URL
-            try:
-                approval_url = next(link['href'] for link in order_response['links'] if link['rel'] == 'approve')
-            except (KeyError, StopIteration):
-                logger.error("Approval URL not found in PayPal response")
-                return JsonResponse({"error": "Approval URL not found"}, status=500)
-
-            return JsonResponse({"approval_url": approval_url})
-
-        except Exception as e:
-            logger.error("Failed to create PayPal order: %s", str(e))
-            return JsonResponse({"error": str(e)}, status=500)
+def create_paypal_product_view(request):
+    if request.method == "POST":
+        product_id = create_paypal_product()
+        if product_id:
+            return JsonResponse({"success": True, "product_id": product_id})
+        else:
+            return JsonResponse({"success": False, "error": "Failed to create PayPal product."})
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+def create_paypal_subscription_plan_view(request):
+    if request.method == "POST":
+        product_id = request.POST.get('product_id')
+        plan_name = request.POST.get('plan_name')
+        interval_unit = request.POST.get('interval_unit')
+        interval_count = int(request.POST.get('interval_count'))
+        amount = int(request.POST.get('amount'))  # amount in cents
 
-@csrf_exempt
-def complete_paypal_payment(request):
+        if not all([product_id, plan_name, interval_unit, interval_count, amount]):
+            return JsonResponse({"error": "Missing required fields."}, status=400)
+
+        plan_id = create_paypal_subscription_plan(product_id, plan_name, interval_unit, interval_count, amount)
+        if plan_id:
+            return JsonResponse({"success": True, "plan_id": plan_id})
+        else:
+            return JsonResponse({"success": False, "error": "Failed to create PayPal subscription plan."})
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from .models import Subscription
+from .utils import grant_course_access, get_random_string
+
+# Assuming this function handles the completion of a PayPal subscription
+def complete_paypal_subscription(request):
     if request.method == 'GET':
         try:
-            order_id = request.GET.get('token')
-            selected_plan = request.session.get('selected_plan')
-            logger.info(f"Retrieved plan from session: {selected_plan}")
+            subscription_id = request.GET.get('subscription_id')  # Get the subscription ID from the GET request
+            user_email = request.session.get('email')  # Assuming email is stored in the session after user input
 
-            if not order_id:
-                logger.error("Missing order_id")
-                return JsonResponse({'success': False, 'error': 'Missing order_id'}, status=400)
+            # Check if the subscription ID is present
+            if not subscription_id:
+                return JsonResponse({'success': False, 'error': 'Missing subscription ID'}, status=400)
 
-            if not selected_plan:
-                logger.error("Selected plan not found in session.")
-                return JsonResponse({'success': False, 'error': 'Selected plan not found in session.'}, status=400)
+            # Check if the user's email is in the session
+            if not user_email:
+                return JsonResponse({'success': False, 'error': 'Email is missing from session.'}, status=400)
 
-            # Check the order status before capturing
-            order_details = paypal_client.get_order(order_id)
-            order_status = order_details.get('status')
-            logger.info(f"Order status: {order_status}")
+            # Random password generation
+            random_password = get_random_string(8)
 
-            if order_status == 'COMPLETED' or order_status == 'APPROVED':
-                # Capture the order if not already completed
-                if order_status == 'APPROVED':
-                    capture_response = paypal_client.capture_order(order_id)
-                    logger.info(f"Capture response: {capture_response}")
+            # Create or retrieve the user by their email address
+            user, created = User.objects.get_or_create(
+                username=user_email,
+                defaults={'email': user_email}
+            )
 
-                    if capture_response.get('status') != 'COMPLETED':
-                        logger.error("Payment not completed: %s", capture_response)
-                        return JsonResponse({'success': False, 'error': 'Payment not completed', 'response': capture_response})
+            if created:
+                # If the user is newly created, set the password and save the user
+                user.set_password(random_password)
+                user.save()
 
-                # Handle email notification and user account creation
-                user_email = request.session.get('email')
-                if not user_email:
-                    logger.error("Email is missing from session.")
-                    return JsonResponse({'success': False, 'error': 'Email is missing from session.'}, status=400)
+                # Grant access to the course based on the selected plan
+                selected_plan = request.session.get('selected_plan')
+                grant_course_access(user, selected_plan)
 
-                random_password = get_random_string(8)
-
-                # Create or retrieve the user
-                user, created = User.objects.get_or_create(
-                    username=user_email,
-                    defaults={'email': user_email}
+                # Send an email with login details
+                subject = 'Your Account Has Been Created'
+                message = (
+                    f'Your account has been created. Your temporary password is: {random_password}\n'
+                    'Please log in and change your password.\n'
+                    'You now have access to the course menu based on your selected plan.'
                 )
-                if created:
-                    user.set_password(random_password)
-                    user.save()
+                send_mail(subject, message, 'your-email@example.com', [user_email])
 
-                    # Grant access to the course
-                    grant_course_access(user, selected_plan)
-
-                    # Send email notification
-                    subject = 'Your Account Has Been Created'
-                    message = (
-                        f'Your account has been created. Your temporary password is: {random_password}\n'
-                        'Please log in and change your password.\n'
-                        'You now have access to the course menu based on your selected plan.'
-                    )
-                    send_mail(subject, message, 'your-email@example.com', [user_email])
-                else:
-                    logger.info(f"User {user_email} already exists. Skipping creation.")
-
-                # Clear the selected plan from the session
-                request.session.pop('selected_plan', None)
-
-                save_quiz_response(request)
-                return JsonResponse({'success': True, 'message': 'Payment completed successfully.'})
             else:
-                logger.error(f"Order not in a capturable state: {order_status}")
-                return JsonResponse({'success': False, 'error': f'Order not in a capturable state: {order_status}'}, status=400)
+                # If the user already exists, skip account creation
+                print(f"User {user_email} already exists. Skipping creation.")
+
+            # Clear the selected plan and other sensitive data from the session
+            request.session.pop('selected_plan', None)
+
+            # Additional logic: e.g., saving the quiz response, updating subscription data in the database, etc.
+            # save_quiz_response(request)
+
+            return JsonResponse({'success': True, 'message': 'Subscription completed successfully.'})
 
         except Exception as e:
-            logger.error("Error capturing PayPal order: %s", str(e))
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
+import requests
+import uuid
 
 def payment_page(request):
     return render(request, 'myapp/quiz/process_payment.html')

@@ -8,7 +8,6 @@ from myapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('customadmin/', include('customadmin.urls')),
-    path('complete-paypal-payment/', views.complete_paypal_payment, name='complete_paypal_payment'),
     path('', include('myapp.urls')),
     
 ]

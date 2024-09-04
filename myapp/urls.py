@@ -136,10 +136,12 @@ urlpatterns = [
     path('password-reset/invalid/', views.password_reset_invalid_link, name='password_reset_invalid_link'),
     
 
-    path('create-paypal-order/', views.create_paypal_order, name='create_paypal_order'),
-    path('complete-paypal-payment/', views.complete_paypal_payment, name='complete_paypal_payment'),
+    #path('create-paypal-order/', views.create_paypal_order, name='create_paypal_order'),
+    path('create-paypal-product/', views.create_paypal_product_view, name='create_paypal_product'),
+    path('create-paypal-plan/', views.create_paypal_subscription_plan_view, name='create_paypal_plan'),
+    path('complete-paypal-subscription/', views.complete_paypal_subscription, name='complete_paypal_subscription'),
 
-
+    
     path('profile/', views.profile_view, name='profile'),
     # path('update-profile/', views.update_profile, name='update_profile'),
     path('profile/settings/', views.profile_settings, name='profile_settings'),
