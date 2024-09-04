@@ -35,12 +35,24 @@ def create_paypal_product():
     # Make the request to PayPal API
     response = requests.post(url, headers=headers, json=data)
 
+    # Log full response if it is not JSON
+    if response.headers.get('Content-Type') != 'application/json':
+        print(f"Received non-JSON response: {response.text}")
+        return None
+
+    # Handle JSON parsing safely
+    try:
+        product_response = response.json()
+    except ValueError as e:
+        print(f"Failed to parse JSON: {response.text}")
+        return None
+
     if response.status_code == 201:
-        product_id = response.json().get("id")
+        product_id = product_response.get("id")
         print(f"Successfully created PayPal product with ID: {product_id}")
         return product_id
     else:
-        print(f"Failed to create PayPal product: {response.json()}")
+        print(f"Failed to create PayPal product: {product_response}")
         return None
 
 
@@ -88,7 +100,21 @@ def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interv
     }
 
     response = requests.post(url, headers=headers, json=data)
+
+    # Log full response if it is not JSON
+    if response.headers.get('Content-Type') != 'application/json':
+        print(f"Received non-JSON response: {response.text}")
+        return None
+
+    # Handle JSON parsing safely
+    try:
+        plan_response = response.json()
+    except ValueError as e:
+        print(f"Failed to parse JSON: {response.text}")
+        return None
+
     response.raise_for_status()
-    plan_id = response.json()["id"]
+    plan_id = plan_response.get("id")
     print(f"Created Plan ID for {plan_name}: {plan_id}")
     return plan_id
+
