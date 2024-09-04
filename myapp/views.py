@@ -1232,7 +1232,8 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from .models import Subscription
-from .utils import grant_course_access, get_random_string
+from .utils import grant_course_access
+from django.utils.crypto import get_random_string 
 
 # Assuming this function handles the completion of a PayPal subscription
 def complete_paypal_subscription(request):
