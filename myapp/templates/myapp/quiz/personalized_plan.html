@@ -2,10 +2,6 @@
 {% load static %}
 {% block title %}Your Personalized AI-Driven Plan{% endblock %}
 {% block content %}
-<head>
-    <script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
-    <script src="https://www.paypal.com/sdk/js?client-id=AcO0pQSFgkyRPtmmgviw2lz2DCojtl28Y_Qr9bligTeR1kOZScy9jecX2eWixffPBqGDJJyxSWn5iT__&currency=USD"></script>
-</head>
 
 <div class="mobile-container">
 <div class="header-container d-flex justify-content-between align-items-center">
@@ -284,6 +280,9 @@
     </div>
 </div>
 </div>
+
+<script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AcO0pQSFgkyRPtmmgviw2lz2DCojtl28Y_Qr9bligTeR1kOZScy9jecX2eWixffPBqGDJJyxSWn5iT__&currency=USD"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('checkout-modal');
@@ -405,37 +404,43 @@ document.addEventListener('DOMContentLoaded', function () {
         if (paypalInitialized) return; // Prevent re-initialization
 
         paypal.Buttons({
-            createOrder: function (data, actions) {
-                const planValue = document.querySelector('input[name="plan"]:checked').value;
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: planValue === '1-week' ? '13.86' :
-                                planValue === '4-week' ? '39.99' :
-                                    planValue === '12-week' ? '79.99' : '0.00'
-                        }
-                    }]
-                });
-            },
-            onApprove: function (data, actions) {
-                return actions.order.capture().then(async function (details) {
-                    const response = await fetch(`/complete-paypal-payment/?token=${data.orderID}`, {
-                        method: 'GET',
-                    });
+    createSubscription: function(data, actions) {
+        const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+        let planId;
 
-                    const jsonResult = await response.json();
-                    if (jsonResult.success) {
-                        window.location.href = '/success/';
-                    } else {
-                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-                    }
-                });
-            },
-            onError: function (err) {
-                console.error('PayPal error:', err);
-                alert('An error occurred during PayPal payment: ' + err);
+        if (selectedPlan === '1-week') {
+            planId = 'P-9U5556015X963500XM3L4YEA';
+        } else if (selectedPlan === '4-week') {
+            planId = 'P-7JH62341R41906352M3L4YEI';
+        } else if (selectedPlan === '12-week') {
+            planId = 'P-4FB80702685344218M3L4YEQ';
+        }
+
+        return actions.subscription.create({
+            'plan_id': planId
+        });
+    },
+    onApprove: function(data, actions) {
+        // This is the onApprove function
+        fetch(`/complete-paypal-subscription/?subscription_id=${data.subscriptionID}`, {
+            method: 'GET',
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                window.location.href = '/success-page/';
+            } else {
+                alert('Subscription failed: ' + result.error);
             }
-        }).render('#paypal-button-container');
+        })
+        .catch(error => {
+            console.error('Error during PayPal subscription completion:', error);
+            alert('An error occurred. Please try again.');
+        });
+    }
+}).render('#paypal-button-container');
+
+
 
         paypalInitialized = true; // Set flag to prevent re-initialization
     }
