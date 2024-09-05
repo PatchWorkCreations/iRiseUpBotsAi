@@ -1246,7 +1246,7 @@ def create_paypal_subscription_plan_view(request):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
-
+import json  # Make sure to import json for handling request data
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.utils import timezone
@@ -1260,6 +1260,9 @@ logger = logging.getLogger(__name__)
 def complete_paypal_subscription(request):
     if request.method == 'GET':
         try:
+            # Log the PayPal response for debugging
+            logger.info(f"PayPal return request: {request.GET}")
+
             # Get subscription ID from PayPal
             subscription_id = request.GET.get('subscription_id')
             user_email = request.session.get('email')  # Get user email from session
@@ -1290,7 +1293,7 @@ def complete_paypal_subscription(request):
             # Ensure the selected plan exists in the session
             selected_plan = request.session.get('selected_plan')
             if not selected_plan:
-                    return JsonResponse({'success': False, 'error': 'Selected plan is missing from session.'}, status=400)
+                return JsonResponse({'success': False, 'error': 'Selected plan is missing from session.'}, status=400)
 
             # Check if a subscription with the same subscription_id already exists
             if Subscription.objects.filter(subscription_id=subscription_id).exists():
@@ -1321,13 +1324,14 @@ def complete_paypal_subscription(request):
 
             return JsonResponse({'success': True, 'message': 'Subscription completed successfully.'})
 
+        except KeyError as e:
+            logger.error(f"Missing key in session or request: {str(e)}", exc_info=True)
+            return JsonResponse({'success': False, 'error': 'Invalid data received.'}, status=400)
         except Exception as e:
             logger.error(f"Error completing PayPal subscription: {str(e)}", exc_info=True)
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
-
-from django.http import JsonResponse
 
 def set_selected_plan(request):
     if request.method == 'POST':
@@ -1349,12 +1353,11 @@ def set_selected_plan(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
-
 def payment_page(request):
     return render(request, 'myapp/quiz/process_payment.html')
 
 def success_page(request):
-    return render(request, 'myapp/quiz/success.html')
+    return render(request, 'myapp/quiz/success.html', {"message": "Subscription completed successfully."})
 
 
 
