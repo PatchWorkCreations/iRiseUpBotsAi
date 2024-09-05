@@ -421,25 +421,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     },
     onApprove: function(data, actions) {
-        // This is the onApprove function
+        // After the subscription is approved, call your backend to complete the subscription
         fetch(`/complete-paypal-subscription/?subscription_id=${data.subscriptionID}`, {
             method: 'GET',
         })
         .then(response => response.json())
         .then(result => {
             if (result.success) {
+                // Redirect to a success page or show a success message
                 window.location.href = '/success-page/';
             } else {
                 alert('Subscription failed: ' + result.error);
             }
-        })
-        .catch(error => {
-            console.error('Error during PayPal subscription completion:', error);
-            alert('An error occurred. Please try again.');
         });
-    }
-}).render('#paypal-button-container');
-
+        },
+    }).render('#paypal-button-container');
 
 
         paypalInitialized = true; // Set flag to prevent re-initialization
