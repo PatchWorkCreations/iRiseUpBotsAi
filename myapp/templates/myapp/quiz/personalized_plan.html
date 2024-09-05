@@ -429,16 +429,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             },
             onApprove: function (data, actions) {
-                // Handle successful subscription
+                // Handle successful subscription within the same tab
                 return fetch(`/complete-paypal-subscription/?subscription_id=${data.subscriptionID}`, {
                     method: 'GET'
                 }).then(async function (response) {
                     const jsonResult = await response.json();
+                    
+                    // If subscription is successful, redirect to the success page in the same tab
                     if (jsonResult.success) {
-                        window.location.href = '/success/';
+                        window.location.href = '/success/';  // Redirect to success page
                     } else {
                         alert('Subscription failed: ' + JSON.stringify(jsonResult.error));
                     }
+                }).catch(function (error) {
+                    console.error('Subscription error:', error);
+                    alert('An error occurred during subscription processing.');
                 });
             },
             onError: function (err) {
@@ -447,6 +452,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }).render('#paypal-button-container');
 
+    
 
         paypalInitialized = true; // Set flag to prevent re-initialization
     }
