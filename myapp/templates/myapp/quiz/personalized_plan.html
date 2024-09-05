@@ -406,26 +406,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
         paypal.Buttons({
         createSubscription: function (data, actions) {
-            // This will retrieve the selected plan ID
             const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
             let planId = '';
 
-            // Match selected plan to PayPal subscription plans
+            // Use the actual PayPal plan IDs here
             if (selectedPlan === '1-week') {
-            planId = 'P-66T34473C6270971CM3MQY2Y';  // 1-week plan
+                planId = 'P-66T34473C6270971CM3MQY2Y';  // 1-week plan
             } else if (selectedPlan === '4-week') {
                 planId = 'P-0VP18059C1255763NM3MQY3A';  // 4-week plan
             } else if (selectedPlan === '12-week') {
                 planId = 'P-307971850T000074HM3MQY3I';  // 12-week plan
             }
 
-
             return actions.subscription.create({
                 'plan_id': planId  // Use the correct plan ID here
             });
         },
         onApprove: function (data, actions) {
-            // Send subscription ID to backend for processing
+            // Handle successful subscription
             return fetch(`/complete-paypal-subscription/?subscription_id=${data.subscriptionID}`, {
                 method: 'GET'
             }).then(async function (response) {
@@ -441,7 +439,8 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('PayPal error:', err);
             alert('An error occurred during PayPal payment: ' + err);
         }
-    }).render('#paypal-button-container');  // Render the PayPal button
+    }).render('#paypal-button-container');
+
 
         paypalInitialized = true; // Set flag to prevent re-initialization
     }
