@@ -1270,7 +1270,7 @@ def complete_paypal_subscription(request):
             # Ensure the selected plan exists in the session
             selected_plan = request.session.get('selected_plan')
             if not selected_plan:
-                return JsonResponse({'success': False, 'error': 'Selected plan is missing from session.'}, status=400)
+                    return JsonResponse({'success': False, 'error': 'Selected plan is missing from session.'}, status=400)
 
             # Check if a subscription with the same subscription_id already exists
             if Subscription.objects.filter(subscription_id=subscription_id).exists():
@@ -1307,6 +1307,25 @@ def complete_paypal_subscription(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
+from django.http import JsonResponse
+
+def set_selected_plan(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            selected_plan = data.get('plan')
+
+            if selected_plan:
+                # Set the selected plan in the session
+                request.session['selected_plan'] = selected_plan
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'No plan selected.'}, status=400)
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
 
 def payment_page(request):
