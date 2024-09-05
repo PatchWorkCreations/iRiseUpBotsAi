@@ -1227,19 +1227,21 @@ def create_paypal_subscription_plan_view(request):
             return JsonResponse({"success": False, "error": "Failed to create PayPal subscription plan."})
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
-from .models import Subscription
-from .utils import grant_course_access
-from django.utils.crypto import get_random_string 
+from django.utils import timezone
+from django.http import JsonResponse
+from .models import User, Subscription, UserCourseAccess
+import logging
+from datetime import timedelta
 
-# Assuming this function handles the completion of a PayPal subscription
+logger = logging.getLogger(__name__)
+
 def complete_paypal_subscription(request):
     if request.method == 'GET':
         try:
-            subscription_id = request.GET.get('subscription_id')  # Get subscription ID from PayPal
+            # Get subscription ID from PayPal
+            subscription_id = request.GET.get('subscription_id')
             user_email = request.session.get('email')  # Get user email from session
 
             if not subscription_id:
@@ -1248,7 +1250,7 @@ def complete_paypal_subscription(request):
             if not user_email:
                 return JsonResponse({'success': False, 'error': 'Email is missing from session.'}, status=400)
 
-            # Create or retrieve the user in Django
+            # Create or retrieve the user
             user, created = User.objects.get_or_create(
                 username=user_email,
                 defaults={'email': user_email}
@@ -1265,23 +1267,33 @@ def complete_paypal_subscription(request):
                 message = f'Your temporary password is: {random_password}\nPlease log in and change your password.'
                 send_mail(subject, message, 'your-email@example.com', [user_email])
 
-            # Save subscription details in the database
+            # Ensure the selected plan exists in the session
+            selected_plan = request.session.get('selected_plan')
+            if not selected_plan:
+                return JsonResponse({'success': False, 'error': 'Selected plan is missing from session.'}, status=400)
+
+            # Check if a subscription with the same subscription_id already exists
+            if Subscription.objects.filter(subscription_id=subscription_id).exists():
+                return JsonResponse({'success': False, 'error': 'This subscription ID already exists.'}, status=400)
+
+            # Save subscription details
             Subscription.objects.create(
                 user=user,
                 subscription_id=subscription_id,
-                plan=request.session.get('selected_plan')  # Assume selected plan is saved in session
+                plan=selected_plan
             )
 
-            # Grant course access based on the plan
-            selected_plan = request.session.get('selected_plan')
+            # Grant course access based on the selected plan
             if selected_plan == '1-week':
                 expiration_date = timezone.now() + timedelta(weeks=1)
             elif selected_plan == '4-week':
                 expiration_date = timezone.now() + timedelta(weeks=4)
             elif selected_plan == '12-week':
                 expiration_date = timezone.now() + timedelta(weeks=12)
+            else:
+                return JsonResponse({'success': False, 'error': 'Invalid plan selected.'}, status=400)
 
-            # Save the course access
+            # Save course access with expiration
             UserCourseAccess.objects.create(user=user, expiration_date=expiration_date)
 
             # Clear session data
@@ -1294,6 +1306,7 @@ def complete_paypal_subscription(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
 
 
 def payment_page(request):
