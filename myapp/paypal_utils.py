@@ -56,7 +56,7 @@ def create_paypal_product():
         return None
 
 
-def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interval_count, amount):
+def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interval_count, amount, return_url, cancel_url):
     url = "https://api-m.sandbox.paypal.com/v1/billing/plans"
     headers = {
         "Content-Type": "application/json",
@@ -96,6 +96,10 @@ def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interv
         "taxes": {
             "percentage": "10",
             "inclusive": False
+        },
+        "application_context": {
+            "return_url": "https://iriseupai-production.up.railway.app/complete-paypal-payment/",
+            "cancel_url": "https://iriseupai-production.up.railway.app/payment/"
         }
     }
 

@@ -476,10 +476,30 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('PayPal error:', err);
             alert('An error occurred during PayPal payment: ' + err.message);
             },
-        }).render('#paypal-button-container'); 
+        }).render('#paypal-button-container');
                     
         paypalInitialized = true; // Set flag to prevent re-initialization
     }
+
+    // Example of how to call the set_selected_plan endpoint
+        async function setSelectedPlan(plan) {
+            const response = await fetch('/set-selected-plan/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',  // Add CSRF token if required
+                },
+                body: JSON.stringify({ plan: plan })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                console.log('Plan set successfully');
+            } else {
+                alert('Failed to set plan: ' + result.error);
+            }
+        }
+
 
     // Event listeners for payment method buttons
     cardBtn.addEventListener('click', function () {

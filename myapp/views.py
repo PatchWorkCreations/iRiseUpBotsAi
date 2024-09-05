@@ -1209,6 +1209,10 @@ def create_paypal_product_view(request):
             return JsonResponse({"success": False, "error": "Failed to create PayPal product."})
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+from django.http import JsonResponse
+from django.urls import reverse
+from .paypal_utils import create_paypal_subscription_plan
+
 def create_paypal_subscription_plan_view(request):
     if request.method == "POST":
         product_id = request.POST.get('product_id')
@@ -1220,12 +1224,28 @@ def create_paypal_subscription_plan_view(request):
         if not all([product_id, plan_name, interval_unit, interval_count, amount]):
             return JsonResponse({"error": "Missing required fields."}, status=400)
 
-        plan_id = create_paypal_subscription_plan(product_id, plan_name, interval_unit, interval_count, amount)
+        # Dynamically generate the return_url and cancel_url using Django's reverse function
+        return_url = request.build_absolute_uri(reverse('success_page'))  # Points to your success view
+        cancel_url = request.build_absolute_uri(reverse('payment_page'))  # Points to your cancel page
+
+        # Call your utility function with the return_url and cancel_url
+        plan_id = create_paypal_subscription_plan(
+            product_id, 
+            plan_name, 
+            interval_unit, 
+            interval_count, 
+            amount,
+            return_url,  # Pass the generated return_url
+            cancel_url   # Pass the generated cancel_url
+        )
+
         if plan_id:
             return JsonResponse({"success": True, "plan_id": plan_id})
         else:
             return JsonResponse({"success": False, "error": "Failed to create PayPal subscription plan."})
+
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
@@ -1315,14 +1335,16 @@ def set_selected_plan(request):
             data = json.loads(request.body)
             selected_plan = data.get('plan')
 
-            if selected_plan:
-                # Set the selected plan in the session
+            # Validate the selected plan
+            valid_plans = ['1-week', '4-week', '12-week']
+            if selected_plan in valid_plans:
                 request.session['selected_plan'] = selected_plan
                 return JsonResponse({'success': True})
             else:
-                return JsonResponse({'success': False, 'error': 'No plan selected.'}, status=400)
+                return JsonResponse({'success': False, 'error': 'Invalid plan selected.'}, status=400)
 
         except Exception as e:
+            logger.error(f"Error setting selected plan: {str(e)}")
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
