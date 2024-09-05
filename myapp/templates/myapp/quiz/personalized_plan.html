@@ -405,37 +405,43 @@ document.addEventListener('DOMContentLoaded', function () {
         if (paypalInitialized) return; // Prevent re-initialization
 
         paypal.Buttons({
-            createOrder: function (data, actions) {
-                const planValue = document.querySelector('input[name="plan"]:checked').value;
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: planValue === '1-week' ? '13.86' :
-                                planValue === '4-week' ? '39.99' :
-                                    planValue === '12-week' ? '79.99' : '0.00'
-                        }
-                    }]
-                });
-            },
-            onApprove: function (data, actions) {
-                return actions.order.capture().then(async function (details) {
-                    const response = await fetch(`/complete-paypal-payment/?token=${data.orderID}`, {
-                        method: 'GET',
-                    });
+        createSubscription: function (data, actions) {
+            // This will retrieve the selected plan ID
+            const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+            let planId = '';
 
-                    const jsonResult = await response.json();
-                    if (jsonResult.success) {
-                        window.location.href = '/success/';
-                    } else {
-                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-                    }
-                });
-            },
-            onError: function (err) {
-                console.error('PayPal error:', err);
-                alert('An error occurred during PayPal payment: ' + err);
+            // Match selected plan to PayPal subscription plans
+            if (selectedPlan === '1-week') {
+            planId = 'P-66T34473C6270971CM3MQY2Y';  // 1-week plan
+            } else if (selectedPlan === '4-week') {
+                planId = 'P-0VP18059C1255763NM3MQY3A';  // 4-week plan
+            } else if (selectedPlan === '12-week') {
+                planId = 'P-307971850T000074HM3MQY3I';  // 12-week plan
             }
-        }).render('#paypal-button-container');
+
+
+            return actions.subscription.create({
+                'plan_id': planId  // Use the correct plan ID here
+            });
+        },
+        onApprove: function (data, actions) {
+            // Send subscription ID to backend for processing
+            return fetch(`/complete-paypal-subscription/?subscription_id=${data.subscriptionID}`, {
+                method: 'GET'
+            }).then(async function (response) {
+                const jsonResult = await response.json();
+                if (jsonResult.success) {
+                    window.location.href = '/success/';
+                } else {
+                    alert('Subscription failed: ' + JSON.stringify(jsonResult.error));
+                }
+            });
+        },
+        onError: function (err) {
+            console.error('PayPal error:', err);
+            alert('An error occurred during PayPal payment: ' + err);
+        }
+    }).render('#paypal-button-container');  // Render the PayPal button
 
         paypalInitialized = true; // Set flag to prevent re-initialization
     }

@@ -1239,63 +1239,62 @@ from django.utils.crypto import get_random_string
 def complete_paypal_subscription(request):
     if request.method == 'GET':
         try:
-            subscription_id = request.GET.get('subscription_id')  # Get the subscription ID from the GET request
-            user_email = request.session.get('email')  # Assuming email is stored in the session after user input
+            subscription_id = request.GET.get('subscription_id')  # Get subscription ID from PayPal
+            user_email = request.session.get('email')  # Get user email from session
 
-            # Check if the subscription ID is present
             if not subscription_id:
                 return JsonResponse({'success': False, 'error': 'Missing subscription ID'}, status=400)
 
-            # Check if the user's email is in the session
             if not user_email:
                 return JsonResponse({'success': False, 'error': 'Email is missing from session.'}, status=400)
 
-            # Random password generation
-            random_password = get_random_string(8)
-
-            # Create or retrieve the user by their email address
+            # Create or retrieve the user in Django
             user, created = User.objects.get_or_create(
                 username=user_email,
                 defaults={'email': user_email}
             )
 
             if created:
-                # If the user is newly created, set the password and save the user
+                # Generate random password for newly created users
+                random_password = get_random_string(8)
                 user.set_password(random_password)
                 user.save()
 
-                # Grant access to the course based on the selected plan
-                selected_plan = request.session.get('selected_plan')
-                grant_course_access(user, selected_plan)
-
-                # Send an email with login details
+                # Send email with account details
                 subject = 'Your Account Has Been Created'
-                message = (
-                    f'Your account has been created. Your temporary password is: {random_password}\n'
-                    'Please log in and change your password.\n'
-                    'You now have access to the course menu based on your selected plan.'
-                )
+                message = f'Your temporary password is: {random_password}\nPlease log in and change your password.'
                 send_mail(subject, message, 'your-email@example.com', [user_email])
 
-            else:
-                # If the user already exists, skip account creation
-                print(f"User {user_email} already exists. Skipping creation.")
+            # Save subscription details in the database
+            Subscription.objects.create(
+                user=user,
+                subscription_id=subscription_id,
+                plan=request.session.get('selected_plan')  # Assume selected plan is saved in session
+            )
 
-            # Clear the selected plan and other sensitive data from the session
+            # Grant course access based on the plan
+            selected_plan = request.session.get('selected_plan')
+            if selected_plan == '1-week':
+                expiration_date = timezone.now() + timedelta(weeks=1)
+            elif selected_plan == '4-week':
+                expiration_date = timezone.now() + timedelta(weeks=4)
+            elif selected_plan == '12-week':
+                expiration_date = timezone.now() + timedelta(weeks=12)
+
+            # Save the course access
+            UserCourseAccess.objects.create(user=user, expiration_date=expiration_date)
+
+            # Clear session data
             request.session.pop('selected_plan', None)
-
-            # Additional logic: e.g., saving the quiz response, updating subscription data in the database, etc.
-            # save_quiz_response(request)
 
             return JsonResponse({'success': True, 'message': 'Subscription completed successfully.'})
 
         except Exception as e:
+            logger.error(f"Error completing PayPal subscription: {str(e)}", exc_info=True)
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-    
+
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
-import requests
-import uuid
 
 def payment_page(request):
     return render(request, 'myapp/quiz/process_payment.html')
