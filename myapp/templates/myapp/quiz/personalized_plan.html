@@ -2,10 +2,6 @@
 {% load static %}
 {% block title %}Your Personalized AI-Driven Plan{% endblock %}
 {% block content %}
-<head>
-    <script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
-<script src="https://www.paypal.com/sdk/js?client-id=AcO0pQSFgkyRPtmmgviw2lz2DCojtl28Y_Qr9bligTeR1kOZScy9jecX2eWixffPBqGDJJyxSWn5iT__&currency=USD"></script>
-</head>
 
 <div class="mobile-container">
 <div class="header-container d-flex justify-content-between align-items-center">
@@ -285,7 +281,8 @@
 </div>
 </div>
 
-
+<script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AcO0pQSFgkyRPtmmgviw2lz2DCojtl28Y_Qr9bligTeR1kOZScy9jecX2eWixffPBqGDJJyxSWn5iT__&currency=USD"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('checkout-modal');
@@ -404,47 +401,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // PayPal payment setup function
     async function setupPayPalPayments() {
-    if (paypalInitialized) return; // Prevent re-initialization
+        if (paypalInitialized) return; // Prevent re-initialization
 
-    paypal.Buttons({
-        createSubscription: function(data, actions) {
-            const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
-            let planId;
+        paypal.Buttons({
+    createSubscription: function(data, actions) {
+        const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+        let planId;
 
-            if (selectedPlan === '1-week') {
-                planId = 'P-9U5556015X963500XM3L4YEA';
-            } else if (selectedPlan === '4-week') {
-                planId = 'P-7JH62341R41906352M3L4YEI';
-            } else if (selectedPlan === '12-week') {
-                planId = 'P-4FB80702685344218M3L4YEQ';
-            }
-
-            return actions.subscription.create({
-                'plan_id': planId
-            });
-        },
-        onApprove: function(data, actions) {
-            fetch(`/complete-paypal-subscription/?subscription_id=${data.subscriptionID}`, {
-                method: 'GET',
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    window.location.href = '/success-page/';
-                } else {
-                    alert('Subscription failed: ' + result.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error during PayPal subscription completion:', error);
-                alert('An error occurred. Please try again.');
-            });
+        if (selectedPlan === '1-week') {
+            planId = 'P-9U5556015X963500XM3L4YEA';
+        } else if (selectedPlan === '4-week') {
+            planId = 'P-7JH62341R41906352M3L4YEI';
+        } else if (selectedPlan === '12-week') {
+            planId = 'P-4FB80702685344218M3L4YEQ';
         }
-    }).render('#paypal-button-container');
 
-    paypalInitialized = true; // Set flag to prevent re-initialization
-}
+        return actions.subscription.create({
+            'plan_id': planId
+        });
+    },
+    onApprove: function(data, actions) {
+        // This is the onApprove function
+        fetch(`/complete-paypal-subscription/?subscription_id=${data.subscriptionID}`, {
+            method: 'GET',
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                window.location.href = '/success-page/';
+            } else {
+                alert('Subscription failed: ' + result.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error during PayPal subscription completion:', error);
+            alert('An error occurred. Please try again.');
+        });
+    }
+}).render('#paypal-button-container');
 
+
+
+        paypalInitialized = true; // Set flag to prevent re-initialization
+    }
 
     // Event listeners for payment method buttons
     cardBtn.addEventListener('click', function () {
