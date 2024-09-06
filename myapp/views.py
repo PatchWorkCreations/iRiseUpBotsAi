@@ -1193,14 +1193,18 @@ def process_payment(request):
                 defaults={'customer_id': customer_id, 'card_id': card_id}
             )
 
-            # Step 7: Compute expiration date based on the selected plan
+            # Step 7: Compute expiration date and next billing date
             expiration_date = None
+            next_billing_date = None
             if selected_plan == '1-week':
                 expiration_date = timezone.now() + timedelta(weeks=1)
+                next_billing_date = expiration_date  # Set next billing date to the expiration date for recurring
             elif selected_plan == '4-week':
                 expiration_date = timezone.now() + timedelta(weeks=4)
+                next_billing_date = expiration_date
             elif selected_plan == '12-week':
                 expiration_date = timezone.now() + timedelta(weeks=12)
+                next_billing_date = expiration_date
 
             # Step 8: Create or update UserCourseAccess to reflect the expiration date
             if expiration_date:
@@ -1209,13 +1213,14 @@ def process_payment(request):
                     defaults={'expiration_date': expiration_date}
                 )
 
-            # Step 9: Create a transaction with a success status
+            # Step 9: Create a transaction with a success status and recurring info
             Transaction.objects.create(
                 user=user,
                 amount=amount,
                 subscription_type=selected_plan,
                 status='success',
-                recurring=True if selected_plan in ['1-week', '4-week', '12-week'] else False
+                recurring=True if selected_plan in ['1-week', '4-week', '12-week'] else False,
+                next_billing_date=next_billing_date  # Store the next billing date
             )
 
             return JsonResponse({"success": True})
