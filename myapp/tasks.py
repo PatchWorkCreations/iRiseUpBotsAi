@@ -37,7 +37,7 @@ def send_welcome_email(email):
 
 
 @shared_task(name="charge_card_for_renewal")
-def charge_card_for_renewal():
+def charge_card_for_renewal(user_id=None):
     # Import models here to avoid the AppRegistryNotReady error
     from .models import SquareCustomer, UserCourseAccess
     from myapp.views import determine_amount_based_on_plan
@@ -49,16 +49,20 @@ def charge_card_for_renewal():
         '12-week': timedelta(weeks=12),
     }
 
-    # Get the current time and the range within which we want to trigger renewals
+    # Get the current time
     current_time = timezone.now()
-    renewal_window_start = current_time + timedelta(days=2)
-    renewal_window_end = current_time + timedelta(days=1)
 
-    # Find all user course accesses that are due for renewal within the next day
-    user_accesses = UserCourseAccess.objects.filter(expiration_date__range=(renewal_window_start, renewal_window_end))
+    # If user_id is provided, get only that user's course access for testing
+    if user_id:
+        user_accesses = UserCourseAccess.objects.filter(user_id=user_id)
+    else:
+        # Otherwise, get all users whose expiration date is due for renewal
+        renewal_window_start = current_time + timedelta(days=2)
+        renewal_window_end = current_time + timedelta(days=1)
+        user_accesses = UserCourseAccess.objects.filter(expiration_date__range=(renewal_window_start, renewal_window_end))
 
     if not user_accesses.exists():
-        logger.info("No user courses due for renewal today.")
+        logger.info("No user courses due for renewal.")
 
     for user_access in user_accesses:
         try:
@@ -90,7 +94,6 @@ def charge_card_for_renewal():
             renewal_period = renewal_periods.get(user_access.selected_plan, timedelta(weeks=4))  # Default to 4 weeks if plan is unrecognized
             user_access.expiration_date += renewal_period
             user_access.save()
-
 
             logger.info(f"Successfully charged and extended access for user {user_access.user.email}")
 

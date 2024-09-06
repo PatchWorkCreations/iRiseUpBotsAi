@@ -996,15 +996,15 @@ client = Client(
     environment='sandbox'  # Use 'production' for live transactions
 )
 
-def determine_amount_based_on_plan(plan):
-    if plan == '1-week':
+def determine_amount_based_on_plan(selected_plan):
+    if selected_plan == '1-week':
         return 1386  # $13.86 in cents
-    elif plan == '4-week':
+    elif selected_plan == '4-week':
         return 3999  # $39.99 in cents
-    elif plan == '12-week':
+    elif selected_plan == '12-week':
         return 7999  # $79.99 in cents
     else:
-        return 0
+        return 0  # Default to 0 for unrecognized plans
 
 
 def grant_course_access(user, selected_plan):
@@ -1206,12 +1206,16 @@ def process_payment(request):
                 expiration_date = timezone.now() + timedelta(weeks=12)
                 next_billing_date = expiration_date
 
-            # Step 8: Create or update UserCourseAccess to reflect the expiration date
+            # Step 8: Create or update UserCourseAccess to reflect the expiration date and selected plan
             if expiration_date:
                 UserCourseAccess.objects.update_or_create(
                     user=user,
-                    defaults={'expiration_date': expiration_date}
+                    defaults={
+                        'expiration_date': expiration_date,
+                        'selected_plan': selected_plan  # Save the selected plan here
+                    }
                 )
+
 
             # Step 9: Create a transaction with a success status and recurring info
             Transaction.objects.create(
@@ -1478,6 +1482,78 @@ def set_selected_plan(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+import logging
+from .models import Subscription, UserCourseAccess
+from django.utils import timezone
+from datetime import timedelta
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+def paypal_webhook(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            event_type = data.get('event_type')
+            subscription_id = data['resource']['id']
+
+            # Handle subscription renewal
+            if event_type == 'BILLING.SUBSCRIPTION.RENEWED':
+                logger.info(f"PayPal subscription renewed: {subscription_id}")
+
+                # Find the subscription in your system
+                subscription = Subscription.objects.get(subscription_id=subscription_id)
+
+                # Extend the user's course access based on the plan
+                if subscription.plan == '1-week':
+                    subscription.expiration_date = timezone.now() + timedelta(weeks=1)
+                elif subscription.plan == '4-week':
+                    subscription.expiration_date = timezone.now() + timedelta(weeks=4)
+                elif subscription.plan == '12-week':
+                    subscription.expiration_date = timezone.now() + timedelta(weeks=12)
+                subscription.save()
+
+                # Optionally, update the UserCourseAccess expiration date as well
+                user_course_access = UserCourseAccess.objects.get(user=subscription.user)
+                user_course_access.expiration_date = subscription.expiration_date
+                user_course_access.save()
+
+                logger.info(f"Renewed access for user {subscription.user.email} until {subscription.expiration_date}")
+
+            # Handle subscription cancellation
+            elif event_type == 'BILLING.SUBSCRIPTION.CANCELLED':
+                logger.info(f"PayPal subscription cancelled: {subscription_id}")
+                
+                # Cancel the subscription in your system
+                subscription = Subscription.objects.get(subscription_id=subscription_id)
+                subscription.is_active = False
+                subscription.save()
+
+                # Optionally, revoke course access
+                UserCourseAccess.objects.filter(user=subscription.user).delete()
+                logger.info(f"Cancelled subscription and access for user {subscription.user.email}")
+
+            # Handle subscription payment failure
+            elif event_type == 'BILLING.SUBSCRIPTION.PAYMENT.FAILED':
+                logger.warning(f"Payment failed for PayPal subscription: {subscription_id}")
+                
+                # Notify the user or take further action if needed
+
+            return JsonResponse({"status": "success"}, status=200)
+
+        except Subscription.DoesNotExist:
+            logger.error(f"Subscription not found for PayPal subscription ID: {subscription_id}")
+            return JsonResponse({"error": "Subscription not found"}, status=404)
+
+        except Exception as e:
+            logger.error(f"Error processing PayPal webhook: {str(e)}", exc_info=True)
+            return JsonResponse({"error": "Webhook error"}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
 def payment_page(request):
