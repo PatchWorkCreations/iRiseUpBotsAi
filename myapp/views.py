@@ -1092,7 +1092,6 @@ def process_payment(request):
             )
             if customer_result.is_error():
                 logger.error("Customer creation failed: %s", customer_result.errors)
-                # Create a transaction with an error status
                 user = User.objects.get(email=user_email)  # Assuming the user exists
                 Transaction.objects.create(
                     user=user,
@@ -1125,7 +1124,6 @@ def process_payment(request):
             if payment_result.is_error():
                 error_messages = [error['detail'] for error in payment_result.errors]
                 logger.error("Payment Error: %s", error_messages)
-                # Create a transaction with an error status
                 Transaction.objects.create(
                     user=user,
                     amount=amount,
@@ -1152,7 +1150,6 @@ def process_payment(request):
             )
             if card_result.is_error():
                 logger.error("Card storage failed: %s", card_result.errors)
-                # Create a transaction with an error status
                 Transaction.objects.create(
                     user=user,
                     amount=amount,
@@ -1172,7 +1169,6 @@ def process_payment(request):
             )
 
             if created:
-                # If the user was created, set a random password and send an email
                 random_password = get_random_string(8)
                 user.set_password(random_password)
                 user.save()
@@ -1197,31 +1193,35 @@ def process_payment(request):
                 defaults={'customer_id': customer_id, 'card_id': card_id}
             )
 
-            # Step 7: Schedule the renewal if needed
-            recurring = False
-            if selected_plan in ['1-week', '4-week', '12-week']:
-                recurring = True
-                renewal_date = timezone.now() + timedelta(weeks=int(selected_plan.split('-')[0]))
-                UserCourseAccess.objects.create(
+            # Step 7: Compute expiration date based on the selected plan
+            expiration_date = None
+            if selected_plan == '1-week':
+                expiration_date = timezone.now() + timedelta(weeks=1)
+            elif selected_plan == '4-week':
+                expiration_date = timezone.now() + timedelta(weeks=4)
+            elif selected_plan == '12-week':
+                expiration_date = timezone.now() + timedelta(weeks=12)
+
+            # Step 8: Create or update UserCourseAccess to reflect the expiration date
+            if expiration_date:
+                UserCourseAccess.objects.update_or_create(
                     user=user,
-                    expiration_date=renewal_date
+                    defaults={'expiration_date': expiration_date}
                 )
 
-            # Step 8: Create a transaction with a success status
+            # Step 9: Create a transaction with a success status
             Transaction.objects.create(
                 user=user,
                 amount=amount,
                 subscription_type=selected_plan,
                 status='success',
-                recurring=recurring
+                recurring=True if selected_plan in ['1-week', '4-week', '12-week'] else False
             )
 
             return JsonResponse({"success": True})
-            
+
         except Exception as e:
-            # Handle unexpected errors and log them
             logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
-            # Create a transaction with an error status
             user = User.objects.get(email=user_email) if 'user_email' in locals() else None
             if user:
                 Transaction.objects.create(
