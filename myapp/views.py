@@ -1092,6 +1092,16 @@ def process_payment(request):
             )
             if customer_result.is_error():
                 logger.error("Customer creation failed: %s", customer_result.errors)
+                # Create a transaction with an error status
+                user = User.objects.get(email=user_email)  # Assuming the user exists
+                Transaction.objects.create(
+                    user=user,
+                    amount=amount,
+                    subscription_type=selected_plan,
+                    status='error',
+                    error_logs=str(customer_result.errors),
+                    recurring=False
+                )
                 return JsonResponse({"error": "Failed to create customer profile."}, status=400)
 
             customer_id = customer_result.body['customer']['id']
@@ -1115,6 +1125,15 @@ def process_payment(request):
             if payment_result.is_error():
                 error_messages = [error['detail'] for error in payment_result.errors]
                 logger.error("Payment Error: %s", error_messages)
+                # Create a transaction with an error status
+                Transaction.objects.create(
+                    user=user,
+                    amount=amount,
+                    subscription_type=selected_plan,
+                    status='error',
+                    error_logs=str(error_messages),
+                    recurring=False
+                )
                 return JsonResponse({"error": error_messages}, status=400)
 
             payment_id = payment_result.body['payment']['id']
@@ -1133,6 +1152,15 @@ def process_payment(request):
             )
             if card_result.is_error():
                 logger.error("Card storage failed: %s", card_result.errors)
+                # Create a transaction with an error status
+                Transaction.objects.create(
+                    user=user,
+                    amount=amount,
+                    subscription_type=selected_plan,
+                    status='error',
+                    error_logs=str(card_result.errors),
+                    recurring=False
+                )
                 return JsonResponse({"error": "Failed to store card on file."}, status=400)
 
             card_id = card_result.body['card']['id']
@@ -1170,18 +1198,40 @@ def process_payment(request):
             )
 
             # Step 7: Schedule the renewal if needed
+            recurring = False
             if selected_plan in ['1-week', '4-week', '12-week']:
+                recurring = True
                 renewal_date = timezone.now() + timedelta(weeks=int(selected_plan.split('-')[0]))
-                user_course_access = UserCourseAccess.objects.create(
+                UserCourseAccess.objects.create(
                     user=user,
                     expiration_date=renewal_date
                 )
 
-            return JsonResponse({"success": True})
+            # Step 8: Create a transaction with a success status
+            Transaction.objects.create(
+                user=user,
+                amount=amount,
+                subscription_type=selected_plan,
+                status='success',
+                recurring=recurring
+            )
 
+            return JsonResponse({"success": True})
+            
         except Exception as e:
             # Handle unexpected errors and log them
             logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
+            # Create a transaction with an error status
+            user = User.objects.get(email=user_email) if 'user_email' in locals() else None
+            if user:
+                Transaction.objects.create(
+                    user=user,
+                    amount=amount,
+                    subscription_type=selected_plan,
+                    status='error',
+                    error_logs=str(e),
+                    recurring=False
+                )
             return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
@@ -1932,3 +1982,70 @@ def edit_avatar(request):
     else:
         form = AvatarForm(instance=user_profile)
     return render(request, 'myapp/forum/edit_avatar.html', {'form': form, 'user_profile': user_profile})
+
+
+from django.http import JsonResponse
+from .models import Transaction
+
+def view_transactions(request):
+    status = request.GET.get('status', None)
+    if status:
+        transactions = Transaction.objects.filter(status=status)
+    else:
+        transactions = Transaction.objects.all()
+    
+    data = []
+    for transaction in transactions:
+        data.append({
+            "user": transaction.user.username,
+            "subscription_type": transaction.subscription_type,
+            "amount": transaction.amount,
+            "status": transaction.status,
+            "transaction_date": transaction.transaction_date,
+            "error_logs": transaction.error_logs if transaction.status == 'error' else None,
+            "recurring": transaction.recurring,
+            "next_billing_date": transaction.next_billing_date
+        })
+    
+    return JsonResponse({"transactions": data})
+
+
+import csv
+from django.http import HttpResponse
+from .models import Transaction
+
+def download_transactions_csv(request):
+    # Create the HttpResponse object with CSV content-type.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="transactions.csv"'
+
+    # Create a CSV writer
+    writer = csv.writer(response)
+
+    # Write CSV header
+    writer.writerow(['User', 'Subscription Type', 'Amount', 'Status', 'Transaction Date', 'Recurring', 'Next Billing Date', 'Error Logs'])
+
+    # Get all transactions (you can filter by status or date as needed)
+    transactions = Transaction.objects.all()
+
+    # Write transaction data
+    for transaction in transactions:
+        writer.writerow([
+            transaction.user.username,
+            transaction.subscription_type,
+            transaction.amount,
+            transaction.status,
+            transaction.transaction_date,
+            transaction.recurring,
+            transaction.next_billing_date,
+            transaction.error_logs if transaction.status == 'error' else ''
+        ])
+
+    return response
+
+
+def view_new_subscriptions(request):
+    new_users = Transaction.objects.filter(status='pending', transaction_date__gte=timezone.now() - timezone.timedelta(days=7))
+    data = [{"user": t.user.username, "subscription_type": t.subscription_type, "status": t.status} for t in new_users]
+    
+    return JsonResponse({"new_subscriptions": data})

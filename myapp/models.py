@@ -265,3 +265,26 @@ class Subscription(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.plan} subscription"
+
+
+from django.db import models
+from django.utils import timezone
+
+class Transaction(models.Model):
+    STATUS_CHOICES = [
+        ('success', 'Success'),
+        ('pending', 'Pending'),
+        ('error', 'Error'),
+    ]
+
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    subscription_type = models.CharField(max_length=100)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    transaction_date = models.DateTimeField(default=timezone.now)
+    error_logs = models.TextField(blank=True, null=True)  # To capture error details if any
+    recurring = models.BooleanField(default=False)  # If it's recurring billing
+    next_billing_date = models.DateTimeField(blank=True, null=True)  # For recurring payments
+
+    def __str__(self):
+        return f"{self.user.username} - {self.subscription_type} - {self.status}"

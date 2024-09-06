@@ -143,3 +143,131 @@ def complete_paypal_payment(request):
             logger.error("Error capturing PayPal order: %s", str(e))
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
+
+
+
+
+@csrf_exempt
+def process_payment(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            card_token = data.get('source_id')
+            selected_plan = data.get('plan')
+            verification_token = data.get('verification_token')
+
+            # Ensure the correct email is being used from the user's current session
+            user_email = request.session.get('email')
+            if not user_email:
+                logger.error("Email is missing from session. Cannot proceed with payment.")
+                return JsonResponse({"error": "Email is missing from session."}, status=400)
+
+            # Ensure the amount is valid based on the selected plan
+            amount = determine_amount_based_on_plan(selected_plan)
+            if amount <= 0:
+                return JsonResponse({"error": "Invalid plan selected."}, status=400)
+
+            # Step 1: Create a new customer or retrieve the existing one
+            customer_result = client.customers.create_customer(
+                body={
+                    "given_name": data.get('givenName'),
+                    "family_name": data.get('familyName'),
+                    "email_address": user_email,
+                }
+            )
+            if customer_result.is_error():
+                logger.error("Customer creation failed: %s", customer_result.errors)
+                return JsonResponse({"error": "Failed to create customer profile."}, status=400)
+
+            customer_id = customer_result.body['customer']['id']
+
+            # Step 2: Make the payment request with the verification token and store the card on file
+            payment_result = client.payments.create_payment(
+                body={
+                    "source_id": card_token,
+                    "idempotency_key": str(uuid.uuid4()),
+                    "amount_money": {
+                        "amount": amount,
+                        "currency": "USD"
+                    },
+                    "verification_token": verification_token,
+                    "autocomplete": True,
+                    "customer_id": customer_id,  # Link the payment to the customer
+                }
+            )
+            logger.info("Square API Payment Response: %s", payment_result)
+
+            if payment_result.is_error():
+                error_messages = [error['detail'] for error in payment_result.errors]
+                logger.error("Payment Error: %s", error_messages)
+                return JsonResponse({"error": error_messages}, status=400)
+
+            payment_id = payment_result.body['payment']['id']
+
+            # Step 3: Store the card on file for the customer
+            card_result = client.cards.create_card(
+                body={
+                    "idempotency_key": str(uuid.uuid4()),
+                    "source_id": payment_id,
+                    "verification_token": verification_token,
+                    "card": {
+                        "cardholder_name": f"{data.get('givenName')} {data.get('familyName')}",
+                        "customer_id": customer_id,
+                    }
+                }
+            )
+            if card_result.is_error():
+                logger.error("Card storage failed: %s", card_result.errors)
+                return JsonResponse({"error": "Failed to store card on file."}, status=400)
+
+            card_id = card_result.body['card']['id']
+
+            # Step 4: Create or retrieve the user in the Django application
+            user, created = User.objects.get_or_create(
+                username=user_email,
+                defaults={'email': user_email}
+            )
+
+            if created:
+                # If the user was created, set a random password and send an email
+                random_password = get_random_string(8)
+                user.set_password(random_password)
+                user.save()
+
+                # Send a welcome email with the temporary password
+                subject = 'Your Account Has Been Created'
+                message = (
+                    f'Your account has been created. Your temporary password is: {random_password}\n'
+                    'Please log in and change your password.\n'
+                    'You now have access to the course menu based on your selected plan.'
+                )
+                send_mail(subject, message, 'juliavictorio16@Gmail.com', [user_email])
+
+            logger.info(f"User {user_email} processed for payment.")
+
+            # Step 5: Save the quiz response to the database linked with the user
+            save_quiz_response(request, user)
+
+            # Step 6: Store the customer_id and card_id in the database
+            SquareCustomer.objects.update_or_create(
+                user=user,
+                defaults={'customer_id': customer_id, 'card_id': card_id}
+            )
+
+            # Step 7: Schedule the renewal if needed
+            if selected_plan in ['1-week', '4-week', '12-week']:
+                renewal_date = timezone.now() + timedelta(weeks=int(selected_plan.split('-')[0]))
+                user_course_access = UserCourseAccess.objects.create(
+                    user=user,
+                    expiration_date=renewal_date
+                )
+
+            return JsonResponse({"success": True})
+            
+        except Exception as e:
+            # Handle unexpected errors and log them
+            logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
+            return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
