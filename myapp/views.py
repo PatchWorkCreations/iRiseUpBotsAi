@@ -1246,57 +1246,64 @@ def create_paypal_subscription_plan_view(request):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
-import json  # Make sure to import json for handling request data
+logger = logging.getLogger(__name__)
+
+from django.http import JsonResponse
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.utils import timezone
-from django.http import JsonResponse
+from django.conf import settings  # Ensure this is imported to access email settings if needed
 from .models import User, Subscription, UserCourseAccess
-import logging
 from datetime import timedelta
+import logging
 
 logger = logging.getLogger(__name__)
 
 def complete_paypal_subscription(request):
     if request.method == 'GET':
         try:
-            # Log the PayPal response for debugging
+            # Log the PayPal return request for debugging purposes
             logger.info(f"PayPal return request: {request.GET}")
 
-            # Get subscription ID from PayPal
+            # Get the subscription ID from PayPal
             subscription_id = request.GET.get('subscription_id')
             user_email = request.session.get('email')  # Get user email from session
 
             if not subscription_id:
+                logger.error('Missing subscription ID in PayPal return.')
                 return JsonResponse({'success': False, 'error': 'Missing subscription ID'}, status=400)
 
             if not user_email:
+                logger.error('Email is missing from session.')
                 return JsonResponse({'success': False, 'error': 'Email is missing from session.'}, status=400)
 
-            # Create or retrieve the user
+            # Create or retrieve the user from the database
             user, created = User.objects.get_or_create(
                 username=user_email,
                 defaults={'email': user_email}
             )
 
             if created:
-                # Generate random password for newly created users
+                # Generate a random password for newly created users
                 random_password = get_random_string(8)
                 user.set_password(random_password)
                 user.save()
 
-                # Send email with account details
+                # Send email with account details to the newly created user
                 subject = 'Your Account Has Been Created'
                 message = f'Your temporary password is: {random_password}\nPlease log in and change your password.'
-                send_mail(subject, message, 'your-email@example.com', [user_email])
+                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user_email])
+                logger.info(f'New user created and email sent to {user_email}.')
 
             # Ensure the selected plan exists in the session
             selected_plan = request.session.get('selected_plan')
             if not selected_plan:
+                logger.error('Selected plan is missing from session.')
                 return JsonResponse({'success': False, 'error': 'Selected plan is missing from session.'}, status=400)
 
             # Check if a subscription with the same subscription_id already exists
             if Subscription.objects.filter(subscription_id=subscription_id).exists():
+                logger.error('This subscription ID already exists.')
                 return JsonResponse({'success': False, 'error': 'This subscription ID already exists.'}, status=400)
 
             # Save subscription details
@@ -1305,6 +1312,7 @@ def complete_paypal_subscription(request):
                 subscription_id=subscription_id,
                 plan=selected_plan
             )
+            logger.info(f'Subscription created for user: {user_email}, Plan: {selected_plan}, Subscription ID: {subscription_id}')
 
             # Grant course access based on the selected plan
             if selected_plan == '1-week':
@@ -1314,12 +1322,14 @@ def complete_paypal_subscription(request):
             elif selected_plan == '12-week':
                 expiration_date = timezone.now() + timedelta(weeks=12)
             else:
+                logger.error('Invalid plan selected.')
                 return JsonResponse({'success': False, 'error': 'Invalid plan selected.'}, status=400)
 
             # Save course access with expiration
             UserCourseAccess.objects.create(user=user, expiration_date=expiration_date)
+            logger.info(f'User {user_email} granted course access until {expiration_date}.')
 
-            # Clear session data
+            # Clear the selected plan from the session
             request.session.pop('selected_plan', None)
 
             return JsonResponse({'success': True, 'message': 'Subscription completed successfully.'})
@@ -1340,10 +1350,10 @@ def set_selected_plan(request):
             data = json.loads(request.body)
             selected_plan = data.get('plan')
 
-            # Validate the selected plan
             valid_plans = ['1-week', '4-week', '12-week']
             if selected_plan in valid_plans:
                 request.session['selected_plan'] = selected_plan
+                request.session.save()  # Force session save
                 return JsonResponse({'success': True})
             else:
                 return JsonResponse({'success': False, 'error': 'Invalid plan selected.'}, status=400)

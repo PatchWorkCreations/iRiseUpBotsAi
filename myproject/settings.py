@@ -103,6 +103,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Ensure session backend is properly configured
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Ensure this is enabled for database-backed sessions
+SESSION_COOKIE_AGE = 1209600  # Sessions last 2 weeks, can be adjusted
+SESSION_SAVE_EVERY_REQUEST = True  # Ensures the session is saved on every request
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Keeps the session alive when the browser is closed
+
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
