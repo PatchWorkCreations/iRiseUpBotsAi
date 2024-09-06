@@ -1249,29 +1249,31 @@ paypal_client = PayPalClient(
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from .models import Subscription
 
-# Create a mapping of plan name to PayPal Plan ID
 PAYPAL_PLANS = {
     '1-week': 'P-66T34473C6270971CM3MQY2Y',
     '4-week': 'P-0VP18059C1255763NM3MQY3A',
     '12-week': 'P-307971850T000074HM3MQY3I'
 }
 
+def get_json_data(request):
+    try:
+        return json.loads(request.body)
+    except json.JSONDecodeError:
+        return None
+
 @csrf_exempt
 def get_paypal_plan_id(request):
     if request.method == 'POST':
-        # Parse the request body to get the selected plan
-        data = json.loads(request.body)
-        selected_plan = data.get('selected_plan')
+        data = get_json_data(request)
+        selected_plan = data.get('selected_plan') if data else None
         
-        # Fetch the PayPal Plan ID based on the selected plan
-        plan_id = PAYPAL_PLANS.get(selected_plan, None)
-        
-        if plan_id:
-            return JsonResponse({'plan_id': plan_id})
-        else:
+        if not selected_plan or selected_plan not in PAYPAL_PLANS:
             return JsonResponse({'error': 'Invalid plan selected'}, status=400)
-
+        
+        return JsonResponse({'plan_id': PAYPAL_PLANS[selected_plan]})
+    
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
@@ -1384,27 +1386,46 @@ def complete_paypal_subscription(request):
                 logger.error('This subscription ID already exists.')
                 return JsonResponse({'success': False, 'error': 'This subscription ID already exists.'}, status=400)
 
-            # Save subscription details
-            Subscription.objects.create(
-                user=user,
-                subscription_id=subscription_id,
-                plan=selected_plan
-            )
-            logger.info(f'Subscription created for user: {user_email}, Plan: {selected_plan}, Subscription ID: {subscription_id}')
-
-            # Grant course access based on the selected plan
+            # Calculate the amount based on the selected plan (this can be customized as needed)
+            amount = 0
             if selected_plan == '1-week':
+                amount = 13.86  # Example amount for 1-week
                 expiration_date = timezone.now() + timedelta(weeks=1)
             elif selected_plan == '4-week':
+                amount = 39.99  # Example amount for 4-week
                 expiration_date = timezone.now() + timedelta(weeks=4)
             elif selected_plan == '12-week':
+                amount = 79.99  # Example amount for 12-week
                 expiration_date = timezone.now() + timedelta(weeks=12)
             else:
                 logger.error('Invalid plan selected.')
                 return JsonResponse({'success': False, 'error': 'Invalid plan selected.'}, status=400)
 
-            # Save course access with expiration
-            UserCourseAccess.objects.create(user=user, expiration_date=expiration_date)
+            # Save subscription details
+            subscription = Subscription.objects.create(
+                user=user,
+                subscription_id=subscription_id,
+                plan=selected_plan,
+                expiration_date=expiration_date
+            )
+            logger.info(f'Subscription created for user: {user_email}, Plan: {selected_plan}, Subscription ID: {subscription_id}')
+
+            # Create a Transaction record
+            Transaction.objects.create(
+                user=user,
+                amount=amount,
+                subscription_type=selected_plan,
+                status='success',
+                recurring=True,  # Assuming this is for a recurring subscription
+                next_billing_date=expiration_date  # Set the next billing date as the expiration date for recurring
+            )
+            logger.info(f'Transaction recorded for user: {user_email}, Amount: {amount}, Plan: {selected_plan}.')
+
+            # Grant course access based on the selected plan
+            UserCourseAccess.objects.create(
+                user=user,
+                expiration_date=expiration_date
+            )
             logger.info(f'User {user_email} granted course access until {expiration_date}.')
 
             # Clear the selected plan from the session
@@ -1416,7 +1437,18 @@ def complete_paypal_subscription(request):
             logger.error(f"Missing key in session or request: {str(e)}", exc_info=True)
             return JsonResponse({'success': False, 'error': 'Invalid data received.'}, status=400)
         except Exception as e:
+            # Log the error and also create a failed Transaction record
             logger.error(f"Error completing PayPal subscription: {str(e)}", exc_info=True)
+
+            # Create a failed transaction record if an error occurs
+            Transaction.objects.create(
+                user=user,
+                amount=amount,
+                subscription_type=selected_plan if selected_plan else 'unknown',
+                status='error',
+                error_logs=str(e)
+            )
+
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
