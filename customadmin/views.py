@@ -537,8 +537,12 @@ def view_transactions(request):
 
 
 # views.py
+# views.py
 from django.shortcuts import render
+from myapp.models import Transaction
 
 def customadmin_transactions(request):
-    transactions = []  # Fetch your transaction data here
+    # Fetch all transactions from the database
+    transactions = Transaction.objects.all()
+    
     return render(request, 'customadmin/transactions.html', {'transactions': transactions})

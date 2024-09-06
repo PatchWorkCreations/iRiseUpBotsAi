@@ -5,7 +5,9 @@
     <h1>Transaction Management</h1>
 
     <!-- Button to download transactions as CSV -->
-    <button onclick="window.location.href='/download-transactions-csv/'" class="btn btn-success mb-3">Download CSV</button>
+    <button onclick="window.location.href='{% url "download_transactions_csv" %}'" class="btn btn-success mb-3">
+        Download CSV
+    </button>
 
     <!-- Transactions Table -->
     <table class="table table-striped">
@@ -21,38 +23,25 @@
                 <th>Error Logs</th>
             </tr>
         </thead>
-        <tbody id="transactions-list">
+        <tbody>
+            <!-- Loop through each transaction passed from the view -->
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.user.email }}</td>
+                <td>{{ transaction.subscription_type }}</td>
+                <td>{{ transaction.amount }}</td>
+                <td>{{ transaction.status }}</td>
+                <td>{{ transaction.transaction_date }}</td>
+                <td>{{ transaction.recurring|yesno:"Yes,No" }}</td>
+                <td>{{ transaction.next_billing_date|default:"N/A" }}</td>
+                <td>{{ transaction.error_logs|default:"No errors" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8">No transactions available.</td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
-
-<!-- Script to fetch and display transactions -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Fetch transactions from the API and display them
-        fetch('/view-transactions/')
-            .then(response => response.json())
-            .then(data => {
-                const table = document.getElementById('transactions-list');
-                data.transactions.forEach(transaction => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${transaction.user}</td>
-                        <td>${transaction.subscription_type}</td>
-                        <td>${transaction.amount}</td>
-                        <td>${transaction.status}</td>
-                        <td>${transaction.transaction_date}</td>
-                        <td>${transaction.recurring ? 'Yes' : 'No'}</td>
-                        <td>${transaction.next_billing_date || ''}</td>
-                        <td>${transaction.error_logs || ''}</td>
-                    `;
-                    table.appendChild(row);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching transactions:', error);
-            });
-    });
-</script>
-
 {% endblock %}

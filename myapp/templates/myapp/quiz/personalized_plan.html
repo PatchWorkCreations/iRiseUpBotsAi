@@ -434,24 +434,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
     paypal.Buttons({
         createSubscription: function (data, actions) {
-            // Retrieve the selected plan from radio buttons
-            const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
-            let planId = '';
-
-            // Map the selected plan to the correct PayPal Plan ID
-            if (selectedPlan === '1-week') {
-                planId = 'P-66T34473C6270971CM3MQY2Y'; // 1-week PayPal Plan ID
-            } else if (selectedPlan === '4-week') {
-                planId = 'P-0VP18059C1255763NM3MQY3A'; // 4-week PayPal Plan ID
-            } else if (selectedPlan === '12-week') {
-                planId = 'P-307971850T000074HM3MQY3I'; // 12-week PayPal Plan ID
-            }
-
-            // Create the PayPal subscription with the selected plan
-            return actions.subscription.create({
-                plan_id: planId,  // Use the PayPal plan ID
-            });
+    // Retrieve the selected plan from radio buttons
+    const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+    
+    // Send the selectedPlan to your backend for processing
+    return fetch('/get-paypal-plan-id/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token for Django
         },
+        body: JSON.stringify({
+            'selected_plan': selectedPlan
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.plan_id) {
+            // Create the PayPal subscription with the returned plan_id
+            return actions.subscription.create({
+                plan_id: data.plan_id,  // Use the plan ID returned from the server
+            });
+        } else {
+            console.error('Plan ID not returned from server');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+    },
+
+      
 
         onApprove: function (data, actions) {
             // Subscription was successfully created
@@ -521,6 +532,7 @@ function getCookie(name) {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
@@ -529,8 +541,6 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
-
 
     // Event listeners for payment method buttons
     cardBtn.addEventListener('click', function () {

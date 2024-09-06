@@ -1246,6 +1246,34 @@ paypal_client = PayPalClient(
     client_secret=settings.PAYPAL_CLIENT_SECRET
 )
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+# Create a mapping of plan name to PayPal Plan ID
+PAYPAL_PLANS = {
+    '1-week': 'P-66T34473C6270971CM3MQY2Y',
+    '4-week': 'P-0VP18059C1255763NM3MQY3A',
+    '12-week': 'P-307971850T000074HM3MQY3I'
+}
+
+@csrf_exempt
+def get_paypal_plan_id(request):
+    if request.method == 'POST':
+        # Parse the request body to get the selected plan
+        data = json.loads(request.body)
+        selected_plan = data.get('selected_plan')
+        
+        # Fetch the PayPal Plan ID based on the selected plan
+        plan_id = PAYPAL_PLANS.get(selected_plan, None)
+        
+        if plan_id:
+            return JsonResponse({'plan_id': plan_id})
+        else:
+            return JsonResponse({'error': 'Invalid plan selected'}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 
 from django.http import JsonResponse
 from .paypal_utils import create_paypal_product, create_paypal_subscription_plan

@@ -14,6 +14,7 @@ paypal_client = PayPalClient(
 )
 
 
+
 def create_paypal_product():
     # Define the API endpoint and headers
     url = "https://api-m.sandbox.paypal.com/v1/catalogs/products"
@@ -58,6 +59,7 @@ def create_paypal_product():
 
 def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interval_count, amount, return_url, cancel_url):
     url = "https://api-m.sandbox.paypal.com/v1/billing/plans"
+
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {paypal_client.access_token}",
