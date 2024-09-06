@@ -483,3 +483,62 @@ def delete_article(request, article_id):
     if request.method == 'POST':
         article.delete()
     return redirect('manage_knowledge_base')
+
+
+import csv
+from django.http import HttpResponse, JsonResponse
+from myapp.models import Transaction
+
+# View for downloading transactions as a CSV file
+def download_transactions_csv(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="transactions.csv"'
+
+    # Create a CSV writer
+    writer = csv.writer(response)
+
+    # Write the header row
+    writer.writerow(['User', 'Subscription Type', 'Amount', 'Status', 'Transaction Date', 'Recurring', 'Next Billing Date', 'Error Logs'])
+
+    # Write data rows
+    transactions = Transaction.objects.all().values_list(
+        'user__email', 'subscription_type', 'amount', 'status', 'created_at', 'recurring', 'next_billing_date', 'error_logs'
+    )
+    for transaction in transactions:
+        writer.writerow(transaction)
+
+    return response
+
+
+# API view to get transactions data for rendering in HTML
+def view_transactions(request):
+    status = request.GET.get('status', None)
+    if status:
+        transactions = Transaction.objects.filter(status=status)
+    else:
+        transactions = Transaction.objects.all()
+
+    transactions_list = [
+        {
+            "user": transaction.user.email,
+            "subscription_type": transaction.subscription_type,
+            "amount": transaction.amount,
+            "status": transaction.status,
+            "transaction_date": transaction.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "recurring": transaction.recurring,
+            "next_billing_date": transaction.next_billing_date.strftime("%Y-%m-%d") if transaction.next_billing_date else None,
+            "error_logs": transaction.error_logs,
+        }
+        for transaction in transactions
+    ]
+
+    return JsonResponse({"transactions": transactions_list})
+
+
+# views.py
+from django.shortcuts import render
+
+def customadmin_transactions(request):
+    transactions = []  # Fetch your transaction data here
+    return render(request, 'customadmin/transactions.html', {'transactions': transactions})

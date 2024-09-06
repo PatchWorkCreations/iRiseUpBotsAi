@@ -1,0 +1,58 @@
+{% extends "customadmin/base.html" %}
+{% block title %}Transaction Management{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Transaction Management</h1>
+
+    <!-- Button to download transactions as CSV -->
+    <button onclick="window.location.href='/download-transactions-csv/'" class="btn btn-success mb-3">Download CSV</button>
+
+    <!-- Transactions Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Subscription Type</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Transaction Date</th>
+                <th>Recurring</th>
+                <th>Next Billing Date</th>
+                <th>Error Logs</th>
+            </tr>
+        </thead>
+        <tbody id="transactions-list">
+        </tbody>
+    </table>
+</div>
+
+<!-- Script to fetch and display transactions -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fetch transactions from the API and display them
+        fetch('/view-transactions/')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('transactions-list');
+                data.transactions.forEach(transaction => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${transaction.user}</td>
+                        <td>${transaction.subscription_type}</td>
+                        <td>${transaction.amount}</td>
+                        <td>${transaction.status}</td>
+                        <td>${transaction.transaction_date}</td>
+                        <td>${transaction.recurring ? 'Yes' : 'No'}</td>
+                        <td>${transaction.next_billing_date || ''}</td>
+                        <td>${transaction.error_logs || ''}</td>
+                    `;
+                    table.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching transactions:', error);
+            });
+    });
+</script>
+
+{% endblock %}

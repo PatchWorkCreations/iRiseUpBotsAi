@@ -32,7 +32,12 @@ urlpatterns = [
     path('add-article/', views.add_article, name='add_article'),
     path('edit-article/<int:id>/', views.edit_article, name='edit_article'),
 
-   path('delete-category/<int:category_id>/', views.delete_category, name='delete_category'),
+    path('delete-category/<int:category_id>/', views.delete_category, name='delete_category'),
     path('delete-subcategory/<int:id>/', views.delete_subcategory, name='delete_subcategory'),
     path('delete-article/<int:article_id>/', views.delete_article, name='delete_article'),
+
+    path('download-transactions-csv/', views.download_transactions_csv, name='download_transactions_csv'),
+    path('view-transactions/', views.view_transactions, name='view_transactions'),
+    path('transactions/', views.customadmin_transactions, name='customadmin_transactions'),  # No customadmin prefix
+
 ]
