@@ -260,7 +260,7 @@ class Subscription(models.Model):
     plan = models.CharField(max_length=50)
     subscription_id = models.CharField(max_length=255, null=True, blank=True)
     start_date = models.DateTimeField(auto_now_add=True)
-    expiration_date = models.DateTimeField()  # Keeping this field for expiration tracking
+    expiration_date = models.DateTimeField(null=True, blank=True)  # Ensure it's nullable if this is what you want
     is_active = models.BooleanField(default=True)
 
     def __str__(self):

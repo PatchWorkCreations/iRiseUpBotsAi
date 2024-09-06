@@ -485,28 +485,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Example of how to call the set_selected_plan endpoint
         // Function to set the selected plan in the session via AJAX
-            async function setSelectedPlan(plan) {
-                try {
-                    const response = await fetch('/set-selected-plan/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': getCookie('csrftoken'),  // Ensure CSRF token is being passed
-                        },
-                        body: JSON.stringify({ plan: plan })
-                    });
+        // Function to set the selected plan in the session via AJAX
+        async function setSelectedPlan(plan) {
+            try {
+                const response = await fetch('/set-selected-plan/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),  // Ensure CSRF token is being passed
+                    },
+                    body: JSON.stringify({ plan: plan })
+                });
 
-                    const result = await response.json();
-                    if (result.success) {
-                        console.log('Plan set successfully');
-                    } else {
-                        alert('Failed to set plan: ' + result.error);
-                    }
-                } catch (error) {
-                    console.error('Error setting plan:', error);
-                    alert('Error setting plan in session.');
+                const result = await response.json();
+                if (result.success) {
+                    console.log('Plan set successfully');
+                } else {
+                    alert('Failed to set plan: ' + result.error);
                 }
+            } catch (error) {
+                console.error('Error setting plan:', error);
+                alert('Error setting plan in session.');
             }
+        }
 
 
         // Event listener for plan selection
