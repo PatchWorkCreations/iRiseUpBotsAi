@@ -275,6 +275,7 @@
         <div id="paypal-payment" class="payment-option" style="display:none;">
             <h3 style="text-align: center;">Pay with PayPal</h3>
             <div id="paypal-button-container"></div> <!-- PayPal button container -->
+            <div id="subscription-status" style="display: none; color: green; text-align: center; margin-top: 15px;"></div>
         </div>
 
         <!-- Add the subscription terms language below the payment options -->
@@ -498,6 +499,13 @@ document.addEventListener('DOMContentLoaded', function () {
     paypalInitialized = true;  // Set initialized flag
 }
 
+const statusDiv = document.getElementById("subscription-status");
+if (statusDiv) {
+    statusDiv.innerHTML = "Your subscription is being processed. You will be notified once it's activated.";
+    statusDiv.style.display = "block";  // Make sure the div is visible
+} else {
+    console.error('Subscription status element not found');
+}
 
 
 // Function to set the selected plan in the session via AJAX
