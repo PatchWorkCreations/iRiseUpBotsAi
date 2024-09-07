@@ -434,47 +434,52 @@ document.addEventListener('DOMContentLoaded', function () {
 
     paypal.Buttons({
         createSubscription: function (data, actions) {
-    // Retrieve the selected plan from radio buttons
-    const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
-    
-    // Send the selectedPlan to your backend for processing
-    return fetch('/get-paypal-plan-id/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token for Django
+            // Retrieve the selected plan from radio buttons
+            const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+            
+            // Send the selectedPlan to your backend for processing
+            return fetch('/get-paypal-plan-id/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token for Django
+                },
+                body: JSON.stringify({
+                    'selected_plan': selectedPlan
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.plan_id) {
+                    // Create the PayPal subscription with the returned plan_id
+                    return actions.subscription.create({
+                        plan_id: data.plan_id,  // Use the plan ID returned from the server
+                    });
+                } else {
+                    console.error('Plan ID not returned from server');
+                }
+            })
+            .catch(error => console.error('Error:', error));
         },
-        body: JSON.stringify({
-            'selected_plan': selectedPlan
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.plan_id) {
-            // Create the PayPal subscription with the returned plan_id
-            return actions.subscription.create({
-                plan_id: data.plan_id,  // Use the plan ID returned from the server
-            });
-        } else {
-            console.error('Plan ID not returned from server');
-        }
-    })
-    .catch(error => console.error('Error:', error));
-    },
-
-      
 
         onApprove: function (data, actions) {
             // Subscription was successfully created
-            // Send the subscription ID to the backend to complete the process
-            return fetch(`/complete-paypal-subscription/?subscription_id=${data.subscriptionID}`, {
+            const subscriptionId = data.subscriptionID;
+
+            // Show a message that the subscription is being processed
+            const statusDiv = document.getElementById("subscription-status");
+            statusDiv.innerHTML = "Your subscription is being processed. You will be notified once it's activated.";
+            statusDiv.style.display = "block";
+
+            // Send the subscription ID to the backend to complete the process (keeping it in pending state)
+            return fetch(`/complete-paypal-subscription/?subscription_id=${subscriptionId}`, {
                 method: 'GET',
             })
             .then((response) => response.json())
             .then((result) => {
                 if (result.success) {
-                    // Redirect the user to the success page on success
-                    window.location.href = '/success/';
+                    // Successfully handled on the backend, but wait for webhook to finalize
+                    statusDiv.innerHTML = "Your subscription is being processed. You'll receive an update when activated.";
                 } else {
                     alert('Subscription failed: ' + result.error);
                 }
@@ -492,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }).render('#paypal-button-container');  // Render PayPal buttons
     paypalInitialized = true;  // Set initialized flag
 }
+
 
 
 // Function to set the selected plan in the session via AJAX

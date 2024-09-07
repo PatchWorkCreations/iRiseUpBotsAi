@@ -1337,12 +1337,13 @@ def create_paypal_subscription_plan_view(request):
 
 logger = logging.getLogger(__name__)
 
+
 from django.http import JsonResponse
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.utils import timezone
-from django.conf import settings  # Ensure this is imported to access email settings if needed
-from .models import User, Subscription, UserCourseAccess
+from django.conf import settings
+from .models import User, Subscription, UserCourseAccess, Transaction
 from datetime import timedelta
 import logging
 
@@ -1395,61 +1396,62 @@ def complete_paypal_subscription(request):
                 logger.error('This subscription ID already exists.')
                 return JsonResponse({'success': False, 'error': 'This subscription ID already exists.'}, status=400)
 
-            # Calculate the amount based on the selected plan (this can be customized as needed)
+            # Calculate the amount based on the selected plan
             amount = 0
             if selected_plan == '1-week':
-                amount = 13.86  # Example amount for 1-week
+                amount = 13.86
                 expiration_date = timezone.now() + timedelta(weeks=1)
             elif selected_plan == '4-week':
-                amount = 39.99  # Example amount for 4-week
+                amount = 39.99
                 expiration_date = timezone.now() + timedelta(weeks=4)
             elif selected_plan == '12-week':
-                amount = 79.99  # Example amount for 12-week
+                amount = 79.99
                 expiration_date = timezone.now() + timedelta(weeks=12)
             else:
                 logger.error('Invalid plan selected.')
                 return JsonResponse({'success': False, 'error': 'Invalid plan selected.'}, status=400)
 
-            # Save subscription details
+            # Save subscription details with 'pending' status until confirmed by PayPal
             subscription = Subscription.objects.create(
                 user=user,
                 subscription_id=subscription_id,
                 plan=selected_plan,
-                expiration_date=expiration_date
+                expiration_date=expiration_date,
+                is_active=False  # Mark as inactive until PayPal confirms
             )
             logger.info(f'Subscription created for user: {user_email}, Plan: {selected_plan}, Subscription ID: {subscription_id}')
 
-            # Create a Transaction record
+            # Create a Transaction record with 'pending' status
             Transaction.objects.create(
                 user=user,
                 amount=amount,
                 subscription_type=selected_plan,
-                status='success',
-                recurring=True,  # Assuming this is for a recurring subscription
-                next_billing_date=expiration_date  # Set the next billing date as the expiration date for recurring
+                status='pending',  # Initially set to pending until confirmation
+                recurring=True,
+                next_billing_date=expiration_date
             )
             logger.info(f'Transaction recorded for user: {user_email}, Amount: {amount}, Plan: {selected_plan}.')
 
-            # Grant course access based on the selected plan
+            # Grant temporary course access
             UserCourseAccess.objects.create(
                 user=user,
                 expiration_date=expiration_date
             )
-            logger.info(f'User {user_email} granted course access until {expiration_date}.')
+            logger.info(f'User {user_email} granted temporary course access until {expiration_date}.')
 
             # Clear the selected plan from the session
             request.session.pop('selected_plan', None)
 
-            return JsonResponse({'success': True, 'message': 'Subscription completed successfully.'})
+            # Redirect to a "pending approval" page or show a success message
+            return JsonResponse({'success': True, 'message': 'Subscription is pending approval from PayPal.'})
 
         except KeyError as e:
             logger.error(f"Missing key in session or request: {str(e)}", exc_info=True)
             return JsonResponse({'success': False, 'error': 'Invalid data received.'}, status=400)
         except Exception as e:
-            # Log the error and also create a failed Transaction record
             logger.error(f"Error completing PayPal subscription: {str(e)}", exc_info=True)
 
-            # Create a failed transaction record if an error occurs
+            # Log a failed transaction
             Transaction.objects.create(
                 user=user,
                 amount=amount,
@@ -1483,11 +1485,12 @@ def set_selected_plan(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
+
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 import logging
-from .models import Subscription, UserCourseAccess
+from .models import Subscription, UserCourseAccess, Transaction
 from django.utils import timezone
 from datetime import timedelta
 
@@ -1497,15 +1500,38 @@ logger = logging.getLogger(__name__)
 def paypal_webhook(request):
     if request.method == 'POST':
         try:
+            # Load the JSON payload
             data = json.loads(request.body)
             event_type = data.get('event_type')
-            subscription_id = data['resource']['id']
+            subscription_id = data['resource']['id']  # PayPal subscription ID
 
-            # Handle subscription renewal
-            if event_type == 'BILLING.SUBSCRIPTION.RENEWED':
-                logger.info(f"PayPal subscription renewed: {subscription_id}")
+            # Log the event type for debugging
+            logger.info(f"Received PayPal webhook event: {event_type} for Subscription ID: {subscription_id}")
+
+            # Handle subscription activation (initial subscription approval)
+            if event_type == 'BILLING.SUBSCRIPTION.ACTIVATED':
+                logger.info(f"PayPal subscription activated: {subscription_id}")
 
                 # Find the subscription in your system
+                subscription = Subscription.objects.get(subscription_id=subscription_id)
+
+                # Mark the subscription as active
+                subscription.is_active = True
+                subscription.save()
+
+                # Update the associated transaction to 'success'
+                Transaction.objects.filter(
+                    user=subscription.user, 
+                    subscription_type=subscription.plan
+                ).update(status='success')
+
+                logger.info(f"Subscription {subscription_id} for {subscription.user.email} is now active.")
+
+            # Handle subscription renewal
+            elif event_type == 'BILLING.SUBSCRIPTION.RENEWED':
+                logger.info(f"PayPal subscription renewed: {subscription_id}")
+
+                # Find the subscription
                 subscription = Subscription.objects.get(subscription_id=subscription_id)
 
                 # Extend the user's course access based on the plan
@@ -1524,25 +1550,59 @@ def paypal_webhook(request):
 
                 logger.info(f"Renewed access for user {subscription.user.email} until {subscription.expiration_date}")
 
+                # Log the renewal transaction
+                Transaction.objects.create(
+                    user=subscription.user,
+                    amount=subscription.get_amount(),  # Assuming there's a method to calculate amount
+                    subscription_type=subscription.plan,
+                    status='success',
+                    recurring=True,
+                    next_billing_date=subscription.expiration_date
+                )
+                logger.info(f"Transaction logged for subscription renewal {subscription_id}")
+
             # Handle subscription cancellation
             elif event_type == 'BILLING.SUBSCRIPTION.CANCELLED':
                 logger.info(f"PayPal subscription cancelled: {subscription_id}")
                 
-                # Cancel the subscription in your system
+                # Find the subscription in your system
                 subscription = Subscription.objects.get(subscription_id=subscription_id)
+
+                # Cancel the subscription
                 subscription.is_active = False
                 subscription.save()
 
                 # Optionally, revoke course access
                 UserCourseAccess.objects.filter(user=subscription.user).delete()
+
                 logger.info(f"Cancelled subscription and access for user {subscription.user.email}")
 
             # Handle subscription payment failure
             elif event_type == 'BILLING.SUBSCRIPTION.PAYMENT.FAILED':
                 logger.warning(f"Payment failed for PayPal subscription: {subscription_id}")
-                
-                # Notify the user or take further action if needed
 
+                # Find the subscription
+                subscription = Subscription.objects.get(subscription_id=subscription_id)
+
+                # Log the failure in the transaction history
+                Transaction.objects.create(
+                    user=subscription.user,
+                    amount=subscription.get_amount(),  # Assuming there's a method to calculate amount
+                    subscription_type=subscription.plan,
+                    status='error',
+                    error_logs='Payment failed',
+                    recurring=True,
+                    next_billing_date=subscription.expiration_date
+                )
+
+                # Optionally notify the user (via email, dashboard message, etc.)
+
+                logger.warning(f"Payment failure recorded for {subscription.user.email}")
+
+            else:
+                logger.info(f"Unhandled PayPal event type: {event_type}")
+
+            # Return a success response to PayPal
             return JsonResponse({"status": "success"}, status=200)
 
         except Subscription.DoesNotExist:
@@ -1553,6 +1613,7 @@ def paypal_webhook(request):
             logger.error(f"Error processing PayPal webhook: {str(e)}", exc_info=True)
             return JsonResponse({"error": "Webhook error"}, status=500)
 
+    # If the request method is not POST
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
