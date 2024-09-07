@@ -142,7 +142,7 @@ urlpatterns = [
     path('complete-paypal-subscription/', views.complete_paypal_subscription, name='complete_paypal_subscription'),
     path('set-selected-plan/', views.set_selected_plan, name='set_selected_plan'),
     path('get-paypal-plan-id/', views.get_paypal_plan_id, name='get-paypal-plan-id'),
-
+    path('paypal/webhook/', views.paypal_webhook, name='paypal_webhook'),
 
     path('profile/', views.profile_view, name='profile'),
     # path('update-profile/', views.update_profile, name='update_profile'),
