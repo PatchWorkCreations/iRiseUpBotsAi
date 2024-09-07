@@ -14,7 +14,7 @@
         <span id="minutes">10</span>:<span id="seconds">00</span>
     </div>
     <div class="plan-button">
-        <button class="card-button btn btn-primary get-plan-btn pulsate">GET MY PLAN</button>
+        <button class="card-button btn btn-primary choose-plan-btn pulsate">Choose a Plan</button>
     </div>
 </div>
 
@@ -129,7 +129,7 @@
             </div>
            </div>    
 
-            <div class="plan-selection-container">
+            <div id="plan-selection-section" class="plan-selection-container">
                 <div class="plan-option">
                     <input type="radio" id="1-week-plan" name="plan" value="1-week">
                     <label for="1-week-plan">
@@ -640,6 +640,18 @@ function startCountdown() {
 // Start the countdown when the page loads
 window.onload = startCountdown;
 
+document.addEventListener('DOMContentLoaded', function () {
+    // Scroll to plan selection section when "Choose a Plan" is clicked
+    const choosePlanButton = document.querySelector('.choose-plan-btn');
+    if (choosePlanButton) {
+        choosePlanButton.addEventListener('click', function () {
+            const planSelectionSection = document.getElementById('plan-selection-section');
+            if (planSelectionSection) {
+                planSelectionSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+});
 
 </script>
 
