@@ -437,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function () {
         createSubscription: function (data, actions) {
             // Retrieve the selected plan from radio buttons
             const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
-            
+
             // Send the selectedPlan to your backend for processing
             return fetch('/get-paypal-plan-id/', {
                 method: 'POST',
@@ -459,6 +459,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     console.error('Plan ID not returned from server');
                 }
+            })
+            .then(function(subscriptionData) {
+                // After the subscription is created, get the approval link and redirect the user
+                const approvalUrl = subscriptionData.links.find(link => link.rel === 'approve').href;
+                window.location.href = approvalUrl;  // Redirect the user to approve the subscription
             })
             .catch(error => console.error('Error:', error));
         },
@@ -498,6 +503,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }).render('#paypal-button-container');  // Render PayPal buttons
     paypalInitialized = true;  // Set initialized flag
 }
+
 
 const statusDiv = document.getElementById("subscription-status");
 if (statusDiv) {
