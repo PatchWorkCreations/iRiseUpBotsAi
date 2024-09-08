@@ -459,41 +459,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     console.error('Plan ID not returned from server');
                 }
-            })
-            .then(function(subscriptionData) {
-                // After the subscription is created, get the approval link and redirect the user
-                const approvalUrl = subscriptionData.links.find(link => link.rel === 'approve').href;
-                window.location.href = approvalUrl;  // Redirect the user to approve the subscription
-            })
-            .catch(error => console.error('Error:', error));
+            });
         },
 
         onApprove: function (data, actions) {
-            // Subscription was successfully created
+            // Get the subscription ID from the onApprove event
             const subscriptionId = data.subscriptionID;
 
-            // Show a message that the subscription is being processed
-            const statusDiv = document.getElementById("subscription-status");
-            statusDiv.innerHTML = "Your subscription is being processed. You will be notified once it's activated.";
-            statusDiv.style.display = "block";
-
-            // Send the subscription ID to the backend to complete the process (keeping it in pending state)
-            return fetch(`/complete-paypal-subscription/?subscription_id=${subscriptionId}`, {
-                method: 'GET',
-            })
-            .then((response) => response.json())
-            .then((result) => {
-                if (result.success) {
-                    // Successfully handled on the backend, but wait for webhook to finalize
-                    statusDiv.innerHTML = "Your subscription is being processed. You'll receive an update when activated.";
-                } else {
-                    alert('Subscription failed: ' + result.error);
-                }
-            })
-            .catch((err) => {
-                console.error('Subscription error:', err);
-                alert('An error occurred during subscription processing.');
-            });
+            if (subscriptionId) {
+                // Redirect the user to approve the subscription
+                return fetch(`/complete-paypal-subscription/?subscription_id=${subscriptionId}`, {
+                    method: 'GET',
+                })
+                .then((response) => response.json())
+                .then((result) => {
+                    if (result.success) {
+                        // Redirect to success page or show a success message
+                        window.location.href = '/success/';
+                    } else {
+                        alert('Subscription failed: ' + result.error);
+                    }
+                })
+                .catch((err) => {
+                    console.error('Subscription error:', err);
+                    alert('An error occurred during subscription processing.');
+                });
+            } else {
+                alert('Subscription ID not found.');
+            }
         },
 
         onError: function (err) {
