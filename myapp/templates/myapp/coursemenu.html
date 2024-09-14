@@ -1,4 +1,5 @@
 {% extends "myapp/base.html" %}
+{% load custom_filters %}
 {% block title %}Course Menu{% endblock %}
 {% load static %}
 {% block content %}
@@ -210,52 +211,60 @@
         </div>
 
         <!-- Ongoing Courses Section -->
+        <!-- Ongoing Courses Section -->
         <div id="ongoing" class="course-section active">
             {% if ongoing_courses %}
                 <div class="course-grid">
-                    {% for course_access in ongoing_courses %}
+                    {% for course in ongoing_courses %}
                     <div class="course-card">
                         <div class="course-card-header">
                             <div class="course-image">
-                                <img src="{{ course_access.course.image.url }}" alt="Course Image">
+                                <img src="{{ course.image.url }}" alt="Course Image">
                             </div>
                             <div class="course-info">
-                                <p>{{ course_access.course.units }} Units • {{ course_access.course.hours }} Hours</p>
-                                <h3>{{ course_access.course.title }}</h3>
-                                <p>{{ course_access.course.description }}</p>
+                                <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
+                                <h3>{{ course.title }}</h3>
+                                <p>{{ course.description }}</p>
                             </div>
                         </div>
-                        {% if course_access.course %}
-                            <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">Continue Watching</a>
-                        {% else %}
-                            <span>No course available</span>
-                        {% endif %}
+                        <a href="{% url 'course_detail' course.id %}" class="view-btn">Continue Course</a>
                     </div>
-                    {% endfor %} <!-- Add this -->
+                    {% endfor %}
                 </div>
-             {% else %}
+            {% else %}
                 <p>No ongoing courses.</p>
             {% endif %}
         </div>
+        
 
+
+        <!-- Completed Courses Section -->
         <!-- Completed Courses Section -->
         <div id="completed" class="course-section">
             <h2>Completed Courses</h2>
             {% if completed_courses %}
                 <div class="course-grid">
-                    {% for course_access in completed_courses %}
+                    {% for course in completed_courses %}
                     <div class="course-card">
                         <div class="course-card-header">
                             <div class="course-image">
-                                <img src="{{ course_access.course.image.url }}" alt="Course Image">
+                                <img src="{{ course.image.url }}" alt="Course Image">
                             </div>
                             <div class="course-info">
-                                <p>{{ course_access.course.units }} Units • {{ course_access.course.hours }} Hours</p>
-                                <h3>{{ course_access.course.title }}</h3>
-                                <p>{{ course_access.course.description }}</p>
+                                <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
+                                <h3>{{ course.title }}</h3>
+                                <p>{{ course.description }}</p>
                             </div>
                         </div>
-                        <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">View Course</a>
+                        <a href="{% url 'course_continue' course.id %}" class="view-btn">View Course</a>
+
+                        <!-- Display course progress (100% for completed courses) -->
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 100%;"></div>
+                            </div>
+                            <span>100% Complete</span>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
@@ -263,6 +272,7 @@
                 <p>No completed courses.</p>
             {% endif %}
         </div>
+
 
         <!-- Saved Courses Section -->
         <div id="saved" class="course-section">
@@ -279,7 +289,11 @@
                                 <h3>{{ course_access.course.title }}</h3>
                             </div>
                         </div>
-                        <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">View Course</a>
+                        {% if course_access.course %}
+    <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">View Course</a>
+{% else %}
+    <span>No course available</span>
+{% endif %}
                     </div>
                     {% endfor %}
                 </div>
@@ -303,7 +317,11 @@
                                 <h3>{{ course_access.course.title }}</h3>
                             </div>
                         </div>
-                        <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">View Course</a>
+                        {% if course_access.course %}
+    <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">View Course</a>
+{% else %}
+    <span>No course available</span>
+{% endif %}
                     </div>
                     {% endfor %}
                 </div>

@@ -139,7 +139,8 @@
         </li>
         {% endfor %}
     </ul>
-
+    <a href="{% url 'add_sub_course' %}?course_id={{ course.id }}" class="add-link">Add Sub-Course</a>  <!-- Ensure this link redirects to the add_sub_course view -->
+    
     <h3>Lessons</h3>
     <ul class="list-group">
         {% for sub_course in sub_courses %}

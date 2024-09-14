@@ -206,7 +206,9 @@ class UserCourseAccess(models.Model):
         """Calculate and update the progress of the entire course based on sub-course completion."""
         total_sub_courses = self.course.sub_courses.count()
         completed_sub_courses = UserSubCourseAccess.objects.filter(
-            user=self.user, sub_course__parent_course=self.course, progress=100.0).count()
+            user=self.user, sub_course__parent_course=self.course, progress=100.0
+        ).count()
+
         if total_sub_courses > 0:
             self.progress = (completed_sub_courses / total_sub_courses) * 100
             self.save()
@@ -231,17 +233,30 @@ class UserSubCourseAccess(models.Model):
         """Calculate and update the progress of the sub-course based on lesson completion."""
         total_lessons = self.sub_course.lessons.count()
         completed_lessons = UserLessonProgress.objects.filter(
-            user=self.user, lesson__parent_sub_course=self.sub_course, completed=True).count()
+            user=self.user, lesson__parent_sub_course=self.sub_course, completed=True
+        ).count()
+
         if total_lessons > 0:
+            # Calculate the percentage of progress
             self.progress = (completed_lessons / total_lessons) * 100
             self.save()
+
+            # Print debugging information to verify the calculation
+            print(f"Sub-course: {self.sub_course.title}")
+            print(f"Total lessons: {total_lessons}, Completed lessons: {completed_lessons}")
+            print(f"Calculated Progress: {self.progress}%")
+            
+            # Update the overall course progress
             self.update_course_progress()
+
 
     def update_course_progress(self):
         """Update the course progress after updating the sub-course progress."""
         user_course_access = UserCourseAccess.objects.get(
-            user=self.user, course=self.sub_course.parent_course)
-        user_course_access.update_progress()
+            user=self.user, course=self.sub_course.parent_course
+        )
+        user_course_access.update_progress()  # Call the course progress update function
+
 
 from django.contrib.auth.models import User
 from django.db import models

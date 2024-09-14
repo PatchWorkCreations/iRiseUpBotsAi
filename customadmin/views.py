@@ -46,19 +46,25 @@ def generate_course_html(course):
 
 from django.shortcuts import get_object_or_404, redirect
 
+from django.shortcuts import redirect, get_object_or_404
+
 def add_sub_course(request):
+    # Fetch the course using course_id from GET parameters
+    course_id = request.GET.get('course_id')
+    parent_course = get_object_or_404(Course, id=course_id)
+    
     if request.method == 'POST':
         form = SubCourseForm(request.POST)
         if form.is_valid():
             sub_course = form.save(commit=False)
-            # Assign the next available order for the subcourse under the parent course
-            parent_course = sub_course.parent_course
+            sub_course.parent_course = parent_course  # Link the new sub-course to the parent course
             sub_course.order = SubCourse.objects.filter(parent_course=parent_course).count() + 1
             sub_course.save()
-            return redirect('course_detail', course_id=sub_course.parent_course.id)  # Redirect to course details after saving
+            return redirect('course_detail', course_id=parent_course.id)
     else:
         form = SubCourseForm()
-    return render(request, 'customadmin/add_sub_course.html', {'form': form})
+
+    return render(request, 'customadmin/add_sub_course.html', {'form': form, 'course': parent_course})
 
 
 def edit_sub_course(request, sub_course_id):

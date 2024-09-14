@@ -4,193 +4,241 @@
 
 {% block content %}
 <style>
-    body {
-        font-family: 'Roboto', sans-serif;
-        background-color: #f5f5f5;
-        margin: 0;
-        padding: 0;
-    }
+/* Overall Page Style */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
 
-    /* Course container */
+/* Enhanced Course Header Styling */
+.course-header {
+    background-color: #f5f5f5;  /* Light background color */
+    padding: 20px 40px;         /* Adjust padding (less vertical space) */
+    border-radius: 10px;        /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
+    text-align: center;         /* Center align content */
+    margin-bottom: 20px;        /* Less margin below the header */
+}
+
+.course-header h1 {
+    font-size: 2rem;            /* Slightly larger font for emphasis */
+    font-weight: 700;           /* Bolder weight */
+    color: #3b3b98;  
+    line-height: 1.2;           /* Deep purple for visibility */
+    margin-bottom: 10px;        /* Reduced bottom margin */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
+}
+
+.course-header p {
+    font-size: 1.1rem;          /* Slightly larger font */
+    color: #555;                /* Darker color */
+    line-height: 1.6;           /* More line spacing */
+    margin: 0;                  /* Removed top and bottom margins */
+}
+
+
+/* Sub-Course Header */
+h2 {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Course Card Styling */
+/* Main Container Styling */
+.course-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Sub-course Card Design */
+.course-card {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-3px);
+}
+
+.course-card-header {
+    display: flex;
+    justify-content: space-between; /* Keeps elements (info and toggle icon) on opposite sides */
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Sub-course Info */
+.course-info h3 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    padding-bottom: 8px;
+}
+
+.course-info p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+/* Progress Bar Styling */
+.progress-bar {
+    background: #e0e0e0;
+    border-radius: 5px;
+    height: 8px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.progress {
+    background: #4caf50; /* Green for unlocked lessons */
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+/* Continue Learning Button */
+.continue-btn {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.continue-btn:hover {
+    background: #0056b3;
+}
+
+/* Locked Lesson Styling */
+.locked {
+    background-color: #f1f1f1;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    color: #999;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.locked .locked-lesson {
+    color: #999;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.lesson-unlock-icon {
+    font-size: 1.2rem; /* Adjust size if needed */
+    margin-right: 10px; /* Space between the icon and the button */
+}
+
+/* Toggle Arrow */
+.toggle-icon {
+    font-size: 1.5rem;
+    color: #007bff;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin-left: auto; /* This keeps the toggle icon aligned on the right side */
+}
+
+.toggle-icon.rotate {
+    transform: rotate(180deg); /* Only rotate in place */
+}
+
+
+.lessons-wrapper {
+    padding-left: 40px; /* Indent lessons to the right */
+    margin-top: 10px;
+}
+
+/* Sub-course Lessons */
+.lessons-wrapper ul {
+    padding-left: 0;
+    margin-top: 10px;
+}
+
+.lessons-wrapper h4{
+    font-size: medium;
+}
+
+.lessons-wrapper ul li {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.lesson-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.lessons-wrapper ul li:hover {
+    background-color: #f9f9f9;
+}
+
+/* Locked Lessons */
+.lessons-wrapper ul li.locked {
+    background-color: #f1f1f1;
+    border-color: #ccc;
+    opacity: 0.8;
+}
+
+.lessons-wrapper ul li.locked .locked-lesson {
+    color: #999;
+}
+
+.lessons-wrapper ul li.locked .continue-btn {
+    display: none;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
     .course-container {
-        width: 90%;
-        max-width: 900px;
-        background: #fff;
         padding: 15px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-        border-radius: 8px;
-        margin: 15px auto;
     }
 
-    /* Headings */
-    h1 {
-        font-size: 1.4rem;
-        color: #333;
-        margin-bottom: 10px;
-        font-weight: 500;
-        line-height: 1.1;
-        word-break: break-word;
+    .course-info h3 {
+        font-size: 1.3rem;
     }
 
-    h2 {
-        font-size: 1.2rem;
-        color: #555;
-        margin-bottom: 10px;
+    .continue-btn {
+        font-size: 0.85rem;
     }
 
-    p {
-        color: #666;
-        line-height: 1.5;
-        margin-bottom: 8px;
-        font-size: 0.9rem;
-    }
-
-    /* Course card */
-    .course-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .course-card {
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        padding: 15px;
-        margin-bottom: 15px;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    /* Toggle icon rotation */
     .toggle-icon {
         font-size: 1.2rem;
-        color: #007bff;
-        cursor: pointer;
-        transition: transform 0.3s ease;
     }
+}
 
-    .toggle-icon.rotate {
-        transform: rotate(180deg);
-    }
-
-    /* Lesson list indentation */
-    .lessons-wrapper ul {
-        padding-left: 20px;
-        margin-top: 10px;
-    }
-
-    .lessons-wrapper ul li {
-        background-color: #f9f9f9;
-        padding: 10px;
-        border-radius: 4px;
-        margin-bottom: 8px;
-        border: 1px solid #ddd;
-    }
-
-    .lesson-info {
-        margin-bottom: 10px;
-    }
-
-    /* Progress bar */
-    .progress-bar {
-        background: #e0e0e0;
-        border-radius: 4px;
-        height: 5px;
-        width: 100%;
-        margin-top: 6px;
-    }
-
-    .progress {
-        background: #007bff;
-        height: 100%;
-        border-radius: 4px;
-        transition: width 0.3s ease;
-    }
-
-    /* Continue button */
-    .continue-btn {
-        background: #007bff;
-        color: #fff;
-        border: none;
-        padding: 6px 10px;
-        border-radius: 4px;
-        font-size: 0.85rem;
-        cursor: pointer;
-        text-align: center;
-        margin-top: 8px;
-        text-decoration: none;
-        transition: background 0.3s ease;
-    }
-
-    .continue-btn:hover {
-        background: #0056b3;
-    }
-
-    /* Locked lesson styling */
-    .locked {
-        color: #ccc;
-    }
-
-    .locked-lesson {
-        color: #f44336;
-        font-size: 0.8rem;
-    }
-
-    /* Mobile Styles */
-    @media (max-width: 768px) {
-        .course-container {
-            padding: 10px;
-        }
-
-        h1, h2 {
-            font-size: 1.3rem;
-        }
-
-        .course-info h3 {
-            font-size: 1.1rem;
-        }
-
-        .course-card-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .toggle-icon {
-            align-self: flex-end;
-        }
-    }
-
-    .lessons {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.5s ease-out;
-    }
-
-    .lessons.expanded {
-        max-height: 1000px; /* Adjust as necessary */
-    }
-
-    .course-header {
-        text-align: center;
-        margin-bottom: 20px;
-        padding: 0;
-    }
-
-    .course-header h1 {
-        font-size: 1.5rem;
-        color: #4822a9;
-        line-height: 1.1;
-        margin-bottom: 5px;
-        font-weight: 500;
-        word-break: break-word;
-    }
-
-    .course-header p {
-        color: #666;
-        font-size: 0.95rem;
-        line-height: 1.4;
-        margin-top: 0;
-    }
 </style>
 
 <div class="course-container">
@@ -202,64 +250,71 @@
     
     <h2>Sub-Courses</h2>
     {% for sub_course in sub_courses %}
-    <div class="course-card" id="subcourse-{{ forloop.counter }}">
-        <div class="course-card-header" onclick="toggleLessons('{{ forloop.counter }}')">
-            <div class="course-info">
-                <h3>{{ sub_course.title }}</h3>
-                <p>{{ sub_course.description }}</p>
-                <p>{{ sub_course.units }} Unit • {{ sub_course.hours }} Hours</p>
-            </div>
-
-            <!-- Display progress for the sub-course without locking it -->
-            <div class="progress-bar">
-                <div class="progress" data-progress="{{ user_progress|get_item:sub_course.id|default:0 }}" id="sub-progress-{{ forloop.counter }}"></div>
-            </div>
-            
-
-            <div class="toggle-icon" id="icon-{{ forloop.counter }}">&#9660;</div>
+<div class="course-card" id="subcourse-{{ forloop.counter }}">
+    <div class="course-card-header" onclick="toggleLessons('{{ forloop.counter }}')">
+        <div class="course-info">
+            <h3>{{ sub_course.title }}</h3>
+            <p>{{ sub_course.description }}</p>
+            <p>{{ sub_course.units }} Unit • {{ sub_course.hours }} Hours</p>
         </div>
 
-        <div class="lessons-wrapper">
-            <div class="lessons" id="lessons-{{ forloop.counter }}">
-                <ul>
-                    {% for lesson in sub_course.lessons.all %}
-                        <li class="{% if not lessons_unlock_status|get_item:lesson.id|default:False %}locked{% endif %}">
-                            <div class="lesson-info">
-                                <h4>{{ lesson.title }}</h4>
-                                {% if lesson.description %}
-                                    <p>{{ lesson.description }}</p>
-                                {% endif %}
-                            </div>
-
-                            <!-- Display Continue button if unlocked, otherwise show Locked -->
-                            {% if lessons_unlock_status|get_item:lesson.id|default:False %}
-                                <a href="{% url 'lesson_detail' lesson.id %}" class="continue-btn">Continue Lesson</a>
-                            {% else %}
-                                <span class="locked-lesson">Locked</span>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        
-        
+        <!-- Display progress for the sub-course without locking it -->
         <div class="progress-bar">
-            <div class="progress" data-progress="{{ user_progress|get_item:sub_course.id|default:0 }}" id="sub-progress-{{ forloop.counter }}"></div>
+            <div class="progress" data-progress="{{ user_progress|get_item:sub_course.id|get_item:'progress'|default:0 }}" id="progress-bar-{{ sub_course.id }}"></div>
         </div>
         
-        
+        <div class="toggle-icon" id="icon-{{ forloop.counter }}">&#9660;</div>
     </div>
-    {% endfor %}
+
+    <!-- Lessons are hidden by default -->
+    <div class="lessons-wrapper" id="lessons-{{ forloop.counter }}" style="display: none;">
+        <ul>
+            {% for lesson in sub_course.lessons.all %}
+            <li class="{% if not lessons_unlock_status|get_item:lesson.id|default:False %}locked{% endif %}">
+                <div class="lesson-info">
+                    <h4>{{ lesson.title }}</h4>
+                    {% if lesson.description %}
+                    <p>{{ lesson.description }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Display Continue button if unlocked, otherwise show Locked -->
+                <div class="lesson-actions">
+                    {% if lessons_unlock_status|get_item:lesson.id|default:False %}
+                    <span class="lesson-unlock-icon">🔓</span>
+                    <a href="{% url 'lesson_detail' lesson.id %}" class="continue-btn">Continue Lesson</a>
+                    {% else %}
+                    <span class="locked-lesson">🔒 Locked</span>
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endfor %}
 </div>
 
+
 <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        var progressBars = document.querySelectorAll('.progress');
+
+        progressBars.forEach(function(progressBar) {
+            var progressValue = progressBar.getAttribute('data-progress');
+            if (progressValue) {
+                progressBar.style.width = progressValue + '%';
+            }
+        });
+    });
+
+
     function toggleLessons(subCourseId) {
-        // Close any other open sub-courses
+        // Close all other sub-courses
         document.querySelectorAll('.lessons-wrapper').forEach((wrapper) => {
             if (wrapper.id !== `lessons-${subCourseId}`) {
-                wrapper.classList.remove('expanded');
-                wrapper.previousElementSibling.querySelector('.toggle-icon').style.transform = 'rotate(0deg)';
+                wrapper.style.display = 'none';  // Close other sub-courses
+                wrapper.previousElementSibling.querySelector('.toggle-icon').classList.remove('rotate');
             }
         });
 
@@ -267,14 +322,25 @@
         const lessonsWrapper = document.getElementById(`lessons-${subCourseId}`);
         const icon = document.querySelector(`#subcourse-${subCourseId} .toggle-icon`);
 
-        if (lessonsWrapper.classList.contains('expanded')) {
-            lessonsWrapper.classList.remove('expanded');
-            icon.style.transform = 'rotate(0deg)';
+        if (lessonsWrapper.style.display === 'block' || lessonsWrapper.style.display === '') {
+            lessonsWrapper.style.display = 'none';  // Close if already open
+            icon.classList.remove('rotate');  // Reset icon
         } else {
-            lessonsWrapper.classList.add('expanded');
-            icon.style.transform = 'rotate(180deg)';
+            lessonsWrapper.style.display = 'block';  // Open if closed
+            icon.classList.add('rotate');  // Rotate icon
         }
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        function setProgressWidths() {
+            var progressBars = document.querySelectorAll('.progress');
+            progressBars.forEach(function(progressBar) {
+                var progress = progressBar.getAttribute('data-progress');
+                progressBar.style.width = progress + '%';
+            });
+        }
+        setProgressWidths();
+    });
 
     document.addEventListener("DOMContentLoaded", function() {
         function setProgressWidths() {

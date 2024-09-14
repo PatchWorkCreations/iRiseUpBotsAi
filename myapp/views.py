@@ -179,27 +179,29 @@ def course_detail(request, course_id):
                         user=request.user, lesson=previous_lesson, completed=True
                     ).exists()
 
-            # Calculate progress for the sub-course
-            completed_lessons = lessons.filter(
-                userlessonprogress__user=request.user, userlessonprogress__completed=True
+            # Updated Progress Calculation for Each Sub-course
+            completed_lessons = UserLessonProgress.objects.filter(
+                user=request.user, lesson__parent_sub_course=sub_course, completed=True
             ).count()
-            total_lessons = lessons.count()
+            total_lessons = sub_course.lessons.count()
 
-            # Store the progress of each sub-course in the user_progress dictionary
-            progress = (completed_lessons / total_lessons) * 100 if total_lessons > 0 else 0
+            # Ensure progress is calculated properly and passed to the front-end
+            if total_lessons > 0:
+                progress_percentage = (completed_lessons / total_lessons) * 100
+            else:
+                progress_percentage = 0  # Avoid division by zero
+
             user_progress[sub_course.id] = {
-                'progress': int(progress),
+                'progress': int(progress_percentage),
+                'completed_lessons': completed_lessons,
+                'total_lessons': total_lessons,
             }
-
-        # Debug print to see lesson unlock statuses
-        for lesson in lessons:
-            print(f"Lesson {lesson.title} is unlockable: {lessons_unlock_status[lesson.id]}")
 
     context = {
         'course': course,
         'sub_courses': sub_courses,
         'user_progress': user_progress,  # The dictionary is passed here to the template
-         'lessons_unlock_status': lessons_unlock_status or {}, # Pass the unlock status to template
+        'lessons_unlock_status': lessons_unlock_status or {},  # Pass the unlock status to template
     }
 
     return render(request, 'myapp/course_list/course_detail.html', context)
@@ -320,7 +322,12 @@ from django.shortcuts import render, get_object_or_404
 from myapp.models import Course, UserCourseAccess
 
 from django.shortcuts import render, get_object_or_404
-from myapp.models import Course, UserCourseAccess
+from myapp.models import Course, UserCourseAccess, UserLessonProgress
+from django.utils import timezone
+
+from django.shortcuts import render, get_object_or_404
+from myapp.models import Course, UserCourseAccess, UserLessonProgress
+from django.utils import timezone
 
 def coursemenu(request):
     all_courses = Course.objects.all()
@@ -329,46 +336,57 @@ def coursemenu(request):
     course_progress = {}
 
     if request.user.is_authenticated:
-        current_course_access = UserCourseAccess.objects.filter(user=request.user, progress__gt=0).first()
-
-        if current_course_access and current_course_access.has_expired():
-            current_course_access.delete()
-            current_course_access = None
-        else:
-            current_course = current_course_access.course if current_course_access else None
-
-        ongoing_courses = UserCourseAccess.objects.filter(user=request.user, progress__lt=100)
-        completed_courses = UserCourseAccess.objects.filter(user=request.user, progress=100)
+        # Check for ongoing courses based on lesson progress
+        ongoing_courses = []
+        completed_courses = []
         saved_courses = UserCourseAccess.objects.filter(user=request.user, is_saved=True)
         favorite_courses = UserCourseAccess.objects.filter(user=request.user, is_favorite=True)
 
-        # Calculate progress for each course
+        # Loop through each course and evaluate progress
         for course in all_courses:
             sub_courses = course.sub_courses.all()
             sub_course_progress = {}
+            total_lessons = 0
+            completed_lessons = 0
+
             for sub_course in sub_courses:
                 lessons = sub_course.lessons.all()
-                completed_lessons = lessons.filter(userlessonprogress__user=request.user, userlessonprogress__completed=True).count()
+                total_lessons += lessons.count()  # Total lessons across all sub-courses
+                sub_completed_lessons = UserLessonProgress.objects.filter(
+                    user=request.user, lesson__in=lessons, completed=True
+                ).count()
+                completed_lessons += sub_completed_lessons  # Accumulate completed lessons
+
+                # Calculate progress for each sub-course
                 sub_course_progress[sub_course.id] = {
-                    'completed_lessons': completed_lessons,
+                    'completed_lessons': sub_completed_lessons,
                     'total_lessons': lessons.count(),
-                    'progress': completed_lessons / lessons.count() * 100 if lessons.count() > 0 else 0
+                    'progress': (sub_completed_lessons / lessons.count()) * 100 if lessons.count() > 0 else 0
                 }
+
             course_progress[course.id] = sub_course_progress
+
+            # If all lessons in the course are completed, mark it as "completed"
+            if completed_lessons == total_lessons and total_lessons > 0:
+                completed_courses.append(course)  # Mark course as completed
+            elif completed_lessons < total_lessons and total_lessons > 0:
+                ongoing_courses.append(course)  # If some lessons are incomplete, mark it as ongoing
 
     context = {
         'all_courses': all_courses,
         'current_course': current_course,
         'current_course_access': current_course_access,
         'course_progress': course_progress,
-        'ongoing_courses': ongoing_courses,
-        'completed_courses': completed_courses,
+        'ongoing_courses': ongoing_courses,  # Reflect ongoing courses
+        'completed_courses': completed_courses,  # Reflect completed courses
         'saved_courses': saved_courses,
         'favorite_courses': favorite_courses,
     }
 
     return render(request, 'myapp/coursemenu.html', context)
 
+
+from django.shortcuts import redirect
 
 def course_continue(request, course_id):
     course = get_object_or_404(Course, id=course_id)
@@ -377,7 +395,7 @@ def course_continue(request, course_id):
         if user_access and not user_access.has_expired():
             return render(request, 'myapp/course_detail.html', {'course': course})
         else:
-            return render(request, 'myapp/course_access_denied.html')
+            return redirect('coursemenu')  # Redirect to course menu if access is denied
     return render(request, 'myapp/course_detail.html', {'course': course})
 
 
