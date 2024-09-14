@@ -152,69 +152,176 @@ def course_list(request):
     courses = Course.objects.all()
     return render(request, 'myapp/course_list/course_list.html', {'courses': courses})
 
+from myapp.models import UserLessonProgress
+
+from django.shortcuts import render, get_object_or_404
+from myapp.models import Course, UserLessonProgress
+
 def course_detail(request, course_id):
+    # Fetch the course and its sub-courses ordered by 'order'
     course = get_object_or_404(Course, id=course_id)
-    sub_courses = course.sub_courses.all()  # Use the related name
+    sub_courses = course.sub_courses.all().order_by('order')
     user_progress = {}
+    lessons_unlock_status = {}  # Dictionary to store unlockable status
 
     if request.user.is_authenticated:
+        # Loop through each sub-course
         for sub_course in sub_courses:
-            lessons = sub_course.lessons.all()
-            completed_lessons = lessons.filter(userlessonprogress__user=request.user, userlessonprogress__completed=True).count()
+            lessons = sub_course.lessons.all().order_by('order')
+
+            # Loop through lessons to set their unlock status
+            for i, lesson in enumerate(lessons):
+                if lesson.is_first_lesson:
+                    lessons_unlock_status[lesson.id] = True
+                else:
+                    previous_lesson = lessons[i - 1]
+                    lessons_unlock_status[lesson.id] = UserLessonProgress.objects.filter(
+                        user=request.user, lesson=previous_lesson, completed=True
+                    ).exists()
+
+            # Calculate progress for the sub-course
+            completed_lessons = lessons.filter(
+                userlessonprogress__user=request.user, userlessonprogress__completed=True
+            ).count()
+            total_lessons = lessons.count()
+
+            # Store the progress of each sub-course in the user_progress dictionary
+            progress = (completed_lessons / total_lessons) * 100 if total_lessons > 0 else 0
             user_progress[sub_course.id] = {
-                'completed_lessons': completed_lessons,
-                'total_lessons': lessons.count(),
-                'sub_course_progress': UserSubCourseAccess.objects.filter(user=request.user, sub_course=sub_course).first()
+                'progress': int(progress),
             }
+
+        # Debug print to see lesson unlock statuses
+        for lesson in lessons:
+            print(f"Lesson {lesson.title} is unlockable: {lessons_unlock_status[lesson.id]}")
 
     context = {
         'course': course,
         'sub_courses': sub_courses,
-        'user_progress': user_progress,
+        'user_progress': user_progress,  # The dictionary is passed here to the template
+         'lessons_unlock_status': lessons_unlock_status or {}, # Pass the unlock status to template
     }
+
     return render(request, 'myapp/course_list/course_detail.html', context)
+
 
 def sub_course_detail(request, sub_course_id):
     sub_course = get_object_or_404(SubCourse, id=sub_course_id)
     lessons = sub_course.lesson_set.all()
     return render(request, 'myapp/course_list/sub_course_detail.html', {'sub_course': sub_course, 'lessons': lessons})
 
-def lesson_detail(request, lesson_id):
-    lesson = get_object_or_404(Lesson, id=lesson_id)
-    return render(request, 'myapp/course_list/lesson_detail.html', {'lesson': lesson})
 
+from django.shortcuts import render, get_object_or_404, redirect
+from myapp.models import Lesson, UserLessonProgress
+import json
+
+from django.shortcuts import render, get_object_or_404, redirect, reverse
+from myapp.models import Lesson, UserLessonProgress
+import json
 
 def lesson_detail(request, lesson_id):
+    # Fetch the lesson object
     lesson = get_object_or_404(Lesson, id=lesson_id)
     course_detail_url = reverse('course_detail', args=[lesson.parent_sub_course.parent_course.id])
-    
-    # Debug: Print the lesson content
-    print("Lesson Content:", lesson.content)
-    
+
+    # Get the user's progress on this lesson
+    user_progress, created = UserLessonProgress.objects.get_or_create(user=request.user, lesson=lesson)
+
+    if request.method == "POST":
+        # When the user submits the lesson (POST request), mark it as completed and unlock the next lesson
+        if not user_progress.completed:
+            # Complete the lesson
+            user_progress.complete_lesson()
+
+            # Unlock the next lesson (but always redirect to course detail page)
+            UserLessonProgress.unlock_next_lesson(request.user, lesson)
+        return redirect(course_detail_url)
+
+    # Process content_blocks from the lesson's content field (assuming it's JSON)
     try:
         content_blocks = json.loads(lesson.content)
-    except json.JSONDecodeError as e:
-        # Debug: Print the error
-        print("JSON Decode Error:", e)
+        for block in content_blocks:
+            if block['type'] == 'multiple_questions' and isinstance(block['content'], str):
+                block['content'] = block['content'].split(',')
+    except json.JSONDecodeError:
         content_blocks = []
-    
+
+    # Check if the lesson is completed
+    is_lesson_completed = user_progress.completed
+
     context = {
         'lesson': lesson,
-        'course_detail_url': course_detail_url,
         'content_blocks': content_blocks,
+        'is_lesson_completed': is_lesson_completed,
+        'course_detail_url': course_detail_url,
     }
+
     return render(request, 'myapp/course_list/lesson_detail.html', context)
+
+from django.http import JsonResponse
+from myapp.models import Lesson, UserLessonProgress
+
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from myapp.models import Lesson, UserLessonProgress
+
+def complete_lesson(request, lesson_id):
+    if request.method == 'POST' and request.user.is_authenticated:
+        lesson = get_object_or_404(Lesson, id=lesson_id)
+        
+        # Mark the lesson as completed
+        user_progress, created = UserLessonProgress.objects.get_or_create(user=request.user, lesson=lesson)
+        if not user_progress.completed:
+            user_progress.complete_lesson()
+
+        # Unlock the next lesson based on the current lesson's order
+        next_lesson = Lesson.objects.filter(
+            parent_sub_course=lesson.parent_sub_course,
+            order=lesson.order + 1
+        ).first()
+
+        # Return success, but redirect to the course detail page
+        return JsonResponse({
+            'success': True,
+            'redirect_url': reverse('course_detail', args=[lesson.parent_sub_course.parent_course.id])
+        })
+
+    return JsonResponse({'success': False}, status=400)
 
 
 def next_lesson(request, lesson_id):
     current_lesson = get_object_or_404(Lesson, id=lesson_id)
-    next_lesson = Lesson.objects.filter(parent_sub_course=current_lesson.parent_sub_course, id__gt=current_lesson.id).order_by('id').first()
+    next_lesson = Lesson.objects.filter(
+        parent_sub_course=current_lesson.parent_sub_course, 
+        id__gt=current_lesson.id
+    ).order_by('id').first()
 
     if next_lesson:
+        # Check if the next lesson is locked
+        previous_lesson = Lesson.objects.filter(
+            parent_sub_course=next_lesson.parent_sub_course,
+            id__lt=next_lesson.id
+        ).last()
+
+        if previous_lesson:
+            is_locked = not UserLessonProgress.objects.filter(
+                user=request.user, lesson=previous_lesson, completed=True
+            ).exists()
+
+            if is_locked:
+                # If locked, redirect back to the current lesson or handle it as needed
+                return redirect('lesson_detail', lesson_id=lesson_id)
+
         return redirect('lesson_detail', lesson_id=next_lesson.id)
     else:
-        return redirect('course_detail', course_id=current_lesson.parent_sub_course.parent_course.id)  # Redirect to course detail page
-    
+        return redirect('course_detail', course_id=current_lesson.parent_sub_course.parent_course.id)
+
+from django.shortcuts import render, get_object_or_404
+from myapp.models import Course, UserCourseAccess
+
+from django.shortcuts import render, get_object_or_404
+from myapp.models import Course, UserCourseAccess
+
 def coursemenu(request):
     all_courses = Course.objects.all()
     current_course_access = None
@@ -225,12 +332,17 @@ def coursemenu(request):
         current_course_access = UserCourseAccess.objects.filter(user=request.user, progress__gt=0).first()
 
         if current_course_access and current_course_access.has_expired():
-            # Access has expired, remove access
             current_course_access.delete()
             current_course_access = None
         else:
             current_course = current_course_access.course if current_course_access else None
 
+        ongoing_courses = UserCourseAccess.objects.filter(user=request.user, progress__lt=100)
+        completed_courses = UserCourseAccess.objects.filter(user=request.user, progress=100)
+        saved_courses = UserCourseAccess.objects.filter(user=request.user, is_saved=True)
+        favorite_courses = UserCourseAccess.objects.filter(user=request.user, is_favorite=True)
+
+        # Calculate progress for each course
         for course in all_courses:
             sub_courses = course.sub_courses.all()
             sub_course_progress = {}
@@ -249,8 +361,24 @@ def coursemenu(request):
         'current_course': current_course,
         'current_course_access': current_course_access,
         'course_progress': course_progress,
+        'ongoing_courses': ongoing_courses,
+        'completed_courses': completed_courses,
+        'saved_courses': saved_courses,
+        'favorite_courses': favorite_courses,
     }
+
     return render(request, 'myapp/coursemenu.html', context)
+
+
+def course_continue(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    if request.user.is_authenticated:
+        user_access = UserCourseAccess.objects.filter(user=request.user, course=course).first()
+        if user_access and not user_access.has_expired():
+            return render(request, 'myapp/course_detail.html', {'course': course})
+        else:
+            return render(request, 'myapp/course_access_denied.html')
+    return render(request, 'myapp/course_detail.html', {'course': course})
 
 
 def combined_quiz(request):

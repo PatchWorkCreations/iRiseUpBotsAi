@@ -44,15 +44,22 @@ def generate_course_html(course):
     with open(file_path, 'w') as f:
         f.write(html_content)
 
+from django.shortcuts import get_object_or_404, redirect
+
 def add_sub_course(request):
     if request.method == 'POST':
         form = SubCourseForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('course_list')
+            sub_course = form.save(commit=False)
+            # Assign the next available order for the subcourse under the parent course
+            parent_course = sub_course.parent_course
+            sub_course.order = SubCourse.objects.filter(parent_course=parent_course).count() + 1
+            sub_course.save()
+            return redirect('course_detail', course_id=sub_course.parent_course.id)  # Redirect to course details after saving
     else:
         form = SubCourseForm()
     return render(request, 'customadmin/add_sub_course.html', {'form': form})
+
 
 def edit_sub_course(request, sub_course_id):
     sub_course = get_object_or_404(SubCourse, id=sub_course_id)
@@ -65,6 +72,7 @@ def edit_sub_course(request, sub_course_id):
         form = SubCourseForm(instance=sub_course)
     return render(request, 'customadmin/edit_sub_course.html', {'form': form, 'sub_course': sub_course})
 
+
 def add_lesson(request):
     if request.method == 'POST':
         form = LessonForm(request.POST)
@@ -72,9 +80,12 @@ def add_lesson(request):
             lesson = form.save(commit=False)
             sub_course_id = request.POST.get('parent_sub_course')
             if sub_course_id:
-                lesson.parent_sub_course = get_object_or_404(SubCourse, id=sub_course_id)
+                sub_course = get_object_or_404(SubCourse, id=sub_course_id)
+                lesson.parent_sub_course = sub_course
+                # Assign the next available order for the lesson under the subcourse
+                lesson.order = Lesson.objects.filter(parent_sub_course=sub_course).count() + 1
                 lesson.save()
-                return redirect('course_list')  # Change this to the appropriate redirect URL
+                return redirect('course_detail', course_id=sub_course.parent_course.id)  # Redirect to course detail page
             else:
                 form.add_error('parent_sub_course', 'This field is required.')
     else:
@@ -87,38 +98,166 @@ def edit_lesson(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     
     if request.method == 'POST':
+        # Update lesson description
         lesson.description = request.POST.get('description', '')
+        
         content_blocks = []
         for idx in range(int(request.POST.get('block_count', '0'))):
             block_type = request.POST.get(f'block_type_{idx}')
+            
             if block_type == 'paragraph':
                 content = request.POST.get(f'content_{idx}', '')
                 content_blocks.append({'type': 'paragraph', 'content': content})
+            
             elif block_type == 'image':
                 image = request.FILES.get(f'image_{idx}')
                 if image:
-                    # Handle image upload and get the URL
-                    image_url = handle_uploaded_file(image)
+                    image_url = handle_uploaded_file(image)  # This function should handle the upload logic
                     content_blocks.append({'type': 'image', 'content': image_url})
+            
             elif block_type == 'header':
                 content = request.POST.get(f'content_{idx}', '')
                 content_blocks.append({'type': 'header', 'content': content})
-        
+            
+            elif block_type == 'task':
+                task_content = request.POST.get(f'content_{idx}', '')
+                content_blocks.append({'type': 'task', 'content': task_content})
+            
+            elif block_type == 'question':
+                question_content = request.POST.get(f'content_{idx}', '')
+                content_blocks.append({'type': 'question', 'content': question_content})
+            
+            elif block_type == 'multiple_questions':
+                multiple_question_content = request.POST.get(f'content_{idx}', '')
+                questions_list = [q.strip() for q in multiple_question_content.split(',')]
+                content_blocks.append({'type': 'multiple_questions', 'content': questions_list})
+            
+            elif block_type == 'multiple_choice':
+                question = request.POST.get(f'question_{idx}', '')
+                correct_answer = request.POST.get(f'correct_answer_{idx}', '')  # Capture the correct answer
+                options = []
+                option_count = 0
+                while request.POST.get(f'option_{idx}_{option_count}', None):
+                    options.append(request.POST.get(f'option_{idx}_{option_count}'))
+                    option_count += 1
+                content_blocks.append({
+                    'type': 'multiple_choice',
+                    'question': question,
+                    'options': options,
+                    'correct_answer': correct_answer  # Store correct answer with the options
+                })
+
+        # Save the updated content blocks in JSON format
         lesson.content = json.dumps(content_blocks)
         lesson.save()
+
+        # Redirect back to the course detail page
         return redirect('course_detail', lesson.parent_sub_course.parent_course.id)
     
+    # Load existing content blocks if available
     try:
         content_blocks = json.loads(lesson.content)
     except json.JSONDecodeError:
         content_blocks = []
-    
+
     context = {
         'lesson': lesson,
         'content_blocks': content_blocks,
-        'block_count': range(len(content_blocks)),  # Pass the range to the template
+        'block_count': range(len(content_blocks)),  # Pass the number of blocks to the template
     }
     return render(request, 'customadmin/edit_lesson.html', context)
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from myapp.models import UserAnswer
+
+@csrf_exempt
+def process_answer(request, lesson_id, question_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    content_blocks = json.loads(lesson.content)
+    
+    # Ensure question_id is valid
+    if question_id >= len(content_blocks) or question_id < 0:
+        return JsonResponse({'error': 'Invalid question ID'}, status=404)
+    
+    question_block = content_blocks[question_id]
+
+    # Ensure it's a multiple-choice question
+    if question_block.get('type') != 'multiple_choice':
+        return JsonResponse({'error': 'Question is not a multiple-choice type'}, status=400)
+
+    user_answer = request.POST.get(f'answer_{question_id}', '').strip().lower()
+    correct_answer = question_block.get('correct_answer', '').strip().lower()
+
+    is_correct = user_answer == correct_answer
+
+    # Save the user's answer to the database
+    UserAnswer.objects.create(
+        user=request.user,
+        lesson=lesson,
+        question_type=question_block.get('type'),
+        question_content=question_block.get('question'),
+        user_answer=user_answer,
+        correct_answer=correct_answer,
+        is_correct=is_correct
+    )
+
+    # Return the response as JSON
+    return JsonResponse({
+        'correct': is_correct,
+        'correct_answer': correct_answer
+    })
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from myapp.models import Lesson, ContentBlock
+
+@csrf_exempt
+def save_block(request, block_id):
+    if request.method == 'POST':
+        block_type = request.POST.get('block_type')
+        content = request.POST.get('content')
+        question = request.POST.get('question')
+        correct_answer = request.POST.get('correct_answer')
+
+        # Retrieve or create the block
+        block = ContentBlock.objects.get(id=block_id)
+
+        # Update the block data
+        block.type = block_type
+        block.content = content
+        block.question = question
+        block.correct_answer = correct_answer
+        block.save()
+
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponseRedirect
+
+def update_sub_course_order(request, sub_course_id):
+    sub_course = get_object_or_404(SubCourse, id=sub_course_id)
+    if request.method == 'POST':
+        new_order = request.POST.get('order')
+        if new_order:
+            sub_course.order = int(new_order)
+            sub_course.save()
+    return redirect('edit_course', course_id=sub_course.parent_course.id)
+
+def update_lesson_order(request, lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    if request.method == 'POST':
+        new_order = request.POST.get('order')
+        if new_order:
+            lesson.order = int(new_order)
+            lesson.save()
+    return redirect('edit_course', course_id=lesson.parent_sub_course.parent_course.id)
 
 
 def edit_course(request, course_id):
@@ -546,3 +685,18 @@ def customadmin_transactions(request):
     transactions = Transaction.objects.all()
     
     return render(request, 'customadmin/transactions.html', {'transactions': transactions})
+
+
+def delete_sub_course(request, sub_course_id):
+    sub_course = get_object_or_404(SubCourse, id=sub_course_id)
+    if request.method == 'POST':
+        sub_course.delete()
+        return redirect('course_detail', course_id=sub_course.parent_course.id)
+    return render(request, 'customadmin/confirm_delete.html', {'sub_course': sub_course})
+
+def delete_lesson(request, lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    if request.method == 'POST':
+        lesson.delete()
+        return redirect('course_detail', course_id=lesson.parent_sub_course.parent_course.id)
+    return render(request, 'customadmin/confirm_delete.html', {'lesson': lesson})

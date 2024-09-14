@@ -1,151 +1,124 @@
 {% extends "myapp/base.html" %}
-
+{% load custom_filters %}
 {% block title %}{{ course.title }}{% endblock %}
+
 {% block content %}
 <style>
     body {
         font-family: 'Roboto', sans-serif;
-        background-color: #f7f9fc;
+        background-color: #f5f5f5;
         margin: 0;
         padding: 0;
     }
 
-    .container {
+    /* Course container */
+    .course-container {
         width: 90%;
-        max-width: 1200px;
+        max-width: 900px;
         background: #fff;
-        padding: 25px;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        border-radius: 12px;
-        margin: 20px auto;
+        padding: 15px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        border-radius: 8px;
+        margin: 15px auto;
     }
 
-    h1, h2 {
-        text-align: center;
+    /* Headings */
+    h1 {
+        font-size: 1.4rem;
         color: #333;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
+        font-weight: 500;
+        line-height: 1.1;
+        word-break: break-word;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+        color: #555;
+        margin-bottom: 10px;
     }
 
     p {
         color: #666;
-        line-height: 1.6;
+        line-height: 1.5;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    /* Course card */
+    .course-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .course-card {
         background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        padding: 20px;
-        margin-bottom: 20px;
-        cursor: pointer;
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .course-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    }
-
-    .course-card-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
-    }
-
-    .course-info {
-        flex-grow: 1;
-        margin-right: 20px;
-    }
-
-    .course-info p {
-        margin: 0;
-        color: #666;
-        font-size: 14px;
-    }
-
-    .course-info h3 {
-        margin: 5px 0;
-        font-size: 18px;
-        color: #333;
-    }
-
-    .lessons-wrapper {
-        margin-top: 15px;
-        padding: 20px;
-        background: #f7f9fc;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .lessons {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.5s ease-out;
-    }
-
-    .lessons.expanded {
-        max-height: 500px; /* Adjust as necessary */
-    }
-
-    .lessons ul {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    .lessons ul li {
-        background: #fff;
-        margin: 5px 0;
-        padding: 15px;
         border-radius: 8px;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        transition: background-color 0.3s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        padding: 15px;
+        margin-bottom: 15px;
+        transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .lessons ul li:hover {
-        background-color: #e9f7fe;
+    /* Toggle icon rotation */
+    .toggle-icon {
+        font-size: 1.2rem;
+        color: #007bff;
+        cursor: pointer;
+        transition: transform 0.3s ease;
     }
 
-    .lessons ul li h4 {
-        margin: 0 0 5px 0;
-        font-size: 16px;
-        color: #333;
+    .toggle-icon.rotate {
+        transform: rotate(180deg);
     }
 
-    .highlight {
-        background-color: #e0f7fa;
-    }
-
-    .progress-bar {
-        background: #e0e0e0;
-        border-radius: 5px;
-        height: 10px;
-        width: 100%;
+    /* Lesson list indentation */
+    .lessons-wrapper ul {
+        padding-left: 20px;
         margin-top: 10px;
     }
 
+    .lessons-wrapper ul li {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        border: 1px solid #ddd;
+    }
+
+    .lesson-info {
+        margin-bottom: 10px;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+        background: #e0e0e0;
+        border-radius: 4px;
+        height: 5px;
+        width: 100%;
+        margin-top: 6px;
+    }
+
     .progress {
-        background: #4caf50;
+        background: #007bff;
         height: 100%;
-        border-radius: 5px;
+        border-radius: 4px;
         transition: width 0.3s ease;
     }
 
+    /* Continue button */
     .continue-btn {
         background: #007bff;
         color: #fff;
         border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
+        padding: 6px 10px;
+        border-radius: 4px;
+        font-size: 0.85rem;
         cursor: pointer;
         text-align: center;
-        margin-top: 10px;
+        margin-top: 8px;
         text-decoration: none;
-        display: inline-block;
         transition: background 0.3s ease;
     }
 
@@ -153,29 +126,28 @@
         background: #0056b3;
     }
 
-    .toggle-icon {
-        font-size: 18px;
-        color: #007bff;
-        cursor: pointer;
-        transition: transform 0.3s;
+    /* Locked lesson styling */
+    .locked {
+        color: #ccc;
     }
 
-    .toggle-icon.rotate {
-        transform: rotate(180deg);
+    .locked-lesson {
+        color: #f44336;
+        font-size: 0.8rem;
     }
 
     /* Mobile Styles */
     @media (max-width: 768px) {
-        .container {
-            padding: 15px;
+        .course-container {
+            padding: 10px;
         }
 
         h1, h2 {
-            font-size: 24px;
+            font-size: 1.3rem;
         }
 
         .course-info h3 {
-            font-size: 16px;
+            font-size: 1.1rem;
         }
 
         .course-card-header {
@@ -187,60 +159,135 @@
             align-self: flex-end;
         }
     }
+
+    .lessons {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-out;
+    }
+
+    .lessons.expanded {
+        max-height: 1000px; /* Adjust as necessary */
+    }
+
+    .course-header {
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 0;
+    }
+
+    .course-header h1 {
+        font-size: 1.5rem;
+        color: #4822a9;
+        line-height: 1.1;
+        margin-bottom: 5px;
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    .course-header p {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        margin-top: 0;
+    }
 </style>
 
-<div class="container">
+<div class="course-container">
     {% include 'myapp/course_list/header_course.html' %}
-    <h1>{{ course.title }}</h1>
-    <p>{{ course.description }}</p>
-
+    <div class="course-header">
+        <h1>{{ course.title }}</h1>
+        <p>{{ course.description }}</p>
+    </div>
+    
     <h2>Sub-Courses</h2>
     {% for sub_course in sub_courses %}
-        <div class="course-card">
-            <div class="course-card-header" onclick="toggleLessons('{{ sub_course.id }}')">
-                <div class="course-info">
-                    <h3>{{ sub_course.title }}</h3>
-                    <p>{{ sub_course.description }}</p>
-                    <p>{{ sub_course.units }} Unit • {{ sub_course.hours }} Hours</p>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress" style="width: {{ sub_course.progress }}%;"></div>
-                </div>
-                <div class="toggle-icon" id="icon-{{ sub_course.id }}">&#9660;</div>
+    <div class="course-card" id="subcourse-{{ forloop.counter }}">
+        <div class="course-card-header" onclick="toggleLessons('{{ forloop.counter }}')">
+            <div class="course-info">
+                <h3>{{ sub_course.title }}</h3>
+                <p>{{ sub_course.description }}</p>
+                <p>{{ sub_course.units }} Unit • {{ sub_course.hours }} Hours</p>
             </div>
-            <div class="lessons-wrapper">
-                <div class="lessons" id="lessons-{{ sub_course.id }}">
-                    <ul>
-                        {% for lesson in sub_course.lessons.all %}
-                            <li class="{% if lesson.is_current %}highlight{% endif %}">
-                                <div class="lesson-info">
-                                    <h4>{{ lesson.title }}</h4>
+
+            <!-- Display progress for the sub-course without locking it -->
+            <div class="progress-bar">
+                <div class="progress" data-progress="{{ user_progress|get_item:sub_course.id|default:0 }}" id="sub-progress-{{ forloop.counter }}"></div>
+            </div>
+            
+
+            <div class="toggle-icon" id="icon-{{ forloop.counter }}">&#9660;</div>
+        </div>
+
+        <div class="lessons-wrapper">
+            <div class="lessons" id="lessons-{{ forloop.counter }}">
+                <ul>
+                    {% for lesson in sub_course.lessons.all %}
+                        <li class="{% if not lessons_unlock_status|get_item:lesson.id|default:False %}locked{% endif %}">
+                            <div class="lesson-info">
+                                <h4>{{ lesson.title }}</h4>
+                                {% if lesson.description %}
                                     <p>{{ lesson.description }}</p>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress" style="width: {{ lesson.progress }}%;"></div>
-                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Display Continue button if unlocked, otherwise show Locked -->
+                            {% if lessons_unlock_status|get_item:lesson.id|default:False %}
                                 <a href="{% url 'lesson_detail' lesson.id %}" class="continue-btn">Continue Lesson</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                            {% else %}
+                                <span class="locked-lesson">Locked</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
+        
+        
+        <div class="progress-bar">
+            <div class="progress" data-progress="{{ user_progress|get_item:sub_course.id|default:0 }}" id="sub-progress-{{ forloop.counter }}"></div>
+        </div>
+        
+        
+    </div>
     {% endfor %}
 </div>
+
 <script>
     function toggleLessons(subCourseId) {
-        var lessonsDiv = document.getElementById('lessons-' + subCourseId);
-        var icon = document.getElementById('icon-' + subCourseId);
-        if (lessonsDiv.classList.contains('expanded')) {
-            lessonsDiv.classList.remove('expanded');
-            icon.classList.remove('rotate');
+        // Close any other open sub-courses
+        document.querySelectorAll('.lessons-wrapper').forEach((wrapper) => {
+            if (wrapper.id !== `lessons-${subCourseId}`) {
+                wrapper.classList.remove('expanded');
+                wrapper.previousElementSibling.querySelector('.toggle-icon').style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // Toggle the selected sub-course
+        const lessonsWrapper = document.getElementById(`lessons-${subCourseId}`);
+        const icon = document.querySelector(`#subcourse-${subCourseId} .toggle-icon`);
+
+        if (lessonsWrapper.classList.contains('expanded')) {
+            lessonsWrapper.classList.remove('expanded');
+            icon.style.transform = 'rotate(0deg)';
         } else {
-            lessonsDiv.classList.add('expanded');
-            icon.classList.add('rotate');
+            lessonsWrapper.classList.add('expanded');
+            icon.style.transform = 'rotate(180deg)';
         }
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        function setProgressWidths() {
+            var progressBars = document.querySelectorAll('.progress');
+            progressBars.forEach(function(progressBar) {
+                var progress = progressBar.getAttribute('data-progress');
+                progressBar.style.width = progress + '%';
+            });
+        }
+        setProgressWidths();
+    });
 </script>
+
+
 {% include 'myapp/course_list/footer_course.html' %}
 {% endblock %}

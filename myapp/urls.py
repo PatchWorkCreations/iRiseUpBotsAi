@@ -47,7 +47,9 @@ urlpatterns = [
     path('courses/', views.course_list, name='course_list'),
     path('courses/<int:course_id>/', views.course_detail, name='course_detail'),
     path('lessons/<int:lesson_id>/next/', views.next_lesson, name='next_lesson'),
+    path('lessons/<int:lesson_id>/complete/', views.complete_lesson, name='complete_lesson'),
 
+    path('course/continue/<int:course_id>/', views.course_continue, name='course_continue'),
 
     path('start_quiz/', views.start_quiz, name='start_quiz'),
     path('age_selection/', views.age_selection, name='age_selection'),
@@ -143,6 +145,7 @@ urlpatterns = [
     path('set-selected-plan/', views.set_selected_plan, name='set_selected_plan'),
     path('get-paypal-plan-id/', views.get_paypal_plan_id, name='get-paypal-plan-id'),
     path('paypal/webhook/', views.paypal_webhook, name='paypal_webhook'),
+
 
     path('profile/', views.profile_view, name='profile'),
     # path('update-profile/', views.update_profile, name='update_profile'),

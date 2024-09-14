@@ -32,11 +32,90 @@ class SubCourse(models.Model):
     description = models.TextField(default="Default description")
     units = models.IntegerField()
     hours = models.FloatField()
+    order = models.PositiveIntegerField(default=1)  # Add order field
+
+    class Meta:
+        ordering = ['order']  # Order by 'order' field by default
+
 
 class Lesson(models.Model):
     parent_sub_course = models.ForeignKey(SubCourse, on_delete=models.CASCADE, related_name='lessons')
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)  # Add this line
     content = models.TextField()
+    order = models.PositiveIntegerField()
+    is_first_lesson = models.BooleanField(default=False, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.order == 1:
+            self.is_first_lesson = True
+        super(Lesson, self).save(*args, **kwargs)
+
+    def is_unlockable_for_user(self, user):
+        """
+        Determines if the lesson is unlockable for a given user.
+        The first lesson is always unlockable. For subsequent lessons, check if the previous one is completed.
+        """
+        if self.is_first_lesson:
+            return True
+        previous_lesson = Lesson.objects.filter(
+            parent_sub_course=self.parent_sub_course, order=self.order - 1
+        ).first()
+
+        if previous_lesson:
+            return UserLessonProgress.objects.filter(
+                user=user, lesson=previous_lesson, completed=True
+            ).exists()
+
+        return False
+
+
+from django.db import models
+from django.core.validators import MinValueValidator
+
+class ContentBlock(models.Model):
+    CONTENT_TYPE_CHOICES = [
+        ('paragraph', 'Paragraph'),
+        ('image', 'Image'),
+        ('header', 'Header'),
+        ('task', 'Task'),
+        ('question', 'Question'),
+        ('multiple_questions', 'Multiple Questions'),
+        ('multiple_choice', 'Multiple Choice'),
+    ]
+    
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='content_blocks')
+    type = models.CharField(max_length=50, choices=CONTENT_TYPE_CHOICES)
+    content = models.TextField(null=True, blank=True)
+    order = models.PositiveIntegerField(validators=[MinValueValidator(1)], default=1)
+    
+    # Only used for 'multiple_choice' block type
+    question = models.TextField(null=True, blank=True)
+    correct_answer = models.CharField(max_length=200, null=True, blank=True)
+    options = models.JSONField(null=True, blank=True, default=list)  # Store options as a list in JSON format
+    
+    def __str__(self):
+        return f"{self.get_type_display()} - {self.lesson.title} (Order: {self.order})"
+
+    class Meta:
+        ordering = ['order']
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class UserAnswer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)  # Nullable for pre-existing records
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True, blank=True)  # Nullable
+    question_type = models.CharField(max_length=50, null=True, blank=True)  # Nullable
+    question_content = models.TextField(null=True, blank=True)  # Nullable
+    user_answer = models.TextField(null=True, blank=True)  # Nullable
+    correct_answer = models.TextField(null=True, blank=True)  # Nullable
+    is_correct = models.BooleanField(default=False)
+    answered_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Answer by {self.user.username if self.user else 'Anonymous'} - Correct: {self.is_correct}"
+
 
 class UserLessonProgress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -44,8 +123,60 @@ class UserLessonProgress(models.Model):
     completed = models.BooleanField(default=False)
     completed_on = models.DateTimeField(null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.user.username} - {self.lesson.title} (Completed: {self.completed})"
+
+    def complete_lesson(self):
+        self.completed = True
+        self.completed_on = timezone.now()
+        self.save()
+        self.update_sub_course_progress()
+
+    @staticmethod
+    def unlock_next_lesson(user, lesson):
+        # Mark the current lesson as completed
+        user_progress, created = UserLessonProgress.objects.get_or_create(user=user, lesson=lesson)
+        if not user_progress.completed:
+            user_progress.complete_lesson()
+
+        # Unlock the next lesson
+        next_lesson = Lesson.objects.filter(
+            parent_sub_course=lesson.parent_sub_course, order=lesson.order + 1
+        ).first()
+
+        if next_lesson:
+            return next_lesson.is_unlockable_for_user(user)
+        return False
+
+
+    def update_sub_course_progress(self):
+        """Update the progress of the sub-course after completing a lesson."""
+        total_lessons = self.lesson.parent_sub_course.lessons.count()
+        completed_lessons = UserLessonProgress.objects.filter(
+            user=self.user, lesson__parent_sub_course=self.lesson.parent_sub_course, completed=True
+        ).count()
+
+        if total_lessons > 0:
+            progress = (completed_lessons / total_lessons) * 100
+            user_sub_course_access, created = UserSubCourseAccess.objects.get_or_create(
+                user=self.user, sub_course=self.lesson.parent_sub_course
+            )
+            user_sub_course_access.progress = progress
+            user_sub_course_access.save()
+
+
+    def is_locked(self):
+        """
+        Determine if the lesson is locked.
+        A lesson is locked if its previous lesson has not been completed.
+        """
+        previous_lesson = Lesson.objects.filter(
+            parent_sub_course=self.lesson.parent_sub_course,
+            id__lt=self.lesson.id  # id less than current lesson id
+        ).last()  # Fetch the immediately previous lesson
+        if previous_lesson:
+            previous_progress = UserLessonProgress.objects.filter(
+                user=self.user, lesson=previous_lesson, completed=True).exists()
+            return not previous_progress  # Locked if the previous lesson is not completed
+        return False  # The first lesson is never locked
 
 
 from django.db import models
@@ -61,6 +192,9 @@ class UserCourseAccess(models.Model):
     renewal_date = models.DateTimeField(null=True, blank=True)  # For scheduling renewal
     renewal_task_id = models.CharField(max_length=255, null=True, blank=True)  # Task ID for the scheduled charge
     selected_plan = models.CharField(max_length=20, null=True, blank=True)
+    is_saved = models.BooleanField(default=False, null=True, blank=True)  # Allow nullable values
+    is_favorite = models.BooleanField(default=False, null=True, blank=True)  # Allow nullable values
+
 
     def __str__(self):
         return f"{self.user.username} - {self.course.title if self.course else 'No course'}"
@@ -69,13 +203,14 @@ class UserCourseAccess(models.Model):
         return self.expiration_date is not None and timezone.now() > self.expiration_date
 
     def update_progress(self):
-        # Automatically calculate progress based on completed sub-courses or lessons
+        """Calculate and update the progress of the entire course based on sub-course completion."""
         total_sub_courses = self.course.sub_courses.count()
+        completed_sub_courses = UserSubCourseAccess.objects.filter(
+            user=self.user, sub_course__parent_course=self.course, progress=100.0).count()
         if total_sub_courses > 0:
-            completed_sub_courses = UserSubCourseAccess.objects.filter(
-                user=self.user, sub_course__parent_course=self.course, progress=100.0).count()
             self.progress = (completed_sub_courses / total_sub_courses) * 100
             self.save()
+
 
     def set_renewal_date(self, plan_duration):
         """Sets the renewal date based on the plan duration in weeks."""
@@ -93,13 +228,20 @@ class UserSubCourseAccess(models.Model):
         return f"{self.user.username} - {self.sub_course.title}"
 
     def update_progress(self):
-        # Automatically calculate progress based on completed lessons
+        """Calculate and update the progress of the sub-course based on lesson completion."""
         total_lessons = self.sub_course.lessons.count()
+        completed_lessons = UserLessonProgress.objects.filter(
+            user=self.user, lesson__parent_sub_course=self.sub_course, completed=True).count()
         if total_lessons > 0:
-            completed_lessons = UserLessonProgress.objects.filter(user=self.user, lesson__parent_sub_course=self.sub_course, completed=True).count()
             self.progress = (completed_lessons / total_lessons) * 100
             self.save()
+            self.update_course_progress()
 
+    def update_course_progress(self):
+        """Update the course progress after updating the sub-course progress."""
+        user_course_access = UserCourseAccess.objects.get(
+            user=self.user, course=self.sub_course.parent_course)
+        user_course_access.update_progress()
 
 from django.contrib.auth.models import User
 from django.db import models

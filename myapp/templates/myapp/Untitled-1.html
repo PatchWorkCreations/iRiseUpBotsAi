@@ -74,19 +74,6 @@
         margin-bottom: 20px;
     }
 
-    .recommended-container h2 {
-    font-size: 28px;
-    color: #333; /* A darker shade for better visibility */
-    margin-bottom: 20px;
-    font-weight: bold; /* Make it stand out as a section title */
-    text-align: left; /* Align the text to the left for a clean layout */
-    line-height: 1.2; /* Slightly reduce line height for tighter spacing */
-    letter-spacing: 0.5px; /* Add a slight letter spacing for readability */
-    padding-left: 10px; /* Add padding for consistency in the layout */
-    border-left: 5px solid #007bff; /* A blue left border to highlight the section */
-}
-
-
     .course-card {
         background-color: #f9faff;
         border: 1px solid #e4e7ed;
@@ -117,26 +104,6 @@
         text-align: center;
     }
 
-    .progress-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
-    }
-
-    .progress-bar {
-        background-color: #e0e0e0;
-        border-radius: 12px;
-        width: 80%;
-        height: 8px;
-    }
-
-    .progress {
-        background-color: #42a5f5;
-        height: 100%;
-        border-radius: 12px;
-    }
-
     .view-btn {
         display: inline-block;
         background-color: #42a5f5;
@@ -153,47 +120,6 @@
     .view-btn:hover {
         background-color: #1e88e5;
     }
-
-    /* Course grid */
-    .course-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        justify-content: space-between;
-    }
-
-    .course-card {
-        background-color: #f9faff;
-        border: 1px solid #e4e7ed;
-        border-radius: 8px;
-        padding: 15px;
-        text-align: center;
-        flex-basis: 240px;
-        max-width: 100%;
-        margin: 10px 5px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        height: auto;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 1200px) {
-        .course-card {
-            width: calc(33.333% - 20px); /* 3 cards per row on smaller screens */
-        }
-    }
-
-    @media (max-width: 768px) {
-        .course-card {
-            width: calc(50% - 20px); /* 2 cards per row on tablets */
-        }
-    }
-
-    @media (max-width: 480px) {
-        .course-card {
-            width: calc(100% - 20px); /* 1 card per row on mobile */
-        }
-    }
-
 </style>
 
 <div class="mobile-container">
@@ -225,15 +151,11 @@
                                 <p>{{ course_access.course.description }}</p>
                             </div>
                         </div>
-                        {% if course_access.course %}
-                            <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">Continue Watching</a>
-                        {% else %}
-                            <span>No course available</span>
-                        {% endif %}
+                        <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">Continue Watching</a>
                     </div>
-                    {% endfor %} <!-- Add this -->
+                    {% endfor %}
                 </div>
-             {% else %}
+            {% else %}
                 <p>No ongoing courses.</p>
             {% endif %}
         </div>
@@ -313,14 +235,13 @@
         </div>
 
         <!-- Recommended Courses Section (inside same container) -->
-        <!-- Remove 'course-section' class so it's always visible -->
         <div class="recommended-container">
-            <!--<div class="filter-section">
+            <div class="filter-section">
                 <span class="filter-option">Category</span>
                 <span class="sort-option">Sort by: Popular</span>
-            </div>-->
-            <div>
-                <h2>Recommended for You</h2>
+            </div>
+            <div class="course-section">
+                <h2>Recommendedd For You</h2>
                 <div class="course-grid">
                     {% for course in all_courses %}
                     <div class="course-card">

@@ -39,5 +39,11 @@ urlpatterns = [
     path('download-transactions-csv/', views.download_transactions_csv, name='download_transactions_csv'),
     path('view-transactions/', views.view_transactions, name='view_transactions'),
     path('transactions/', views.customadmin_transactions, name='customadmin_transactions'),  # No customadmin prefix
+    
 
+    path('sub_courses/<int:sub_course_id>/delete/', views.delete_sub_course, name='delete_sub_course'),
+    path('lessons/<int:lesson_id>/delete/', views.delete_lesson, name='delete_lesson'),
+
+    path('sub-course/<int:sub_course_id>/update-order/', views.update_sub_course_order, name='update_sub_course_order'),
+    path('lesson/<int:lesson_id>/update-order/', views.update_lesson_order, name='update_lesson_order'),
 ]

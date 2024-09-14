@@ -94,6 +94,20 @@
     .add-link:hover {
         background: #218838;
     }
+
+    .delete-btn {
+        background: #dc3545;
+        color: #fff;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .delete-btn:hover {
+        background: #c82333;
+    }
 </style>
 
 <div class="container">
@@ -107,20 +121,48 @@
     <h3>Sub-Courses</h3>
     <ul class="list-group">
         {% for sub_course in sub_courses %}
-        <li>{{ sub_course.title }} - <a href="{% url 'edit_sub_course' sub_course.id %}">Edit</a></li>
+        <li>
+            {{ sub_course.title }} 
+            <form method="post" action="{% url 'update_sub_course_order' sub_course.id %}" style="display: inline;">
+                {% csrf_token %}
+                <input type="number" name="order" value="{{ sub_course.order }}" min="1" style="width: 50px;">
+                <button type="submit" class="btn btn-primary btn-sm">Update Order</button>
+            </form>
+            <div>
+                <a href="{% url 'edit_sub_course' sub_course.id %}" class="btn btn-info btn-sm">Edit</a>
+
+                <form method="post" action="{% url 'delete_sub_course' sub_course.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn btn-sm">Delete</button>
+                </form>
+            </div>
+        </li>
         {% endfor %}
     </ul>
-    <a href="{% url 'add_sub_course' %}" class="add-link">Add Sub-Course</a>
 
     <h3>Lessons</h3>
     <ul class="list-group">
         {% for sub_course in sub_courses %}
             {% for lesson in sub_course.lessons.all %}
-            <li>{{ lesson.title }} - <a href="{% url 'edit_lesson' lesson.id %}">Edit</a></li>
+            <li>
+                {{ lesson.title }}
+                <form method="post" action="{% url 'update_lesson_order' lesson.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="number" name="order" value="{{ lesson.order }}" min="1" style="width: 50px;">
+                    <button type="submit" class="btn btn-primary btn-sm">Update Order</button>
+                </form>
+                <div>
+                    <a href="{% url 'edit_lesson' lesson.id %}" class="btn btn-info btn-sm">Edit</a>
+
+                    <form method="post" action="{% url 'delete_lesson' lesson.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn btn-sm">Delete</button>
+                    </form>
+                </div>
+            </li>
             {% endfor %}
         {% endfor %}
     </ul>
     <a href="{% url 'add_lesson' %}" class="add-link">Add Lesson</a>
-</div>
 </div>
 {% endblock %}

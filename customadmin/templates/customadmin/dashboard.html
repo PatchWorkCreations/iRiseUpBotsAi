@@ -64,7 +64,7 @@
         var modal = $(this);
         modal.find('#itemTitle').text(itemTitle);
         modal.find('#itemType').text(itemType);
-        modal.find('#deleteForm').attr('action', '/customadmin/custom_admin/' + itemType + '/' + itemId + '/delete/');
+        modal.find('#deleteForm').attr('action', '/customadmin/courses/' + itemId + '/delete/');
     });
 </script>
 {% endblock %}
