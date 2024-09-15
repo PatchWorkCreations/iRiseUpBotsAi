@@ -3,8 +3,37 @@
 {% block title %}{{ course.title }}{% endblock %}
 
 {% block content %}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
 <style>
 /* Overall Page Style */
+  /* Styling for the icon buttons */
+  .icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 10px;
+        color: #007bff;
+        transition: color 0.3s ease;
+    }
+
+    .icon-btn:hover {
+        color: #0056b3;
+    }
+
+    /* Adjusting the icons to make them stand out */
+    .fa {
+        font-size: 1.8rem;
+        margin-right: 10px;
+    }
+
+    /* Filled star and bookmark have different colors for better user feedback */
+    .fa-star, .fa-bookmark {
+        color: gold;
+    }
+    
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #ffffff;
@@ -246,6 +275,23 @@ h2 {
     <div class="course-header">
         <h1>{{ course.title }}</h1>
         <p>{{ course.description }}</p>
+
+        <div class="course-actions">
+            <form action="{% url 'course_detail' course.id %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" name="favorite" class="icon-btn">
+                    <i class="fa {% if course_access.is_favorite %}fa-star{% else %}fa-star-o{% endif %}"></i>
+                </button>
+            </form>
+    
+            <!-- Save (Bookmark) Button -->
+            <form action="{% url 'course_detail' course.id %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" name="save" class="icon-btn">
+                    <i class="fa {% if course_access.is_saved %}fa-bookmark{% else %}fa-bookmark-o{% endif %}"></i>
+                </button>
+            </form>
+        </div>
     </div>
     
     <h2>Sub-Courses</h2>

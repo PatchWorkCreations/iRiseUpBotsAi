@@ -153,16 +153,31 @@ def course_list(request):
     return render(request, 'myapp/course_list/course_list.html', {'courses': courses})
 
 from myapp.models import UserLessonProgress
+from django.shortcuts import render, get_object_or_404, redirect
+from myapp.models import Course, UserLessonProgress, UserCourseAccess
+from django.contrib.auth.decorators import login_required
 
-from django.shortcuts import render, get_object_or_404
-from myapp.models import Course, UserLessonProgress
-
+@login_required
 def course_detail(request, course_id):
     # Fetch the course and its sub-courses ordered by 'order'
     course = get_object_or_404(Course, id=course_id)
     sub_courses = course.sub_courses.all().order_by('order')
     user_progress = {}
     lessons_unlock_status = {}  # Dictionary to store unlockable status
+
+    # Check if the user has saved or favorited the course
+    course_access, created = UserCourseAccess.objects.get_or_create(user=request.user, course=course)
+
+    if request.method == 'POST':
+        # Check if the request is to save or favorite the course
+        if 'favorite' in request.POST:
+            course_access.is_favorite = not course_access.is_favorite  # Toggle favorite
+            course_access.save()
+        elif 'save' in request.POST:
+            course_access.is_saved = not course_access.is_saved  # Toggle saved
+            course_access.save()
+        # Redirect to the same page after the action to avoid form resubmission
+        return redirect('course_detail', course_id=course.id)
 
     if request.user.is_authenticated:
         # Loop through each sub-course
@@ -202,6 +217,7 @@ def course_detail(request, course_id):
         'sub_courses': sub_courses,
         'user_progress': user_progress,  # The dictionary is passed here to the template
         'lessons_unlock_status': lessons_unlock_status or {},  # Pass the unlock status to template
+        'course_access': course_access,  # Pass the user's course access info (favorite/save status)
     }
 
     return render(request, 'myapp/course_list/course_detail.html', context)
@@ -384,6 +400,32 @@ def coursemenu(request):
     }
 
     return render(request, 'myapp/coursemenu.html', context)
+
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from myapp.models import Course, UserCourseAccess
+
+@login_required
+def toggle_favorite(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    course_access, created = UserCourseAccess.objects.get_or_create(user=request.user, course=course)
+    
+    # Toggle the favorite status
+    course_access.is_favorite = not course_access.is_favorite
+    course_access.save()
+
+    return redirect('course_detail', course_id=course.id)
+
+@login_required
+def toggle_save(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    course_access, created = UserCourseAccess.objects.get_or_create(user=request.user, course=course)
+    
+    # Toggle the saved status
+    course_access.is_saved = not course_access.is_saved
+    course_access.save()
+
+    return redirect('course_detail', course_id=course.id)
 
 
 from django.shortcuts import redirect

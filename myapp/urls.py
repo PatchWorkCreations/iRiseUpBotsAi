@@ -176,4 +176,7 @@ urlpatterns = [
     path('forum/profile/', views.forum_profile_view, name='forum_profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('profile/edit-avatar/', views.edit_avatar, name='edit_avatar'),
+
+    path('course/<int:course_id>/toggle-favorite/', views.toggle_favorite, name='toggle_favorite'),
+    path('course/<int:course_id>/toggle-save/', views.toggle_save, name='toggle_save'),
 ]

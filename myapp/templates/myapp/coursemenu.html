@@ -213,6 +213,7 @@
         <!-- Ongoing Courses Section -->
         <!-- Ongoing Courses Section -->
         <div id="ongoing" class="course-section active">
+            <h2>Ongoing Courses</h2>
             {% if ongoing_courses %}
                 <div class="course-grid">
                     {% for course in ongoing_courses %}
@@ -286,14 +287,17 @@
                                 <img src="{{ course_access.course.image.url }}" alt="Course Image">
                             </div>
                             <div class="course-info">
+                                <!-- Reference course through course_access.course -->
+                                <p>{{ course_access.course.units }} Units • {{ course_access.course.hours }} Hours</p>
                                 <h3>{{ course_access.course.title }}</h3>
+                                <p>{{ course_access.course.description }}</p>
                             </div>
                         </div>
                         {% if course_access.course %}
-    <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">View Course</a>
-{% else %}
-    <span>No course available</span>
-{% endif %}
+                            <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">View Course</a>
+                        {% else %}
+                            <span>No course available</span>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
@@ -301,6 +305,7 @@
                 <p>No saved courses.</p>
             {% endif %}
         </div>
+        
 
         <!-- Favorite Courses Section -->
         <div id="favorite" class="course-section">
@@ -314,14 +319,16 @@
                                 <img src="{{ course_access.course.image.url }}" alt="Course Image">
                             </div>
                             <div class="course-info">
-                                <h3>{{ course_access.course.title }}</h3>
+                                <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
+                                <h3>{{ course.title }}</h3>
+                                <p>{{ course.description }}</p>
                             </div>
                         </div>
                         {% if course_access.course %}
-    <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">View Course</a>
-{% else %}
-    <span>No course available</span>
-{% endif %}
+                            <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">View Course</a>
+                        {% else %}
+                            <span>No course available</span>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
@@ -330,13 +337,8 @@
             {% endif %}
         </div>
 
-        <!-- Recommended Courses Section (inside same container) -->
         <!-- Remove 'course-section' class so it's always visible -->
         <div class="recommended-container">
-            <!--<div class="filter-section">
-                <span class="filter-option">Category</span>
-                <span class="sort-option">Sort by: Popular</span>
-            </div>-->
             <div>
                 <h2>Recommended for You</h2>
                 <div class="course-grid">
@@ -348,7 +350,11 @@
                         <div class="course-category">
                             <span class="badge">{{ course.category }}</span>
                         </div>
-                        <h3>{{ course.title }}</h3>
+                        <div class="course-info">
+                            <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
+                            <h3>{{ course.title }}</h3>
+                            <p>{{ course.description }}</p>
+                        </div>
                         <a href="{% url 'course_detail' course.id %}" class="view-btn">View Details</a>
                     </div>
                     {% endfor %}
