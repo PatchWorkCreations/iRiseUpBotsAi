@@ -60,7 +60,7 @@ def add_sub_course(request):
             sub_course.parent_course = parent_course  # Link the new sub-course to the parent course
             sub_course.order = SubCourse.objects.filter(parent_course=parent_course).count() + 1
             sub_course.save()
-            return redirect('course_detail', course_id=parent_course.id)
+            return redirect('edit_course', course_id=parent_course.id)
     else:
         form = SubCourseForm()
 
@@ -73,11 +73,32 @@ def edit_sub_course(request, sub_course_id):
         form = SubCourseForm(request.POST, instance=sub_course)
         if form.is_valid():
             form.save()
-            return redirect('course_detail', course_id=sub_course.parent_course.id)
+            return redirect('edit_course', course_id=sub_course.parent_course.id)
     else:
         form = SubCourseForm(instance=sub_course)
     return render(request, 'customadmin/edit_sub_course.html', {'form': form, 'sub_course': sub_course})
 
+import os
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+
+def handle_uploaded_file(file):
+    upload_dir = '/Users/Julia/Downloads/braine-package/myapp/static/myapp/images/lesson_images/'
+    
+    # Ensure the directory exists
+    if not os.path.exists(upload_dir):
+        os.makedirs(upload_dir)
+    
+    file_path = os.path.join(upload_dir, file.name)
+    
+    # Save the file in the specified directory
+    with open(file_path, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+    
+    # Return the relative file path for template use
+    return f'/static/myapp/images/lesson_images/{file.name}'
 
 def add_lesson(request):
     if request.method == 'POST':
@@ -91,7 +112,7 @@ def add_lesson(request):
                 # Assign the next available order for the lesson under the subcourse
                 lesson.order = Lesson.objects.filter(parent_sub_course=sub_course).count() + 1
                 lesson.save()
-                return redirect('course_detail', course_id=sub_course.parent_course.id)  # Redirect to course detail page
+                return redirect('edit_course', course_id=sub_course.parent_course.id)  # Redirect to course detail page
             else:
                 form.add_error('parent_sub_course', 'This field is required.')
     else:
@@ -102,64 +123,60 @@ def add_lesson(request):
 
 def edit_lesson(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
-    
+
     if request.method == 'POST':
-        # Update lesson description
+        # Update the lesson description
         lesson.description = request.POST.get('description', '')
-        
+
         content_blocks = []
         for idx in range(int(request.POST.get('block_count', '0'))):
             block_type = request.POST.get(f'block_type_{idx}')
-            
+
             if block_type == 'paragraph':
                 content = request.POST.get(f'content_{idx}', '')
                 content_blocks.append({'type': 'paragraph', 'content': content})
-            
+
             elif block_type == 'image':
                 image = request.FILES.get(f'image_{idx}')
                 if image:
-                    image_url = handle_uploaded_file(image)  # This function should handle the upload logic
+                    image_url = handle_uploaded_file(image)
                     content_blocks.append({'type': 'image', 'content': image_url})
-            
+
             elif block_type == 'header':
                 content = request.POST.get(f'content_{idx}', '')
                 content_blocks.append({'type': 'header', 'content': content})
-            
+
             elif block_type == 'task':
                 task_content = request.POST.get(f'content_{idx}', '')
                 content_blocks.append({'type': 'task', 'content': task_content})
-            
+
             elif block_type == 'question':
                 question_content = request.POST.get(f'content_{idx}', '')
                 content_blocks.append({'type': 'question', 'content': question_content})
-            
+
             elif block_type == 'multiple_questions':
                 multiple_question_content = request.POST.get(f'content_{idx}', '')
                 questions_list = [q.strip() for q in multiple_question_content.split(',')]
                 content_blocks.append({'type': 'multiple_questions', 'content': questions_list})
-            
+
             elif block_type == 'multiple_choice':
                 question = request.POST.get(f'question_{idx}', '')
-                correct_answer = request.POST.get(f'correct_answer_{idx}', '')  # Capture the correct answer
-                options = []
-                option_count = 0
-                while request.POST.get(f'option_{idx}_{option_count}', None):
-                    options.append(request.POST.get(f'option_{idx}_{option_count}'))
-                    option_count += 1
+                correct_answer = request.POST.get(f'correct_answer_{idx}', '')
+                options = request.POST.getlist(f'option_{idx}[]')
                 content_blocks.append({
                     'type': 'multiple_choice',
                     'question': question,
                     'options': options,
-                    'correct_answer': correct_answer  # Store correct answer with the options
+                    'correct_answer': correct_answer
                 })
 
         # Save the updated content blocks in JSON format
         lesson.content = json.dumps(content_blocks)
         lesson.save()
 
-        # Redirect back to the course detail page
+        # Redirect back to the course detail page after saving
         return redirect('course_detail', lesson.parent_sub_course.parent_course.id)
-    
+
     # Load existing content blocks if available
     try:
         content_blocks = json.loads(lesson.content)
@@ -169,7 +186,7 @@ def edit_lesson(request, lesson_id):
     context = {
         'lesson': lesson,
         'content_blocks': content_blocks,
-        'block_count': range(len(content_blocks)),  # Pass the number of blocks to the template
+        'block_count': len(content_blocks),  # Pass the number of blocks to the template
     }
     return render(request, 'customadmin/edit_lesson.html', context)
 
@@ -272,7 +289,7 @@ def edit_course(request, course_id):
         form = CourseForm(request.POST, request.FILES, instance=course)
         if form.is_valid():
             form.save()
-            return redirect('course_detail', course_id=course.id)
+            return redirect('edit_course', course_id=course.id)
     else:
         form = CourseForm(instance=course)
     sub_courses = course.sub_courses.all()
@@ -697,12 +714,12 @@ def delete_sub_course(request, sub_course_id):
     sub_course = get_object_or_404(SubCourse, id=sub_course_id)
     if request.method == 'POST':
         sub_course.delete()
-        return redirect('course_detail', course_id=sub_course.parent_course.id)
+        return redirect('edit_course', course_id=sub_course.parent_course.id)
     return render(request, 'customadmin/confirm_delete.html', {'sub_course': sub_course})
 
 def delete_lesson(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     if request.method == 'POST':
         lesson.delete()
-        return redirect('course_detail', course_id=lesson.parent_sub_course.parent_course.id)
+        return redirect('edit_course', course_id=lesson.parent_sub_course.parent_course.id)
     return render(request, 'customadmin/confirm_delete.html', {'lesson': lesson})

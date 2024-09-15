@@ -4,78 +4,8 @@
 {% block title %}Edit Lesson{% endblock %}
 
 {% block content %}
-{% include 'myapp/quiz/header.html' %}
-<div class="container">
-    <h2>Edit Lesson: {{ lesson.title }}</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-
-        <h3>Lesson Content</h3>
-        <textarea name="description" rows="4" cols="50" placeholder="Describe the lesson content here">{{ lesson.description }}</textarea><br>
-
-        <h3>Content Blocks</h3>
-        <button type="button" id="toggle-drag-btn" class="btn btn-primary mb-3" onclick="toggleDragMode()">Enable Drag Mode</button>
-        <div id="content-blocks-container" class="mb-3">
-            {% for block in content_blocks %}
-            <div class="content-block p-3 mb-4 border rounded" data-index="{{ forloop.counter0 }}">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <label class="mb-0">Order: {{ forloop.counter }}</label>
-                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteBlock(this)">Delete</button>
-                </div>
-
-                <select name="block_type_{{ forloop.counter0 }}" class="form-select mb-2">
-                    <option value="paragraph" {% if block.type == 'paragraph' %}selected{% endif %}>Paragraph</option>
-                    <option value="image" {% if block.type == 'image' %}selected{% endif %}>Image</option>
-                    <option value="header" {% if block.type == 'header' %}selected{% endif %}>Header</option>
-                    <option value="task" {% if block.type == 'task' %}selected{% endif %}>Task</option>
-                    <option value="question" {% if block.type == 'question' %}selected{% endif %}>Question</option>
-                    <option value="multiple_questions" {% if block.type == 'multiple_questions' %}selected{% endif %}>Multiple Questions</option>
-                    <option value="multiple_choice" {% if block.type == 'multiple_choice' %}selected{% endif %}>Multiple Choice</option>
-                </select>
-
-                <div class="content-block-fields">
-                    {% if block.type == 'paragraph' %}
-                    <textarea name="content_{{ forloop.counter0 }}" rows="4" cols="50" class="form-control mb-2" placeholder="Write your paragraph here">{{ block.content }}</textarea>
-                    {% elif block.type == 'image' %}
-                    <input type="file" name="image_{{ forloop.counter0 }}" class="form-control mb-2"><br>
-                    <img src="{{ block.content }}" alt="Uploaded image" style="max-width: 200px;" class="img-thumbnail mb-2">
-                    {% elif block.type == 'header' %}
-                    <input type="text" name="content_{{ forloop.counter0 }}" value="{{ block.content }}" class="form-control mb-2" placeholder="Enter the header" style="font-size: large;">
-                    {% elif block.type == 'task' %}
-                    <textarea name="content_{{ forloop.counter0 }}" rows="4" cols="50" class="form-control mb-2" placeholder="Describe the task">{{ block.content }}</textarea>
-                    {% elif block.type == 'question' %}
-                    <input type="text" name="content_{{ forloop.counter0 }}" value="{{ block.content }}" class="form-control mb-2" placeholder="Write the question">
-                    {% elif block.type == 'multiple_questions' %}
-                    <textarea name="content_{{ forloop.counter0 }}" rows="4" cols="50" class="form-control mb-2" placeholder="Write multiple questions separated by commas">{{ block.content }}</textarea>
-                    {% elif block.type == 'multiple_choice' %}
-                    <input type="text" name="question_{{ forloop.counter0 }}" value="{{ block.question }}" class="form-control mb-2" placeholder="Enter the multiple-choice question">
-                    <input type="text" name="correct_answer_{{ forloop.counter0 }}" value="{{ block.correct_answer }}" class="form-control mb-2" placeholder="Enter the correct answer">
-                    <div id="multiple-choice-options-{{ forloop.counter0 }}">
-                        {% for option in block.options %}
-                        <div class="form-check">
-                            <input type="radio" name="option_{{ forloop.counter0 }}" class="form-check-input">
-                            <input type="text" name="option_{{ forloop.counter0 }}_{{ forloop.counter }}" value="{{ option }}" class="form-control mb-2" placeholder="Option {{ forloop.counter }}">
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <button type="button" class="btn btn-secondary mb-2" onclick="addOption('{{ forloop.counter0 }}')">Add Option</button>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        <input type="hidden" name="block_count" id="block_count" value="{{ content_blocks|length }}">
-
-        <div class="btn-container">
-            <button type="button" class="btn btn-secondary" onclick="addContentBlock()">Add Content Block</button>
-            <button type="submit" class="btn btn-success">Save Changes</button>
-            <a href="{% url 'course_detail' lesson.parent_sub_course.parent_course.id %}" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
-</div>
-
 <style>
+   
     .shaking {
         animation: subtle-shake 1s infinite;
     }
@@ -138,187 +68,215 @@
     }
 </style>
 
+<h2>Edit Lesson: {{ lesson.title }}</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js" integrity="sha512-zYXldzJsDrNKV+odAwFYiDXV2Cy37cwizT+NkuiPGsa9X1dOz04eHvUWVuxaJ299GvcJT31ug2zO4itXBjFx4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <h3>Lesson Content</h3>
+    <textarea name="description" rows="4" cols="50" placeholder="Describe the lesson content here">{{ lesson.description }}</textarea><br>
+
+    <h3>Content Blocks</h3>
+    <button type="button" id="toggle-drag-btn" class="btn btn-primary mb-3" onclick="toggleDragMode()">Enable Drag Mode</button>
+    <div id="content-blocks-container" class="mb-3" data-block-count="{{ content_blocks|length }}">
+        <!-- Your content block HTML here -->
+        {% for block in content_blocks %}
+        <div class="content-block p-3 mb-4 border rounded" data-index="{{ forloop.counter0 }}">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="mb-0">Order: {{ forloop.counter }}</label>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteBlock(this)">Delete</button>
+            </div>
+    
+            <select name="block_type_{{ forloop.counter0 }}" class="form-select mb-2">
+                <option value="paragraph" {% if block.type == 'paragraph' %}selected{% endif %}>Paragraph</option>
+                <option value="image" {% if block.type == 'image' %}selected{% endif %}>Image</option>
+                <option value="header" {% if block.type == 'header' %}selected{% endif %}>Header</option>
+                <option value="task" {% if block.type == 'task' %}selected{% endif %}>Task</option>
+                <option value="question" {% if block.type == 'question' %}selected{% endif %}>Question</option>
+                <option value="multiple_questions" {% if block.type == 'multiple_questions' %}selected{% endif %}>Multiple Questions</option>
+                <option value="multiple_choice" {% if block.type == 'multiple_choice' %}selected{% endif %}>Multiple Choice</option>
+            </select>
+    
+            <div id="content-block-fields-{{ forloop.counter0 }}" class="content-block-fields">
+                {% if block.type == 'paragraph' %}
+                <textarea name="content_{{ forloop.counter0 }}" rows="4" cols="50" class="form-control mb-2">{{ block.content }}</textarea>
+                
+                {% elif block.type == 'image' %}
+                <input type="file" name="image_{{ forloop.counter0 }}" class="form-control mb-2">
+                <img src="{{ block.content }}" alt="Uploaded image" style="max-width: 200px;" class="img-thumbnail mb-2">
+                
+                {% elif block.type == 'header' %}
+                <input type="text" name="content_{{ forloop.counter0 }}" class="form-control mb-2" value="{{ block.content }}" placeholder="Enter the header">
+                
+                {% elif block.type == 'task' %}
+                <textarea name="content_{{ forloop.counter0 }}" rows="4" cols="50" class="form-control mb-2">{{ block.content }}</textarea>
+                
+                {% elif block.type == 'multiple_choice' %}
+                <input type="text" name="question_{{ forloop.counter0 }}" class="form-control mb-2" placeholder="Enter the multiple-choice question" value="{{ block.question }}">
+                <input type="text" name="correct_answer_{{ forloop.counter0 }}" class="form-control mb-2" placeholder="Enter the correct answer" value="{{ block.correct_answer }}">
+                
+                <div id="multiple-choice-options-{{ forloop.counter0 }}">
+                    {% for option in block.options %}
+                    <div class="form-check">
+                        <input type="radio" name="correct_option_{{ forloop.counter0 }}" class="form-check-input" {% if option == block.correct_answer %}checked{% endif %}>
+                        <input type="text" name="option_{{ forloop.counter0 }}[]" value="{{ option }}" class="form-control mb-2" placeholder="Option {{ forloop.counter }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-secondary mb-2" onclick="addOption('{{ forloop.counter0 }}')">Add Option</button>
+                
+                {% endif %}
+            </div>
+            </div>
+            {% endfor %}
+            </div>
+            
+    
+    <input type="hidden" name="block_count" id="block_count" value="{{ content_blocks|length }}">
+
+    <div class="btn-container">
+        <button type="button" class="btn btn-secondary" onclick="addContentBlock()">Add Content Block</button>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <a href="{% url 'course_detail' lesson.parent_sub_course.parent_course.id %}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
 <script>
-// Function to add a new content block dynamically
-function addContentBlock() {
-    const container = document.getElementById('content-blocks-container');
-    const blockId = blockCounter++;
-    
-    const blockDiv = document.createElement('div');
-    blockDiv.classList.add('content-block', 'p-3', 'mb-4', 'border', 'rounded');
-    blockDiv.setAttribute('data-index', blockId);
+    const contentBlocksContainer = document.getElementById('content-blocks-container');
+    let blockCounter = parseInt(contentBlocksContainer.getAttribute('data-block-count')) || 0;
 
-    const orderLabel = document.createElement('label');
-    orderLabel.innerHTML = `Order: ${blockCounter}`;
-    
-    const blockTypeSelect = document.createElement('select');
-    blockTypeSelect.name = 'block_type_' + blockId;
-    blockTypeSelect.classList.add('form-select', 'mb-2');
-    blockTypeSelect.innerHTML = `
-        <option value="paragraph">Paragraph</option>
-        <option value="image">Image</option>
-        <option value="header">Header</option>
-        <option value="task">Task</option>
-        <option value="question">Question</option>
-        <option value="multiple_questions">Multiple Questions</option>
-        <option value="multiple_choice">Multiple Choice</option>
-    `;
+    function addContentBlock() {
+        const container = document.getElementById('content-blocks-container');
+        const blockId = blockCounter++;
 
-    const contentDiv = document.createElement('div');
-    contentDiv.classList.add('content-block-fields');
-    contentDiv.innerHTML = '<textarea name="content_' + blockId + '" rows="4" cols="50" class="form-control mb-2"></textarea><br>';
-    
-    // Update content when the block type is changed
-    blockTypeSelect.addEventListener('change', function() {
-        const blockType = this.value;
+        const blockDiv = document.createElement('div');
+        blockDiv.classList.add('content-block', 'p-3', 'mb-4', 'border', 'rounded');
+        blockDiv.setAttribute('data-index', blockId);
 
-        if (blockType === 'image') {
-            contentDiv.innerHTML = '<input type="file" name="image_' + blockId + '" class="form-control mb-2"><br>';
-        } else if (blockType === 'header') {
-            contentDiv.innerHTML = '<input type="text" name="content_' + blockId + '" class="form-control mb-2" style="font-size: large;" placeholder="Enter header text"><br>';
-        } else if (blockType === 'task') {
-            contentDiv.innerHTML = '<textarea name="content_' + blockId + '" rows="4" cols="50" class="form-control mb-2" placeholder="Describe the task"></textarea><br>';
-        } else if (blockType === 'question') {
-            contentDiv.innerHTML = '<input type="text" name="content_' + blockId + '" class="form-control mb-2" placeholder="Write the question"><br>';
-        } else if (blockType === 'multiple_questions') {
-            contentDiv.innerHTML = '<textarea name="content_' + blockId + '" rows="4" cols="50" class="form-control mb-2" placeholder="Write multiple questions separated by commas"></textarea><br>';
-            autoSave(blockId); // Auto-save and refresh the page
-            location.reload();  // Refresh the page after auto-save
-        } else if (blockType === 'multiple_choice') {
-            contentDiv.innerHTML = `
-                <input type="text" name="question_${blockId}" class="form-control mb-2" placeholder="Enter the multiple-choice question">
-                <input type="text" name="correct_answer_${blockId}" class="form-control mb-2" placeholder="Enter the correct answer">
-                <div id="multiple-choice-options-${blockId}"></div>
-                <button type="button" class="btn btn-secondary mb-2" onclick="addOption(${blockId})">Add Option</button>
-            `;
-            autoSave(blockId);  // Auto-save and refresh the page
-            location.reload();  // Refresh the page after auto-save
-        } else {
-            contentDiv.innerHTML = '<textarea name="content_' + blockId + '" rows="4" cols="50" class="form-control mb-2"></textarea><br>';
-        }
-    });
+        const orderLabel = document.createElement('label');
+        orderLabel.innerHTML = `Order: ${blockCounter}`;
 
-    const deleteButton = document.createElement('button');
-    deleteButton.type = 'button';
-    deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
-    deleteButton.textContent = 'Delete';
-    deleteButton.onclick = () => deleteBlock(deleteButton);
+        const blockTypeSelect = document.createElement('select');
+        blockTypeSelect.name = 'block_type_' + blockId;
+        blockTypeSelect.classList.add('form-select', 'mb-2');
+        blockTypeSelect.innerHTML = `
+            <option value="paragraph">Paragraph</option>
+            <option value="image">Image</option>
+            <option value="header">Header</option>
+            <option value="task">Task</option>
+            <option value="question">Question</option>
+            <option value="multiple_questions">Multiple Questions</option>
+            <option value="multiple_choice">Multiple Choice</option>
+        `;
 
-    const headerDiv = document.createElement('div');
-    headerDiv.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-2');
-    headerDiv.appendChild(orderLabel);
-    headerDiv.appendChild(deleteButton);
+        const contentDiv = document.createElement('div');
+        contentDiv.id = `content-block-fields-${blockId}`;
+        contentDiv.classList.add('content-block-fields');
+        contentDiv.innerHTML = '<textarea name="content_' + blockId + '" rows="4" cols="50" class="form-control mb-2"></textarea>';
 
-    blockDiv.appendChild(headerDiv);
-    blockDiv.appendChild(blockTypeSelect);
-    blockDiv.appendChild(contentDiv);
-    container.appendChild(blockDiv);
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
+        deleteButton.textContent = 'Delete';
+        deleteButton.onclick = () => deleteBlock(deleteButton);
 
-    document.getElementById('block_count').value = blockCounter;
-}
+        const headerDiv = document.createElement('div');
+        headerDiv.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-2');
+        headerDiv.appendChild(orderLabel);
+        headerDiv.appendChild(deleteButton);
 
-// Function to add an option for multiple-choice type blocks
-function addOption(blockId) {
-    const optionsContainer = document.getElementById(`multiple-choice-options-${blockId}`);
-    
-    const optionDiv = document.createElement('div');
-    optionDiv.classList.add('form-check');
+        blockDiv.appendChild(headerDiv);
+        blockDiv.appendChild(blockTypeSelect);
+        blockDiv.appendChild(contentDiv);
+        container.appendChild(blockDiv);
 
-    const radioInput = document.createElement('input');
-    radioInput.type = 'radio';
-    radioInput.name = `option_${blockId}`;
-    radioInput.classList.add('form-check-input');
+        document.getElementById('block_count').value = blockCounter;
+    }
 
-    const textInput = document.createElement('input');
-    textInput.type = 'text';
-    textInput.name = `option_${blockId}_new`;
-    textInput.classList.add('form-control', 'mb-2');
-    textInput.placeholder = 'New Option';
-
-    optionDiv.appendChild(radioInput);
-    optionDiv.appendChild(textInput);
-    optionsContainer.appendChild(optionDiv);
-}
-
-// Function to delete a content block
-function deleteBlock(button) {
-    if (confirm('Are you sure you want to delete this block?')) {
+    function deleteBlock(button) {
         const block = button.closest('.content-block');
         block.remove();
         updateBlockIndices();
     }
+
+    // Function to add an option for multiple-choice type blocks
+    function addOption(blockId) {
+    const optionsContainer = document.getElementById(`multiple-choice-options-${blockId}`);
+
+    // Create a new div for the option
+    const optionDiv = document.createElement('div');
+    optionDiv.classList.add('form-check');
+
+    // Create a radio button input
+    const radioInput = document.createElement('input');
+    radioInput.type = 'radio';
+    radioInput.name = `correct_option_${blockId}`;
+    radioInput.classList.add('form-check-input');
+
+    // Create a text input for the option content
+    const textInput = document.createElement('input');
+    textInput.type = 'text';
+    textInput.name = `option_${blockId}[]`;  // Use array-like syntax to handle multiple options
+    textInput.classList.add('form-control', 'mb-2');
+    textInput.placeholder = 'Option';
+
+    // Append the radio and text input to the option div
+    optionDiv.appendChild(radioInput);
+    optionDiv.appendChild(textInput);
+
+    // Append the option div to the options container
+    optionsContainer.appendChild(optionDiv);
 }
 
-// Function to update the order of content blocks
-function updateBlockIndices() {
-    const blocks = document.querySelectorAll('.content-block');
-    blocks.forEach((block, index) => {
-        block.setAttribute('data-index', index);
-        block.querySelector('label').innerHTML = `Order: ${index + 1}`;
-        block.querySelector('select[name^="block_type"]').name = 'block_type_' + index;
-        const fields = block.querySelector('.content-block-fields');
-        const input = fields.querySelector('textarea, input[type="file"], input[type="text"]');
-        if (input) {
-            input.name = input.name.replace(/_\d+$/, '_' + index);
-        }
-    });
-    document.getElementById('block_count').value = blocks.length;
-}
 
-// Auto-save function
-function autoSave(blockId) {
-    const formData = new FormData();
-    const blockType = document.querySelector(`select[name="block_type_${blockId}"]`).value;
-    const content = document.querySelector(`textarea[name="content_${blockId}"]`)?.value || '';
-    const question = document.querySelector(`input[name="question_${blockId}"]`)?.value || '';
-    const correctAnswer = document.querySelector(`input[name="correct_answer_${blockId}"]`)?.value || '';
-
-    formData.append('block_type', blockType);
-    formData.append('content', content);
-    formData.append('question', question);
-    formData.append('correct_answer', correctAnswer);
-    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-
-    fetch(`/save-block/${blockId}/`, {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('Block auto-saved successfully');
-        }
-    })
-    .catch(error => {
-        console.error('Error auto-saving block:', error);
-    });
-}
-
-// Function to toggle drag mode
-function toggleDragMode() {
-    const container = document.getElementById('content-blocks-container');
-    if (dragEnabled) {
-        sortable.destroy();
-        dragEnabled = false;
-        document.getElementById('toggle-drag-btn').textContent = 'Enable Drag Mode';
-        document.querySelectorAll('.content-block').forEach(block => {
-            block.classList.remove('shaking', 'draggable');
-        });
-    } else {
-        sortable = new Sortable(container, {
-            animation: 150,
-            onEnd: function () {
-                updateBlockIndices();
+    function updateBlockIndices() {
+        const blocks = document.querySelectorAll('.content-block');
+        blocks.forEach((block, index) => {
+            block.setAttribute('data-index', index);
+            block.querySelector('label').innerHTML = `Order: ${index + 1}`;
+            block.querySelector('select[name^="block_type"]').name = 'block_type_' + index;
+            const fields = block.querySelector('.content-block-fields');
+            const input = fields.querySelector('textarea, input[type="file"], input[type="text"]');
+            if (input) {
+                input.name = input.name.replace(/_\d+$/, '_' + index);
             }
         });
-        dragEnabled = true;
-        document.getElementById('toggle-drag-btn').textContent = 'Disable Drag Mode';
-        document.querySelectorAll('.content-block').forEach(block => {
-            block.classList.add('shaking', 'draggable');
-        });
+        document.getElementById('block_count').value = blocks.length;
     }
-}
+
+    // Event listener for block type changes
+    contentBlocksContainer.addEventListener('change', function (event) {
+        if (event.target && event.target.matches('select[name^="block_type"]')) {
+            const selectElement = event.target;
+            const blockIndex = selectElement.closest('.content-block').getAttribute('data-index');
+            handleBlockTypeChange(selectElement, blockIndex);
+        }
+    });
+
+    function handleBlockTypeChange(select, index) {
+        const selectedType = select.value;
+        const contentDiv = document.getElementById(`content-block-fields-${index}`);
+
+        if (selectedType === 'image') {
+            contentDiv.innerHTML = '<input type="file" name="image_' + index + '" class="form-control mb-2" accept="image/*"><br>';
+        } else if (selectedType === 'header') {
+            contentDiv.innerHTML = '<input type="text" name="content_' + index + '" class="form-control mb-2" placeholder="Enter the header" style="font-size: large;"><br>';
+        } else if (selectedType === 'task') {
+            contentDiv.innerHTML = '<textarea name="content_' + index + '" rows="4" cols="50" class="form-control mb-2" placeholder="Describe the task"></textarea><br>';
+        } else if (selectedType === 'question') {
+            contentDiv.innerHTML = '<input type="text" name="content_' + index + '" class="form-control mb-2" placeholder="Write the question"><br>';
+        } else if (selectedType === 'multiple_questions') {
+            contentDiv.innerHTML = '<textarea name="content_' + index + '" rows="4" cols="50" class="form-control mb-2" placeholder="Write multiple questions separated by commas"></textarea><br>';
+        } else if (selectedType === 'multiple_choice') {
+            contentDiv.innerHTML = `
+                <input type="text" name="question_${index}" class="form-control mb-2" placeholder="Enter the multiple-choice question">
+                <input type="text" name="correct_answer_${index}" class="form-control mb-2" placeholder="Enter the correct answer">
+                <div id="multiple-choice-options-${index}"></div>
+                <button type="button" class="btn btn-secondary mb-2" onclick="addOption(${index})">Add Option</button>
+            `;
+        } else {
+            contentDiv.innerHTML = '<textarea name="content_' + index + '" rows="4" cols="50" class="form-control mb-2"></textarea><br>';
+        }
+    }
 </script>
 {% endblock %}

@@ -4,110 +4,252 @@
 
 {% block content %}
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f8fa;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
 
+.container {
+    width: 90%;
+    max-width: 1200px;
+    background: #fff;
+    padding: 50px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    box-sizing: border-box;
+    margin: 50px auto;
+}
+
+h2, h3 {
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+h4 {
+    color: #555;
+    margin-bottom: 20px;
+    font-weight: 600;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+
+.sub-course-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #f4f6f9;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.sub-course-title {
+    flex: 2;
+    padding-right: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sub-course-form {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.sub-course-form input[type="number"] {
+    margin-right: 10px;
+    width: 60px;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sub-course-actions {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.sub-course-actions a, .sub-course-actions button {
+    padding: 8px 12px;
+    text-align: center;
+}
+
+.sub-course-actions a {
+    background: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sub-course-actions a:hover {
+    background: #0056b3;
+}
+
+
+form {
+    margin-bottom: 30px;
+}
+
+form button {
+    background: #007bff;
+    color: #fff;
+    font-size: 15px;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+}
+
+form button:hover {
+    background: #0056b3;
+}
+
+.list-group {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;
+}
+
+.lesson-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #f4f6f9;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.lesson-title {
+    flex: 2;
+    padding-right: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lesson-form {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.lesson-form input[type="number"] {
+    margin-right: 10px;
+    width: 60px;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.lesson-actions {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.lesson-actions a, .lesson-actions button {
+    padding: 8px 12px;
+    text-align: center;
+}
+
+.lesson-actions a {
+    background: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lesson-actions a:hover {
+    background: #0056b3;
+}
+
+.delete-btn {
+    background: #dc3545;
+    color: #fff;
+    border-radius: 5px;
+    border: none;
+    transition: background 0.3s ease;
+}
+
+.delete-btn:hover {
+    background: #c82333;
+}
+
+.add-link {
+    display: inline-block;
+    margin-top: 20px;
+    background: #28a745;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 15px;
+    transition: background 0.3s ease;
+    box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3);
+}
+
+.add-link:hover {
+    background: #218838;
+}
+
+.sub-course-group {
+    margin-bottom: 50px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
     .container {
-        width: 90%;
-        max-width: 1000px;
-        background: #fff;
         padding: 30px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        box-sizing: border-box;
-        margin: 20px auto;
-    }
-
-    h2, h3 {
-        color: #333;
-        margin-bottom: 20px;
-    }
-
-    form {
-        margin-bottom: 30px;
-    }
-
-    form button {
-        background: #007bff;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-    }
-
-    form button:hover {
-        background: #0056b3;
-    }
-
-    .list-group {
-        list-style: none;
-        padding: 0;
-        margin-bottom: 30px;
+        margin: 30px auto;
     }
 
     .list-group li {
-        background: #f0f0f0;
-        margin: 5px 0;
-        padding: 10px;
-        border-radius: 5px;
-        font-size: 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .list-group li a {
-        background: #007bff;
-        color: #fff;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        text-decoration: none;
-        transition: background 0.3s ease;
-    }
-
-    .list-group li a:hover {
-        background: #0056b3;
-    }
-
-    .add-link {
-        display: inline-block;
+    .list-group li form, .list-group li div {
+        width: 100%;
         margin-top: 10px;
-        background: #28a745;
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        transition: background 0.3s ease;
     }
+}
 
-    .add-link:hover {
-        background: #218838;
-    }
 
-    .delete-btn {
-        background: #dc3545;
-        color: #fff;
-        padding: 5px 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-    }
-
-    .delete-btn:hover {
-        background: #c82333;
-    }
 </style>
 
 <div class="container">
@@ -121,14 +263,18 @@
     <h3>Sub-Courses</h3>
     <ul class="list-group">
         {% for sub_course in sub_courses %}
-        <li>
-            {{ sub_course.title }} 
-            <form method="post" action="{% url 'update_sub_course_order' sub_course.id %}" style="display: inline;">
+        <li class="sub-course-item">
+            <div class="sub-course-title">
+                {{ sub_course.title }} 
+            </div>
+            
+            <form method="post" action="{% url 'update_sub_course_order' sub_course.id %}" class="sub-course-form">
                 {% csrf_token %}
-                <input type="number" name="order" value="{{ sub_course.order }}" min="1" style="width: 50px;">
+                <input type="number" name="order" value="{{ sub_course.order }}" min="1" style="width: 60px;">
                 <button type="submit" class="btn btn-primary btn-sm">Update Order</button>
             </form>
-            <div>
+            
+            <div class="sub-course-actions">
                 <a href="{% url 'edit_sub_course' sub_course.id %}" class="btn btn-info btn-sm">Edit</a>
 
                 <form method="post" action="{% url 'delete_sub_course' sub_course.id %}" style="display: inline;">
@@ -139,31 +285,39 @@
         </li>
         {% endfor %}
     </ul>
-    <a href="{% url 'add_sub_course' %}?course_id={{ course.id }}" class="add-link">Add Sub-Course</a>  <!-- Ensure this link redirects to the add_sub_course view -->
-    
-    <h3>Lessons</h3>
-    <ul class="list-group">
-        {% for sub_course in sub_courses %}
+    <a href="{% url 'add_sub_course' %}?course_id={{ course.id }}" class="add-link">Add Sub-Course</a>
+
+    <h3>Lessons by Sub-Course</h3>
+
+    {% for sub_course in sub_courses %}
+    <div class="sub-course-group">
+        <h4>{{ sub_course.title }} - Lessons</h4>
+        <ul class="list-group">
             {% for lesson in sub_course.lessons.all %}
-            <li>
-                {{ lesson.title }}
-                <form method="post" action="{% url 'update_lesson_order' lesson.id %}" style="display: inline;">
+            <li class="lesson-item">
+                <div class="lesson-title">
+                    {{ lesson.title }}
+                </div>
+                
+                <form method="post" action="{% url 'update_lesson_order' lesson.id %}" class="lesson-form">
                     {% csrf_token %}
-                    <input type="number" name="order" value="{{ lesson.order }}" min="1" style="width: 50px;">
+                    <input type="number" name="order" value="{{ lesson.order }}" min="1" style="width: 60px;">
                     <button type="submit" class="btn btn-primary btn-sm">Update Order</button>
                 </form>
-                <div>
+                
+                <div class="lesson-actions">
                     <a href="{% url 'edit_lesson' lesson.id %}" class="btn btn-info btn-sm">Edit</a>
-
+            
                     <form method="post" action="{% url 'delete_lesson' lesson.id %}" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="delete-btn btn-sm">Delete</button>
                     </form>
                 </div>
-            </li>
+            </li>            
             {% endfor %}
-        {% endfor %}
-    </ul>
-    <a href="{% url 'add_lesson' %}" class="add-link">Add Lesson</a>
+        </ul>
+        <a href="{% url 'add_lesson' %}?sub_course_id={{ sub_course.id }}" class="add-link">Add Lesson to {{ sub_course.title }}</a>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}
