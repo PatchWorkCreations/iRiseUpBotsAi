@@ -22,6 +22,7 @@ class Course(models.Model):
     image = models.ImageField(upload_to='course/', default='myapp/images/course/favicon.png')
     units = models.IntegerField()
     hours = models.FloatField()
+    category = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -118,9 +119,9 @@ class UserAnswer(models.Model):
 
 
 class UserLessonProgress(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    completed = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, db_index=True)
+    completed = models.BooleanField(default=False, db_index=True)
     completed_on = models.DateTimeField(null=True, blank=True)
 
 
@@ -148,7 +149,6 @@ class UserLessonProgress(models.Model):
 
 
     def update_sub_course_progress(self):
-        """Update the progress of the sub-course after completing a lesson."""
         total_lessons = self.lesson.parent_sub_course.lessons.count()
         completed_lessons = UserLessonProgress.objects.filter(
             user=self.user, lesson__parent_sub_course=self.lesson.parent_sub_course, completed=True
@@ -156,11 +156,10 @@ class UserLessonProgress(models.Model):
 
         if total_lessons > 0:
             progress = (completed_lessons / total_lessons) * 100
-            user_sub_course_access, created = UserSubCourseAccess.objects.get_or_create(
-                user=self.user, sub_course=self.lesson.parent_sub_course
+            UserSubCourseAccess.objects.update_or_create(
+                user=self.user, sub_course=self.lesson.parent_sub_course,
+                defaults={'progress': progress}
             )
-            user_sub_course_access.progress = progress
-            user_sub_course_access.save()
 
 
     def is_locked(self):
@@ -348,8 +347,8 @@ class ForumPost(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(ForumCategory, on_delete=models.CASCADE, related_name='posts')  # Add this line
-    created_at = models.DateTimeField(auto_now_add=True)
+    category = models.ForeignKey(ForumCategory, on_delete=models.CASCADE, related_name='posts', db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
     dislikes = models.ManyToManyField(User, related_name='post_dislikes', blank=True)
@@ -434,11 +433,11 @@ class Transaction(models.Model):
         ('error', 'Error'),
     ]
 
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending', db_index=True)
+    transaction_date = models.DateTimeField(default=timezone.now, db_index=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     subscription_type = models.CharField(max_length=100)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
-    transaction_date = models.DateTimeField(default=timezone.now)
     error_logs = models.TextField(blank=True, null=True)  # To capture error details if any
     recurring = models.BooleanField(default=False)  # If it's recurring billing
     next_billing_date = models.DateTimeField(blank=True, null=True)  # For recurring payments

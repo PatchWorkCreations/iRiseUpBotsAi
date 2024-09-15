@@ -21,9 +21,38 @@ client = Client(
 def add(x, y):
     return x + y
 
+import logging
+from django.core.exceptions import ObjectDoesNotExist
+from celery import shared_task
+from myapp.models import Lesson, UserLessonProgress
+
+# Set up a logger
+logger = logging.getLogger(__name__)
+
+from celery import shared_task
+from myapp.models import Lesson, UserLessonProgress
+
 @shared_task
-def hello():
-    return 'Hello, world!'
+def complete_lesson_task(user_id, lesson_id):
+    try:
+        # Fetch the lesson and user progress
+        user_progress = UserLessonProgress.objects.select_related('lesson__parent_sub_course__parent_course').get(user_id=user_id, lesson_id=lesson_id)
+        
+        # If the lesson is not completed, mark it as completed
+        if not user_progress.completed:
+            user_progress.complete_lesson()
+
+            # Unlock the next lesson
+            lesson = Lesson.objects.get(id=lesson_id)
+            UserLessonProgress.unlock_next_lesson(user_progress.user, lesson)
+        
+        return True
+    except Exception as e:
+        # Log any exceptions here
+        print(f"Error in complete_lesson_task: {str(e)}")
+        return False
+
+
 
 @shared_task(name="send_welcome_email_task")
 def send_welcome_email(email):

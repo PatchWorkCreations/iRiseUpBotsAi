@@ -1,0 +1,242 @@
+<!-- header.html -->
+{% load static %}
+<style>
+/* Layout Container */
+.header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    background-color: #f9f9f9;
+    padding: 0 20px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 252px;
+    position: fixed;
+    left: 0;
+    top: 60px;
+    background-color: #fff;
+    border-right: 1px solid var(--gray-100);
+    height: calc(100vh - 60px);
+    z-index: 99;
+    transition: .2s linear;
+}
+
+/* Profile Dropdown Container (Aligned Right) */
+.profile-dropdown-wrapper {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    display: flex;
+    align-items: center;
+    z-index: 1001;
+}
+
+/* Profile Button */
+.profile-dropdown-button {
+    display: flex;
+    align-items: center;
+    border: 1px solid #c0c0c0;
+    border-radius: 50px;
+    padding: 5px 12px;
+    background-color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Profile Avatar */
+.profile-avatar-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Status Indicator */
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: #28a745;
+    border-radius: 50%;
+    border: 2px solid white;
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+}
+
+/* Dropdown Icon */
+.dropdown-icon {
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 5px;
+    margin-left: 10px;
+    transform: rotate(45deg); /* Downward arrow */
+    transition: transform 0.2s ease;
+}
+
+.profile-dropdown-button.active .dropdown-icon {
+    transform: rotate(225deg); /* Rotate arrow upwards when active */
+}
+
+/* Profile Dropdown Menu */
+.profile-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 200px;
+    z-index: 1001;
+}
+
+.profile-dropdown-menu.active {
+    display: block;
+}
+
+/* Dropdown Menu Items */
+.profile-dropdown-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-dropdown-menu ul li {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.profile-dropdown-menu ul li:last-child {
+    border-bottom: none;
+}
+
+.profile-dropdown-menu ul li a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.2s ease;
+}
+
+.profile-dropdown-menu ul li a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Sidebar menu item */
+.sidebar-menu__item {
+    margin-bottom: 12px; /* Space between items */
+}
+
+/* Sidebar menu link */
+.sidebar-menu__link {
+    padding: 12px 16px; /* Padding inside the links */
+    border-radius: 8px; /* Rounded corners */
+    color: #4a4a4a; /* Default text color */
+    display: flex; /* Flexbox for layout */
+    align-items: center; /* Vertically align icon and text */
+    gap: 12px; /* Space between the icon and the text */
+    text-transform: capitalize; /* Capitalizes the first letter */
+    text-decoration: none; /* Removes underline from links */
+}
+
+/* Active menu item (selected or hovered) */
+.sidebar-menu__link.active {
+    background-color: #e0e7ff; /* Light blue background for active item */
+    color: #4f46e5; /* Blue text color for active item */
+}
+
+/* Hover effect for menu item */
+.sidebar-menu__link:hover {
+    color: #4f46e5; /* Blue text color on hover */
+    background-color: #e0e7ff; /* Light blue background on hover */
+}
+
+
+
+</style>
+<div class="header-wrapper">
+    <aside class="sidebar">
+        <button type="button" class="sidebar-close-btn text-gray-500 hover-text-white hover-bg-main-600 text-md w-24 h-24 border border-gray-100 hover-border-main-600 d-xl-none d-flex flex-center rounded-circle position-absolute">
+            <i class="ph ph-x"></i>
+        </button>
+        <a href="{% url 'coursemenu' %}" class="sidebar__logo text-center p-20 position-sticky inset-block-start-0 bg-white w-100 z-1 pb-10">
+            <img src="{% static 'myapp/images/mobile-logo.svg' %}" alt="Logo">
+        </a>
+        <div class="sidebar-menu-wrapper overflow-y-auto scroll-sm">
+            <div class="p-20 pt-10">
+                <ul class="sidebar-menu">
+                    <li class="sidebar-menu__item">
+                        <a href="{% url 'coursemenu' %}" class="sidebar-menu__link active">
+                            <i class="icon ph ph-graduation-cap"></i>Course Menu
+                        </a>
+                    </li>
+                    <li class="sidebar-menu__item">
+                        <a href="#" class="sidebar-menu__link">
+                            <i class="icon ph ph-bookmarks"></i>Student Courses
+                        </a>
+                    </li>
+                    <li class="sidebar-menu__item">
+                        <a href="#" class="sidebar-menu__link">
+                            <i class="icon ph ph-users-three"></i>Account Settings
+                        </a>
+                    </li>
+                    <li class="sidebar-menu__item">
+                        <a href="#" class="sidebar-menu__link">
+                            <i class="icon ph ph-support"></i>Support Center
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Profile Dropdown (moved to right) -->
+    <div class="profile-dropdown-wrapper">
+        <button class="profile-dropdown-button">
+            <span class="profile-avatar-wrapper">
+                <img src="{% static 'myapp/images/mobile-logo.svg' %}" alt="Profile Image" class="profile-avatar">
+                <span class="status-indicator"></span>
+            </span>
+            <i class="dropdown-icon"></i>
+        </button>
+        <div class="profile-dropdown-menu">
+            <ul>
+                <li><a href="{% url 'profile_settings' %}">Account Settings</a></li>
+                <li><a href="{% url 'sign_out' %}">Sign Out</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileButton = document.querySelector('.profile-dropdown-button');
+        const dropdownMenu = document.querySelector('.profile-dropdown-menu');
+
+        profileButton.addEventListener('click', function() {
+            profileButton.classList.toggle('active');
+            dropdownMenu.classList.toggle('active');
+        });
+
+        // Close the dropdown when clicking outside
+        window.addEventListener('click', function(event) {
+            if (!profileButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                profileButton.classList.remove('active');
+                dropdownMenu.classList.remove('active');
+            }
+        });
+    });
+</script>

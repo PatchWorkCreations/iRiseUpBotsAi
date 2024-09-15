@@ -195,10 +195,58 @@
         }
     }
 
+    #full-page-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        z-index: 10000;
+        display: none; /* Initially hidden */
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Bouncing balls animation */
+    .bouncing-balls {
+        display: flex;
+        justify-content: center;
+        font-size: 3rem;
+    }
+
+    .bouncing-balls span {
+        display: inline-block;
+        margin: 0 10px;
+        animation: bounce 0.6s infinite alternate;
+    }
+
+    .bouncing-balls span:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .bouncing-balls span:nth-child(3) {
+        animation-delay: 0.2s;
+    }
+
+    @keyframes bounce {
+        to {
+            transform: translateY(-20px);
+        }
+    }
+
 </style>
+<div id="full-page-loader">
+    <div class="bouncing-balls">
+        <span>🟡</span>
+        <span>🔵</span>
+        <span>🟢</span>
+    </div>
+</div>
 
 <div class="mobile-container">
-    {% include 'myapp/course_list/header_course.html' %}
     <div class="container">
         <h1>My Courses</h1>
 
@@ -257,7 +305,7 @@
                                 <p>{{ course.description }}</p>
                             </div>
                         </div>
-                        <a href="{% url 'course_continue' course.id %}" class="view-btn">View Course</a>
+                        <a href="{% url 'course_detail' course.id %}" class="view-btn">View Course</a>
 
                         <!-- Display course progress (100% for completed courses) -->
                         <div class="progress-container">
@@ -287,14 +335,14 @@
                                 <img src="{{ course_access.course.image.url }}" alt="Course Image">
                             </div>
                             <div class="course-info">
-                                <!-- Reference course through course_access.course -->
                                 <p>{{ course_access.course.units }} Units • {{ course_access.course.hours }} Hours</p>
                                 <h3>{{ course_access.course.title }}</h3>
                                 <p>{{ course_access.course.description }}</p>
                             </div>
                         </div>
                         {% if course_access.course %}
-                            <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">View Course</a>
+                            <!-- Changed button link to course_detail similar to the ongoing section -->
+                            <a href="{% url 'course_detail' course_access.course.id %}" class="view-btn">Continue Course</a>
                         {% else %}
                             <span>No course available</span>
                         {% endif %}
@@ -305,6 +353,7 @@
                 <p>No saved courses.</p>
             {% endif %}
         </div>
+        
         
 
         <!-- Favorite Courses Section -->
@@ -319,13 +368,14 @@
                                 <img src="{{ course_access.course.image.url }}" alt="Course Image">
                             </div>
                             <div class="course-info">
-                                <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
-                                <h3>{{ course.title }}</h3>
-                                <p>{{ course.description }}</p>
+                                <p>{{ course_access.course.units }} Units • {{ course_access.course.hours }} Hours</p>
+                                <h3>{{ course_access.course.title }}</h3>
+                                <p>{{ course_access.course.description }}</p>
                             </div>
                         </div>
                         {% if course_access.course %}
-                            <a href="{% url 'course_continue' course_access.course.id %}" class="view-btn">View Course</a>
+                            <!-- Changed button link to course_detail similar to the ongoing section -->
+                            <a href="{% url 'course_detail' course_access.course.id %}" class="view-btn">Continue Course</a>
                         {% else %}
                             <span>No course available</span>
                         {% endif %}
@@ -336,6 +386,7 @@
                 <p>No favorite courses.</p>
             {% endif %}
         </div>
+        
 
         <!-- Remove 'course-section' class so it's always visible -->
         <div class="recommended-container">
@@ -381,6 +432,49 @@
             document.getElementById(tabId).classList.add('active');
         });
     });
+
+    // Show the loader
+function showLoader() {
+    const loader = document.getElementById('full-page-loader');
+    loader.style.display = 'flex';  // Show the loader
+}
+
+// Hide the loader (when page is fully loaded)
+function hideLoader() {
+    const loader = document.getElementById('full-page-loader');
+    loader.style.display = 'none';  // Hide the loader
+}
+
+// Function to attach event listener to all links and buttons
+function attachLoaderToLinksAndButtons() {
+    // Attach the loader to all <a> (anchor) links
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function (event) {
+            // Avoid showing the loader for internal anchor links or empty hrefs
+            if (!link.getAttribute('href').startsWith('#') && link.getAttribute('href') !== '') {
+                showLoader();
+            }
+        });
+    });
+
+    // Attach the loader to all buttons and form submissions
+    document.querySelectorAll('button, input[type="submit"]').forEach(button => {
+        button.addEventListener('click', function () {
+            showLoader();
+        });
+    });
+}
+
+// Ensure the loader is hidden after the new page loads
+window.addEventListener('load', function () {
+    hideLoader();  // Hide the loader once the page is fully loaded
+});
+
+// Wait until the DOM is fully loaded before attaching listeners
+document.addEventListener('DOMContentLoaded', function () {
+    attachLoaderToLinksAndButtons();  // Attach the loader to links and buttons
+});
+
 </script>
 
 {% include 'myapp/course_list/footer_course.html' %}

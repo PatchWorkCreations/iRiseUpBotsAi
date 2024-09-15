@@ -229,13 +229,14 @@ def sub_course_detail(request, sub_course_id):
     return render(request, 'myapp/course_list/sub_course_detail.html', {'sub_course': sub_course, 'lessons': lessons})
 
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from myapp.models import Lesson, UserLessonProgress
+from myapp.tasks import complete_lesson_task  # Import the Celery task
 import json
+import logging
 
-from django.shortcuts import render, get_object_or_404, redirect, reverse
-from myapp.models import Lesson, UserLessonProgress
-import json
+logger = logging.getLogger(__name__)
 
 def lesson_detail(request, lesson_id):
     # Fetch the lesson object
@@ -246,13 +247,13 @@ def lesson_detail(request, lesson_id):
     user_progress, created = UserLessonProgress.objects.get_or_create(user=request.user, lesson=lesson)
 
     if request.method == "POST":
-        # When the user submits the lesson (POST request), mark it as completed and unlock the next lesson
+        # When the user submits the lesson (POST request), send the lesson completion to a Celery task
         if not user_progress.completed:
-            # Complete the lesson
-            user_progress.complete_lesson()
-
-            # Unlock the next lesson (but always redirect to course detail page)
-            UserLessonProgress.unlock_next_lesson(request.user, lesson)
+            try:
+                complete_lesson_task.delay(request.user.id, lesson.id)  # Trigger Celery task
+            except Exception as e:
+                logger.error(f"Failed to trigger complete_lesson_task: {str(e)}")
+                # Optionally: Add a message to notify the user of the error
         return redirect(course_detail_url)
 
     # Process content_blocks from the lesson's content field (assuming it's JSON)
