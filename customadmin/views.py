@@ -101,24 +101,22 @@ def handle_uploaded_file(file):
     return f'/static/myapp/images/lesson_images/{file.name}'
 
 def add_lesson(request):
+    sub_course_id = request.GET.get('sub_course_id')
+    sub_course = get_object_or_404(SubCourse, id=sub_course_id)
+    
     if request.method == 'POST':
         form = LessonForm(request.POST)
         if form.is_valid():
             lesson = form.save(commit=False)
-            sub_course_id = request.POST.get('parent_sub_course')
-            if sub_course_id:
-                sub_course = get_object_or_404(SubCourse, id=sub_course_id)
-                lesson.parent_sub_course = sub_course
-                # Assign the next available order for the lesson under the subcourse
-                lesson.order = Lesson.objects.filter(parent_sub_course=sub_course).count() + 1
-                lesson.save()
-                return redirect('edit_course', course_id=sub_course.parent_course.id)  # Redirect to course detail page
-            else:
-                form.add_error('parent_sub_course', 'This field is required.')
+            lesson.parent_sub_course = sub_course
+            # Assign the next available order for the lesson under the sub-course
+            lesson.order = Lesson.objects.filter(parent_sub_course=sub_course).count() + 1
+            lesson.save()
+            return redirect('edit_course', course_id=sub_course.parent_course.id)  # Redirect to course detail page
     else:
         form = LessonForm()
-    sub_courses = SubCourse.objects.all()
-    return render(request, 'customadmin/add_lesson.html', {'form': form, 'sub_courses': sub_courses})
+
+    return render(request, 'customadmin/add_lesson.html', {'form': form, 'sub_course': sub_course})
 
 
 def edit_lesson(request, lesson_id):
