@@ -5,7 +5,7 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
     <div class="container text-center">
-        <h2>What fields would you personally like to try yourself in?</h2>
+        <h2>What fields are you personally interested in exploring?</h2>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
@@ -15,71 +15,85 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-12 col-md-11 mb-3">
-                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Graphic Design">
-                        <span class="emoji">🎨</span>
-                        <span>Graphic Design</span>
-                    </button>
-                </div>
-                <div class="col-12 col-md-11 mb-3">
-                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Content Creation">
+                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Content writing and blogging">
                         <span class="emoji">✍️</span>
-                        <span>Content Creation</span>
+                        <span>Content writing and blogging</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Graphic design">
+                        <span class="emoji">🎨</span>
+                        <span>Graphic design</span>
                     </button>
                 </div>
             </div>
             <div class="row justify-content-center">
                 <div class="col-12 col-md-11 mb-3">
-                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Web Development">
-                        <span class="emoji">💻</span>
-                        <span>Web Development</span>
-                    </button>
-                </div>
-                <div class="col-12 col-md-11 mb-3">
-                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Artificial Intelligence">
-                        <span class="emoji">🤖</span>
-                        <span>Artificial Intelligence</span>
-                    </button>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-11 mb-3">
-                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Digital Marketing">
+                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Digital marketing">
                         <span class="emoji">📈</span>
-                        <span>Digital Marketing</span>
+                        <span>Digital marketing</span>
                     </button>
                 </div>
                 <div class="col-12 col-md-11 mb-3">
-                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Social Media Management">
-                        <span class="emoji">📱</span>
-                        <span>Social Media Management</span>
+                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Video editing">
+                        <span class="emoji">🎥</span>
+                        <span>Video editing</span>
                     </button>
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-11 mb-3">
-                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Video Editing">
-                        <span class="emoji">🎥</span>
-                        <span>Video Editing</span>
-                    </button>
-                </div>
                 <div class="col-12 col-md-11 mb-3">
                     <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Photography">
                         <span class="emoji">📸</span>
                         <span>Photography</span>
                     </button>
                 </div>
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Social media management">
+                        <span class="emoji">📱</span>
+                        <span>Social media management</span>
+                    </button>
+                </div>
             </div>
             <div class="row justify-content-center">
                 <div class="col-12 col-md-11 mb-3">
-                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="E-commerce">
+                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="E-commerce and online sales">
                         <span class="emoji">🛒</span>
-                        <span>E-commerce</span>
+                        <span>E-commerce and online sales</span>
                     </button>
                 </div>
                 <div class="col-12 col-md-11 mb-3">
-                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Consulting">
+                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Virtual assistance">
+                        <span class="emoji">💻</span>
+                        <span>Virtual assistance</span>
+                    </button>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Web development">
+                        <span class="emoji">💻</span>
+                        <span>Web development</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Podcasting or audio editing">
+                        <span class="emoji">🎙️</span>
+                        <span>Podcasting or audio editing</span>
+                    </button>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Online tutoring or teaching">
+                        <span class="emoji">📚</span>
+                        <span>Online tutoring or teaching</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="button" class="btn btn-light btn-interest d-flex align-items-center" data-value="Consulting or coaching">
                         <span class="emoji">💼</span>
-                        <span>Consulting</span>
+                        <span>Consulting or coaching</span>
                     </button>
                 </div>
             </div>

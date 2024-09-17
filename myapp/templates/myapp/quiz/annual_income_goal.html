@@ -5,23 +5,23 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
     <div class="container text-center">
-        <h2>What Annual Income Level Are You Aiming For?</h2>
+        <h2>What kind of Annual Income are you hoping to enjoy during your retirement?</h2>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
                 <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="annual_income_goal" value="30,000 – $50,000" class="btn btn-light btn-income">
-                        <span>30,000 – $50,000</span>
+                        <span>$50,000 - $100,000</span>
                     </button>
                 </div>
                 <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="annual_income_goal" value="$50,000 – $100,000" class="btn btn-light btn-income">
-                        <span>$50,000 – $100,000</span>
+                        <span>$100,000 – $150,000</span>
                     </button>
                 </div>
                 <div class="col-12 col-md-11 mb-3">
                     <button type="submit" name="annual_income_goal" value="More than $100,000" class="btn btn-light btn-income">
-                        <span>More than $100,000</span>
+                        <span>More than $150,000</span>
                     </button>
                 </div>
             </div>

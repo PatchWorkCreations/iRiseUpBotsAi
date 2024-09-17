@@ -4,39 +4,48 @@
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
-<div class="container text-center">
-    <h2>Do you find it easy to maintain your focus?</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-11 mb-3">
-                <button type="submit" name="focus_ability" value="Yes, I can easily stay focused" class="btn btn-light btn-focus d-flex align-items-center">
-                    <span class="emoji">🎯</span>
-                    <span>Yes, I can easily stay focused</span>
-                </button>
+    <div class="container text-center">
+        <h2>Do you find it easy to maintain your focus?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="submit" name="focus_ability" value="Yes, I can stay focused for long periods." class="btn btn-light btn-focus d-flex align-items-center">
+                        <span class="emoji">🎯</span>
+                        <span>Yes, I can stay focused for long periods.</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="submit" name="focus_ability" value="Most of the time, but I have occasional distractions." class="btn btn-light btn-focus d-flex align-items-center">
+                        <span class="emoji">🤔</span>
+                        <span>Most of the time, but I have occasional distractions.</span>
+                    </button>
+                </div>
             </div>
-            <div class="col-12 col-md-11 mb-3">
-                <button type="submit" name="focus_ability" value="Mostly, but I sometimes get distracted" class="btn btn-light btn-focus d-flex align-items-center">
-                    <span class="emoji">🤔</span>
-                    <span>Mostly, but I sometimes get distracted</span>
-                </button>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="submit" name="focus_ability" value="It depends on the task—some things hold my attention better." class="btn btn-light btn-focus d-flex align-items-center">
+                        <span class="emoji">🔍</span>
+                        <span>It depends on the task—some things hold my attention better.</span>
+                    </button>
+                </div>
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="submit" name="focus_ability" value="I struggle with focus but can manage with short breaks." class="btn btn-light btn-focus d-flex align-items-center">
+                        <span class="emoji">😕</span>
+                        <span>I struggle with focus but can manage with short breaks.</span>
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-11 mb-3">
-                <button type="submit" name="focus_ability" value="I often struggle" class="btn btn-light btn-focus d-flex align-items-center">
-                    <span class="emoji">😕</span>
-                    <span>I often struggle</span>
-                </button>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-11 mb-3">
+                    <button type="submit" name="focus_ability" value="No, I often find it hard to concentrate for long." class="btn btn-light btn-focus d-flex align-items-center">
+                        <span class="emoji">😴</span>
+                        <span>No, I often find it hard to concentrate for long.</span>
+                    </button>
+                </div>
             </div>
-            <div class="col-12 col-md-11 mb-3">
-                <button type="submit" name="focus_ability" value="No, I frequently procrastinate" class="btn btn-light btn-focus d-flex align-items-center">
-                    <span class="emoji">😴</span>
-                    <span>No, I frequently procrastinate</span>
-                </button>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 <style>

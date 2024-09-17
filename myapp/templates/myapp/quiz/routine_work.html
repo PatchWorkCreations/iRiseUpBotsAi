@@ -5,7 +5,7 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
     <div class="container text-center">
-        <h2>Would you enjoy a job where something else does the routine work for you?</h2>
+        <h2>Would you appreciate a role where the routine tasks are taken care of for you, so you can focus on what truly matters during your retirement?</h2>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
@@ -33,7 +33,7 @@
         </form>
         <div class="d-flex justify-content-center mt-4">
             {% if gender == 'Male' %}
-                <img src="{% static 'myapp/images/quiz/6.webp' %}" alt="Routine Work" class="img-fluid routine-work-image">
+                <img src="{% static 'myapp/images/quiz/9.png' %}" alt="Routine Work" class="img-fluid routine-work-image">
             {% elif gender == 'Female' %}
                 <img src="{% static 'myapp/images/quiz/female_6.webp' %}" alt="Routine Work" class="img-fluid routine-work-image">
             {% endif %}

@@ -5,37 +5,45 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
 <div class="container text-center">
-    <h2>How much time are you ready to spend to achieve your goal?</h2>
+    <h2>How much time are you willing to invest in achieving your retirement goals?</h2>
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
             <div class="col-12 col-md-11 mb-3">
-                <button type="submit" name="time_to_achieve_goal" value="5 min/day" class="btn btn-light btn-time-goal d-flex align-items-center">
-                    <span class="emoji">⏱️</span>
-                    <span>5 min/day</span>
+                <button type="submit" name="retirement_time_investment" value="I’m ready to dedicate a lot of time since I have more flexibility." class="btn btn-light btn-investment d-flex align-items-center">
+                    <span class="emoji">⏳</span>
+                    <span>I’m ready to dedicate a lot of time since I have more flexibility.</span>
                 </button>
             </div>
             <div class="col-12 col-md-11 mb-3">
-                <button type="submit" name="time_to_achieve_goal" value="10 min/day" class="btn btn-light btn-time-goal d-flex align-items-center">
-                    <span class="emoji">⏱️</span>
-                    <span>10 min/day</span>
+                <button type="submit" name="retirement_time_investment" value="I can commit a few hours a week to make steady progress." class="btn btn-light btn-investment d-flex align-items-center">
+                    <span class="emoji">📅</span>
+                    <span>I can commit a few hours a week to make steady progress.</span>
                 </button>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-12 col-md-11 mb-3">
-                <button type="submit" name="time_to_achieve_goal" value="15 min/day" class="btn btn-light btn-time-goal d-flex align-items-center">
-                    <span class="emoji">⏱️</span>
-                    <span>15 min/day</span>
+                <button type="submit" name="retirement_time_investment" value="I’ll take it slow and work at my own pace." class="btn btn-light btn-investment d-flex align-items-center">
+                    <span class="emoji">🐢</span>
+                    <span>I’ll take it slow and work at my own pace.</span>
                 </button>
             </div>
             <div class="col-12 col-md-11 mb-3">
-                <button type="submit" name="time_to_achieve_goal" value="20 min/day" class="btn btn-light btn-time-goal d-flex align-items-center">
-                    <span class="emoji">⏱️</span>
-                    <span>20 min/day</span>
+                <button type="submit" name="retirement_time_investment" value="I have some time, but I want to balance it with enjoying my retirement." class="btn btn-light btn-investment d-flex align-items-center">
+                    <span class="emoji">⚖️</span>
+                    <span>I have some time, but I want to balance it with enjoying my retirement.</span>
                 </button>
             </div>
         </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-11 mb-3">
+                <button type="submit" name="retirement_time_investment" value="I’m not sure how much time I want to invest yet, but I’m open to exploring." class="btn btn-light btn-investment d-flex align-items-center">
+                    <span class="emoji">🔍</span>
+                    <span>I’m not sure how much time I want to invest yet, but I’m open to exploring.</span>
+                </button>
+            </div>
+        </div>        
     </form>
 </div>
 

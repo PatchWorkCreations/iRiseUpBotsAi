@@ -5,13 +5,13 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
 <div class="container text-center">
-    <h2>Turn Dreams into Reality!</h2>
+    <h2>Turn your retirement dreams into reality! </h2>
     {% if gender == 'Male' %}
         <img src="{% static 'myapp/images/quiz/3.webp' %}" alt="Turn Dreams into Reality" class="img-fluid mb-3 reality-image">
     {% elif gender == 'Female' %}
         <img src="{% static 'myapp/images/quiz/female_3.webp' %}" alt="Turn Dreams into Reality" class="img-fluid mb-3 reality-image">
     {% endif %}
-    <p style="text-align: left;">Our learning challenge will help you turn your passions into a thriving career. Start living your dream today and join the 87% of people who love what they do!</p>
+    <p style="text-align: left;">Our learning challenge will help you transform your passions into meaningful pursuits. Start enjoying the next chapter of your life today, just like the 78% of people who love what they do in their golden years! </p>
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary btn-follow">Continue</button>
