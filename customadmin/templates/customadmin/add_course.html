@@ -11,26 +11,10 @@
     <button type="submit">Add Course</button>
 </form>
 
-{% if course %}
-    <h2>Add Sub-Courses to {{ course.title }}</h2>
-    <form method="post" enctype="multipart/form-data" action="{% url 'add_sub_course' course.id %}">
-        {% csrf_token %}
-        {{ sub_course_form.as_p }}
-        <button type="submit">Add Sub-Course</button>
-    </form>
-
-    <h2>Add Lessons to {{ course.title }}</h2>
-    <form method="post" enctype="multipart/form-data" action="{% url 'add_lesson' course.id %}">
-        {% csrf_token %}
-        {{ lesson_form.as_p }}
-        <button type="submit">Add Lesson</button>
-    </form>
-
-    <h2>Upload CSV to Add Sub-Courses and Lessons</h2>
-    <form method="post" enctype="multipart/form-data" action="{% url 'upload_csv' %}">
-        {% csrf_token %}
-        <input type="file" name="csv_file" accept=".csv" required>
-        <button type="submit">Upload CSV</button>
-    </form>
-{% endif %}
+<h2>Upload CSV to Add Courses, Sub-Courses, and Lessons</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="csv_file" accept=".csv" required>
+    <button type="submit">Upload CSV</button>
+</form>
 {% endblock %}

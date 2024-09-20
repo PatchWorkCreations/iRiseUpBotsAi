@@ -163,51 +163,41 @@ def course_detail(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     sub_courses = course.sub_courses.all().order_by('order')
     user_progress = {}
-    lessons_unlock_status = {}  # Dictionary to store unlockable status
+    lessons_unlock_status = {}
 
-    # Check if the user has saved or favorited the course
     course_access, created = UserCourseAccess.objects.get_or_create(user=request.user, course=course)
 
     if request.method == 'POST':
-        # Check if the request is to save or favorite the course
         if 'favorite' in request.POST:
-            course_access.is_favorite = not course_access.is_favorite  # Toggle favorite
+            course_access.is_favorite = not course_access.is_favorite
             course_access.save()
         elif 'save' in request.POST:
-            course_access.is_saved = not course_access.is_saved  # Toggle saved
+            course_access.is_saved = not course_access.is_saved
             course_access.save()
-        # Redirect to the same page after the action to avoid form resubmission
         return redirect('course_detail', course_id=course.id)
 
     if request.user.is_authenticated:
-        # Loop through each sub-course
         for sub_course in sub_courses:
+            # Ensure lessons are fetched in ascending order by 'order'
             lessons = sub_course.lessons.all().order_by('order')
 
-            # Loop through lessons to set their unlock status
             for i, lesson in enumerate(lessons):
                 if lesson.is_first_lesson:
                     lessons_unlock_status[lesson.id] = True
-                else:
+                elif i > 0:
                     previous_lesson = lessons[i - 1]
                     lessons_unlock_status[lesson.id] = UserLessonProgress.objects.filter(
                         user=request.user, lesson=previous_lesson, completed=True
                     ).exists()
 
-            # Updated Progress Calculation for Each Sub-course
+            # Calculate the progress for each sub-course
             completed_lessons = UserLessonProgress.objects.filter(
                 user=request.user, lesson__parent_sub_course=sub_course, completed=True
             ).count()
             total_lessons = sub_course.lessons.count()
 
-            # Ensure progress is calculated properly and passed to the front-end
-            if total_lessons > 0:
-                progress_percentage = (completed_lessons / total_lessons) * 100
-            else:
-                progress_percentage = 0  # Avoid division by zero
-
             user_progress[sub_course.id] = {
-                'progress': int(progress_percentage),
+                'progress': int((completed_lessons / total_lessons) * 100 if total_lessons > 0 else 0),
                 'completed_lessons': completed_lessons,
                 'total_lessons': total_lessons,
             }
@@ -215,9 +205,9 @@ def course_detail(request, course_id):
     context = {
         'course': course,
         'sub_courses': sub_courses,
-        'user_progress': user_progress,  # The dictionary is passed here to the template
-        'lessons_unlock_status': lessons_unlock_status or {},  # Pass the unlock status to template
-        'course_access': course_access,  # Pass the user's course access info (favorite/save status)
+        'user_progress': user_progress,
+        'lessons_unlock_status': lessons_unlock_status,
+        'course_access': course_access,
     }
 
     return render(request, 'myapp/course_list/course_detail.html', context)

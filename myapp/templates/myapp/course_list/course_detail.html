@@ -364,7 +364,7 @@ h2 {
     <!-- Lessons are hidden by default -->
     <div class="lessons-wrapper" id="lessons-{{ forloop.counter }}" style="display: none;">
         <ul>
-            {% for lesson in sub_course.lessons.all %}
+            {% for lesson in sub_course.lessons.all|dictsort:"order" %}
             <li class="{% if not lessons_unlock_status|get_item:lesson.id|default:False %}locked{% endif %}">
                 <div class="lesson-info">
                     <h4>{{ lesson.title }}</h4>
@@ -372,7 +372,7 @@ h2 {
                     <p>{{ lesson.description }}</p>
                     {% endif %}
                 </div>
-
+    
                 <!-- Display Continue button if unlocked, otherwise show Locked -->
                 <div class="lesson-actions">
                     {% if lessons_unlock_status|get_item:lesson.id|default:False %}
@@ -386,6 +386,7 @@ h2 {
             {% endfor %}
         </ul>
     </div>
+    
 </div>
 {% endfor %}
 </div>

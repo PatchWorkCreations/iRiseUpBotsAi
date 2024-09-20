@@ -25,8 +25,19 @@ def course_detail(request, course_id):
     sub_courses = course.sub_courses.all()
     return render(request, 'myapp/course_detail.html', {'course': course, 'sub_courses': sub_courses})
 
+import csv
+from django.shortcuts import render, redirect
+from myapp.models import Course, SubCourse, Lesson
+from myapp.forms import CourseForm
+
 def add_course(request):
     if request.method == 'POST':
+        # Handle file upload if there's a CSV
+        if 'csv_file' in request.FILES:
+            csv_file = request.FILES['csv_file']
+            handle_csv_upload(csv_file)
+            return redirect('course_list')
+
         course_form = CourseForm(request.POST, request.FILES)
         if course_form.is_valid():
             course = course_form.save()
@@ -35,6 +46,123 @@ def add_course(request):
     else:
         course_form = CourseForm()
     return render(request, 'customadmin/add_course.html', {'course_form': course_form})
+
+import csv
+from myapp.models import Course, SubCourse, Lesson
+
+def handle_csv_upload(csv_file):
+    csv_reader = csv.DictReader(csv_file.read().decode('utf-8').splitlines())
+    
+    for row in csv_reader:
+        course_title = row.get('Course Title').strip()
+        subcourse_title = row.get('Subcourse Title').strip().lower()  # Normalize the subcourse title
+        lesson_title = row.get('Lesson Title').strip()
+        lesson_content = row.get('Lesson Content')
+        lesson_order = int(row.get('Lesson Order'))  # Ensure lesson_order is an integer
+        units = row.get('Units')
+        hours = row.get('Hours')
+
+        # Fetch or create the course based on the course title, units, and hours
+        course, created = Course.objects.get_or_create(
+            title=course_title,
+            defaults={'units': units, 'hours': hours}
+        )
+
+        # Update the course units and hours if necessary
+        if not created:
+            if course.units != units:
+                course.units = units
+            if course.hours != hours:
+                course.hours = hours
+            course.save()
+
+        # Normalize the subcourse title and fetch or create the subcourse
+        subcourse_title_normalized = subcourse_title.strip().lower()  # Normalized subcourse title
+        sub_course, created = SubCourse.objects.get_or_create(
+            title=subcourse_title_normalized,  # Store the normalized title
+            parent_course=course,
+            defaults={'units': units, 'hours': hours}
+        )
+
+        # If the subcourse is newly created, assign the correct order
+        if created:
+            # Assign order based on the number of existing subcourses under the course
+            sub_course.order = SubCourse.objects.filter(parent_course=course).count()
+            sub_course.save()
+
+        # If the subcourse already exists but the units/hours are different, update them
+        if not created:
+            if sub_course.units != units:
+                sub_course.units = units
+            if sub_course.hours != hours:
+                sub_course.hours = hours
+            sub_course.save()
+
+        # Check if the lesson already exists under the subcourse to avoid duplication
+        lesson_exists = Lesson.objects.filter(
+            title=lesson_title, 
+            parent_sub_course=sub_course
+        ).exists()
+
+        # Only create the lesson if it doesn't already exist
+        if not lesson_exists:
+            # Check if the lesson order is 1 to mark it as the first lesson
+            is_first_lesson = True if lesson_order == 1 else False
+
+            Lesson.objects.create(
+                title=lesson_title, 
+                content=lesson_content, 
+                parent_sub_course=sub_course, 
+                order=lesson_order,
+                is_first_lesson=is_first_lesson  # Mark it as the first lesson if order is 1
+            )
+
+from docx import Document
+from myapp.models import Course, SubCourse, Lesson
+
+def extract_lesson_content(word_file, course_id):
+    doc = Document(word_file)
+    
+    # Fetch the course by course_id (assuming course already exists)
+    course = Course.objects.get(id=course_id)
+    
+    current_subcourse = None
+    current_lesson = None
+
+    for para in doc.paragraphs:
+        text = para.text.strip()
+        if not text:
+            continue
+
+        # Identify subcourse headers (e.g., "Subcourse 1: Introduction to Podcasting")
+        if "Sub course" in text:
+            subcourse_title = text.split(':')[1].strip()  # Extract title after "Sub course X:"
+            # Fetch the existing subcourse from the database
+            current_subcourse = SubCourse.objects.filter(
+                title=subcourse_title,
+                parent_course=course
+            ).first()
+
+        # Identify lessons under each subcourse (e.g., "Lesson 1: What is Podcasting?")
+        elif "Lesson" in text and current_subcourse:
+            lesson_title = text.split(':')[1].strip()  # Extract title after "Lesson X:"
+            # Fetch the existing lesson under the subcourse
+            current_lesson = Lesson.objects.filter(
+                title=lesson_title,
+                parent_sub_course=current_subcourse
+            ).first()
+
+        # Add content to the current lesson if we're within a lesson
+        elif current_lesson:
+            if current_lesson.content:
+                current_lesson.content += f"\n{text}"  # Append content to existing content
+            else:
+                current_lesson.content = text  # Add new content
+            current_lesson.save()
+
+    return "Lesson contents have been successfully updated."
+
+
 
 def generate_course_html(course):
     context = {'course': course}
@@ -119,67 +247,99 @@ def add_lesson(request):
     return render(request, 'customadmin/add_lesson.html', {'form': form, 'sub_course': sub_course})
 
 
+import json
+from docx import Document
+from django.shortcuts import get_object_or_404, redirect, render
+
+def extract_paragraphs_and_headers_from_word(word_file):
+    doc = Document(word_file)
+    content_blocks = []
+
+    for para in doc.paragraphs:
+        text = para.text.strip()
+        if not text:
+            continue
+
+        # Check if any part of the paragraph is bold
+        is_bold = any(run.bold for run in para.runs if run.bold is not None)
+
+        # Classify as header or paragraph
+        if is_bold:
+            block_type = 'header'
+        else:
+            block_type = 'paragraph'
+        
+        content_blocks.append({'type': block_type, 'content': text})
+
+    return content_blocks
+
 def edit_lesson(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
 
     if request.method == 'POST':
-        # Update the lesson description
-        lesson.description = request.POST.get('description', '')
+        # Check if a Word document is uploaded
+        if 'word_document' in request.FILES:
+            word_file = request.FILES['word_document']
+            content_blocks = extract_paragraphs_and_headers_from_word(word_file)
+        else:
+            # Regular form submission to handle the lesson content
+            lesson.description = request.POST.get('description', '')
 
-        content_blocks = []
-        for idx in range(int(request.POST.get('block_count', '0'))):
-            block_type = request.POST.get(f'block_type_{idx}')
+            content_blocks = []
+            for idx in range(int(request.POST.get('block_count', '0'))):
+                block_type = request.POST.get(f'block_type_{idx}')
 
-            if block_type == 'paragraph':
-                content = request.POST.get(f'content_{idx}', '')
-                content_blocks.append({'type': 'paragraph', 'content': content})
+                if block_type == 'paragraph':
+                    content = request.POST.get(f'content_{idx}', '')
+                    content_blocks.append({'type': 'paragraph', 'content': content})
 
-            elif block_type == 'image':
-                image = request.FILES.get(f'image_{idx}')
-                if image:
-                    image_url = handle_uploaded_file(image)
-                    content_blocks.append({'type': 'image', 'content': image_url})
+                elif block_type == 'image':
+                    image = request.FILES.get(f'image_{idx}')
+                    if image:
+                        image_url = handle_uploaded_file(image)
+                        content_blocks.append({'type': 'image', 'content': image_url})
 
-            elif block_type == 'header':
-                content = request.POST.get(f'content_{idx}', '')
-                content_blocks.append({'type': 'header', 'content': content})
+                elif block_type == 'header':
+                    content = request.POST.get(f'content_{idx}', '')
+                    content_blocks.append({'type': 'header', 'content': content})
 
-            elif block_type == 'task':
-                task_content = request.POST.get(f'content_{idx}', '')
-                content_blocks.append({'type': 'task', 'content': task_content})
+                elif block_type == 'task':
+                    task_content = request.POST.get(f'content_{idx}', '')
+                    content_blocks.append({'type': 'task', 'content': task_content})
 
-            elif block_type == 'question':
-                question_content = request.POST.get(f'content_{idx}', '')
-                content_blocks.append({'type': 'question', 'content': question_content})
+                elif block_type == 'question':
+                    question_content = request.POST.get(f'content_{idx}', '')
+                    content_blocks.append({'type': 'question', 'content': question_content})
 
-            elif block_type == 'multiple_questions':
-                multiple_question_content = request.POST.get(f'content_{idx}', '')
-                questions_list = [q.strip() for q in multiple_question_content.split(',')]
-                content_blocks.append({'type': 'multiple_questions', 'content': questions_list})
+                elif block_type == 'multiple_questions':
+                    multiple_question_content = request.POST.get(f'content_{idx}', '')
+                    questions_list = [q.strip() for q in multiple_question_content.split(',')]
+                    content_blocks.append({'type': 'multiple_questions', 'content': questions_list})
 
-            elif block_type == 'multiple_choice':
-                question = request.POST.get(f'question_{idx}', '')
-                correct_answer = request.POST.get(f'correct_answer_{idx}', '')
-                options = request.POST.getlist(f'option_{idx}[]')
-                content_blocks.append({
-                    'type': 'multiple_choice',
-                    'question': question,
-                    'options': options,
-                    'correct_answer': correct_answer
-                })
+                elif block_type == 'multiple_choice':
+                    question = request.POST.get(f'question_{idx}', '')
+                    correct_answer = request.POST.get(f'correct_answer_{idx}', '')
+                    options = request.POST.getlist(f'option_{idx}[]')
+                    content_blocks.append({
+                        'type': 'multiple_choice',
+                        'question': question,
+                        'options': options,
+                        'correct_answer': correct_answer
+                    })
 
-        # Save the updated content blocks in JSON format
-        lesson.content = json.dumps(content_blocks)
-        lesson.save()
+            # Save the updated content blocks in JSON format
+            lesson.content = json.dumps(content_blocks)
+            lesson.save()
 
-        # Redirect back to the course detail page after saving
-        return redirect('course_detail', lesson.parent_sub_course.parent_course.id)
+            # Redirect back to the course detail page after saving
+            return redirect('edit_course', lesson.parent_sub_course.parent_course.id)
 
-    # Load existing content blocks if available
-    try:
-        content_blocks = json.loads(lesson.content)
-    except json.JSONDecodeError:
-        content_blocks = []
+    else:
+        # Load existing content blocks if available
+        try:
+            content_blocks = json.loads(lesson.content)
+        except json.JSONDecodeError:
+            content_blocks = []
 
     context = {
         'lesson': lesson,

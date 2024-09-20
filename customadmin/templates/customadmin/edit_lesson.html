@@ -75,8 +75,11 @@
 
     <h3>Lesson Content</h3>
     <textarea name="description" rows="4" cols="50" placeholder="Describe the lesson content here">{{ lesson.description }}</textarea><br>
+    <h3>Upload Word Document</h3>
+    <input type="file" name="word_document" accept=".docx" class="form-control mb-3" onchange="this.form.submit()">
 
     <h3>Content Blocks</h3>
+    
     <button type="button" id="toggle-drag-btn" class="btn btn-primary mb-3" onclick="toggleDragMode()">Enable Drag Mode</button>
     <div id="content-blocks-container" class="mb-3" data-block-count="{{ content_blocks|length }}">
         <!-- Your content block HTML here -->
