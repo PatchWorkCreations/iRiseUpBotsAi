@@ -24,28 +24,149 @@ def course_detail(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     sub_courses = course.sub_courses.all()
     return render(request, 'myapp/course_detail.html', {'course': course, 'sub_courses': sub_courses})
-
-import csv
+import os
+from docx import Document
 from django.shortcuts import render, redirect
 from myapp.models import Course, SubCourse, Lesson
+from myapp.forms import CourseForm
+import json
+
+def extract_subcourses_lessons_from_docx(docx_file, course):
+    doc = Document(docx_file)
+
+    current_subcourse = None
+    current_lesson = None
+    lesson_blocks = []  # To hold all the blocks (headers, paragraphs) for a lesson
+    block_content = ""  # To accumulate paragraph content
+    subcourse_order = SubCourse.objects.filter(parent_course=course).count()  # Set initial order based on existing subcourses
+
+    # Keep track of whether we're inside a lesson to handle nested structures
+    inside_lesson = False
+
+    for para in doc.paragraphs:
+        text = para.text.strip()
+        if not text:
+            continue
+
+        # Check if the paragraph contains bold text (header block)
+        is_bold = any(run.bold for run in para.runs if run.bold)
+
+        # Identify subcourse (e.g., "Sub course 1: Introduction to Podcasting")
+        if "Sub course" in text and ':' in text:
+            subcourse_title = text.split(':', 1)[1].strip()  # Extract title after "Sub course X:"
+            
+            # Save the previous lesson's content (if any)
+            if current_lesson and lesson_blocks:
+                current_lesson.content = json.dumps(lesson_blocks)
+                current_lesson.save()
+                lesson_blocks = []  # Reset for the next subcourse
+
+            # Create subcourse if it does not exist
+            current_subcourse, created = SubCourse.objects.get_or_create(
+                title=subcourse_title,
+                parent_course=course,
+                defaults={'order': subcourse_order + 1, 'units': 1, 'hours': 1}  # Set order, units, and hours
+            )
+
+            if created:
+                subcourse_order += 1  # Increment subcourse order only if a new subcourse was created
+
+            # Reset lesson order for the new subcourse
+            lesson_order = Lesson.objects.filter(parent_sub_course=current_subcourse).count()
+            current_lesson = None  # Reset current lesson since we've started a new subcourse
+            inside_lesson = False  # Ensure we start fresh for a new subcourse
+
+        # Identify lessons under each subcourse (e.g., "Lesson 1: What is Podcasting?")
+        elif "Lesson" in text and ':' in text and current_subcourse:
+            lesson_title = text.split(':', 1)[1].strip()  # Extract title after "Lesson X:"
+
+            # Save the previous lesson's content (if any)
+            if current_lesson and lesson_blocks:
+                current_lesson.content = json.dumps(lesson_blocks)
+                current_lesson.save()
+
+            # Create new lesson under current subcourse
+            current_lesson, created = Lesson.objects.get_or_create(
+                title=lesson_title,
+                parent_sub_course=current_subcourse,
+                defaults={'order': lesson_order + 1}  # Assign the lesson order
+            )
+
+            if created:
+                lesson_order += 1  # Increment lesson order if a new lesson was created
+
+            # Reset lesson blocks for the new lesson
+            lesson_blocks = []
+            block_content = ""
+            inside_lesson = True  # Mark that we're now inside a lesson
+
+        # Handle nested headers within lessons (e.g., "Key Points," "Exercises")
+        elif is_bold and current_lesson and inside_lesson:
+            if block_content:
+                # Save the previous block content before starting a new header block
+                lesson_blocks.append({'type': 'paragraph', 'content': block_content.strip()})
+                block_content = ""
+
+            # Add the bold text as a header block
+            lesson_blocks.append({'type': 'header', 'content': text})
+
+        # Handle paragraphs and general content blocks
+        elif current_lesson and inside_lesson:
+            # Break up paragraphs into blocks of 3 sentences for better readability
+            sentences = text.split('. ')
+            for i in range(0, len(sentences), 3):
+                block = ". ".join(sentences[i:i+3]).strip()  # Join 3 sentences together
+                if block:
+                    block_content += f"{block}. "  # Add the sentences to the current block
+
+            if block_content:
+                lesson_blocks.append({'type': 'paragraph', 'content': block_content.strip()})
+                block_content = ""
+
+    # Save the last lesson's content after looping
+    if current_lesson and lesson_blocks:
+        current_lesson.content = json.dumps(lesson_blocks)
+        current_lesson.save()
+
+    # Once subcourses are added, update the course with correct units and hours
+    course.units = subcourse_order  # Update based on the number of subcourses
+    course.hours = subcourse_order  # 1 hour per subcourse
+    course.save()
+
+
+from django.shortcuts import render, redirect
 from myapp.forms import CourseForm
 
 def add_course(request):
     if request.method == 'POST':
-        # Handle file upload if there's a CSV
-        if 'csv_file' in request.FILES:
-            csv_file = request.FILES['csv_file']
-            handle_csv_upload(csv_file)
-            return redirect('course_list')
+        # Handle DOCX upload
+        if 'upload_docx' in request.POST:
+            if 'docx_file' in request.FILES:
+                docx_file = request.FILES['docx_file']
+                course_form = CourseForm(request.POST, request.FILES)
+                
+                if course_form.is_valid():
+                    # Save the course first to avoid unsaved related object error
+                    course = course_form.save()  # Save the course immediately
+                    
+                    # Extract subcourses and lessons from DOCX file
+                    extract_subcourses_lessons_from_docx(docx_file, course)
+                    
+                    # Now the course, subcourses, and lessons are saved, redirect to course list
+                    return redirect('course_list')
 
-        course_form = CourseForm(request.POST, request.FILES)
-        if course_form.is_valid():
-            course = course_form.save()
-            generate_course_html(course)
-            return redirect('course_list')
+        # Handle CSV upload
+        elif 'upload_csv' in request.POST:
+            if 'csv_file' in request.FILES:
+                csv_file = request.FILES['csv_file']
+                handle_csv_upload(csv_file)  # Use your existing CSV handling function
+                return redirect('course_list')
+
     else:
         course_form = CourseForm()
+    
     return render(request, 'customadmin/add_course.html', {'course_form': course_form})
+
 
 import csv
 from myapp.models import Course, SubCourse, Lesson

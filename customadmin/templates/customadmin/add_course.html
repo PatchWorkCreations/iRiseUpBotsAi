@@ -5,16 +5,26 @@
 
 {% block content %}
 <h2>Add New Course</h2>
-<form method="post" enctype="multipart/form-data">
+
+<!-- Add Course Form -->
+<form method="post" enctype="multipart/form-data" action="">
     {% csrf_token %}
     {{ course_form.as_p }}
-    <button type="submit">Add Course</button>
+
+    <!-- Upload DOCX Section -->
+    <div>
+        <label for="docx_file">Upload Course Content (DOCX):</label>
+        <input type="file" name="docx_file" accept=".docx">
+        <button type="submit" name="upload_docx">Upload DOCX and Add Course</button>
+    </div>
 </form>
 
+<!-- Separate form for uploading CSV -->
 <h2>Upload CSV to Add Courses, Sub-Courses, and Lessons</h2>
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" action="">
     {% csrf_token %}
     <input type="file" name="csv_file" accept=".csv" required>
-    <button type="submit">Upload CSV</button>
+    <button type="submit" name="upload_csv">Upload CSV</button>
 </form>
+
 {% endblock %}
