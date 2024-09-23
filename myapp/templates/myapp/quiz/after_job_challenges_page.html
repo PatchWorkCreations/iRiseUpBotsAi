@@ -5,7 +5,7 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
 <div class="container text-center">
-    <h2>Stability Is Within Reach</h2>
+    <h2 style="font-size: 36px;">Stability Is Within Reach</h2>
     <img src="{% static 'myapp/images/quiz/five.png' %}" alt="Overcoming Challenges" class="img-fluid mb-3">
     <p style="padding-bottom: 50px;">Thank you for sharing, we will do our best to help you!
         We have helped more than 100,000 people to boost their productivity and income potential at work and life using latest AI tools.</p>
@@ -15,7 +15,31 @@
     </form>
 </div>
 <style>
+.text-center h2 {
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+    }
 
- 
+    .img-fluid {
+        max-width: 80%; /* Reduced size for better text visibility */
+        height: auto;
+        margin-bottom: 20px;
+        border-radius: 8px; /* Optional: for a more polished look */
+    }
+
+    p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 30px; /* Increased margin to ensure space between text and button */
+        padding: 0 10px;
+    }
+
+    
+    /* Ensure scrollability for small screens */
+    .container.text-center {
+        max-height: calc(100vh - 100px); /* Adjust height to leave room for padding */
+        overflow-y: auto;
+    }
+
 </style>
 {% endblock %}

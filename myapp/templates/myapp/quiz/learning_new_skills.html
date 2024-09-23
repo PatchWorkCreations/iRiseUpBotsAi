@@ -5,23 +5,23 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
 <div class="container text-center">
-    <h2>Are you comfortable with learning new skills or techniques?</h2>
+    <h2 style="font-size: 36px;">Are you comfortable with learning new skills or techniques?</h2>
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="learning_new_skills" value="Yes" class="btn btn-light btn-skills d-flex align-items-center">
                     <span class="emoji">📚</span>
                     <span>Yes, I enjoy learning new things.</span>
                 </button>
             </div>
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="learning_new_skills" value="No" class="btn btn-light btn-skills d-flex align-items-center">
                     <span class="emoji">🚫</span>
                     <span>I’m open to it, but I prefer simple steps.</span>
                 </button>
             </div>
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="learning_new_skills" value="Hm, not sure" class="btn btn-light btn-skills d-flex align-items-center">
                     <span class="emoji">🤔</span>
                     <span>It depends, but I’m willing to try.</span>

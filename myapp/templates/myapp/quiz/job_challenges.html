@@ -4,20 +4,20 @@
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
-    <div class="container text-center">
+    <div class="container text-center mt-3">
         <h2>What Challenges Are You Facing in Your Current Job?</h2>
         <p class="text-muted">Select All That Apply</p>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <input type="checkbox" name="job_challenges" value="Low income" id="low_income" class="d-none">
                     <label for="low_income" class="btn btn-light btn-challenge d-flex align-items-center">
                         <span class="emoji">💸</span>
                         <span>Not Enough Income</span>
                     </label>
                 </div>
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <input type="checkbox" name="job_challenges" value="Financial dependence" id="financial_dependence" class="d-none">
                     <label for="financial_dependence" class="btn btn-light btn-challenge d-flex align-items-center">
                         <span class="emoji">🔗</span>
@@ -26,14 +26,14 @@
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <input type="checkbox" name="job_challenges" value="No free time" id="no_free_time" class="d-none">
                     <label for="no_free_time" class="btn btn-light btn-challenge d-flex align-items-center">
                         <span class="emoji">⏳</span>
                         <span>No Time for Myself</span>
                     </label>
                 </div>
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <input type="checkbox" name="job_challenges" value="Routine" id="routine" class="d-none">
                     <label for="routine" class="btn btn-light btn-challenge d-flex align-items-center">
                         <span class="emoji">🔁</span>
@@ -42,14 +42,14 @@
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <input type="checkbox" name="job_challenges" value="Constant stress" id="constant_stress" class="d-none">
                     <label for="constant_stress" class="btn btn-light btn-challenge d-flex align-items-center">
                         <span class="emoji">😰</span>
                         <span>Feeling Constantly Stressed</span>
                     </label>
                 </div>
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <input type="checkbox" name="job_challenges" value="Toxic environment" id="toxic_environment" class="d-none">
                     <label for="toxic_environment" class="btn btn-light btn-challenge d-flex align-items-center">
                         <span class="emoji">☠️</span>
@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <input type="checkbox" name="job_challenges" value="Other" id="other" class="d-none">
                     <label for="other" class="btn btn-light btn-challenge d-flex align-items-center">
                         <span class="emoji">🤔</span>

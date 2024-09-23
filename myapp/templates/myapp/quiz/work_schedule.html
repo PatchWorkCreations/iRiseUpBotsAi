@@ -4,18 +4,18 @@
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
-    <div class="container text-center">
+    <div class="container text-center mt-3">
         <h2>What’s Your Work Schedule?</h2>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="work_schedule" value="9 to 5" class="btn btn-light btn-schedule">
                         <span class="emoji">👔</span>
                         <span>Standard 9 to 5</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="work_schedule" value="Night shifts" class="btn btn-light btn-schedule">
                         <span class="emoji">🌙</span>
                         <span>Night Owl Hours</span>
@@ -23,13 +23,13 @@
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="work_schedule" value="My hours are flexible" class="btn btn-light btn-schedule">
                         <span class="emoji">👌</span>
                         <span>Flexible and On My Terms</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="work_schedule" value="I’m retired" class="btn btn-light btn-schedule">
                         <span class="emoji">🧶</span>
                         <span>Enjoying Retirement

@@ -4,24 +4,24 @@
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
-    <div class="container text-center">
+    <div class="container text-center mt-3">
         <h2>Would you enjoy having more flexibility in choosing when and where you spend your time during retirement?</h2>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="control_work_hours" value="Yes" class="btn btn-light btn-control">
                         <span class="emoji">🕒</span>
                         <span>Yes</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="control_work_hours" value="No" class="btn btn-light btn-control">
                         <span class="emoji">🚫</span>
                         <span>No</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="control_work_hours" value="Hm, not sure" class="btn btn-light btn-control">
                         <span class="emoji">🤔</span>
                         <span>Hm, not sure</span>

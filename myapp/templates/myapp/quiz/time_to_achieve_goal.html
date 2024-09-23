@@ -5,17 +5,17 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
 <div class="container text-center">
-    <h2>How much time are you willing to invest in achieving your retirement goals?</h2>
+    <h2 style="font-size: 36px;">How much time are you willing to invest in achieving your retirement goals?</h2>
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="retirement_time_investment" value="I’m ready to dedicate a lot of time since I have more flexibility." class="btn btn-light btn-investment d-flex align-items-center">
                     <span class="emoji">⏳</span>
                     <span>I’m ready to dedicate a lot of time since I have more flexibility.</span>
                 </button>
             </div>
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="retirement_time_investment" value="I can commit a few hours a week to make steady progress." class="btn btn-light btn-investment d-flex align-items-center">
                     <span class="emoji">📅</span>
                     <span>I can commit a few hours a week to make steady progress.</span>
@@ -23,13 +23,13 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="retirement_time_investment" value="I’ll take it slow and work at my own pace." class="btn btn-light btn-investment d-flex align-items-center">
                     <span class="emoji">🐢</span>
                     <span>I’ll take it slow and work at my own pace.</span>
                 </button>
             </div>
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="retirement_time_investment" value="I have some time, but I want to balance it with enjoying my retirement." class="btn btn-light btn-investment d-flex align-items-center">
                     <span class="emoji">⚖️</span>
                     <span>I have some time, but I want to balance it with enjoying my retirement.</span>
@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="retirement_time_investment" value="I’m not sure how much time I want to invest yet, but I’m open to exploring." class="btn btn-light btn-investment d-flex align-items-center">
                     <span class="emoji">🔍</span>
                     <span>I’m not sure how much time I want to invest yet, but I’m open to exploring.</span>

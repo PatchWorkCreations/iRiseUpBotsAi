@@ -5,18 +5,18 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
 <div class="container text-center">
-    <h2>Is there something special you wish to achieve in your retirement? </h2>
+    <h2 style="font-size: 36px;">Is there something special you wish to achieve in your retirement? </h2>
     <p>You're more likely to reach your goal when you have something meaningful to aim for.</p>
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="special_goal" value="Yes, I want to pursue a lifelong passion." class="btn btn-light btn-goal d-flex align-items-center">
                     <span class="emoji">🎯</span>
                     <span>Yes, I want to pursue a lifelong passion.</span>
                 </button>
             </div>
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="special_goal" value="I’d like to give back through volunteering or mentoring." class="btn btn-light btn-goal d-flex align-items-center">
                     <span class="emoji">🤝</span>
                     <span>I’d like to give back through volunteering or mentoring.</span>
@@ -24,13 +24,13 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="special_goal" value="I hope to start a new hobby or side project." class="btn btn-light btn-goal d-flex align-items-center">
                     <span class="emoji">🛠️</span>
                     <span>I hope to start a new hobby or side project.</span>
                 </button>
             </div>
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="special_goal" value="I want to stay active and learn new things." class="btn btn-light btn-goal d-flex align-items-center">
                     <span class="emoji">💪</span>
                     <span>I want to stay active and learn new things.</span>
@@ -38,7 +38,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="special_goal" value="I’m not sure yet, but I’m open to exploring new opportunities." class="btn btn-light btn-goal d-flex align-items-center">
                     <span class="emoji">🔍</span>
                     <span>I’m not sure yet, but I’m open to exploring new opportunities.</span>

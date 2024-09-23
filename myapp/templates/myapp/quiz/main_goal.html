@@ -4,24 +4,24 @@
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
-    <div class="container text-center">
+    <div class="container text-center mt-4">
         <h2>What’s your top priority?</h2>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
-                <div class="col-12 col-md-12 mb-4">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="main_goal" value="Grow wealth" class="btn btn-light btn-goal d-flex align-items-center">
                         <img src="{% if gender == 'Male' %}{% static 'myapp/images/quiz/male_grow_wealth.webp' %}{% else %}{% static 'myapp/images/quiz/female_grow_wealth.webp' %}{% endif %}" alt="Grow Wealth" class="img-fluid goal-image" />
                         <span>Grow My Money</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-12 mb-4">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="main_goal" value="Be my own boss" class="btn btn-light btn-goal d-flex align-items-center">
                         <img src="{% if gender == 'Male' %}{% static 'myapp/images/quiz/male_be_my_own_boss.webp' %}{% else %}{% static 'myapp/images/quiz/female_be_my_own_boss.webp' %}{% endif %}" alt="Be My Own Boss" class="img-fluid goal-image" />
                         <span>Start My Own Business</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-12 mb-4">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="main_goal" value="Travel the world" class="btn btn-light btn-goal d-flex align-items-center">
                         <img src="{% if gender == 'Male' %}{% static 'myapp/images/quiz/male_travel_the_world.webp' %}{% else %}{% static 'myapp/images/quiz/female_travel_the_world.webp' %}{% endif %}" alt="Travel the World" class="img-fluid goal-image" />
                         <span>Travel and See the World</span>

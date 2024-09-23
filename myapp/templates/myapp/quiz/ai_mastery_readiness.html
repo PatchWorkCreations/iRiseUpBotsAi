@@ -5,17 +5,17 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
 <div class="container text-center">
-    <h2>Rate your readiness to master AI</h2>
+    <h2 style="font-size: 36px;">Rate your readiness to master AI</h2>
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="ai_mastery_readiness" value="All set - I am fully prepared" class="btn btn-light btn-readiness d-flex align-items-center">
                     <span class="emoji">🚀</span>
                     <span>All set - I am fully prepared</span>
                 </button>
             </div>
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="ai_mastery_readiness" value="Ready - I feel confident" class="btn btn-light btn-readiness d-flex align-items-center">
                     <span class="emoji">👍</span>
                     <span>Ready - I feel confident</span>
@@ -23,13 +23,13 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="ai_mastery_readiness" value="Somewhat Ready - I have some knowledge" class="btn btn-light btn-readiness d-flex align-items-center">
                     <span class="emoji">🤔</span>
                     <span>Somewhat Ready - I have some knowledge</span>
                 </button>
             </div>
-            <div class="col-12 col-md-11 mb-3">
+            <div class="col-12 col-md-12 mb-4 mt-4">
                 <button type="submit" name="ai_mastery_readiness" value="Not Ready - I need more preparation" class="btn btn-light btn-readiness d-flex align-items-center">
                     <span class="emoji">⚠️</span>
                     <span>Not Ready - I need more preparation</span>

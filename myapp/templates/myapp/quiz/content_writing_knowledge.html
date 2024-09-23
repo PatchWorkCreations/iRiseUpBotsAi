@@ -4,19 +4,19 @@
 {% block content %}
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
-    <div class="container text-center">
+    <div class="container text-center mt-3">
         <h2>Rate your knowledge in content writing</h2>
         <p>According to Upwork, a freelance content writer makes around $42,000 annually.</p>
         <form method="post">
             {% csrf_token %}
             <div class="row justify-content-center">
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="content_writing_knowledge" value="Expert - I have extensive knowledge" class="btn btn-light btn-knowledge d-flex align-items-center">
                         <span class="emoji">💡</span>
                         <span>Expert - I have extensive knowledge</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="content_writing_knowledge" value="Proficient - I am skilled" class="btn btn-light btn-knowledge d-flex align-items-center">
                         <span class="emoji">📝</span>
                         <span>Proficient - I am skilled</span>
@@ -24,13 +24,13 @@
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="content_writing_knowledge" value="Intermediate - I have some knowledge" class="btn btn-light btn-knowledge d-flex align-items-center">
                         <span class="emoji">✏️</span>
                         <span>Intermediate - I have some knowledge</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-11 mb-3">
+                <div class="col-12 col-md-12 mb-4 mt-4">
                     <button type="submit" name="content_writing_knowledge" value="Novice - I have limited knowledge" class="btn btn-light btn-knowledge d-flex align-items-center">
                         <span class="emoji">📚</span>
                         <span>Novice - I have limited knowledge</span>
