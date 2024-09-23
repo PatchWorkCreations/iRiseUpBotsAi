@@ -129,51 +129,53 @@
             </div>
            </div>    
 
-            <div id="plan-selection-section" class="plan-selection-container">
-                <div class="plan-option">
-                    <input type="radio" id="1-week-plan" name="plan" value="1-week">
-                    <label for="1-week-plan">
-                        <div class="plan-header">
-                            <span>1-WEEK PLAN</span>
-                            <span>$13.86</span>
-                        </div>
-                        <div class="plan-price">
-                            <span>$1.98</span>
-                            <span>per day</span>
-                        </div>
-                    </label>
-                </div>
-                
-                <div class="plan-option most-popular">
-                    <input type="radio" id="4-week-plan" name="plan" value="4-week" checked>
-                    <label for="4-week-plan">
-                        <div class="most-popular-badge">
-                            <span>👍 MOST POPULAR</span>
-                        </div>
-                        <div class="plan-header" style="padding-top: 55px;">
-                            <span>4-WEEK PLAN</span>
-                            <span>$39.99</span>
-                        </div>
-                        <div class="plan-price">
-                            <span>$1.43</span>
-                            <span>per day</span>
-                        </div>
-                    </label>
-                </div>
-                
-                <div class="plan-option">
-                    <input type="radio" id="12-week-plan" name="plan" value="12-week">
-                    <label for="12-week-plan">
-                        <div class="plan-header">
-                            <span>12-WEEK PLAN</span>
-                            <span>$79.99</span>
-                        </div>
-                        <div class="plan-price">
-                            <span>$0.95</span>
-                            <span>per day</span>
-                        </div>
-                    </label>
-                </div>
+           <div id="plan-selection-section" class="plan-selection-container">
+            <div class="plan-option">
+                <input type="radio" id="1-week-plan" name="plan" value="1-week">
+                <label for="1-week-plan">
+                    <div class="plan-header">
+                        <span>1-WEEK PLAN</span>
+                        <span>$12.87</span> <!-- Updated total price -->
+                    </div>
+                    <div class="plan-price">
+                        <span>$1.84</span> <!-- Updated per-day price -->
+                        <span>per day</span>
+                    </div>
+                </label>
+            </div>
+            
+            <div class="plan-option most-popular">
+                <input type="radio" id="4-week-plan" name="plan" value="4-week" checked>
+                <label for="4-week-plan">
+                    <div class="most-popular-badge">
+                        <span>👍 MOST POPULAR</span>
+                    </div>
+                    <div class="plan-header" style="padding-top: 55px;">
+                        <span>4-WEEK PLAN</span>
+                        <span>$37.95</span> <!-- Updated total price -->
+                    </div>
+                    <div class="plan-price">
+                        <span>$1.36</span> <!-- Updated per-day price -->
+                        <span>per day</span>
+                    </div>
+                </label>
+            </div>
+            
+            <div class="plan-option">
+                <input type="radio" id="12-week-plan" name="plan" value="12-week">
+                <label for="12-week-plan">
+                    <div class="plan-header">
+                        <span>12-WEEK PLAN</span>
+                        <span>$97.00</span> <!-- Updated total price -->
+                    </div>
+                    <div class="plan-price">
+                        <span>$1.15</span> <!-- Updated per-day price -->
+                        <span>per day</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+        
                 
 
                 <div class="plan-info">
@@ -363,16 +365,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to determine the amount based on the selected plan
     function determineAmountBasedOnPlan(plan) {
-        if (plan === '1-week') {
-            return 1386;  // $13.86 in cents
-        } else if (plan === '4-week') {
-            return 3999;  // $39.99 in cents
-        } else if (plan === '12-week') {
-            return 7999;  // $79.99 in cents
-        } else {
-            return 0;
-        }
+    if (plan === '1-week') {
+        return 1287;  // $12.87 in cents
+    } else if (plan === '4-week') {
+        return 3795;  // $37.95 in cents
+    } else if (plan === '12-week') {
+        return 9700;  // $97.00 in cents
+    } else {
+        return 0;
     }
+}
+
 
     // Function to set the selected plan in the session via AJAX
         function setSelectedPlanInSession(plan) {
@@ -595,12 +598,13 @@ document.addEventListener('DOMContentLoaded', function () {
         let price;
 
         if (selectedPlan.value === '1-week') {
-            price = '13.86';
-        } else if (selectedPlan.value === '4-week') {
-            price = '39.99';
-        } else if (selectedPlan.value === '12-week') {
-            price = '79.99';
-        }
+         price = '12.87';  // Updated price for 1-week plan
+    } else if (selectedPlan.value === '4-week') {
+        price = '37.95';  // Updated price for 4-week plan
+    } else if (selectedPlan.value === '12-week') {
+        price = '97.00';  // Updated price for 12-week plan
+    }
+
 
         selectedPlanPrice.textContent = `$${price}`;
         selectedPlanRenewalPrice.textContent = `$${price}`;

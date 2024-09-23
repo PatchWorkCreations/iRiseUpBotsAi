@@ -1177,11 +1177,11 @@ client = Client(
 
 def determine_amount_based_on_plan(selected_plan):
     if selected_plan == '1-week':
-        return 1386  # $13.86 in cents
+        return 1287  # $12.87 in cents
     elif selected_plan == '4-week':
-        return 3999  # $39.99 in cents
+        return 3795  # $37.95 in cents
     elif selected_plan == '12-week':
-        return 7999  # $79.99 in cents
+        return 9700  # $97.00 in cents
     else:
         return 0  # Default to 0 for unrecognized plans
 
@@ -1440,9 +1440,9 @@ import json
 from .models import Subscription
 
 PAYPAL_PLANS = {
-    '1-week': 'P-66T34473C6270971CM3MQY2Y',
-    '4-week': 'P-0VP18059C1255763NM3MQY3A',
-    '12-week': 'P-307971850T000074HM3MQY3I'
+    '1-week': 'P-8UK56244MG445954XM3YQWQA',
+    '4-week': 'P-8L991744WP760193RM3YQWQI',
+    '12-week': 'P-75F49223D3934520VM3YQWQI'
 }
 
 def get_json_data(request):
@@ -1578,13 +1578,13 @@ def complete_paypal_subscription(request):
             # Calculate the amount based on the selected plan
             amount = 0
             if selected_plan == '1-week':
-                amount = 13.86
+                amount = 12.87  # Updated price for 1-week
                 expiration_date = timezone.now() + timedelta(weeks=1)
             elif selected_plan == '4-week':
-                amount = 39.99
+                amount = 37.95  # Updated price for 4-week
                 expiration_date = timezone.now() + timedelta(weeks=4)
             elif selected_plan == '12-week':
-                amount = 79.99
+                amount = 97.00  # Updated price for 12-week
                 expiration_date = timezone.now() + timedelta(weeks=12)
             else:
                 logger.error('Invalid plan selected.')
