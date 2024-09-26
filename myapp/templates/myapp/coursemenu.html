@@ -138,22 +138,43 @@
         border-radius: 12px;
     }
 
-    .view-btn {
-        display: inline-block;
-        background-color: #42a5f5;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 20px;
-        font-size: 12px;
-        text-transform: uppercase;
-        cursor: pointer;
-        margin-top: 5px;
-    }
+    /* Ensure the course card container is a flex container */
+.course-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* This pushes content to the top and button to the bottom */
+    background-color: #f9faff;
+    border: 1px solid #e4e7ed;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    flex-basis: 240px;
+    max-width: 100%;
+    margin: 10px 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: auto;
+}
 
-    .view-btn:hover {
-        background-color: #1e88e5;
-    }
+/* Make sure the button stays at the bottom of the card */
+.view-btn {
+    display: inline-block;
+    background-color: #42a5f5;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: auto; /* This ensures the button is pushed to the bottom of the card */
+}
+
+/* Change color when hovering over the button */
+.view-btn:hover {
+    background-color: #1e88e5;
+}
+
+
 
     /* Course grid */
     .course-grid {
@@ -163,18 +184,7 @@
         justify-content: space-between;
     }
 
-    .course-card {
-        background-color: #f9faff;
-        border: 1px solid #e4e7ed;
-        border-radius: 8px;
-        padding: 15px;
-        text-align: center;
-        flex-basis: 240px;
-        max-width: 100%;
-        margin: 10px 5px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        height: auto;
-    }
+    
 
     /* Responsive adjustments */
     @media (max-width: 1200px) {
@@ -237,6 +247,47 @@
         }
     }
 
+    .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.step-links a, .step-links .current {
+    margin: 0 5px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    background-color: #42a5f5;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.step-links a:hover {
+    background-color: #1e88e5;
+}
+
+.step-links .current {
+    background-color: #1e88e5;
+    pointer-events: none; /* Prevent clicking on the current page */
+}
+
+.step-links a.disabled {
+    background-color: #ddd;
+    color: #999;
+    pointer-events: none;
+}
+
+.step-links a:first-child, .step-links a:last-child {
+    background-color: #f44336; /* Red for first/last page buttons */
+    color: white;
+}
+
+.step-links a:first-child:hover, .step-links a:last-child:hover {
+    background-color: #d32f2f;
+}
+
 </style>
 <div id="full-page-loader">
     <div class="bouncing-balls">
@@ -259,62 +310,42 @@
         </div>
 
         <!-- Ongoing Courses Section -->
-        <!-- Ongoing Courses Section -->
         <div id="ongoing" class="course-section active">
             <h2>Ongoing Courses</h2>
             {% if ongoing_courses %}
                 <div class="course-grid">
                     {% for course in ongoing_courses %}
-                    <div class="course-card">
-                        <div class="course-card-header">
+                        <div class="course-card">
                             <div class="course-image">
                                 <img src="{{ course.image.url }}" alt="Course Image">
                             </div>
-                            <div class="course-info">
-                                <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
-                                <h3>{{ course.title }}</h3>
-                                <p>{{ course.description }}</p>
-                            </div>
+                            <h3>{{ course.title }}</h3>
+                            <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
+                            <p>{{ course.description }}</p>
+                            <a href="{% url 'course_detail' course.id %}" class="view-btn">Continue Course</a>
                         </div>
-                        <a href="{% url 'course_detail' course.id %}" class="view-btn">Continue Course</a>
-                    </div>
                     {% endfor %}
                 </div>
             {% else %}
                 <p>No ongoing courses.</p>
             {% endif %}
         </div>
-        
 
-
-        <!-- Completed Courses Section -->
         <!-- Completed Courses Section -->
         <div id="completed" class="course-section">
             <h2>Completed Courses</h2>
             {% if completed_courses %}
                 <div class="course-grid">
                     {% for course in completed_courses %}
-                    <div class="course-card">
-                        <div class="course-card-header">
+                        <div class="course-card">
                             <div class="course-image">
                                 <img src="{{ course.image.url }}" alt="Course Image">
                             </div>
-                            <div class="course-info">
-                                <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
-                                <h3>{{ course.title }}</h3>
-                                <p>{{ course.description }}</p>
-                            </div>
+                            <h3>{{ course.title }}</h3>
+                            <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
+                            <p>{{ course.description }}</p>
+                            <a href="{% url 'course_detail' course.id %}" class="view-btn">View Course</a>
                         </div>
-                        <a href="{% url 'course_detail' course.id %}" class="view-btn">View Course</a>
-
-                        <!-- Display course progress (100% for completed courses) -->
-                        <div class="progress-container">
-                            <div class="progress-bar">
-                                <div class="progress" style="width: 100%;"></div>
-                            </div>
-                            <span>100% Complete</span>
-                        </div>
-                    </div>
                     {% endfor %}
                 </div>
             {% else %}
@@ -322,39 +353,27 @@
             {% endif %}
         </div>
 
-
         <!-- Saved Courses Section -->
         <div id="saved" class="course-section">
             <h2>Saved Courses</h2>
             {% if saved_courses %}
                 <div class="course-grid">
                     {% for course_access in saved_courses %}
-                    <div class="course-card">
-                        <div class="course-card-header">
+                        <div class="course-card">
                             <div class="course-image">
                                 <img src="{{ course_access.course.image.url }}" alt="Course Image">
                             </div>
-                            <div class="course-info">
-                                <p>{{ course_access.course.units }} Units • {{ course_access.course.hours }} Hours</p>
-                                <h3>{{ course_access.course.title }}</h3>
-                                <p>{{ course_access.course.description }}</p>
-                            </div>
-                        </div>
-                        {% if course_access.course %}
-                            <!-- Changed button link to course_detail similar to the ongoing section -->
+                            <h3>{{ course_access.course.title }}</h3>
+                            <p>{{ course_access.course.units }} Units • {{ course_access.course.hours }} Hours</p>
+                            <p>{{ course_access.course.description }}</p>
                             <a href="{% url 'course_detail' course_access.course.id %}" class="view-btn">Continue Course</a>
-                        {% else %}
-                            <span>No course available</span>
-                        {% endif %}
-                    </div>
+                        </div>
                     {% endfor %}
                 </div>
             {% else %}
                 <p>No saved courses.</p>
             {% endif %}
         </div>
-        
-        
 
         <!-- Favorite Courses Section -->
         <div id="favorite" class="course-section">
@@ -362,24 +381,15 @@
             {% if favorite_courses %}
                 <div class="course-grid">
                     {% for course_access in favorite_courses %}
-                    <div class="course-card">
-                        <div class="course-card-header">
+                        <div class="course-card">
                             <div class="course-image">
                                 <img src="{{ course_access.course.image.url }}" alt="Course Image">
                             </div>
-                            <div class="course-info">
-                                <p>{{ course_access.course.units }} Units • {{ course_access.course.hours }} Hours</p>
-                                <h3>{{ course_access.course.title }}</h3>
-                                <p>{{ course_access.course.description }}</p>
-                            </div>
-                        </div>
-                        {% if course_access.course %}
-                            <!-- Changed button link to course_detail similar to the ongoing section -->
+                            <h3>{{ course_access.course.title }}</h3>
+                            <p>{{ course_access.course.units }} Units • {{ course_access.course.hours }} Hours</p>
+                            <p>{{ course_access.course.description }}</p>
                             <a href="{% url 'course_detail' course_access.course.id %}" class="view-btn">Continue Course</a>
-                        {% else %}
-                            <span>No course available</span>
-                        {% endif %}
-                    </div>
+                        </div>
                     {% endfor %}
                 </div>
             {% else %}
@@ -387,94 +397,81 @@
             {% endif %}
         </div>
         
-
-        <!-- Remove 'course-section' class so it's always visible -->
+        {% load cache %}
+        {% cache 600 recommended_courses_section request.user.id %}
+        <!-- Recommended Section -->
         <div class="recommended-container">
-            <div>
-                <h2>Recommended for You</h2>
-                <div class="course-grid">
-                    {% for course in all_courses %}
+            <h2>Recommended for You</h2>
+            <div class="course-grid">
+                {% for course in recommended_courses_page %}
                     <div class="course-card">
                         <div class="course-image">
-                            <img src="{{ course.image.url }}" alt="Course Image" width="130" height="131">
+                            <img src="{{ course.image.url }}" alt="Course Image">
                         </div>
-                        <div class="course-category">
-                            <span class="badge">{{ course.category }}</span>
-                        </div>
-                        <div class="course-info">
-                            <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
-                            <h3>{{ course.title }}</h3>
-                            <p>{{ course.description }}</p>
-                        </div>
+                        <h3>{{ course.title }}</h3>
                         <a href="{% url 'course_detail' course.id %}" class="view-btn">View Details</a>
                     </div>
-                    {% endfor %}
-                </div>
+                {% endfor %}
+            </div>
+        
+            <!-- Pagination controls -->
+            <div class="pagination">
+                <span class="step-links">
+                    {% if recommended_courses_page.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ recommended_courses_page.previous_page_number }}">previous</a>
+                    {% else %}
+                        <a class="disabled">&laquo; first</a>
+                        <a class="disabled">previous</a>
+                    {% endif %}
+                
+                    <span class="current">
+                        Page {{ recommended_courses_page.number }} of {{ recommended_courses_page.paginator.num_pages }}
+                    </span>
+                
+                    {% if recommended_courses_page.has_next %}
+                        <a href="?page={{ recommended_courses_page.next_page_number }}">next</a>
+                        <a href="?page={{ recommended_courses_page.paginator.num_pages }}">last &raquo;</a>
+                    {% else %}
+                        <a class="disabled">next</a>
+                        <a class="disabled">last &raquo;</a>
+                    {% endif %}
+                </span>
             </div>
         </div>
+        {% endcache %}
+        
     </div>
 </div>
 
 <script>
+    // Tabs functionality
     document.querySelectorAll('.tab').forEach(button => {
         button.addEventListener('click', () => {
-            // Remove active class from all tabs
             document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
-
-            // Add active class to clicked tab
             button.classList.add('active');
-
-            // Hide all course sections
             document.querySelectorAll('.course-section').forEach(section => section.classList.remove('active'));
-
-            // Show the associated course section
-            const tabId = button.getAttribute('data-tab');
-            document.getElementById(tabId).classList.add('active');
+            document.getElementById(button.getAttribute('data-tab')).classList.add('active');
         });
     });
 
-    // Show the loader
-function showLoader() {
-    const loader = document.getElementById('full-page-loader');
-    loader.style.display = 'flex';  // Show the loader
-}
+    // Loader functionality
+    function showLoader() {
+        document.getElementById('full-page-loader').style.display = 'flex';
+    }
 
-// Hide the loader (when page is fully loaded)
-function hideLoader() {
-    const loader = document.getElementById('full-page-loader');
-    loader.style.display = 'none';  // Hide the loader
-}
+    function hideLoader() {
+        document.getElementById('full-page-loader').style.display = 'none';
+    }
 
-// Function to attach event listener to all links and buttons
-function attachLoaderToLinksAndButtons() {
-    // Attach the loader to all <a> (anchor) links
-    document.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', function (event) {
-            // Avoid showing the loader for internal anchor links or empty hrefs
-            if (!link.getAttribute('href').startsWith('#') && link.getAttribute('href') !== '') {
-                showLoader();
-            }
+    document.addEventListener('DOMContentLoaded', function () {
+        hideLoader();
+        document.querySelectorAll('a, button, input[type="submit"]').forEach(element => {
+            element.addEventListener('click', showLoader);
         });
     });
 
-    // Attach the loader to all buttons and form submissions
-    document.querySelectorAll('button, input[type="submit"]').forEach(button => {
-        button.addEventListener('click', function () {
-            showLoader();
-        });
-    });
-}
-
-// Ensure the loader is hidden after the new page loads
-window.addEventListener('load', function () {
-    hideLoader();  // Hide the loader once the page is fully loaded
-});
-
-// Wait until the DOM is fully loaded before attaching listeners
-document.addEventListener('DOMContentLoaded', function () {
-    attachLoaderToLinksAndButtons();  // Attach the loader to links and buttons
-});
-
+    window.addEventListener('load', hideLoader);
 </script>
 
 {% include 'myapp/course_list/footer_course.html' %}

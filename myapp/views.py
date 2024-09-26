@@ -325,72 +325,108 @@ def next_lesson(request, lesson_id):
     else:
         return redirect('course_detail', course_id=current_lesson.parent_sub_course.parent_course.id)
 
-from django.shortcuts import render, get_object_or_404
-from myapp.models import Course, UserCourseAccess
 
-from django.shortcuts import render, get_object_or_404
-from myapp.models import Course, UserCourseAccess, UserLessonProgress
-from django.utils import timezone
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from myapp.models import Course, UserCourseAccess, UserLessonProgress
-from django.utils import timezone
+from django.core.paginator import Paginator
+from django.core.cache import cache
+from django.db.models import Count, Q
 
 def coursemenu(request):
-    all_courses = Course.objects.all()
-    current_course_access = None
-    current_course = None
-    course_progress = {}
-
     if request.user.is_authenticated:
-        # Check for ongoing courses based on lesson progress
-        ongoing_courses = []
-        completed_courses = []
-        saved_courses = UserCourseAccess.objects.filter(user=request.user, is_saved=True)
-        favorite_courses = UserCourseAccess.objects.filter(user=request.user, is_favorite=True)
+        # Use caching to avoid repeated calculations
+        cache_key = f'course_progress_{request.user.id}'
+        course_data = cache.get(cache_key)
 
-        # Loop through each course and evaluate progress
-        for course in all_courses:
-            sub_courses = course.sub_courses.all()
-            sub_course_progress = {}
-            total_lessons = 0
-            completed_lessons = 0
+        if not course_data:
+            # Prefetch sub-courses and lessons for performance
+            all_courses = Course.objects.prefetch_related('sub_courses__lessons')
 
-            for sub_course in sub_courses:
-                lessons = sub_course.lessons.all()
-                total_lessons += lessons.count()  # Total lessons across all sub-courses
-                sub_completed_lessons = UserLessonProgress.objects.filter(
-                    user=request.user, lesson__in=lessons, completed=True
-                ).count()
-                completed_lessons += sub_completed_lessons  # Accumulate completed lessons
+            ongoing_courses = []
+            completed_courses = []
+            course_progress = {}
 
-                # Calculate progress for each sub-course
-                sub_course_progress[sub_course.id] = {
-                    'completed_lessons': sub_completed_lessons,
-                    'total_lessons': lessons.count(),
-                    'progress': (sub_completed_lessons / lessons.count()) * 100 if lessons.count() > 0 else 0
-                }
+            for course in all_courses:
+                sub_course_progress = {}
+                total_course_lessons = 0
+                total_completed_lessons = 0
+                course_started = False  # Track if the user has started any sub-course
 
-            course_progress[course.id] = sub_course_progress
+                for sub_course in course.sub_courses.all():
+                    lessons = sub_course.lessons.all()
+                    total_lessons = lessons.count()
 
-            # If all lessons in the course are completed, mark it as "completed"
-            if completed_lessons == total_lessons and total_lessons > 0:
-                completed_courses.append(course)  # Mark course as completed
-            elif completed_lessons < total_lessons and total_lessons > 0:
-                ongoing_courses.append(course)  # If some lessons are incomplete, mark it as ongoing
+                    # Get how many lessons the user has completed
+                    completed_lessons = UserLessonProgress.objects.filter(
+                        user=request.user, lesson__in=lessons, completed=True
+                    ).count()
 
-    context = {
-        'all_courses': all_courses,
-        'current_course': current_course,
-        'current_course_access': current_course_access,
-        'course_progress': course_progress,
-        'ongoing_courses': ongoing_courses,  # Reflect ongoing courses
-        'completed_courses': completed_courses,  # Reflect completed courses
-        'saved_courses': saved_courses,
-        'favorite_courses': favorite_courses,
-    }
+                    # If the user has completed any lessons in this course, mark it as started
+                    if completed_lessons > 0:
+                        course_started = True
 
-    return render(request, 'myapp/coursemenu.html', context)
+                    total_course_lessons += total_lessons
+                    total_completed_lessons += completed_lessons
+
+                    sub_course_progress[sub_course.id] = {
+                        'completed_lessons': completed_lessons,
+                        'total_lessons': total_lessons,
+                        'progress': (completed_lessons / total_lessons) * 100 if total_lessons > 0 else 0
+                    }
+
+                course_progress[course.id] = sub_course_progress
+
+                # If the course is started and not yet fully completed
+                if course_started and total_completed_lessons < total_course_lessons:
+                    ongoing_courses.append(course)
+                # If the course is fully completed
+                elif total_completed_lessons == total_course_lessons and total_course_lessons > 0:
+                    completed_courses.append(course)
+
+            saved_courses = UserCourseAccess.objects.filter(user=request.user, is_saved=True)
+            favorite_courses = UserCourseAccess.objects.filter(user=request.user, is_favorite=True)
+
+            # Pagination for recommended courses
+            paginator = Paginator(all_courses, 8)  # Set the number of items per page to 8 for consistency
+            page_number = request.GET.get('page')  # Get the current page number from the request
+            recommended_courses_page = paginator.get_page(page_number)
+
+            # Cache the progress to avoid repeated queries
+            cache.set(cache_key, {
+                'ongoing_courses': ongoing_courses,
+                'completed_courses': completed_courses,
+                'course_progress': course_progress,
+                'saved_courses': saved_courses,
+                'favorite_courses': favorite_courses,
+            }, timeout=600)  # Cache for 10 minutes
+        else:
+            # Safely retrieve keys from cached data and set defaults if not found
+            ongoing_courses = course_data.get('ongoing_courses', [])
+            completed_courses = course_data.get('completed_courses', [])
+            course_progress = course_data.get('course_progress', {})
+            saved_courses = course_data.get('saved_courses', [])
+            favorite_courses = course_data.get('favorite_courses', [])
+
+            # Still need to paginate the queryset after retrieving it
+            all_courses = Course.objects.prefetch_related('sub_courses__lessons')  # Ensure this query is performed for pagination
+            paginator = Paginator(all_courses, 8)  # Ensure consistency in pagination size
+            page_number = request.GET.get('page')
+            recommended_courses_page = paginator.get_page(page_number)
+
+        context = {
+            'course_progress': course_progress,
+            'ongoing_courses': ongoing_courses,
+            'completed_courses': completed_courses,
+            'saved_courses': saved_courses,
+            'favorite_courses': favorite_courses,
+            'recommended_courses_page': recommended_courses_page,  # Include paginated page
+        }
+
+        return render(request, 'myapp/coursemenu.html', context)
+
+    return render(request, 'myapp/coursemenu.html')
+
 
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required

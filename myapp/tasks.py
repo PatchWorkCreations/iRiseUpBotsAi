@@ -130,3 +130,7 @@ def charge_card_for_renewal(user_id=None):
             logger.error(f"SquareCustomer record not found for user {user_access.user.email}")
         except Exception as e:
             logger.error(f"Failed to charge card for user {user_access.user.email}: {str(e)}")
+
+
+
+

@@ -25,21 +25,9 @@
                             </div>
                             <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
                                 <ul class="navigation clearfix">
-                                    <li class="dropdown"><a href="#">Home</a>
-                                        <ul>
-                                            <li><a href="{% url 'index' %}">HomePage 01</a></li>
-                                            <li><a href="{% url 'index2' %}">HomePage 02</a></li>
-                                            <li><a href="{% url 'index3' %}">HomePage 03</a></li>
-                                            <li class="dropdown"><a href="#">Header Style</a>
-                                                <ul>
-                                                    <li><a href="{% url 'index' %}">Header 1</a></li>
-                                                    <li><a href="{% url 'index2' %}">Header 2</a></li>
-                                                    <li><a href="{% url 'index3' %}">Header 3</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    <li><a href="{% url 'index2' %}">Home</a></li>
                                     <li><a href="{% url 'about' %}">About</a></li>
+                                    <!--  
                                     <li class="dropdown"><a href="#">Pages</a>
                                         <ul>
                                             <li><a href="{% url 'faq' %}">Faq</a></li>
@@ -56,6 +44,7 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    -->
                                     <li class="dropdown"><a href="#">Services</a>
                                         <ul>
                                             <li><a href="{% url 'services' %}">Services</a></li>
