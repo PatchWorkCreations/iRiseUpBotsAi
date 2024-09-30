@@ -409,33 +409,58 @@ def edit_lesson(request, lesson_id):
             content_blocks = []
             for idx in range(int(request.POST.get('block_count', '0'))):
                 block_type = request.POST.get(f'block_type_{idx}')
-
+                block_order = request.POST.get(f'block_order_{idx}', idx)  # Capture the order of the block
+                
                 if block_type == 'paragraph':
                     content = request.POST.get(f'content_{idx}', '')
-                    content_blocks.append({'type': 'paragraph', 'content': content})
+                    content_blocks.append({
+                        'type': 'paragraph',
+                        'content': content,
+                        'order': block_order  # Save the block order
+                    })
 
                 elif block_type == 'image':
                     image = request.FILES.get(f'image_{idx}')
                     if image:
                         image_url = handle_uploaded_file(image)
-                        content_blocks.append({'type': 'image', 'content': image_url})
+                        content_blocks.append({
+                            'type': 'image',
+                            'content': image_url,
+                            'order': block_order  # Save the block order
+                        })
 
                 elif block_type == 'header':
                     content = request.POST.get(f'content_{idx}', '')
-                    content_blocks.append({'type': 'header', 'content': content})
+                    content_blocks.append({
+                        'type': 'header',
+                        'content': content,
+                        'order': block_order  # Save the block order
+                    })
 
                 elif block_type == 'task':
                     task_content = request.POST.get(f'content_{idx}', '')
-                    content_blocks.append({'type': 'task', 'content': task_content})
+                    content_blocks.append({
+                        'type': 'task',
+                        'content': task_content,
+                        'order': block_order  # Save the block order
+                    })
 
                 elif block_type == 'question':
                     question_content = request.POST.get(f'content_{idx}', '')
-                    content_blocks.append({'type': 'question', 'content': question_content})
+                    content_blocks.append({
+                        'type': 'question',
+                        'content': question_content,
+                        'order': block_order  # Save the block order
+                    })
 
                 elif block_type == 'multiple_questions':
                     multiple_question_content = request.POST.get(f'content_{idx}', '')
                     questions_list = [q.strip() for q in multiple_question_content.split(',')]
-                    content_blocks.append({'type': 'multiple_questions', 'content': questions_list})
+                    content_blocks.append({
+                        'type': 'multiple_questions',
+                        'content': questions_list,
+                        'order': block_order  # Save the block order
+                    })
 
                 elif block_type == 'multiple_choice':
                     question = request.POST.get(f'question_{idx}', '')
@@ -445,11 +470,12 @@ def edit_lesson(request, lesson_id):
                         'type': 'multiple_choice',
                         'question': question,
                         'options': options,
-                        'correct_answer': correct_answer
+                        'correct_answer': correct_answer,
+                        'order': block_order  # Save the block order
                     })
 
-            # Save the updated content blocks in JSON format
-            lesson.content = json.dumps(content_blocks)
+            # Save the updated content blocks in JSON format with their order
+            lesson.content = json.dumps(sorted(content_blocks, key=lambda x: int(x['order'])))
             lesson.save()
 
             # Redirect back to the course detail page after saving
@@ -468,6 +494,7 @@ def edit_lesson(request, lesson_id):
         'block_count': len(content_blocks),  # Pass the number of blocks to the template
     }
     return render(request, 'customadmin/edit_lesson.html', context)
+
 
 
 from django.http import JsonResponse
