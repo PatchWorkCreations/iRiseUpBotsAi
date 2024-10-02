@@ -1,0 +1,82 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Have you tried using any AI tools, and if so, which ones?{% endblock %}
+{% block content %}
+{% include 'myapp/quiz/header.html' %}
+<div class="mobile-container">
+    <div class="container text-center mt-4">
+        <h2>Have you tried using any AI tools, and if so, which ones?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I’ve used AI tools like Siri or Alexa." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🎯</span>
+                    <span>I’ve used AI tools like Siri or Alexa.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I’m familiar with basic AI tools like Google Assistant." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🤝</span>
+                    <span>I’m familiar with basic AI tools like Google Assistant.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I’ve used AI for photo editing apps like FaceApp." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🛠️</span>
+                    <span>I’ve used AI for photo editing apps like FaceApp.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I’ve heard of AI tools, but I haven’t used any myself." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">💪</span>
+                    <span>I’ve heard of AI tools, but I haven’t used any myself.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I’m not familiar with any AI tools yet, but I’m interested in learning." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🔍</span>
+                    <span>I’m not familiar with any AI tools yet, but I’m interested in learning.</span>
+                </button>
+            </div>
+        
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .emoji {
+        font-size: 50px;
+        margin-right: 15px;
+    }
+
+    .btn-goal {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        text-align: left;
+        padding: 15px 20px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        font-size: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-goal:hover {
+        background-color: #e2e6ea;
+    }
+
+    .btn-goal span {
+        font-weight: normal;
+    }
+</style>
+{% endblock %}

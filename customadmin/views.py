@@ -394,11 +394,28 @@ def extract_paragraphs_and_headers_from_word(word_file):
 
     return content_blocks
 
+
+import re
+
+def convert_to_embed_url(url):
+    youtube_regex = r'(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})'
+    match = re.match(youtube_regex, url)
+    if match:
+        video_id = match.group(6)
+        # Append parameters to remove branding and controls
+        return f"https://www.youtube.com/embed/{video_id}?rel=0&modestbranding=1&controls=0&fs=0&disablekb=1&autohide=1"
+    return url
+
+
+
+from django.shortcuts import get_object_or_404, redirect, render
+import json
+
 def edit_lesson(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
 
     if request.method == 'POST':
-        # Check if a Word document is uploaded
+        # Check if a Word document is uploaded (existing logic)
         if 'word_document' in request.FILES:
             word_file = request.FILES['word_document']
             content_blocks = extract_paragraphs_and_headers_from_word(word_file)
@@ -409,58 +426,34 @@ def edit_lesson(request, lesson_id):
             content_blocks = []
             for idx in range(int(request.POST.get('block_count', '0'))):
                 block_type = request.POST.get(f'block_type_{idx}')
-                block_order = request.POST.get(f'block_order_{idx}', idx)  # Capture the order of the block
-                
+                block_order = request.POST.get(f'block_order_{idx}', idx)  # Ensure order is retrieved
+
                 if block_type == 'paragraph':
                     content = request.POST.get(f'content_{idx}', '')
-                    content_blocks.append({
-                        'type': 'paragraph',
-                        'content': content,
-                        'order': block_order  # Save the block order
-                    })
+                    content_blocks.append({'type': 'paragraph', 'content': content, 'order': block_order})
 
                 elif block_type == 'image':
                     image = request.FILES.get(f'image_{idx}')
                     if image:
                         image_url = handle_uploaded_file(image)
-                        content_blocks.append({
-                            'type': 'image',
-                            'content': image_url,
-                            'order': block_order  # Save the block order
-                        })
+                        content_blocks.append({'type': 'image', 'content': image_url, 'order': block_order})
 
                 elif block_type == 'header':
                     content = request.POST.get(f'content_{idx}', '')
-                    content_blocks.append({
-                        'type': 'header',
-                        'content': content,
-                        'order': block_order  # Save the block order
-                    })
+                    content_blocks.append({'type': 'header', 'content': content, 'order': block_order})
 
                 elif block_type == 'task':
                     task_content = request.POST.get(f'content_{idx}', '')
-                    content_blocks.append({
-                        'type': 'task',
-                        'content': task_content,
-                        'order': block_order  # Save the block order
-                    })
+                    content_blocks.append({'type': 'task', 'content': task_content, 'order': block_order})
 
                 elif block_type == 'question':
                     question_content = request.POST.get(f'content_{idx}', '')
-                    content_blocks.append({
-                        'type': 'question',
-                        'content': question_content,
-                        'order': block_order  # Save the block order
-                    })
+                    content_blocks.append({'type': 'question', 'content': question_content, 'order': block_order})
 
                 elif block_type == 'multiple_questions':
                     multiple_question_content = request.POST.get(f'content_{idx}', '')
                     questions_list = [q.strip() for q in multiple_question_content.split(',')]
-                    content_blocks.append({
-                        'type': 'multiple_questions',
-                        'content': questions_list,
-                        'order': block_order  # Save the block order
-                    })
+                    content_blocks.append({'type': 'multiple_questions', 'content': questions_list, 'order': block_order})
 
                 elif block_type == 'multiple_choice':
                     question = request.POST.get(f'question_{idx}', '')
@@ -471,11 +464,16 @@ def edit_lesson(request, lesson_id):
                         'question': question,
                         'options': options,
                         'correct_answer': correct_answer,
-                        'order': block_order  # Save the block order
+                        'order': block_order
                     })
 
-            # Save the updated content blocks in JSON format with their order
-            lesson.content = json.dumps(sorted(content_blocks, key=lambda x: int(x['order'])))
+                # Handle Wistia video URL
+                elif block_type == 'video':
+                    video_url = request.POST.get(f'video_url_{idx}', '')
+                    content_blocks.append({'type': 'video', 'content': video_url, 'order': block_order})
+
+            # Save the updated content blocks in JSON format with order
+            lesson.content = json.dumps(content_blocks)
             lesson.save()
 
             # Redirect back to the course detail page after saving
@@ -488,13 +486,15 @@ def edit_lesson(request, lesson_id):
         except json.JSONDecodeError:
             content_blocks = []
 
+        # Sort the content blocks by the 'order' field before passing them to the template
+        content_blocks = sorted(content_blocks, key=lambda x: int(x.get('order', 0)))
+
     context = {
         'lesson': lesson,
         'content_blocks': content_blocks,
         'block_count': len(content_blocks),  # Pass the number of blocks to the template
     }
     return render(request, 'customadmin/edit_lesson.html', context)
-
 
 
 from django.http import JsonResponse

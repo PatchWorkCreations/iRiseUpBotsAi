@@ -5,40 +5,40 @@
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
 <div class="container text-center">
-    <h2 style="font-size: 36px;">Select Your Age</h2>
+    <h2 style="font-size: 36px;">Select Your Heritage or Legacy</h2>
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
             <div class="col-6 col-md-6">
                 {% if gender == 'Male' %}
-                    <button type="submit" name="age_range" value="35-44" class="btn btn-light btn-age">
+                    <button type="submit" name="age_range" value="Legacy" class="btn btn-light btn-age">
                         <img src="{% static 'myapp/images/quiz/male_age_35-44.webp' %}" alt="Age 35-44" class="img-fluid age-image" />
-                        <p>Age: 35-44</p>
+                        <p>Legacy</p>
                     </button>
                 {% elif gender == 'Female' %}
-                    <button type="submit" name="age_range" value="35-44" class="btn btn-light btn-age">
+                    <button type="submit" name="age_range" value="Legacy" class="btn btn-light btn-age">
                         <img src="{% static 'myapp/images/quiz/female_age 35-44.webp' %}" alt="Age 35-44" class="img-fluid age-image" />
-                        <p>Age: 35-44</p>
+                        <p>Legacy</p>
                     </button>
                 {% endif %}
             </div>
             <div class="col-6 col-md-6">
                 {% if gender == 'Male' %}
-                    <button type="submit" name="age_range" value="45+" class="btn btn-light btn-age">
+                    <button type="submit" name="age_range" value="Heritage" class="btn btn-light btn-age">
                         <img src="{% static 'myapp/images/quiz/male_age_45+.webp' %}" alt="Age 45+" class="img-fluid age-image" />
-                        <p>Age: 45+</p>
+                        <p>Heritage</p>
                     </button>
                 {% elif gender == 'Female' %}
-                    <button type="submit" name="age_range" value="45+" class="btn btn-light btn-age">
+                    <button type="submit" name="age_range" value="Heritage" class="btn btn-light btn-age">
                         <img src="{% static 'myapp/images/quiz/female_45+.webp' %}" alt="Age 45+" class="img-fluid age-image" />
-                        <p>Age: 45+</p>
+                        <p>Heritage</p>
                     </button>
                 {% endif %}
             </div>
         </div>
     </form>
     <p>
-        By choosing your age, you agree with <a href="#">Terms and Conditions</a>, <a href="#">Privacy Policy</a>, <a href="#">Subscription Terms</a>
+        By choosing your heritage or legacy, you agree with <a href="#">Terms and Conditions</a>, <a href="#">Privacy Policy</a>, <a href="#">Subscription Terms</a>
     </p>
     <p>iRiseUp.ai, Limassol, Cyprus. 2024 &copy; All Rights Reserved.</p>
 </div>
@@ -65,6 +65,10 @@
         border: 2px solid #f8f9fa;
         background-color: #ffffff;
         border-radius: 8px; /* Add rounded corners to the button */
+        transition: transform 0.2s ease-in-out; /* Smooth button interaction */
+    }
+    .btn-gender:hover, .btn-age:hover {
+        transform: scale(1.05); /* Slight zoom-in on hover */
     }
     .btn-gender p, .btn-age p {
         margin-top: 10px;

@@ -1,0 +1,82 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Do you find it simple to keep your focus on what you’re doing?{% endblock %}
+{% block content %}
+{% include 'myapp/quiz/header.html' %}
+<div class="mobile-container">
+    <div class="container text-center mt-4">
+        <h2>Do you find it simple to keep your focus on what you’re doing?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="Yes, I find it easy to stay focused most of the time." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🎯</span>
+                    <span>Yes, I find it easy to stay focused most of the time.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I can focus, but I get distracted sometimes." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🤝</span>
+                    <span>I can focus, but I get distracted sometimes.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="It depends on the task—sometimes I find it hard to concentrate." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🛠️</span>
+                    <span>It depends on the task—sometimes I find it hard to concentrate.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I struggle to stay focused and often get sidetracked." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">💪</span>
+                    <span>I struggle to stay focused and often get sidetracked.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I try, but staying focused can be challenging for me." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🔍</span>
+                    <span>I try, but staying focused can be challenging for me.</span>
+                </button>
+            </div>
+        
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .emoji {
+        font-size: 50px;
+        margin-right: 15px;
+    }
+
+    .btn-goal {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        text-align: left;
+        padding: 15px 20px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        font-size: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-goal:hover {
+        background-color: #e2e6ea;
+    }
+
+    .btn-goal span {
+        font-weight: normal;
+    }
+</style>
+{% endblock %}

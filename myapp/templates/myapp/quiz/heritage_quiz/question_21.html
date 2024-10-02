@@ -1,0 +1,82 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}How much time are you willing to put into reaching your long-term goals?{% endblock %}
+{% block content %}
+{% include 'myapp/quiz/header.html' %}
+<div class="mobile-container">
+    <div class="container text-center mt-4">
+        <h2>How much time are you willing to put into reaching your long-term goals?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I’m willing to dedicate a few hours each week." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🎯</span>
+                    <span>I’m willing to dedicate a few hours each week.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I can invest some time daily to work toward my goals." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🤝</span>
+                    <span>I can invest some time daily to work toward my goals.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I’m ready to commit as much time as needed to achieve them." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🛠️</span>
+                    <span>I’m ready to commit as much time as needed to achieve them.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I’d like to start small but gradually invest more time as I go." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">💪</span>
+                    <span>I’d like to start small but gradually invest more time as I go.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I’m flexible and can adjust my schedule based on the demands of the goal." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🔍</span>
+                    <span>I’m flexible and can adjust my schedule based on the demands of the goal.</span>
+                </button>
+            </div>
+        
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .emoji {
+        font-size: 50px;
+        margin-right: 15px;
+    }
+
+    .btn-goal {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        text-align: left;
+        padding: 15px 20px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        font-size: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-goal:hover {
+        background-color: #e2e6ea;
+    }
+
+    .btn-goal span {
+        font-weight: normal;
+    }
+</style>
+{% endblock %}

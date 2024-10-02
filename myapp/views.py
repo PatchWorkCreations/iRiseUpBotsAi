@@ -233,39 +233,51 @@ def lesson_detail(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     course_detail_url = reverse('course_detail', args=[lesson.parent_sub_course.parent_course.id])
 
-    # Get the user's progress on this lesson
+    # Get or create user progress for this lesson
     user_progress, created = UserLessonProgress.objects.get_or_create(user=request.user, lesson=lesson)
 
+    # Handle POST requests for lesson completion
     if request.method == "POST":
-        # When the user submits the lesson (POST request), send the lesson completion to a Celery task
         if not user_progress.completed:
             try:
-                complete_lesson_task.delay(request.user.id, lesson.id)  # Trigger Celery task
+                # Trigger Celery task to complete the lesson asynchronously
+                complete_lesson_task.delay(request.user.id, lesson.id)
             except Exception as e:
                 logger.error(f"Failed to trigger complete_lesson_task: {str(e)}")
                 # Optionally: Add a message to notify the user of the error
         return redirect(course_detail_url)
 
-    # Process content_blocks from the lesson's content field (assuming it's JSON)
+    # Try to load content blocks from the lesson's content field (assuming it's JSON)
+    content_blocks = []
     try:
-        content_blocks = json.loads(lesson.content)
+        content_blocks = json.loads(lesson.content) if lesson.content else []
+        
+        # Ensure content is split properly for multiple_questions
         for block in content_blocks:
             if block['type'] == 'multiple_questions' and isinstance(block['content'], str):
                 block['content'] = block['content'].split(',')
-    except json.JSONDecodeError:
-        content_blocks = []
+
+        # Sort content blocks by 'order' if present, defaulting to 0 if not found
+        content_blocks = sorted(content_blocks, key=lambda x: int(x.get('order', 0)))
+
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding lesson content JSON: {str(e)}")
+        content_blocks = []  # In case of error, just default to empty list
 
     # Check if the lesson is completed
     is_lesson_completed = user_progress.completed
 
+    # Prepare context for rendering the template
     context = {
         'lesson': lesson,
         'content_blocks': content_blocks,
-        'is_lesson_completed': is_lesson_completed,
+        'is_lesson_completed': is_lesson_completed,  # Pass lesson completion status
         'course_detail_url': course_detail_url,
     }
 
+    # Render the lesson detail page
     return render(request, 'myapp/course_list/lesson_detail.html', context)
+
 
 from django.http import JsonResponse
 from myapp.models import Lesson, UserLessonProgress
@@ -685,7 +697,13 @@ def age_selection(request):
     if request.method == 'POST':
         age_range = request.POST.get('age_range')
         request.session['age_range'] = age_range
-        return redirect('after_age_page')
+        
+        # Check if the age_range is 'Legacy' or 'Heritage' and redirect accordingly
+        if age_range == 'Legacy':
+            return redirect('after_age_page')  # The original path for 'Legacy'
+        elif age_range == 'Heritage':
+            return redirect('heritage_page')  # A different path for 'Heritage'
+        
     gender = request.session.get('gender')
     context = {'gender': gender}
     return render(request, 'myapp/quiz/age_selection.html', context)
@@ -695,6 +713,25 @@ def after_age_page(request):
     if request.method == 'POST':
         return redirect('main_goal')
     return render(request, 'myapp/quiz/after_age_page.html')
+
+
+def heritage_page(request):
+    if request.method == 'POST':
+        return redirect('heritage_main_goal')  # Redirect to the heritage main goal
+    return render(request, 'myapp/quiz/heritage_quiz/heritage_page.html')
+
+
+def heritage_main_goal(request):
+    # Ensure that gender is stored in the session
+    gender = request.session.get('gender')
+    
+    if request.method == 'POST':
+        # Save the main goal to the session
+        request.session['main_goal'] = request.POST.get('main_goal')
+        return redirect('heritage_question_1')
+    
+    # Pass the gender to the template
+    return render(request, 'myapp/quiz/heritage_quiz/heritage_main_goal.html', {'gender': gender})
 
 
 def main_goal(request):
@@ -715,6 +752,7 @@ def income_source(request):
         request.session['income_source'] = request.POST.get('income_source')
         return redirect('work_schedule')
     return render(request, 'myapp/quiz/income_source.html')
+
 
 def work_schedule(request):
     if request.method == 'POST':
@@ -2466,3 +2504,269 @@ def view_new_subscriptions(request):
     data = [{"user": t.user.username, "subscription_type": t.subscription_type, "status": t.status} for t in new_users]
     
     return JsonResponse({"new_subscriptions": data})
+
+
+def heritage_question_1(request):
+    if request.method == 'POST':
+        # Save the user's answer in session or handle it as needed
+        request.session['heritage_question_1_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_2')  # Redirect to the next question
+
+    # Render the template for question 1
+    return render(request, 'myapp/quiz/heritage_quiz/question_1.html')
+
+# Example view for question 2
+def heritage_question_2(request):
+    if request.method == 'POST':
+        request.session['heritage_question_2_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_3')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_2.html')
+
+# Example view for question 3
+def heritage_question_3(request):
+    if request.method == 'POST':
+        request.session['heritage_question_3_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_4')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_3.html')
+
+# Example view for question 4
+def heritage_question_4(request):
+    if request.method == 'POST':
+        request.session['heritage_question_4_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_5')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_4.html')
+
+# Example view for question 5
+def heritage_question_5(request):
+    if request.method == 'POST':
+        request.session['heritage_question_5_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_6')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_5.html')
+
+# Example view for question 6
+def heritage_question_6(request):
+    if request.method == 'POST':
+        request.session['heritage_question_6_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_7')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_6.html')
+
+# Example view for question 7
+def heritage_question_7(request):
+    if request.method == 'POST':
+        request.session['heritage_question_7_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_8')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_7.html')
+
+# Example view for question 8
+def heritage_question_8(request):
+    if request.method == 'POST':
+        request.session['heritage_question_8_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_9')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_8.html')
+
+# Example view for question 9
+def heritage_question_9(request):
+    if request.method == 'POST':
+        request.session['heritage_question_9_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_10')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_9.html')
+
+# Example view for question 10
+def heritage_question_10(request):
+    if request.method == 'POST':
+        request.session['heritage_question_10_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_11')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_10.html')
+
+# Example view for question 11
+def heritage_question_11(request):
+    if request.method == 'POST':
+        request.session['heritage_question_11_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_12')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_11.html')
+
+# Example view for question 12
+def heritage_question_12(request):
+    if request.method == 'POST':
+        request.session['heritage_question_12_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_13')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_12.html')
+
+# Example view for question 13
+def heritage_question_13(request):
+    if request.method == 'POST':
+        request.session['heritage_question_13_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_14')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_13.html')
+
+# Example view for question 14
+def heritage_question_14(request):
+    if request.method == 'POST':
+        request.session['heritage_question_14_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_15')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_14.html')
+
+# Example view for question 15
+def heritage_question_15(request):
+    if request.method == 'POST':
+        request.session['heritage_question_15_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_16')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_15.html')
+
+# Example view for question 16
+def heritage_question_16(request):
+    if request.method == 'POST':
+        request.session['heritage_question_16_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_17')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_16.html')
+
+# Example view for question 17
+def heritage_question_17(request):
+    if request.method == 'POST':
+        request.session['heritage_question_17_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_18')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_17.html')
+
+# Example view for question 18
+def heritage_question_18(request):
+    if request.method == 'POST':
+        request.session['heritage_question_18_answer'] = request.POST.get('answer')
+        return redirect('heritage_question_19')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_18.html')
+
+# Example view for question 19
+def heritage_question_19(request):
+    if request.method == 'POST':
+        request.session['heritage_question_19_answer'] = request.POST.get('answer')
+        return redirect('heritage_summary')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_19.html')
+
+def heritage_summary(request):
+    # Get gender and set the image path based on gender
+    gender = request.session.get('gender', 'male').lower()
+    
+    # Determine the appropriate image path based on gender
+    if gender == 'male':
+        image_path = "myapp/images/quiz/male_be_my_own_boss.webp"
+    else:
+        image_path = "myapp/images/quiz/female_be_my_own_boss.webp"
+
+    # Build context using the answers stored in the session
+    context = {
+        'gender': gender,
+        'income_source': request.session.get('heritage_question_1_answer', ''),
+        'work_schedule': request.session.get('heritage_question_2_answer', ''),
+        'job_challenges': request.session.get('heritage_question_3_answer', ''),
+        'financial_situation': request.session.get('heritage_question_4_answer', ''),
+        'retirement_income': request.session.get('heritage_question_5_answer', ''),
+        'freedom_of_time': request.session.get('heritage_question_6_answer', ''),
+        'focus_on_big_things': request.session.get('heritage_question_7_answer', ''),
+        'use_of_extra_time': request.session.get('heritage_question_8_answer', ''),
+        'alignment_with_love': request.session.get('heritage_question_9_answer', ''),
+        'online_business_knowledge': request.session.get('heritage_question_10_answer', ''),
+        'income_from_hobbies': request.session.get('heritage_question_11_answer', ''),
+        'learning_new_skills': request.session.get('heritage_question_12_answer', ''),
+        'ai_tools_familiarity': request.session.get('heritage_question_13_answer', ''),
+        'content_writing_confidence': request.session.get('heritage_question_14_answer', ''),
+        'digital_marketing_skills': request.session.get('heritage_question_15_answer', ''),
+        'ai_income_boost_awareness': request.session.get('heritage_question_16_answer', ''),
+        'areas_of_interest': request.session.get('heritage_question_17_answer', ''),
+        'ai_mastery_readiness': request.session.get('heritage_question_18_answer', ''),
+        'focus_ability': request.session.get('heritage_question_19_answer', ''),
+        
+        # Adding the profile image based on gender
+        'profile_image': image_path,
+        
+        # Additional placeholders for future questions or metrics
+        'motivation': request.session.get('motivation', 'High'),
+        'potential': request.session.get('potential', 'High'),
+        'focus': request.session.get('focus', 'Limited'),
+        'ai_knowledge': request.session.get('ai_knowledge', 'Low'),
+    }
+
+    if request.method == 'POST':
+        return redirect('heritage_question_20')
+
+    # Render the summary page
+    return render(request, 'myapp/quiz/heritage_quiz/heritage_summary.html', context)
+
+
+
+# Example view for question 20
+def heritage_question_20(request):
+    if request.method == 'POST':
+        request.session['heritage_question_20_answer'] = request.POST.get('answer')
+        return redirect('heritage_results')
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_20.html')
+
+from datetime import datetime, timedelta
+
+def heritage_results(request):
+    # Get the current date and calculate the target date (2 months from now)
+    current_date = datetime.now()
+    target_date = current_date + timedelta(days=60)
+    
+    # Format the months as "Month, Year"
+    current_month = current_date.strftime('%B, %Y')
+    target_month = target_date.strftime('%B, %Y')
+
+    # Get gender and set image path accordingly
+    gender = request.session.get('gender', 'male').lower()
+    image_path = "myapp/images/quiz/male_grow_wealth.webp" if gender == 'male' else "myapp/images/quiz/female_grow_wealth.webp"
+
+    # Fetching quiz answers from session
+    results_context = {
+        'current_month': current_month,
+        'target_month': target_month,
+        'special_goal': request.session.get('special_goal', 'Your Goal'),
+        'income_source': request.session.get('heritage_question_1_answer', 'Not provided'),
+        'work_schedule': request.session.get('heritage_question_2_answer', 'Not provided'),
+        'job_challenges': request.session.get('heritage_question_3_answer', 'Not provided'),
+        'financial_situation': request.session.get('heritage_question_4_answer', 'Not provided'),
+        'retirement_income': request.session.get('heritage_question_5_answer', 'Not provided'),
+        'freedom_of_time': request.session.get('heritage_question_6_answer', 'Not provided'),
+        'focus_on_big_things': request.session.get('heritage_question_7_answer', 'Not provided'),
+        'use_of_extra_time': request.session.get('heritage_question_8_answer', 'Not provided'),
+        'alignment_with_love': request.session.get('heritage_question_9_answer', 'Not provided'),
+        'profile_image': image_path,
+
+        # Additional motivation, potential, and AI-related attributes based on quiz data
+        'motivation': request.session.get('motivation', 'High'),
+        'potential': request.session.get('potential', 'High'),
+        'focus': request.session.get('focus', 'Limited'),
+        'ai_knowledge': request.session.get('ai_knowledge', 'Low'),
+    }
+
+    # Store the context in the session for use on the loading page
+    request.session['results_context'] = results_context
+
+    # Redirect to the loading page before results
+    return redirect('loading_page')
+
+
+# Example view for question 21
+def heritage_question_21(request):
+    if request.method == 'POST':
+        request.session['heritage_question_21_answer'] = request.POST.get('answer')
+        return redirect('some_next_view')  # Redirect to the next view or complete the process
+
+    return render(request, 'myapp/quiz/heritage_quiz/question_21.html')

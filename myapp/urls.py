@@ -179,4 +179,32 @@ urlpatterns = [
 
     path('course/<int:course_id>/toggle-favorite/', views.toggle_favorite, name='toggle_favorite'),
     path('course/<int:course_id>/toggle-save/', views.toggle_save, name='toggle_save'),
+
+    path('heritage/', views.heritage_page, name='heritage_page'),
+    path('heritage/main-goal/', views.heritage_main_goal, name='heritage_main_goal'),
+   
+   path('heritage/question-1/', views.heritage_question_1, name='heritage_question_1'),
+    path('heritage/question-2/', views.heritage_question_2, name='heritage_question_2'),
+    path('heritage/question-3/', views.heritage_question_3, name='heritage_question_3'),
+    path('heritage/question-4/', views.heritage_question_4, name='heritage_question_4'),
+    path('heritage/question-5/', views.heritage_question_5, name='heritage_question_5'),
+    path('heritage/question-6/', views.heritage_question_6, name='heritage_question_6'),
+    path('heritage/question-7/', views.heritage_question_7, name='heritage_question_7'),
+    path('heritage/question-8/', views.heritage_question_8, name='heritage_question_8'),
+    path('heritage/question-9/', views.heritage_question_9, name='heritage_question_9'),
+    path('heritage/question-10/', views.heritage_question_10, name='heritage_question_10'),
+    path('heritage/question-11/', views.heritage_question_11, name='heritage_question_11'),
+    path('heritage/question-12/', views.heritage_question_12, name='heritage_question_12'),
+    path('heritage/question-13/', views.heritage_question_13, name='heritage_question_13'),
+    path('heritage/question-14/', views.heritage_question_14, name='heritage_question_14'),
+    path('heritage/question-15/', views.heritage_question_15, name='heritage_question_15'),
+    path('heritage/question-16/', views.heritage_question_16, name='heritage_question_16'),
+    path('heritage/question-17/', views.heritage_question_17, name='heritage_question_17'),
+    path('heritage/question-18/', views.heritage_question_18, name='heritage_question_18'),
+    path('heritage/question-19/', views.heritage_question_19, name='heritage_question_19'),
+    path('heritage/heritage-summary/', views.heritage_summary, name='heritage_summary'),
+    path('heritage/question-20/', views.heritage_question_20, name='heritage_question_20'),
+    path('heritage/heritage-results/', views.heritage_results, name='heritage_results'),
+    path('heritage/question-21/', views.heritage_question_21, name='heritage_question_21'),
+
 ]

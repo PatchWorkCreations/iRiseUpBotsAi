@@ -1,0 +1,82 @@
+{% extends "myapp/quiz/quiz_base.html" %}
+{% load static %}
+{% block title %}Have you ever turned a hobby or project into extra income, and would you want to keep growing that?{% endblock %}
+{% block content %}
+{% include 'myapp/quiz/header.html' %}
+<div class="mobile-container">
+    <div class="container text-center mt-4">
+        <h2>Have you ever turned a hobby or project into extra income, and would you want to keep growing that?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="Yes, I’ve made extra income and would love to grow it further." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🎯</span>
+                    <span>Yes, I’ve made extra income and would love to grow it further.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I have, and I’m definitely interested in exploring it more." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🤝</span>
+                    <span>I have, and I’m definitely interested in exploring it more.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I haven’t yet, but I’d like to look into making money from my hobbies." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🛠️</span>
+                    <span>I haven’t yet, but I’d like to look into making money from my hobbies.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="Yes, I’ve earned extra income before and would love to turn it into something bigger." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">💪</span>
+                    <span>Yes, I’ve earned extra income before and would love to turn it into something bigger.</span>
+                </button>
+            </div>
+        
+            <div class="col-12 col-md-11 mb-3 mt-3">
+                <button type="submit" name="answer" value="I’ve thought about it, but I’m not sure how to take it to the next level." class="btn btn-light btn-goal d-flex align-items-center">
+                    <span class="emoji">🔍</span>
+                    <span>I’ve thought about it, but I’m not sure how to take it to the next level.</span>
+                </button>
+            </div>
+        
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .emoji {
+        font-size: 50px;
+        margin-right: 15px;
+    }
+
+    .btn-goal {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        text-align: left;
+        padding: 15px 20px;
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        font-size: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-goal:hover {
+        background-color: #e2e6ea;
+    }
+
+    .btn-goal span {
+        font-weight: normal;
+    }
+</style>
+{% endblock %}

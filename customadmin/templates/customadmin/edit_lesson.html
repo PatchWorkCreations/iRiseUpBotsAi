@@ -98,7 +98,9 @@
                 <option value="question" {% if block.type == 'question' %}selected{% endif %}>Question</option>
                 <option value="multiple_questions" {% if block.type == 'multiple_questions' %}selected{% endif %}>Multiple Questions</option>
                 <option value="multiple_choice" {% if block.type == 'multiple_choice' %}selected{% endif %}>Multiple Choice</option>
+                <option value="video" {% if block.type == 'video' %}selected{% endif %}>Video Embed</option> <!-- Ensure this is selected -->
             </select>
+            
 
             <!-- Hidden input to capture the current order of the block -->
             <input type="hidden" name="block_order_{{ forloop.counter0 }}" value="{{ forloop.counter0 }}">
@@ -121,6 +123,7 @@
                 <input type="text" name="question_{{ forloop.counter0 }}" class="form-control mb-2" placeholder="Enter the multiple-choice question" value="{{ block.question }}">
                 <input type="text" name="correct_answer_{{ forloop.counter0 }}" class="form-control mb-2" placeholder="Enter the correct answer" value="{{ block.correct_answer }}">
                 
+                
                 <div id="multiple-choice-options-{{ forloop.counter0 }}">
                     {% for option in block.options %}
                     <div class="form-check">
@@ -131,6 +134,12 @@
                 </div>
                 <button type="button" class="btn btn-secondary mb-2" onclick="addOption('{{ forloop.counter0 }}')">Add Option</button>
                 
+
+                {% elif block.type == 'video' %}
+                <input type="text" name="video_url_{{ forloop.counter0 }}" class="form-control mb-2" value="{{ block.content }}" placeholder="Enter Wistia Video URL">
+
+
+
                 {% endif %}
             </div>
         </div>
@@ -212,24 +221,27 @@ let dragEnabled = false;
         e.preventDefault();
         this.classList.remove('dragging');
     }
-
     function updateBlockIndices() {
-        const blocks = document.querySelectorAll('.content-block');
-        blocks.forEach((block, index) => {
-            block.setAttribute('data-index', index);
-            block.querySelector('label').innerHTML = `Order: ${index + 1}`;
-            const hiddenOrderInput = block.querySelector(`input[name^="block_order"]`);
-            if (hiddenOrderInput) {
-                hiddenOrderInput.value = index;
-            }
-        });
-        document.getElementById('block_count').value = blocks.length;
+    const blocks = document.querySelectorAll('.content-block');
+    blocks.forEach((block, index) => {
+        block.setAttribute('data-index', index);
+        block.querySelector('label').innerHTML = `Order: ${index + 1}`;
+        
+        // Update the hidden input with the correct order
+        const hiddenOrderInput = block.querySelector(`input[name^="block_order"]`);
+        if (hiddenOrderInput) {
+            hiddenOrderInput.value = index; // Save the correct index in the hidden input
+        }
+    });
+    document.getElementById('block_count').value = blocks.length; // Update block count
     }
 
     function updateBlockIndicesBeforeSubmit() {
-        updateBlockIndices();
+        updateBlockIndices();  // Ensure the indices are updated before form submission
     }
-    
+
+
+
     const contentBlocksContainer = document.getElementById('content-blocks-container');
     let blockCounter = parseInt(contentBlocksContainer.getAttribute('data-block-count')) || 0;
 
@@ -255,7 +267,9 @@ let dragEnabled = false;
             <option value="question">Question</option>
             <option value="multiple_questions">Multiple Questions</option>
             <option value="multiple_choice">Multiple Choice</option>
+            <option value="video">Video Embed</option>  <!-- Add the video embed option -->
         `;
+
 
         const contentDiv = document.createElement('div');
         contentDiv.id = `content-block-fields-${blockId}`;
@@ -349,6 +363,8 @@ let dragEnabled = false;
                 <div id="multiple-choice-options-${index}"></div>
                 <button type="button" class="btn btn-secondary mb-2" onclick="addOption(${index})">Add Option</button>
             `;
+        } else if (selectedType === 'video') {
+        contentDiv.innerHTML = '<input type="text" name="video_url_' + index + '" class="form-control mb-2" placeholder="Enter Wistia Video URL"><br>';
         } else {
             contentDiv.innerHTML = '<textarea name="content_' + index + '" rows="4" cols="50" class="form-control mb-2"></textarea><br>';
         }

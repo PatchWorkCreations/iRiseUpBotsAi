@@ -275,7 +275,23 @@
                 </ul>
             </div>
 
+            {% elif block.type == 'video' %}
+            <div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;">
+                <div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;">
+                    <iframe src="{{ block.content }}" 
+                            allow="autoplay; fullscreen" 
+                            allowfullscreen 
+                            frameborder="0" 
+                            scrolling="no" 
+                            class="wistia_embed" 
+                            name="wistia_embed" 
+                            style="height:100%;width:100%"></iframe>
+                </div>
+            </div>
+            <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
+
             {% endif %}
+
         </div>
         {% endfor %}
     </div>
@@ -355,3 +371,13 @@ function showNextContentBlock() {
 
 </script>
 {% endblock %}
+
+
+<!--
+    {% if block.type == 'video' %}
+    <div class="video-wrapper">
+        <iframe width="560" height="315" src="{{ block.content }}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+{% endif %}
+
+-->
