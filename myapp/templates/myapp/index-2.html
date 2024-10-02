@@ -2216,118 +2216,124 @@ body {
     * 11. START REVIEWS DESIGN
     * ----------------------------------------------------------------------------------------
     */
+
     .testi_home_area {
-        background: url(../images/banner/shapes-bg.png) no-repeat;
-        background-position: top center;
-        background-size:cover;
-        padding-bottom: 100px;
-    }
-    .testimonial {
-        background: #fff;
-        border-radius: 5px;
-        margin: 0px 15px;
-        -webkit-box-shadow: 0 10px 20px -10px rgba(0,64,128,.3);
-        box-shadow:0 10px 20px -10px rgba(0,64,128,.3);
-        margin-bottom: 30px;
-    }
-    .testimonial_content{padding: 30px;}
-    .testimonial_content h3 {
-        font-weight: 600;
-        font-size: 20px;
-        color:#1a2d62;
-    }
-    .testimonial_content i {
-        color: #ffbd35;
-        font-size: 22px;
-    }
-    .testimonial_content p {
-        overflow: hidden;
-        margin-top: 15px;
-    }
-    .testi_pic_title{
-    
-    padding:20px;
-    }
-    .tpt_one{background:rgba(46,202,127,0.2);}
-    .tpt_two{background:#fff8ee;}
-    .tpt_three{background:#eef4ff;}
-    .testi_pic_title .pic{
-        float: left;
-        width:70px;
-        height:70px;
-        margin-right: 15px;
-    }
-    .testi_pic_title .pic img {
-        width: 100%;
-        height: 100%;
-        border-radius: 100px;
-    }
-    .testi_pic_title h4 {
-        font-size: 20px;
-        font-weight: 700;
-        margin-top: 10px;
-    }
-    .testi_pic_title small {
-        font-weight: 400;
-        color: #1b2032;
-        font-size: 14px;
-        margin-top: 8px;
-        display: block;
-        font-family: 'Poppins', sans-serif;
-    }
-    .owl-theme{-webkit-transition:0.4s;-o-transition:0.4s;transition:0.4s;}
-    .owl-theme .owl-controls{
-        width: 100%;
-        height: 50px;
-        display: block!important;
-        opacity: 1;
-        position: absolute;
-        top: -32%;
-        -webkit-transition:0.4s;
-        -o-transition:0.4s;
-        transition:0.4s;
-    }
-    .owl-theme .owl-controls .owl-buttons div {
-        width: 46px;
-        height: 46px;
-        line-height: 42px;
-        opacity: 1;
-        border-radius: 3px;
-        background: #fff;
-        border: 1px solid #ededed;
-        -webkit-transition: 0.4s;
-        -o-transition: 0.4s;
-        transition: 0.4s;
-        -webkit-box-shadow:0px 0px 150px 0px rgba(78, 67, 250, 0.06);
-                box-shadow:0px 0px 150px 0px rgba(78, 67, 250, 0.06);
-    }
-    
-    .owl-theme .owl-controls .owl-buttons div:hover{
-    background:#2eca7f;
-    border:1px solid #2eca7f;
-    display:block;
-    }
-    .owl-prev{
-        position: absolute;
-        left:89%;
-    }
-    .owl-next{
-        position: absolute;
-        right: 1%;
-    }
-    .owl-prev:after,
-    .owl-next:after{
-        content: "\f104";
-        font-family: 'FontAwesome';
-        font-size: 26px;
-        color: #1a2d62;
-        opacity: 1;
-    }
-    .owl-next:after{ content: "\f105"; }
-    @media only screen and (max-width: 768px){
-        .owl-theme .owl-controls{ margin-top: 20px; }
-         .owl-theme .owl-controls{display:none!important; }
-    }
+    background: url(../images/banner/shapes-bg.png) no-repeat;
+    background-position: top center;
+    background-size: cover;
+    padding-bottom: 100px;
+}
+
+.testimonial {
+    background: #fff;
+    border-radius: 10px;
+    margin: 0px 15px;
+    box-shadow: 0 10px 30px rgba(0,64,128,.2);
+    margin-bottom: 30px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.testimonial:hover {
+    transform: translateY(-10px);
+}
+
+.testimonial_content {
+    padding: 30px;
+    text-align: center;
+}
+
+.testimonial_content i {
+    color: #ffbd35;
+    font-size: 22px;
+}
+
+.testimonial_content p {
+    font-size: 16px;
+    color: #666;
+    margin-top: 15px;
+    font-style: italic;
+}
+
+.testi_pic_title {
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.tpt_one { background-color: rgba(46,202,127,0.1); }
+.tpt_two { background-color: rgba(255,248,238,0.1); }
+.tpt_three { background-color: rgba(238,244,255,0.1); }
+
+.testi_pic_title .pic {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.testi_pic_title .pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.testi_pic_title h4 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 10px;
+    color: #333;
+}
+
+.testi_pic_title small {
+    font-weight: 400;
+    color: #888;
+    font-size: 14px;
+}
+
+.owl-theme .owl-controls {
+    margin-top: 20px;
+}
+
+.owl-prev, .owl-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.owl-prev:hover, .owl-next:hover {
+    background-color: #2eca7f;
+}
+
+.owl-prev {
+    left: 15px;
+}
+
+.owl-next {
+    right: 15px;
+}
+
+.owl-prev:after, .owl-next:after {
+    content: "\f104";
+    font-family: 'FontAwesome';
+    font-size: 20px;
+    color: #1a2d62;
+}
+
+.owl-next:after {
+    content: "\f105";
+}
+
     /*
     * ----------------------------------------------------------------------------------------
     * 11.END REVIEWS DESIGN
@@ -4657,384 +4663,294 @@ body {
 	
 					
 	<!-- START HOME -->
-	<section id="home" class="home_bg">	
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6 col-sm-6 col-xs-12">	
-					<div class="home_content">
-						<h1>Better <span>Learning Future</span> Starts With iRiseUp</h1>
-						<p>It is a long established fact that reader will be distracted readable content of a page when.</p>						
-					</div>
-					<div class="home_btn">
-						<a href="#" class="cta">
-							<span>Explore Courses</span>
-							<svg width="13px" height="10px" viewBox="0 0 13 10">
-								<path d="M1,5 L11,5"></path>
-								<polyline points="8 1 12 5 8 9"></polyline>
-							</svg>
-						</a>
-					</div>		
-				</div><!-- END COL-->
-				<div class="col-lg-6 col-sm-6 col-xs-12">	
-					<div class="home_me_img">
-						<img src="{% static 'myapp/images/all-img/home-image.png' %}" class="img-fluid" alt="Home Image" />
-						<div class="home_ps">
-							<img src="{% static 'myapp/images/icon/user2.svg' %}" alt="User Icon" />
-							<h2>7500+</h2>
-							<span>Active student</span>
-						</div>
-						<div class="home_ps2">
-							<img src="{% static 'myapp/images/icon/file2.svg' %}" alt="File Icon" />
-							<h2>4500+</h2>
-							<span>Online Course</span>
-						</div>
-					</div>		
-				</div><!-- END COL-->
-			</div><!--- END ROW -->			
-		</div><!--- END CONTAINER -->
-	</section>
+	<section id="home" class="home_bg">    
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6 col-xs-12">    
+                    <div class="home_content">
+                        <h1><span>Empower Your Future</span> With iRiseUp Courses</h1>
+                        <p>Discover personalized courses designed to help you stay relevant, build new skills, and take charge of your future. Whether you're over 40 or looking to pivot, it's never too late to learn and grow with iRiseUp.</p>                       
+                    </div>
+                    <div class="home_btn">
+                        <a href="{% url 'start_quiz' %}" class="cta">
+                            <span>Explore Our Courses</span>
+                            <svg width="13px" height="10px" viewBox="0 0 13 10">
+                                <path d="M1,5 L11,5"></path>
+                                <polyline points="8 1 12 5 8 9"></polyline>
+                            </svg>
+                        </a>
+                    </div>        
+                </div><!-- END COL-->
+                <div class="col-lg-6 col-sm-6 col-xs-12">    
+                    <div class="home_me_img">
+                        <!-- YouTube Embed Code -->
+                        <iframe width="600" height="610" 
+                        src="https://www.youtube.com/embed/igozhJ_Tk20?autoplay=1&mute=1" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                        <!-- End YouTube Embed Code -->
+                        <p style="text-align:center; font-size:14px;">🔊 Click the video to unmute</p>
+                    </div>        
+                </div><!-- END COL-->
+                
+            </div><!--- END ROW -->            
+        </div><!--- END CONTAINER -->
+    </section>
+    
 	<!-- END  HOME -->
 
 	<!-- START ABOUT US HOME ONE -->
 	<section class="tp_feature">
-		<div class="container-fluid">			
-			 <div class="row">					
-				 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
-					 <div class="single_tp">
-						 <h3>Quality Education</h3>
-						 <p>Lorem ipsum dolor sit amet, consectetur notted adipisicing elit sed do eiusmod tempor incididunt ut labore.</p>
-						 <a href="#" class="cta">
-							 <span>Explore</span>
-							 <svg width="13px" height="10px" viewBox="0 0 13 10">
-								 <path d="M1,5 L11,5"></path>
-								 <polyline points="8 1 12 5 8 9"></polyline>
-							 </svg>
-						 </a>
-					 </div>
-				 </div><!-- END COL -->			
-				 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
-					 <div class="single_tp">
-						 <h3>Experienced Teachers</h3>
-						 <p>Lorem ipsum dolor sit amet, consectetur notted adipisicing elit sed do eiusmod tempor incididunt ut labore.</p>
-						 <a href="#" class="cta">
-							 <span>Explore</span>
-							 <svg width="13px" height="10px" viewBox="0 0 13 10">
-								 <path d="M1,5 L11,5"></path>
-								 <polyline points="8 1 12 5 8 9"></polyline>
-							 </svg>
-						 </a>
-					 </div>
-				 </div><!-- END COL -->			
-				 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
-					 <div class="single_tp">
-						 <h3>Delicious Food</h3>
-						 <p>Lorem ipsum dolor sit amet, consectetur notted adipisicing elit sed do eiusmod tempor incididunt ut labore.</p>
-						 <a href="#" class="cta">
-							 <span>Explore</span>
-							 <svg width="13px" height="10px" viewBox="0 0 13 10">
-								 <path d="M1,5 L11,5"></path>
-								 <polyline points="8 1 12 5 8 9"></polyline>
-							 </svg>
-						 </a>
-					 </div>
-				 </div><!-- END COL -->							
-			 </div><!-- END ROW -->
-		 </div><!-- END CONTAINER -->
-	 </section>
+        <div class="container-fluid">            
+             <div class="row">                    
+                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
+                     <div class="single_tp">
+                         <h3>Content Writing & Blogging</h3>
+                         <p>Master the art of storytelling, blogging, and content creation to engage audiences and build your personal or business brand.</p>
+                         <a href="{% url 'start_quiz' %}" class="cta">
+                             <span>Explore</span>
+                             <svg width="13px" height="10px" viewBox="0 0 13 10">
+                                 <path d="M1,5 L11,5"></path>
+                                 <polyline points="8 1 12 5 8 9"></polyline>
+                             </svg>
+                         </a>
+                     </div>
+                 </div>             
+                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
+                     <div class="single_tp">
+                         <h3>Graphic Design</h3>
+                         <p>Learn essential graphic design skills to create stunning visuals that stand out and communicate effectively.</p>
+                         <a href="{% url 'start_quiz' %}" class="cta">
+                             <span>Explore</span>
+                             <svg width="13px" height="10px" viewBox="0 0 13 10">
+                                 <path d="M1,5 L11,5"></path>
+                                 <polyline points="8 1 12 5 8 9"></polyline>
+                             </svg>
+                         </a>
+                     </div>
+                 </div>             
+                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
+                     <div class="single_tp">
+                         <h3>Digital Marketing</h3>
+                         <p>Develop your digital marketing expertise to grow your online presence, reach your target audience, and boost sales.</p>
+                         <a href="{% url 'start_quiz' %}" class="cta">
+                             <span>Explore</span>
+                             <svg width="13px" height="10px" viewBox="0 0 13 10">
+                                 <path d="M1,5 L11,5"></path>
+                                 <polyline points="8 1 12 5 8 9"></polyline>
+                             </svg>
+                         </a>
+                     </div>
+                 </div>                             
+             </div><!-- END ROW -->
+             <div class="row">
+                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
+                     <div class="single_tp">
+                         <h3>Video Editing</h3>
+                         <p>Learn the tools and techniques of professional video editing to create engaging content for social media, websites, and more.</p>
+                         <a href="{% url 'start_quiz' %}" class="cta">
+                             <span>Explore</span>
+                             <svg width="13px" height="10px" viewBox="0 0 13 10">
+                                 <path d="M1,5 L11,5"></path>
+                                 <polyline points="8 1 12 5 8 9"></polyline>
+                             </svg>
+                         </a>
+                     </div>
+                 </div>     
+                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
+                     <div class="single_tp">
+                         <h3>Photography</h3>
+                         <p>Hone your photography skills, from camera basics to advanced editing techniques, to capture stunning visuals.</p>
+                         <a href="{% url 'start_quiz' %}" class="cta">
+                             <span>Explore</span>
+                             <svg width="13px" height="10px" viewBox="0 0 13 10">
+                                 <path d="M1,5 L11,5"></path>
+                                 <polyline points="8 1 12 5 8 9"></polyline>
+                             </svg>
+                         </a>
+                     </div>
+                 </div>             
+                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
+                     <div class="single_tp">
+                         <h3>Social Media Management</h3>
+                         <p>Manage and grow social media accounts with confidence, building engagement and connections across platforms.</p>
+                         <a href="{% url 'start_quiz' %}" class="cta">
+                             <span>Explore</span>
+                             <svg width="13px" height="10px" viewBox="0 0 13 10">
+                                 <path d="M1,5 L11,5"></path>
+                                 <polyline points="8 1 12 5 8 9"></polyline>
+                             </svg>
+                         </a>
+                     </div>
+                 </div>                             
+             </div><!-- END ROW -->
+         </div><!-- END CONTAINER -->
+     </section>
+    
 	<!-- END ABOUT US HOME ONE -->	
 
 	<!-- START COUNTER -->
     {% load static %}
 
-<section class="ab_one section-padding">
-	<div class="container">									
-		<div class="row">								
-			<div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
-				<div class="ab_img">
-					<img src="{% static 'myapp/images/all-img/about1.png' %}" class="img-fluid" alt="About Us Image">
-					<!-- <div class="wc_year">
-						<h3><span>6k+</span> <br />Happy Clients</h3>
-					</div> -->
-				</div>
-			</div><!--- END COL -->					
-			<div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
-				<div class="ab_content">
-					<h2>Learn new skills to go <u><span>ahead for your </span></u> career.</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur notted adipisicing elit sed do eiusmod tempor incididunt ut labore et simply.</p>
-				</div>
-				<div class="abmv">
-					<span class="ti-medall"></span>
-					<h4>Our Mission</h4>
-					<p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore.</p>
-				</div>
-				<div class="abmv">
-					<span class="ti-wand"></span>
-					<h4>Our Vision</h4>
-					<p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore.</p>
-				</div>	
-				<a class="btn_one" href="#">Discover More</a>
-			</div><!--- END COL -->								  
-		</div><!--- END ROW -->
-	</div><!--- END CONTAINER -->
-</section>
+    <section class="ab_one section-padding">
+        <div class="container">                                    
+            <div class="row">                                
+                <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
+                    <div class="ab_img">
+                        <img src="{% static 'myapp/images/iriseup/1.png' %}" class="img-fluid" alt="Learn New Skills at iRiseUp">
+                    </div>
+                </div><!--- END COL -->                    
+                <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
+                    <div class="ab_content">
+                        <h2>Learn new skills to go <u><span>ahead in your </span></u> career.</h2>
+                        <p>At iRiseUp, we offer a range of courses that help you stay competitive and develop the skills you need for today’s rapidly changing job market. From digital marketing to virtual assistance, you’ll find the perfect course to match your goals.</p>
+                    </div>
+                    <div class="abmv">
+                        <span class="ti-medall"></span>
+                        <h4>Our Mission</h4>
+                        <p>Empowering individuals, especially those over 40, to take control of their futures through accessible and practical learning experiences.</p>
+                    </div>
+                    <div class="abmv">
+                        <span class="ti-wand"></span>
+                        <h4>Our Vision</h4>
+                        <p>To be a global leader in providing innovative, tech-based learning solutions that help individuals build rewarding careers and personal growth.</p>
+                    </div>    
+                    <a class="btn_one" href="{% url 'start_quiz' %}">Discover More</a>
+                </div><!--- END COL -->                                  
+            </div><!--- END ROW -->
+        </div><!--- END CONTAINER -->
+    </section>
+    
 <!-- END ABOUT US HOME ONE -->	
 
-<!-- START COUNTER -->
-<section id="counts" class="counts section-padding">
-	<div class="container" data-aos="fade-up">
-		<div class="section-title">
-			<h2>Some Fun Fact</h2>
-			<p>Our Great <span><u>Achievement</u></span></p>
-		</div>	  
-		<div class="row gy-4">
-			<div class="col-lg-3 col-md-6">
-				<div class="count-box">
-					<i class="ti-face-smile"></i>
-					<div>
-						<span data-purecounter-start="0" data-purecounter-end="8232" data-purecounter-duration="1" class="purecounter"></span>
-						<p>Enrolled Students</p>
-					</div>
-				</div>
-			</div><!--- END COL -->		
-			<div class="col-lg-3 col-md-6">
-				<div class="count-box">
-					<i class="ti-files" style="color: #ee6c20;"></i>
-					<div>
-						<span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
-						<p>Academic Programs</p>
-					</div>
-				</div>
-			</div><!--- END COL -->		
-			<div class="col-lg-3 col-md-6">
-				<div class="count-box">
-					<i class="ti-headphone-alt" style="color: #15be56;"></i>
-					<div>
-						<span data-purecounter-start="0" data-purecounter-end="163" data-purecounter-duration="1" class="purecounter"></span>
-						<p>Winning Awards</p>
-					</div>
-				</div>
-			</div><!--- END COL -->		
-			<div class="col-lg-3 col-md-6">
-				<div class="count-box">
-					<i class="ti-user" style="color: #bb0852;"></i>
-					<div>
-						<span data-purecounter-start="0" data-purecounter-end="93" data-purecounter-duration="1" class="purecounter"></span>
-						<p>Certified Students</p>
-					</div>
-				</div>
-			</div><!--- END COL -->		
-		</div><!--- END ROW -->		
-	</div><!--- END CONTAINER -->		
-</section>	
-<!-- END COUNTER -->	
-
-<!-- START COMPANY PARTNER LOGO  -->
-<div class="partner-logo section-padding">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-12 text-center">
-				<div class="partner_title">
-					<h3>Trusted Company Around The World!</h3>
-				</div>
-				<div class="partner">
-					<a href="#"><img src="{% static 'myapp/images/all-img/clients/1.png' %}" alt="Client 1"></a>
-					<a href="#"><img src="{% static 'myapp/images/all-img/clients/2.png' %}" alt="Client 2"></a>
-					<a href="#"><img src="{% static 'myapp/images/all-img/clients/3.png' %}" alt="Client 3"></a>
-					<a href="#"><img src="{% static 'myapp/images/all-img/clients/4.png' %}" alt="Client 4"></a>
-					<a href="#"><img src="{% static 'myapp/images/all-img/clients/5.png' %}" alt="Client 5"></a>
-					<a href="#"><img src="{% static 'myapp/images/all-img/clients/2.png' %}" alt="Client 6"></a>
-					<a href="#"><img src="{% static 'myapp/images/all-img/clients/1.png' %}" alt="Client 7"></a>
-					<a href="#"><img src="{% static 'myapp/images/all-img/clients/3.png' %}" alt="Client 8"></a>
-					<a href="#"><img src="{% static 'myapp/images/all-img/clients/4.png' %}" alt="Client 9"></a>
-				</div>
-			</div><!-- END COL  -->
-		</div><!--END  ROW  -->
-	</div><!-- END CONTAINER  -->
-</div>
-<!-- END COMPANY PARTNER LOGO -->
-
-	<!-- END COMPANY PARTNER LOGO -->
 
 	<!-- START WHY CHOOSE US-->
 
-
-<section class="marketing_content_area section-padding">
-   <div class="container">
-		<div class="section-title">
-			<h2>Why Choose iRiseUp</h2>
-			<p>Find the <span><u>best features</u></span> of iRiseUp.</p>
-		</div>		
-		<div class="row">									
-			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
-				<div class="single_feature_one">
-					<div class="sf_top">
-						<span class="ti-book ss_one"></span>
-						<h2><a href="#" target="_blank">Learn More Anywhere</a></h2>
-					</div>
-					<p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore.</p>
-				</div>					
-			</div><!-- END COL -->								
-			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
-				<div class="single_feature_one">
-					<div class="sf_top">
-						<span class="ti-heart ss_two"></span>
-						<h2><a href="#" target="_blank">Expert <br />Instructor</a></h2>
-					</div>	
-					<p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore.</p>
-				</div>					
-			</div><!-- END COL -->								
-			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
-				<div class="single_feature_one">
-					<div class="sf_top">
-						<span class="ti-user ss_three"></span>
-						<h2><a href="#" target="_blank">Team <br />Management</a></h2>
-					</div>	
-					<p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore.</p>
-				</div>					
-			</div><!-- END COL -->								
-			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
-				<div class="single_feature_one">
-					<div class="sf_top">
-						<span class="ti-eye ss_four"></span>
-						<h2><a href="#" target="_blank">Course <br /> Planning</a></h2>
-					</div>	
-					<p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore.</p>
-				</div>					
-			</div><!-- END COL -->								
-			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" data-wow-offset="0">
-				<div class="single_feature_one">
-					<div class="sf_top">
-						<span class="ti-light-bulb ss_five"></span>
-						<h2><a href="#" target="_blank">Teacher Monitoring</a></h2>
-					</div>		
-					<p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore.</p>
-				</div>					
-			</div><!-- END COL -->								
-			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" data-wow-offset="0">
-				<div class="single_feature_one">
-					<div class="sf_top">
-						<span class="ti-email ss_six"></span>
-						<h2><a href="#" target="_blank">24/7 Strong Support</a></h2>
-					</div>		
-					<p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore.</p>
-				</div>					
-			</div><!-- END COL -->																
-		</div><!-- END ROW -->
-	</div><!-- END CONTAINER -->
-</section>
+    <section class="marketing_content_area section-padding">
+        <div class="container">
+             <div class="section-title">
+                 <h2>Why Choose iRiseUp</h2>
+                 <p>Discover the <span><u>top features</u></span> of learning with iRiseUp.</p>
+             </div>      
+             <div class="row">                                    
+                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
+                     <div class="single_feature_one">
+                         <div class="sf_top">
+                             <span class="ti-book ss_one"></span>
+                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Learn Anytime, Anywhere</a></h2>
+                         </div>
+                         <p>Our online platform allows you to access courses from any device, anytime, so you can learn on your own schedule, no matter where you are.</p>
+                     </div>                    
+                 </div>                                 
+                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
+                     <div class="single_feature_one">
+                         <div class="sf_top">
+                             <span class="ti-heart ss_two"></span>
+                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Expert Instructors</a></h2>
+                         </div>  
+                         <p>Learn from industry professionals with years of experience, ensuring that you gain valuable insights and practical skills from the best in the field.</p>
+                     </div>                    
+                 </div>                                 
+                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
+                     <div class="single_feature_one">
+                         <div class="sf_top">
+                             <span class="ti-user ss_three"></span>
+                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Community Support</a></h2>
+                         </div>  
+                         <p>Join a growing community of learners and professionals. Share insights, ask questions, and collaborate with others working towards similar goals.</p>
+                     </div>                    
+                 </div>                                 
+                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
+                     <div class="single_feature_one">
+                         <div class="sf_top">
+                             <span class="ti-eye ss_four"></span>
+                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Personalized Course Planning</a></h2>
+                         </div>  
+                         <p>Our tailored course recommendations help you focus on the skills that matter most to your career goals, ensuring a more effective learning experience.</p>
+                     </div>                    
+                 </div>                                 
+                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" data-wow-offset="0">
+                     <div class="single_feature_one">
+                         <div class="sf_top">
+                             <span class="ti-light-bulb ss_five"></span>
+                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Progress Tracking</a></h2>
+                         </div>      
+                         <p>Stay motivated with our progress tracking system, allowing you to see your achievements and stay on course as you develop new skills.</p>
+                     </div>                    
+                 </div>                                 
+                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" data-wow-offset="0">
+                     <div class="single_feature_one">
+                         <div class="sf_top">
+                             <span class="ti-email ss_six"></span>
+                             <h2><a href="{% url 'start_quiz' %}" target="_blank">24/7 Dedicated Support</a></h2>
+                         </div>      
+                         <p>Our support team is here to help you with any issues or questions, any time of day. We're committed to your success, whenever you need us.</p>
+                     </div>                    
+                 </div>                                                                 
+             </div><!-- END ROW -->
+         </div><!-- END CONTAINER -->
+     </section>
+     
 
 	<!-- END WHY CHOOSE US -->
-	
-	<!--START COURSE -->
-	<div class="best-course section-padding">
-		<div class="container">
-			<div class="section-title">
-				<h2>Popular Courses</h2>
-				<p>Choose Our <span><u>Top Courses</u></span></p>
-			</div>				
-			<div class="row">					
-				<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
-					<div class="course-slide">
-						<div class="course-img">
-							<img src="{% static 'myapp/images/all-img/c1.png' %}" alt="Arts & Design">
-							<div class="course-date">
-								<span class="month">$49</span>
-							</div>
-						</div>
-						<div class="course-content">
-							<a class="c_btn" href="#">Arts & Design</a>
-							<h3><a href="#">Basic Fundamentals of Interior & Graphics Design</a></h3>
-							<span><i class="fa fa-calendar"></i>3 Lessons</span>
-							<span><i class="fa fa-clock-o"></i>3h 45m</span>
-							<span><i class="fa fa-star"></i>4.9</span>
-							<span><i class="fa fa-table"></i><strong>30 Seats Available</strong></span>
-						</div>
-					</div>	
-				</div>			
-				<!-- Repeat the structure for other courses, changing the course info and images -->
-				<!-- Example for the next course -->
-				<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
-					<div class="course-slide">
-						<div class="course-img">
-							<img src="{% static 'myapp/images/all-img/c1.png' %}" alt="Arts & Design">
-							<div class="course-date">
-								<span class="month">$49</span>
-							</div>
-						</div>
-						<div class="course-content">
-							<a class="c_btn" href="#">Arts & Design</a>
-							<h3><a href="#">Basic Fundamentals of Interior & Graphics Design</a></h3>
-							<span><i class="fa fa-calendar"></i>3 Lessons</span>
-							<span><i class="fa fa-clock-o"></i>3h 45m</span>
-							<span><i class="fa fa-star"></i>4.9</span>
-							<span><i class="fa fa-table"></i><strong>30 Seats Available</strong></span>
-						</div>
-					</div>	
-				</div>	
-				<!-- Add other courses here... -->
-				<div class="col-lg-12 text-center">
-					<div class="cc_btn">
-						<a class="btn_one" href="#">View All Courses</a>
-					</div>
-				</div>				
-			</div>
-		</div>
-	</div>
-	
-	<!-- START COURSE PROMOTION -->
-	<section class="course_promo section-padding">
-		<div class="container">									
-			<div class="row">								
-				<div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
-					<div class="cp_content">
-						<h4>Best Online Learning Platform</h4>
-						<h2>One Platform & Many <span><u>Courses</u></span> For You</h2>
-						<p>From blogs to emails to ad copies, auto-generate catchy, original, and high-converting copies in popular tones and languages.</p>
-						<ul>
-							<li><span class="ti-check"></span>9/10 Average Satisfaction Rate</li>
-							<li><span class="ti-check"></span>96% Completion Rate</li>
-							<li><span class="ti-check"></span>Friendly Environment & Expert Teacher</li>
-						</ul>
-					</div>
-					<div class="cp_btn">
-						<a href="#" class="cta">
-							<span>Explore Our Courses</span>
-							<svg width="13px" height="10px" viewBox="0 0 13 10">
-								<path d="M1,5 L11,5"></path>
-								<polyline points="8 1 12 5 8 9"></polyline>
-							</svg>
-						</a>
-					</div>
-				</div>
-				<div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
-					<div class="cp_img">
-						<img src="{% static 'myapp/images/all-img/promo.png' %}" class="img-fluid" alt="Promo Image">
-					</div>
-				</div>			  
-			</div>
-		</div>
-	</section>
+<!-- START COURSE PROMOTION -->
+<section class="course_promo section-padding">
+    <div class="container">                                    
+        <div class="row">                                
+            <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
+                <div class="cp_content">
+                    <h4>The Best Platform for Learning New Skills</h4>
+                    <h2>One Platform, Countless <span><u>Courses</u></span> to Build Your Future</h2>
+                    <p>Whether you’re looking to master digital marketing, web development, graphic design, or start a side hustle, iRiseUp provides the tools and guidance you need to thrive. Learn at your own pace with courses designed for busy individuals.</p>
+                    <ul>
+                        <li><span class="ti-check"></span>9/10 Average Student Satisfaction Rate</li>
+                        <li><span class="ti-check"></span>96% Course Completion Rate</li>
+                        <li><span class="ti-check"></span>Friendly Environment & Expert Instructors</li>
+                    </ul>
+                </div>
+                <div class="cp_btn">
+                    <a href="{% url 'start_quiz' %}" class="cta">
+                        <span>Explore Our Courses</span>
+                        <svg width="13px" height="10px" viewBox="0 0 13 10">
+                            <path d="M1,5 L11,5"></path>
+                            <polyline points="8 1 12 5 8 9"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
+                <div class="cp_img">
+                    <img src="{% static 'myapp/images/iriseup/2.png' %}" class="img-fluid" alt="Learn New Skills Online with iRiseUp">
+                </div>
+            </div>              
+        </div>
+    </div>
+</section>
+
 	
 	<!-- START NEWSLETTER -->
-	<section class="newsletter_area section-padding">
-		<div class="container">
-			<div class="row text-center">			
-				<div class="col-lg-6 offset-lg-3 col-sm-12 col-xs-12">
-					<div class="subs_form">
-						<h3>Subscribe to our newsletter, We don't make any spam.</h3>
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor enim minim</p>
-						<form action="#" class="home_subs" method="POST">
-							{% csrf_token %}
-							<input type="text" class="subscribe__input" placeholder="Enter your Email Address" name="email">
-							<button type="submit" class="subscribe__btn"><i class="fa fa-paper-plane-o"></i></button>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+    <section class="newsletter_area section-padding">
+        <div class="container">
+            <div class="row text-center">            
+                <div class="col-lg-6 offset-lg-3 col-sm-12 col-xs-12">
+                    <div class="subs_form">
+                        <h3>Stay Updated with iRiseUp! No Spam, Just Valuable Insights.</h3>
+                        <p>Get the latest tips, updates, and special offers directly to your inbox. Join our community of learners and stay ahead in your career!</p>
+                        <form action="#" class="home_subs" method="POST">
+                            {% csrf_token %}
+                            <input type="email" class="subscribe__input" placeholder="Enter your Email Address" name="email" required>
+                            <button type="submit" class="subscribe__btn"><i class="fa fa-paper-plane-o"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 	
-	<!-- START TOPIC -->
+	<!-- 
 	<section class="topic_content_area section-padding">
 	   <div class="container">
 			<div class="section-title">
@@ -5045,33 +4961,31 @@ body {
 				<div class="col-lg-4 col-sm-6 col-xs-12">
 					<div class="single_tca">
 						<img src="{% static 'myapp/images/icon/ct1.svg' %}" alt="UI/UX Design Icon">
-						<h2><a href="#">UI/UX Design</a></h2>
+						<h2><a href="{% url 'start_quiz' %}">UI/UX Design</a></h2>
 						<span>71 Courses</span>
 					</div>					
 				</div>
-				<!-- Repeat for other topics -->
+				
 				<div class="col-lg-4 col-sm-6 col-xs-12">
 					<div class="single_tca">
 						<img src="{% static 'myapp/images/icon/ct2.svg' %}" alt="Digital Program Icon">
-						<h2><a href="#">Digital Program</a></h2>
+						<h2><a href="{% url 'start_quiz' %}">Digital Program</a></h2>
 						<span>59 Courses</span>
 					</div>					
 				</div>
 				<div class="col-lg-4 col-sm-6 col-xs-12">
 					<div class="single_tca">
 						<img src="{% static 'myapp/images/icon/ct3.svg' %}" alt="Finance Icon">
-						<h2><a href="#">Finance</a></h2>
+						<h2><a href="{% url 'start_quiz' %}">Finance</a></h2>
 						<span>68 Courses</span>
 					</div>					
 				</div>
-				<!-- Add more topics as needed -->
+				
 			</div>
 		</div>
 	</section>
 	
-	<!-- END TOPIC -->
 	
-	<!-- START EVENT -->
 	{% load static %}
 
 <section class="our-event section-padding">
@@ -5089,14 +5003,14 @@ body {
 							<span class="month">Oct</span>
 						</div>							
 						<div class="event-content ec_pd">
-							<h3><a href="#">Chiter Astana Event</a></h3>
+							<h3><a href="{% url 'start_quiz' %}">Chiter Astana Event</a></h3>
 							<span><i class="fa fa-clock-o"></i>10.00AM - 12.00PM</span>
 							<span><i class="fa fa-table"></i><strong>At iRiseUp School</strong></span>
 							<p>Lorem ipsum dolor sit amet magna consectetur adipisicing elit.</p>
 						</div>
-					</div><!-- END EVENT -->
-				</div><!-- END EVENT -->
-			</div><!-- END COL -->	
+					</div>
+				</div>
+			</div>
 			<div class="col-lg-4 col-sm-6 col-xs-12">
 				<div class="event-slide es">
 					<div class="ed_mb">
@@ -5104,13 +5018,13 @@ body {
 						<span class="month">Oct</span>
 					</div>							
 					<div class="event-content ec_pd">
-						<h3><a href="#">Chiter Astana Event</a></h3>
+						<h3><a href="{% url 'start_quiz' %}">Chiter Astana Event</a></h3>
 						<span><i class="fa fa-clock-o"></i>10.00AM - 12.00PM</span>
 						<span><i class="fa fa-table"></i><strong>At iRiseUp School</strong></span>
 						<p>Lorem ipsum dolor sit amet magna consectetur adipisicing elit.</p>
 					</div>
-				</div><!-- END EVENT -->
-			</div><!-- END COL -->	
+				</div> 
+			</div> 
 			<div class="col-lg-4 col-sm-6 col-xs-12">
 				<div class="event-slide es">
 					<div class="ed_mb">
@@ -5118,137 +5032,103 @@ body {
 						<span class="month">Oct</span>
 					</div>							
 					<div class="event-content ec_pd">
-						<h3><a href="#">Chiter Astana Event</a></h3>
+						<h3><a href="{% url 'start_quiz' %}">Chiter Astana Event</a></h3>
 						<span><i class="fa fa-clock-o"></i>10.00AM - 12.00PM</span>
 						<span><i class="fa fa-table"></i><strong>At iRiseUp School</strong></span>
 						<p>Lorem ipsum dolor sit amet magna consectetur adipisicing elit.</p>
 					</div>
-				</div><!-- END EVENT -->
+				</div> 
 				<div class="event-slide es">
 					<div class="ed_mb">
 						<span class="date">29</span>
 						<span class="month">Oct</span>
 					</div>	
 					<div class="event-content ec_pd">						
-						<h3><a href="#">Dasel Bhai Program</a></h3>
+						<h3><a href="{% url 'start_quiz' %}">Dasel Bhai Program</a></h3>
 						<span><i class="fa fa-clock-o"></i>10.00AM - 12.00PM</span>
 						<span><i class="fa fa-table"></i><strong>At iRiseUp School</strong></span>
 						<p>Lorem ipsum dolor sit amet magna consectetur adipisicing elit.</p>							
 					</div>
-				</div><!-- END EVENT -->	
-			</div><!-- END COL -->	
-		</div><!-- END ROW -->
-	</div><!-- END CONTAINER -->			
+				</div> 	
+			</div> 
+		</div> 
+	</div>			
 </section>
-
-	<!-- END EVENT -->	
+END ROW -->
+	 	
 	
 	<!-- START TESTIMONIALS-->
 	{% load static %}
 
-<section class="testi_home_area section-padding">
-	<div class="container">
-		<div class="section-title">
-			<h2>Testimonial</h2>
-			<p>What Says <span><u>Our Students</u></span></p>
-		</div>		
-		<div class="row">								
-			<div class="col-lg-12">
-				<div id="testimonial-slider" class="owl-carousel">
-					<div class="testimonial">
-						<div class="testimonial_content">													
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor.</p>
-						</div>
-						<div class="testi_pic_title tpt_one">
-							<div class="pic">
-								<img src="{% static 'myapp/images/all-img/t1.png' %}" alt="James Clayton">
-							</div>
-							<h4>James Clayton</h4>
-							<small class="post">- Design Expert</small>	
-						</div>
-					</div><!-- END TESTIMONIAL -->
-					<div class="testimonial">
-						<div class="testimonial_content">													
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor.</p>
-						</div>
-						<div class="testi_pic_title tpt_two">
-							<div class="pic">
-								<img src="{% static 'myapp/images/all-img/t2.png' %}" alt="James Simmons">
-							</div>
-							<h4>James Simmons</h4>
-							<small class="post">- Marketing Expert</small>	
-						</div>
-					</div><!-- END TESTIMONIAL -->
-					<div class="testimonial">
-						<div class="testimonial_content">													
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor.</p>
-						</div>
-						<div class="testi_pic_title tpt_three">
-							<div class="pic">
-								<img src="{% static 'myapp/images/all-img/t3.png' %}" alt="Alex Feroundo">
-							</div>
-							<h4>Alex Feroundo</h4>
-							<small class="post">- Founder</small>	
-						</div>
-					</div><!-- END TESTIMONIAL -->
-					<div class="testimonial">
-						<div class="testimonial_content">													
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor.</p>
-						</div>
-						<div class="testi_pic_title tpt_one">
-							<div class="pic">
-								<img src="{% static 'myapp/images/all-img/t4.png' %}" alt="Kallu Mastan">
-							</div>
-							<h4>Kallu Mastan</h4>
-							<small class="post">- Mastan Group</small>	
-						</div>
-					</div><!-- END TESTIMONIAL -->
-					<div class="testimonial">
-						<div class="testimonial_content">													
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor.</p>
-						</div>
-						<div class="testi_pic_title tpt_two">
-							<div class="pic">
-								<img src="{% static 'myapp/images/all-img/t1.png' %}" alt="Devid Max">
-							</div>
-							<h4>Devid Max</h4>
-							<small class="post">- Max Inc</small>	
-						</div>
-					</div><!-- END TESTIMONIAL -->
-				</div><!-- END TESTIMONIAL SLIDER -->
-			</div><!-- END COL  -->																							
-		</div><!-- END ROW -->
-	</div><!-- END CONTAINER -->
-</section>
+    <section class="testi_home_area section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Students Say</h2>
+                <p>See Why <span><u>People Love Learning</u></span> with iRiseUp</p>
+            </div>      
+            <div class="row">                                
+                <div class="col-lg-12">
+                    <div id="testimonial-slider" class="owl-carousel">
+                        <div class="testimonial">
+                            <div class="testimonial_content">                                                    
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <p>"iRiseUp helped me upgrade my skills in digital marketing. The courses are top-notch, and the support is fantastic!"</p>
+                            </div>
+                            <div class="testi_pic_title tpt_one">
+                                <div class="pic">
+                                    <img src="{% static 'myapp/images/all-img/t1.png' %}" alt="James Clayton">
+                                </div>
+                                <h4>James Clayton</h4>
+                                <small class="post">- Digital Marketing Specialist</small>  
+                            </div>
+                        </div><!-- END TESTIMONIAL -->
+                        <div class="testimonial">
+                            <div class="testimonial_content">                                                    
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <p>"Learning web development with iRiseUp has been a game-changer. The hands-on approach made it easy to understand!"</p>
+                            </div>
+                            <div class="testi_pic_title tpt_two">
+                                <div class="pic">
+                                    <img src="{% static 'myapp/images/all-img/t2.png' %}" alt="James Simmons">
+                                </div>
+                                <h4>James Simmons</h4>
+                                <small class="post">- Web Developer</small>  
+                            </div>
+                        </div><!-- END TESTIMONIAL -->
+                        <div class="testimonial">
+                            <div class="testimonial_content">                                                    
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <p>"Thanks to iRiseUp, I now feel confident managing social media campaigns for my clients. The courses were easy to follow!"</p>
+                            </div>
+                            <div class="testi_pic_title tpt_three">
+                                <div class="pic">
+                                    <img src="{% static 'myapp/images/all-img/t3.png' %}" alt="Alex Feroundo">
+                                </div>
+                                <h4>Alex Feroundo</h4>
+                                <small class="post">- Social Media Manager</small>  
+                            </div>
+                        </div><!-- END TESTIMONIAL -->
+                    </div><!-- END TESTIMONIAL SLIDER -->
+                </div><!-- END COL  -->                                                                                         
+            </div><!-- END ROW -->
+        </div><!-- END CONTAINER -->
+    </section>
 
 	<!-- END TESTIMONIALS -->
 	
-	<!-- START TEAM-->
+	<!-- 
 	<section class="team_home_area section-padding">
 		<div class="container">
 			<div class="section-title">
@@ -5269,13 +5149,13 @@ body {
 								<span class="ti-user"> <u>12 Student</u></span>
 							</div>
 							<ul class="social-home">
-								<li><a href="#" class="facebook-home"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="#" class="twitter-home"><i class="fa fa-twitter"></i></a></li>
-								<li><a href="#" class="instagram-home"><i class="fa fa-instagram"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="facebook-home"><i class="fa fa-facebook"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="twitter-home"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="instagram-home"><i class="fa fa-instagram"></i></a></li>
 							</ul>
 						</div>
 					</div>
-				</div><!-- END COL -->
+				</div> 
 				
 				<div class="col-lg-3 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
 					<div class="single-team-home">
@@ -5290,13 +5170,13 @@ body {
 								<span class="ti-user"> <u>7 Student</u></span>
 							</div>
 							<ul class="social-home">
-								<li><a href="#" class="facebook-home"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="#" class="twitter-home"><i class="fa fa-twitter"></i></a></li>
-								<li><a href="#" class="instagram-home"><i class="fa fa-instagram"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="facebook-home"><i class="fa fa-facebook"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="twitter-home"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="instagram-home"><i class="fa fa-instagram"></i></a></li>
 							</ul>
 						</div>
 					</div>
-				</div><!-- END COL -->
+				</div> 
 	
 				<div class="col-lg-3 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
 					<div class="single-team-home">
@@ -5311,13 +5191,13 @@ body {
 								<span class="ti-user"> <u>17 Student</u></span>
 							</div>
 							<ul class="social-home">
-								<li><a href="#" class="facebook-home"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="#" class="twitter-home"><i class="fa fa-twitter"></i></a></li>
-								<li><a href="#" class="instagram-home"><i class="fa fa-instagram"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="facebook-home"><i class="fa fa-facebook"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="twitter-home"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="instagram-home"><i class="fa fa-instagram"></i></a></li>
 							</ul>
 						</div>
 					</div>
-				</div><!-- END COL -->
+				</div> 
 	
 				<div class="col-lg-3 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
 					<div class="single-team-home">
@@ -5332,14 +5212,14 @@ body {
 								<span class="ti-user"> <u>31 Student</u></span>
 							</div>
 							<ul class="social-home">
-								<li><a href="#" class="facebook-home"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="#" class="twitter-home"><i class="fa fa-twitter"></i></a></li>
-								<li><a href="#" class="instagram-home"><i class="fa fa-instagram"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="facebook-home"><i class="fa fa-facebook"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="twitter-home"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="{% url 'start_quiz' %}" class="instagram-home"><i class="fa fa-instagram"></i></a></li>
 							</ul>
 						</div>
 					</div>
-				</div><!-- END COL -->																								
-			</div><!-- END ROW -->
+				</div> 																							
+			</div> END ROW -->
 		</div><!-- END CONTAINER -->
 	</section>
 	<!-- END TEAM -->	
@@ -5355,9 +5235,9 @@ body {
 				<div class="col-lg-4 col-sm-4 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
 					<div class="single_blog">
 						<div class="content_box">
-							<span>August 25, 2023 | <a href="#">Design</a></span>
-							<h2><a href="#">Professional Mobile Painting and Sculpting</a></h2>
-							<a href="#" class="cta">
+							<span>August 25, 2023 | <a href="{% url 'start_quiz' %}">Design</a></span>
+							<h2><a href="{% url 'start_quiz' %}">Professional Mobile Painting and Sculpting</a></h2>
+							<a href="{% url 'start_quiz' %}" class="cta">
 								<span>READ MORE</span>
 								<svg width="13px" height="10px" viewBox="0 0 13 10">
 									<path d="M1,5 L11,5"></path>
@@ -5372,9 +5252,9 @@ body {
 					<div class="single_blog">
 						<img src="{% static 'myapp/images/blog/2.png' %}" class="img-fluid" alt="Professional Ceramic Moulding">
 						<div class="content_box">
-							<span>August 26, 2023 | <a href="#">Education</a></span>
-							<h2><a href="#">Professional Ceramic Moulding for Beginner</a></h2>
-							<a href="#" class="cta">
+							<span>August 26, 2023 | <a href="{% url 'start_quiz' %}">Education</a></span>
+							<h2><a href="{% url 'start_quiz' %}">Professional Ceramic Moulding for Beginner</a></h2>
+							<a href="{% url 'start_quiz' %}" class="cta">
 								<span>READ MORE</span>
 								<svg width="13px" height="10px" viewBox="0 0 13 10">
 									<path d="M1,5 L11,5"></path>
@@ -5388,9 +5268,9 @@ body {
 					<div class="single_blog">
 						<img src="#" class="img-fluid" alt="Education Leaders">
 						<div class="content_box">
-							<span>August 28, 2023 | <a href="#">Programming</a></span>
-							<h2><a href="#">Education Is About Creating Leaders For Tomorrow</a></h2>
-							<a href="#" class="cta">
+							<span>August 28, 2023 | <a href="{% url 'start_quiz' %}">Programming</a></span>
+							<h2><a href="{% url 'start_quiz' %}">Education Is About Creating Leaders For Tomorrow</a></h2>
+							<a href="{% url 'start_quiz' %}" class="cta">
 								<span>READ MORE</span>
 								<svg width="13px" height="10px" viewBox="0 0 13 10">
 									<path d="M1,5 L11,5"></path>

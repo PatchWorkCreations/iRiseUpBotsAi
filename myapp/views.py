@@ -1964,9 +1964,16 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .forms import SignInForm  # Import the form
 import logging
+from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
+
 def sign_in(request):
+    # Check if the user is already authenticated
+    if request.user.is_authenticated:
+        logger.debug(f"User {request.user.username} tried to access the login page while already logged in.")
+        return redirect('coursemenu')  # Redirect to the course menu or appropriate page
+    
     if request.method == 'POST':
         form = SignInForm(request.POST)
 

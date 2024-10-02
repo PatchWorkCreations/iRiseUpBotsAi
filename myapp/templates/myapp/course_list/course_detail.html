@@ -349,7 +349,6 @@ h2 {
     <div class="course-card-header" onclick="toggleLessons('{{ forloop.counter }}')">
         <div class="course-info">
             <h3>{{ sub_course.title }}</h3>
-            <p>{{ sub_course.description }}</p>
             <p>{{ sub_course.units }} Unit • {{ sub_course.hours }} Hours</p>
         </div>
 
@@ -369,7 +368,6 @@ h2 {
                 <div class="lesson-info">
                     <h4>{{ lesson.title }}</h4>
                     {% if lesson.description %}
-                    <p>{{ lesson.description }}</p>
                     {% endif %}
                 </div>
     
