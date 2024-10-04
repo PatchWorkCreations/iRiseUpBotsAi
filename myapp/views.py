@@ -2779,14 +2779,16 @@ def heritage_question_21(request):
     return render(request, 'myapp/quiz/heritage_quiz/question_21.html')
 
 import os
-from openai import OpenAI
+import openai
 
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')  # Securely load the API key from environment variables
-client = OpenAI(api_key=OPENAI_API_KEY)
+# Get the API key from the environment
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
-import logging
-from django.http import JsonResponse
-from openai import OpenAI
+if not OPENAI_API_KEY:
+    raise ValueError("OpenAI API Key is missing!")
+
+# Initialize OpenAI client
+client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 # Set up logging
 logger = logging.getLogger(__name__)
