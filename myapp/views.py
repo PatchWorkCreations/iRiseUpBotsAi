@@ -2777,3 +2777,60 @@ def heritage_question_21(request):
         return redirect('some_next_view')  # Redirect to the next view or complete the process
 
     return render(request, 'myapp/quiz/heritage_quiz/question_21.html')
+
+import os
+from openai import OpenAI
+
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')  # Securely load the API key from environment variables
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+import logging
+from django.http import JsonResponse
+from openai import OpenAI
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
+
+def get_response(request):
+    if request.method == 'POST':
+        user_message = request.POST.get('message')
+
+        # Check if the message is empty
+        if not user_message or user_message.strip() == "":
+            return JsonResponse({'response': 'Error: Message cannot be empty.'})
+
+        try:
+            # Call OpenAI's GPT API for the response
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",  # Ensure you are using the correct model
+                messages=[
+                    {"role": "system", "content": "You are Eri, a kind and respectful assistant for iRiseup.ai. "
+                    "Your audience is mostly non-techy users over 40. "
+                    "Always respond in simple, encouraging language, and if needed, reference iRiseup.ai as the company providing solutions. "
+                    "Your goal is to help users understand products like content writing, e-commerce, social media management, and more."
+                    },
+
+                    {"role": "user", "content": user_message}
+                ]
+            )
+
+            # Extract the response from the API - use .content, not subscript
+            message = response.choices[0].message.content
+
+        except Exception as e:
+            # Log the error and return a detailed error response
+            logger.error(f"OpenAI API Error: {e}")
+            return JsonResponse({'response': f'Error: Unable to get a response from ChatGPT. {str(e)}'})
+
+        # Return the successful response
+        return JsonResponse({'response': message})
+
+    # If the request method is not POST, return an error
+    return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+from django.shortcuts import render
+
+def chat_interface(request):
+    return render(request, 'myapp/course_list/chat_interface.html')
+

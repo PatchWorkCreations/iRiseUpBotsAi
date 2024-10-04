@@ -1,0 +1,226 @@
+{% extends "myapp/base.html" %}
+{% block title %}Chat Assistant{% endblock %}
+{% load static %}
+{% block content %}
+
+<style>
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 0; }
+    h1 { text-align: center; padding: 20px 0; font-size: 24px; color: #333; }
+
+    .chat-container {
+        max-width: 600px;
+        margin: 50px auto;
+        border: 1px solid #ddd;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-header {
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    #chatbox {
+        padding: 20px;
+        height: 500px;
+        overflow-y: auto;
+        border-bottom: 1px solid #ddd;
+        background-color: #fafafa;
+    }
+
+    .message {
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        border-radius: 12px;
+        max-width: 80%;
+    }
+
+    .message.user {
+        background-color: #007bff;
+        color: white;
+        margin-left: auto;
+        text-align: right;
+    }
+
+    .message.bot {
+        background-color: #e9ecef;
+        color: #333;
+        text-align: left;
+    }
+
+    .message ul, .message ol {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .message li {
+        margin-bottom: 5px;
+    }
+
+    .message strong {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .typing-indicator {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .typing-indicator span {
+        display: inline-block;
+        background-color: #e9ecef;
+        border-radius: 50%;
+        width: 8px;
+        height: 8px;
+        margin-right: 3px;
+        animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+        0% { opacity: 0.2; }
+        50% { opacity: 1; }
+        100% { opacity: 0.2; }
+    }
+
+    .chat-footer {
+        padding: 10px;
+        background-color: #f1f1f1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #message {
+        width: 85%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 16px;
+    }
+
+    #send {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 50px;
+        cursor: pointer;
+    }
+
+    #send:hover {
+        background-color: #0056b3;
+    }
+
+</style>
+
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Eri, Your Personal Assistant</div>
+        <div id="chatbox">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="typing-indicator" id="typing-indicator">
+            <span></span><span></span><span></span>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="message" placeholder="Type your message..." autocomplete="off">
+            <button id="send">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatbox = document.getElementById('chatbox');
+        const typingIndicator = document.getElementById('typing-indicator');
+
+        // Function to display messages in the chatbox
+        function addMessage(sender, text, type = 'bot') {
+            const messageClass = sender === 'You' ? 'user' : 'bot';
+            const formattedText = formatResponse(text);  // Format the response before adding
+            const messageHTML = `<div class="message ${messageClass}">${formattedText}</div>`;
+            chatbox.innerHTML += messageHTML;
+            chatbox.scrollTop = chatbox.scrollHeight;  // Auto scroll to bottom
+        }
+
+        // Function to format Eri's response: Detect lists, headers, and bold content
+        function formatResponse(text) {
+            // Detect and format lists (e.g., numbered or bulleted lists)
+            if (text.includes('\n-') || text.includes('\n1.')) {
+                let listItems = text.split('\n').map(line => {
+                    if (line.startsWith('- ')) {
+                        return `<li>${line.slice(2)}</li>`;
+                    } else if (/^\d+\./.test(line)) {
+                        return `<li>${line}</li>`;
+                    }
+                    return line;
+                });
+                return `<ul>${listItems.join('')}</ul>`;
+            }
+
+            // Detect headers (e.g., "Header:" or "Title:")
+            text = text.replace(/(Header:|Title:)(.*?)(\n|$)/g, '<strong>$1$2</strong><br>');
+
+            // Return the formatted text
+            return text.replace(/\n/g, '<br>');  // Preserve line breaks
+        }
+
+        // Function to simulate the bot "typing" with an ellipsis
+        function showTypingIndicator() {
+            typingIndicator.style.display = 'flex';
+        }
+
+        function hideTypingIndicator() {
+            typingIndicator.style.display = 'none';
+        }
+
+        // Function to initiate the chat with the bot's greeting message
+        function initiateBotMessage() {
+            const botGreeting = "Hi, I'm Eri. I'll be your personal assistant today!";
+            addMessage('Eri', botGreeting);
+        }
+
+        // Trigger the bot's initial message when the page loads
+        document.addEventListener('DOMContentLoaded', (event) => {
+            initiateBotMessage();
+        });
+
+        // Send message when user clicks 'Send' button
+        document.getElementById('send').addEventListener('click', function() {
+            const message = document.getElementById('message').value;
+            if (message.trim() === '') return;
+
+            addMessage('You', message, 'user');
+
+            showTypingIndicator();
+
+            fetch('/api/chat/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'  // Required for Django
+                },
+                body: new URLSearchParams({
+                    'message': message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideTypingIndicator();
+                addMessage('Eri', data.response, 'bot');
+                document.getElementById('message').value = '';  // Clear input field
+            })
+            .catch(error => {
+                hideTypingIndicator();
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+
+{% include 'myapp/course_list/footer_course.html' %}
+{% endblock %}

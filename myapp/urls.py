@@ -207,4 +207,6 @@ urlpatterns = [
     path('heritage/heritage-results/', views.heritage_results, name='heritage_results'),
     path('heritage/question-21/', views.heritage_question_21, name='heritage_question_21'),
 
+    path('chat/', views.chat_interface, name='chat_interface'),
+    path('api/chat/', views.get_response, name='get_response'),
 ]
