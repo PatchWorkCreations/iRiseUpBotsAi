@@ -2780,18 +2780,19 @@ def heritage_question_21(request):
 
 import os
 import openai
+import logging
 
 # Get the API key from the environment
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
+# Debugging print statement to check if the key is loaded
+print(f"API Key: {OPENAI_API_KEY}")
 
 if not OPENAI_API_KEY:
     raise ValueError("OpenAI API Key is missing!")
 
 # Initialize OpenAI client
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
-
-# Set up logging
-logger = logging.getLogger(__name__)
 
 
 def get_response(request):
