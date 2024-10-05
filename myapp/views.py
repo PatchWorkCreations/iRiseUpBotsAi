@@ -2794,7 +2794,6 @@ if not OPENAI_API_KEY:
 # Initialize OpenAI client
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
-
 def get_response(request):
     if request.method == 'POST':
         user_message = request.POST.get('message')
@@ -2803,23 +2802,34 @@ def get_response(request):
         if not user_message or user_message.strip() == "":
             return JsonResponse({'response': 'Error: Message cannot be empty.'})
 
-        try:
-            # Call OpenAI's GPT API for the response
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo",  # Ensure you are using the correct model
-                messages=[
-                    {"role": "system", "content": "You are Eri, a kind and respectful assistant for iRiseup.ai. "
-                    "Your audience is mostly non-techy users over 40. "
-                    "Always respond in simple, encouraging language, and if needed, reference iRiseup.ai as the company providing solutions. "
-                    "Your goal is to help users understand products like content writing, e-commerce, social media management, and more."
-                    },
+        # Retrieve the conversation history from the session
+        conversation_history = request.session.get('conversation_history', [])
 
-                    {"role": "user", "content": user_message}
-                ]
+        # Append the user's message to the conversation history
+        conversation_history.append({"role": "user", "content": user_message})
+
+        try:
+            # Adjust the system prompt to improve empathy and handling of emotional responses
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are Ari, a kind, respectful, and emotionally intelligent assistant for iRiseup.ai. "
+                    "When users express feelings like sadness, grief, or other emotions, respond with deep empathy. "
+                    "Ask clarifying questions when something is ambiguous, and only provide technical or product-based help when the user specifically asks for it or when it feels appropriate."
+                    "Your goal is to assist users with any requests they may have, while also specializing in content creation, e-commerce, social media management, and digital products. "
+                    "However, focus on helping them first, and only introduce iRiseup services when they align with the user's needs."
+                    }
+                ] + conversation_history  # Include the full conversation history
             )
 
-            # Extract the response from the API - use .content, not subscript
+            # Extract the response from the API
             message = response.choices[0].message.content
+
+            # Append Ari's response to the conversation history
+            conversation_history.append({"role": "assistant", "content": message})
+
+            # Update the session with the new conversation history
+            request.session['conversation_history'] = conversation_history
 
         except Exception as e:
             # Log the error and return a detailed error response
