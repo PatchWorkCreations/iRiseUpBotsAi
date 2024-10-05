@@ -34,3 +34,8 @@ jobs:
           echo "Running Django with OpenAI key: $OPENAI_API_KEY"
           python manage.py migrate  # Apply migrations before starting the server
           python manage.py runserver 0.0.0.0:8000  # Run the Django app on the GitHub Actions runner
+
+      - name: Print OpenAI Key (For Debugging Only - REMOVE before Production)
+        run: echo $OPENAI_API_KEY
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
