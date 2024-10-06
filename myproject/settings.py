@@ -186,9 +186,26 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 PAYPAL_MODE = 'sandbox' 
 PAYPAL_CLIENT_ID = env('PAYPAL_CLIENT_ID')
 PAYPAL_CLIENT_SECRET = env('PAYPAL_CLIENT_SECRET')
-
-
 SQUARE_ACCESS_TOKEN = env('SQUARE_ACCESS_TOKEN')
+
+
+import environ
+
+env = environ.Env()
+environ.Env.read_env()  # This loads the .env file and makes env vars available
+
+# Assign the OpenAI API key to settings
+OPENAI_API_KEY = env('OPENAI_API_KEY')
+
+
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from Railway or .env
+load_dotenv()
+
+# Fetch OpenAI API Key from environment variables
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 # settings.py
 
