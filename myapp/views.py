@@ -358,7 +358,16 @@ def coursemenu(request):
         completed_courses = []
         course_progress = {}
 
-        # Calculate course progress and categorize courses
+        # Bulk fetch all UserLessonProgress for the user
+        all_progress = UserLessonProgress.objects.filter(
+            user=request.user,
+            lesson__in=[lesson.id for course in all_courses for sub_course in course.sub_courses.all() for lesson in sub_course.prefetched_lessons]
+        ).values('lesson_id', 'completed')
+
+        # Create a dictionary for fast lookup
+        progress_by_lesson = {progress['lesson_id']: progress['completed'] for progress in all_progress}
+
+        # Loop through courses and sub-courses to calculate progress
         for course in all_courses:
             sub_course_progress = {}
             total_course_lessons = 0
@@ -369,10 +378,8 @@ def coursemenu(request):
                 lessons = sub_course.prefetched_lessons  # Use the prefetched lessons
                 total_lessons = len(lessons)
 
-                # Get how many lessons the user has completed in bulk
-                completed_lessons = UserLessonProgress.objects.filter(
-                    user=request.user, lesson__in=[lesson.id for lesson in lessons], completed=True
-                ).count()
+                # Calculate completed lessons based on the pre-fetched user progress
+                completed_lessons = sum([1 for lesson in lessons if progress_by_lesson.get(lesson.id, False)])
 
                 if completed_lessons > 0:
                     course_started = True
