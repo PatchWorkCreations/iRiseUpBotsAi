@@ -101,12 +101,13 @@
     }
 
     .course-image img {
-        border-radius: 8px;
-        max-width: 100px;
-        height: 100px;
-        display: block;
-        margin: 0 auto 10px;
-    }
+    border-radius: 8px;
+    max-width: 100%;  /* Percentage for responsive design */
+    height: auto;    /* Maintain aspect ratio */
+    display: block;
+    margin: 0 auto 10px;
+}
+
 
     h3 {
         font-size: 18px;
@@ -396,9 +397,7 @@
                 <p>No favorite courses.</p>
             {% endif %}
         </div>
-        
-        {% load cache %}
-        {% cache 600 recommended_courses_section request.user.id %}
+
         <!-- Recommended Section -->
         <div class="recommended-container">
             <h2>Recommended for You</h2>
@@ -409,29 +408,30 @@
                             <img src="{{ course.image.url }}" alt="Course Image">
                         </div>
                         <h3>{{ course.title }}</h3>
+                        <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
                         <a href="{% url 'course_detail' course.id %}" class="view-btn">View Details</a>
                     </div>
                 {% endfor %}
             </div>
-        
+
             <!-- Pagination controls -->
             <div class="pagination">
                 <span class="step-links">
                     {% if recommended_courses_page.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ recommended_courses_page.previous_page_number }}">previous</a>
+                        <a href="?page=1" onclick="showLoader()">&laquo; first</a>
+                        <a href="?page={{ recommended_courses_page.previous_page_number }}" onclick="showLoader()">previous</a>
                     {% else %}
                         <a class="disabled">&laquo; first</a>
                         <a class="disabled">previous</a>
                     {% endif %}
-                
+
                     <span class="current">
                         Page {{ recommended_courses_page.number }} of {{ recommended_courses_page.paginator.num_pages }}
                     </span>
-                
+
                     {% if recommended_courses_page.has_next %}
-                        <a href="?page={{ recommended_courses_page.next_page_number }}">next</a>
-                        <a href="?page={{ recommended_courses_page.paginator.num_pages }}">last &raquo;</a>
+                        <a href="?page={{ recommended_courses_page.next_page_number }}" onclick="showLoader()">next</a>
+                        <a href="?page={{ recommended_courses_page.paginator.num_pages }}" onclick="showLoader()">last &raquo;</a>
                     {% else %}
                         <a class="disabled">next</a>
                         <a class="disabled">last &raquo;</a>
@@ -439,7 +439,6 @@
                 </span>
             </div>
         </div>
-        {% endcache %}
         
     </div>
 </div>
@@ -465,8 +464,10 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        hideLoader();
-        document.querySelectorAll('a, button, input[type="submit"]').forEach(element => {
+        hideLoader();  // Hide loader when the page is fully loaded
+
+        // Show loader only for pagination links (next, previous, etc.)
+        document.querySelectorAll('.pagination a').forEach(element => {
             element.addEventListener('click', showLoader);
         });
     });
