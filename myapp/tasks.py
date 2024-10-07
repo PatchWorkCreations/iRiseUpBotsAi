@@ -59,7 +59,7 @@ def send_welcome_email(email):
     subject = 'Welcome to iRiseUp.Ai!'
     html_message = render_to_string('welcome_email.html', {'email': email})
     plain_message = strip_tags(html_message)
-    from_email = 'juliavictorio16@gmail.com'  # Replace with your actual sender email
+    from_email = 'support@iriseup.ai'  # Replace with your actual sender email
     send_mail(subject, plain_message, from_email, [email], html_message=html_message)
     
     return f"'send_welcome_email_task' completed for {email}"

@@ -1433,7 +1433,7 @@ def process_payment(request):
                     'Please log in and change your password.\n'
                     'You now have access to the course menu based on your selected plan.'
                 )
-                send_mail(subject, message, 'juliavictorio16@Gmail.com', [user_email])
+                send_mail(subject, message, 'support@iriseup.ai', [user_email])
 
             logger.info(f"User {user_email} processed for payment.")
 
@@ -2117,8 +2117,8 @@ def submit_request(request):
                 'email': email,
             })
             plain_message = strip_tags(html_message)
-            from_email = 'juliavictorio16@gmail.com'  # Replace with your email
-            to = 'juliavictorio16@gmail.com'  # Send to yourself
+            from_email = 'support@iriseup.ai'  # Replace with your email
+            to = 'support@iriseup.ai'  # Send to yourself
 
             # Send the email
             send_mail(

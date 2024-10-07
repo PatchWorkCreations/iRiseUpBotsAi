@@ -133,12 +133,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.office365.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'juliavictorio16@gmail.com'
-EMAIL_HOST_PASSWORD = 'lovi mltt gpzl tgcf'
-DEFAULT_FROM_EMAIL = 'Test account'
+EMAIL_HOST_USER = 'support@iriseup.ai'  # Your Office 365 email
+EMAIL_HOST_PASSWORD = 'Psalm149$$$'  # Your email account's regular password
+DEFAULT_FROM_EMAIL = 'your_email@yourdomain.com'
 
 
 # In your Django settings (settings.py), add or update the LOGGING configuration:
