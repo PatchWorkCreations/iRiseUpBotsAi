@@ -24,12 +24,6 @@ def course_detail(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     sub_courses = course.sub_courses.all()
     return render(request, 'myapp/course_detail.html', {'course': course, 'sub_courses': sub_courses})
-import os
-from docx import Document
-from django.shortcuts import render, redirect
-from myapp.models import Course, SubCourse, Lesson
-from myapp.forms import CourseForm
-import json
 
 def extract_subcourses_lessons_from_docx(docx_file, course):
     doc = Document(docx_file)
@@ -48,8 +42,21 @@ def extract_subcourses_lessons_from_docx(docx_file, course):
         if not text:
             continue
 
-        # Check if the paragraph contains bold text (header block)
+        # Check if the paragraph contains bold text (header block) or if the text is 30 characters or less
         is_bold = any(run.bold for run in para.runs if run.bold)
+        is_short_header = len(text) <= 50 and "\n" not in text  # Check if text is 30 chars or less and is a single line
+        starts_with_bullet = text.startswith('•')  # Check if line starts with a bullet
+
+        # Indent bullet points and entire paragraph
+        if starts_with_bullet:
+            block_content = f"<div style='margin-left: 20px;'>{text}</div>"  # Indent bullet and content using inline style
+            
+            # Add the entire indented block to the lesson blocks
+            lesson_blocks.append({'type': 'paragraph', 'content': block_content})
+            block_content = ""  # Reset block content after appending it
+
+            # Do not skip the rest of the loop, allowing it to process other contents
+            continue  # Allows processing to continue for other paragraphs
 
         # Identify subcourse (e.g., "Sub course 1: Introduction to Podcasting")
         if "Sub course" in text and ':' in text:
@@ -101,13 +108,13 @@ def extract_subcourses_lessons_from_docx(docx_file, course):
             inside_lesson = True  # Mark that we're now inside a lesson
 
         # Handle nested headers within lessons (e.g., "Key Points," "Exercises")
-        elif is_bold and current_lesson and inside_lesson:
+        elif (is_bold or is_short_header) and current_lesson and inside_lesson:
             if block_content:
                 # Save the previous block content before starting a new header block
                 lesson_blocks.append({'type': 'paragraph', 'content': block_content.strip()})
                 block_content = ""
 
-            # Add the bold text as a header block
+            # Add the bold or short text as a header block
             lesson_blocks.append({'type': 'header', 'content': text})
 
         # Handle paragraphs and general content blocks
@@ -132,6 +139,7 @@ def extract_subcourses_lessons_from_docx(docx_file, course):
     course.units = subcourse_order  # Update based on the number of subcourses
     course.hours = subcourse_order  # 1 hour per subcourse
     course.save()
+
 
 
 from django.shortcuts import render, redirect

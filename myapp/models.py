@@ -17,7 +17,7 @@ class SquareCustomer(models.Model):
 
 
 class Course(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=250)
     description = models.TextField(default="Default description")
     image = models.ImageField(upload_to='course/', default='myapp/images/course/favicon.png')
     units = models.IntegerField()
