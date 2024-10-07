@@ -219,6 +219,38 @@
         color: #666;
     }
 
+    .reflection-block, .course-wrap-up-block, .congratulations-block {
+    border: 1px solid #00796b; /* Change colors based on section */
+    background-color: #e0f2f1; /* Light background for readability */
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.reflection-block h3 {
+    color: #004d40;
+}
+
+.course-wrap-up-block {
+    border: 1px solid #ffc107; /* Yellow border for Course Wrap-Up */
+    background-color: #fffde7; /* Light yellow background */
+}
+
+.course-wrap-up-block h3 {
+    color: #ff8f00; /* Darker shade for contrast */
+}
+
+.congratulations-block {
+    border: 1px solid #4caf50; /* Green border for Congratulations */
+    background-color: #e8f5e9; /* Light green background */
+}
+
+.congratulations-block h3 {
+    color: #1b5e20; /* Darker shade for contrast */
+}
+
+
 </style>
 
 <div class="lesson-container">
@@ -289,6 +321,24 @@
                 </div>
             </div>
             <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
+
+            {% elif block.type == 'reflection' %}
+            <div class="reflection-block">
+                <h3>Reflection:</h3>
+                <p>{{ block.content|safe }}</p>
+            </div>
+
+            {% elif block.type == 'course_wrap_up' %}
+            <div class="course-wrap-up-block">
+                <h3>Course Wrap-Up:</h3>
+                <p>{{ block.content|safe }}</p>
+            </div>
+
+            {% elif block.type == 'congratulations' %}
+            <div class="congratulations-block">
+                <h3>Congratulations:</h3>
+                <p>{{ block.content|safe }}</p>
+            </div>
 
             {% endif %}
 

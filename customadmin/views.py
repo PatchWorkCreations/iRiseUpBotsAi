@@ -55,8 +55,22 @@ def extract_subcourses_lessons_from_docx(docx_file, course):
             lesson_blocks.append({'type': 'paragraph', 'content': block_content})
             block_content = ""  # Reset block content after appending it
 
-            # Do not skip the rest of the loop, allowing it to process other contents
             continue  # Allows processing to continue for other paragraphs
+
+        # Check for Reflection section
+        if "Reflection" in text:
+            if current_lesson:
+                # Replace the subcourse number with the lesson name
+                reflection_content = text.replace("End of Sub course", f"End of {current_lesson.title}")
+                lesson_blocks.append({'type': 'reflection', 'content': reflection_content})
+            continue  # Skip further processing for this section
+
+        # Check for Course Wrap-Up or Congratulations
+        if "Course Wrap-Up" in text or "Congratulations" in text:
+            # Combine handling for both sections
+            wrap_up_content = f"<h2>{text}</h2>"  # Use a header format for styling
+            lesson_blocks.append({'type': 'course_wrap_up', 'content': wrap_up_content})
+            continue  # Skip further processing for this section
 
         # Identify subcourse (e.g., "Sub course 1: Introduction to Podcasting")
         if "Sub course" in text and ':' in text:
@@ -110,16 +124,13 @@ def extract_subcourses_lessons_from_docx(docx_file, course):
         # Handle nested headers within lessons (e.g., "Key Points," "Exercises")
         elif (is_bold or is_short_header) and current_lesson and inside_lesson:
             if block_content:
-                # Save the previous block content before starting a new header block
                 lesson_blocks.append({'type': 'paragraph', 'content': block_content.strip()})
                 block_content = ""
 
-            # Add the bold or short text as a header block
             lesson_blocks.append({'type': 'header', 'content': text})
 
         # Handle paragraphs and general content blocks
         elif current_lesson and inside_lesson:
-            # Break up paragraphs into blocks of 3 sentences for better readability
             sentences = text.split('. ')
             for i in range(0, len(sentences), 3):
                 block = ". ".join(sentences[i:i+3]).strip()  # Join 3 sentences together
@@ -139,6 +150,7 @@ def extract_subcourses_lessons_from_docx(docx_file, course):
     course.units = subcourse_order  # Update based on the number of subcourses
     course.hours = subcourse_order  # 1 hour per subcourse
     course.save()
+
 
 
 
@@ -475,10 +487,21 @@ def edit_lesson(request, lesson_id):
                         'order': block_order
                     })
 
-                # Handle Wistia video URL
+                # Handle video URL
                 elif block_type == 'video':
                     video_url = request.POST.get(f'video_url_{idx}', '')
                     content_blocks.append({'type': 'video', 'content': video_url, 'order': block_order})
+
+                # Handle Reflection section
+                elif "Reflection" in block_type:
+                    reflection_content = request.POST.get(f'content_{idx}', '')
+                    reflection_content = reflection_content.replace("End of Sub course", f"End of {lesson.title}")
+                    content_blocks.append({'type': 'reflection', 'content': reflection_content, 'order': block_order})
+
+                # Handle Course Wrap-Up or Congratulations
+                elif "Course Wrap-Up" in block_type or "Congratulations" in block_type:
+                    wrap_up_content = request.POST.get(f'content_{idx}', '')
+                    content_blocks.append({'type': 'course_wrap_up', 'content': wrap_up_content, 'order': block_order})
 
             # Save the updated content blocks in JSON format with order
             lesson.content = json.dumps(content_blocks)

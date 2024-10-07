@@ -99,6 +99,9 @@
                 <option value="multiple_questions" {% if block.type == 'multiple_questions' %}selected{% endif %}>Multiple Questions</option>
                 <option value="multiple_choice" {% if block.type == 'multiple_choice' %}selected{% endif %}>Multiple Choice</option>
                 <option value="video" {% if block.type == 'video' %}selected{% endif %}>Video Embed</option> <!-- Ensure this is selected -->
+                <option value="reflection" {% if block.type == 'reflection' %}selected{% endif %}>Reflection</option> <!-- Reflection option -->
+                <option value="course_wrap_up" {% if block.type == 'course_wrap_up' %}selected{% endif %}>Course Wrap-Up</option> <!-- Course Wrap-Up option -->
+                <option value="congratulations" {% if block.type == 'congratulations' %}selected{% endif %}>Congratulations</option> <!-- Congratulations option -->
             </select>
             
 
@@ -138,6 +141,14 @@
                 {% elif block.type == 'video' %}
                 <input type="text" name="video_url_{{ forloop.counter0 }}" class="form-control mb-2" value="{{ block.content }}" placeholder="Enter Wistia Video URL">
 
+                {% elif block.type == 'reflection' %}
+                <textarea name="content_{{ forloop.counter0 }}" rows="4" cols="50" class="form-control mb-2" placeholder="Enter Reflection">{{ block.content }}</textarea>
+                
+                {% elif block.type == 'course_wrap_up' %}
+                <textarea name="content_{{ forloop.counter0 }}" rows="4" cols="50" class="form-control mb-2" placeholder="Enter Course Wrap-Up Content">{{ block.content }}</textarea>
+                
+                {% elif block.type == 'congratulations' %}
+                <textarea name="content_{{ forloop.counter0 }}" rows="4" cols="50" class="form-control mb-2" placeholder="Enter Congratulations Content">{{ block.content }}</textarea>
 
 
                 {% endif %}
@@ -268,6 +279,9 @@ let dragEnabled = false;
             <option value="multiple_questions">Multiple Questions</option>
             <option value="multiple_choice">Multiple Choice</option>
             <option value="video">Video Embed</option>  <!-- Add the video embed option -->
+            <option value="reflection">Reflection</option>  <!-- Added Reflection option -->
+            <option value="course_wrap_up">Course Wrap-Up</option>  <!-- Added Course Wrap-Up option -->
+            <option value="congratulations">Congratulations</option>  <!-- Added Congratulations option -->
         `;
 
 
@@ -365,9 +379,15 @@ let dragEnabled = false;
             `;
         } else if (selectedType === 'video') {
         contentDiv.innerHTML = '<input type="text" name="video_url_' + index + '" class="form-control mb-2" placeholder="Enter Wistia Video URL"><br>';
-        } else {
+        } else if (selectedType === 'reflection') {
+            contentDiv.innerHTML = '<textarea name="content_' + index + '" rows="4" cols="50" class="form-control mb-2" placeholder="Enter Reflection"></textarea>';
+        } else if (selectedType === 'course_wrap_up') {
+            contentDiv.innerHTML = '<textarea name="content_' + index + '" rows="4" cols="50" class="form-control mb-2" placeholder="Enter Course Wrap-Up Content"></textarea>';
+        } else if (selectedType === 'congratulations') {
+            contentDiv.innerHTML = '<textarea name="content_' + index + '" rows="4" cols="50" class="form-control mb-2" placeholder="Enter Congratulations Content"></textarea>';
+        } else  {
             contentDiv.innerHTML = '<textarea name="content_' + index + '" rows="4" cols="50" class="form-control mb-2"></textarea><br>';
-        }
+        } 
     }
 </script>
 {% endblock %}

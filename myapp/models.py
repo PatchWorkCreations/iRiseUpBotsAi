@@ -83,11 +83,16 @@ class ContentBlock(models.Model):
         ('question', 'Question'),
         ('multiple_questions', 'Multiple Questions'),
         ('multiple_choice', 'Multiple Choice'),
+        ('reflection', 'Reflection'),
+        ('course_wrap_up', 'Course Wrap-Up'),
+        ('congratulations', 'Congratulations'),
+        ('video', 'Video'),  # New content type for videos
     ]
     
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='content_blocks')
     type = models.CharField(max_length=50, choices=CONTENT_TYPE_CHOICES)
     content = models.TextField(null=True, blank=True)
+    video_url = models.URLField(null=True, blank=True)  # Field to store video URLs
     order = models.PositiveIntegerField(validators=[MinValueValidator(1)], default=1)
     
     # Only used for 'multiple_choice' block type
@@ -100,6 +105,7 @@ class ContentBlock(models.Model):
 
     class Meta:
         ordering = ['order']
+
 
 from django.db import models
 from django.contrib.auth.models import User
