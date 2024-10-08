@@ -11,6 +11,9 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{% static 'myapp/css/index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
 {% endblock %}
 
 {% block content %}
@@ -4766,7 +4769,7 @@ body {
             <div class="row">                                
                 <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
                     <div class="ab_img">
-                        <img src="{% static 'myapp/images/iriseup/1.png' %}" class="img-fluid" alt="Learn New Skills at iRiseUp">
+                        <img src="{% static 'myapp/images/iriseup/Happy_friends.jpg' %}" class="img-fluid" alt="Learn New Skills at iRiseUp">
                     </div>
                 </div><!--- END COL -->                    
                 <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
@@ -4775,16 +4778,17 @@ body {
                         <p>At iRiseUp, we offer a range of courses that help you stay competitive and develop the skills you need for today’s rapidly changing job market. From digital marketing to virtual assistance, you’ll find the perfect course to match your goals.</p>
                     </div>
                     <div class="abmv">
-                        <span class="ti-medall"></span>
+                        <span class="fas fa-medal" style="font-size: 24px; color: #00796b;"></span> <!-- Medal icon -->
                         <h4>Our Mission</h4>
                         <p>Empowering individuals, especially those over 40, to take control of their futures through accessible and practical learning experiences.</p>
                     </div>
                     <div class="abmv">
-                        <span class="ti-wand"></span>
+                        <span class="fas fa-lightbulb" style="font-size: 24px; color: #00796b;"></span> <!-- Light bulb icon -->
                         <h4>Our Vision</h4>
                         <p>To be a global leader in providing innovative, tech-based learning solutions that help individuals build rewarding careers and personal growth.</p>
                     </div>    
                     <a class="btn_one" href="{% url 'start_quiz' %}">Discover More</a>
+                     
                 </div><!--- END COL -->                                  
             </div><!--- END ROW -->
         </div><!--- END CONTAINER -->
@@ -4797,68 +4801,69 @@ body {
 
     <section class="marketing_content_area section-padding">
         <div class="container">
-             <div class="section-title">
-                 <h2>Why Choose iRiseUp</h2>
-                 <p>Discover the <span><u>top features</u></span> of learning with iRiseUp.</p>
-             </div>      
-             <div class="row">                                    
-                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
-                     <div class="single_feature_one">
-                         <div class="sf_top">
-                             <span class="ti-book ss_one"></span>
-                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Learn Anytime, Anywhere</a></h2>
-                         </div>
-                         <p>Our online platform allows you to access courses from any device, anytime, so you can learn on your own schedule, no matter where you are.</p>
-                     </div>                    
-                 </div>                                 
-                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
-                     <div class="single_feature_one">
-                         <div class="sf_top">
-                             <span class="ti-heart ss_two"></span>
-                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Expert Instructors</a></h2>
-                         </div>  
-                         <p>Learn from industry professionals with years of experience, ensuring that you gain valuable insights and practical skills from the best in the field.</p>
-                     </div>                    
-                 </div>                                 
-                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
-                     <div class="single_feature_one">
-                         <div class="sf_top">
-                             <span class="ti-user ss_three"></span>
-                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Community Support</a></h2>
-                         </div>  
-                         <p>Join a growing community of learners and professionals. Share insights, ask questions, and collaborate with others working towards similar goals.</p>
-                     </div>                    
-                 </div>                                 
-                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
-                     <div class="single_feature_one">
-                         <div class="sf_top">
-                             <span class="ti-eye ss_four"></span>
-                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Personalized Course Planning</a></h2>
-                         </div>  
-                         <p>Our tailored course recommendations help you focus on the skills that matter most to your career goals, ensuring a more effective learning experience.</p>
-                     </div>                    
-                 </div>                                 
-                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" data-wow-offset="0">
-                     <div class="single_feature_one">
-                         <div class="sf_top">
-                             <span class="ti-light-bulb ss_five"></span>
-                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Progress Tracking</a></h2>
-                         </div>      
-                         <p>Stay motivated with our progress tracking system, allowing you to see your achievements and stay on course as you develop new skills.</p>
-                     </div>                    
-                 </div>                                 
-                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" data-wow-offset="0">
-                     <div class="single_feature_one">
-                         <div class="sf_top">
-                             <span class="ti-email ss_six"></span>
-                             <h2><a href="{% url 'start_quiz' %}" target="_blank">24/7 Dedicated Support</a></h2>
-                         </div>      
-                         <p>Our support team is here to help you with any issues or questions, any time of day. We're committed to your success, whenever you need us.</p>
-                     </div>                    
-                 </div>                                                                 
-             </div><!-- END ROW -->
-         </div><!-- END CONTAINER -->
-     </section>
+            <div class="section-title">
+                <h2>Why Choose iRiseUp</h2>
+                <p>Discover the <span><u>top features</u></span> of learning with iRiseUp.</p>
+            </div>      
+            <div class="row">                                    
+                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
+                    <div class="single_feature_one">
+                        <div class="sf_top">
+                            <span class="fas fa-laptop" style="font-size: 24px; color: #00796b;"></span>
+                            <h2><a href="{% url 'start_quiz' %}" target="_blank">Learn Anytime, Anywhere</a></h2>
+                        </div>
+                        <p>Our online platform allows you to access courses from any device, anytime, so you can learn on your own schedule, no matter where you are.</p>
+                    </div>                    
+                </div>                                 
+                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
+                    <div class="single_feature_one">
+                        <div class="sf_top">
+                            <span class="fas fa-chalkboard-teacher" style="font-size: 24px; color: #00796b;"></span>
+                            <h2><a href="{% url 'start_quiz' %}" target="_blank">Expert Instructors</a></h2>
+                        </div>  
+                        <p>Learn from industry professionals with years of experience, ensuring that you gain valuable insights and practical skills from the best in the field.</p>
+                    </div>                    
+                </div>                                 
+                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
+                    <div class="single_feature_one">
+                        <div class="sf_top">
+                            <span class="fas fa-users" style="font-size: 24px; color: #00796b;"></span>
+                            <h2><a href="{% url 'start_quiz' %}" target="_blank">Community Support</a></h2>
+                        </div>  
+                        <p>Join a growing community of learners and professionals. Share insights, ask questions, and collaborate with others working towards similar goals.</p>
+                    </div>                    
+                </div>                                 
+                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
+                    <div class="single_feature_one">
+                        <div class="sf_top">
+                            <span class="fas fa-calendar-alt" style="font-size: 24px; color: #00796b;"></span>
+                            <h2><a href="{% url 'start_quiz' %}" target="_blank">Personalized Course Planning</a></h2>
+                        </div>  
+                        <p>Our tailored course recommendations help you focus on the skills that matter most to your career goals, ensuring a more effective learning experience.</p>
+                    </div>                    
+                </div>                                 
+                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" data-wow-offset="0">
+                    <div class="single_feature_one">
+                        <div class="sf_top">
+                            <span class="fas fa-chart-line" style="font-size: 24px; color: #00796b;"></span>
+                            <h2><a href="{% url 'start_quiz' %}" target="_blank">Progress Tracking</a></h2>
+                        </div>      
+                        <p>Stay motivated with our progress tracking system, allowing you to see your achievements and stay on course as you develop new skills.</p>
+                    </div>                    
+                </div>                                 
+                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" data-wow-offset="0">
+                    <div class="single_feature_one">
+                        <div class="sf_top">
+                            <span class="fas fa-headset" style="font-size: 24px; color: #00796b;"></span>
+                            <h2><a href="{% url 'start_quiz' %}" target="_blank">24/7 Dedicated Support</a></h2>
+                        </div>      
+                        <p>Our support team is here to help you with any issues or questions, any time of day. We're committed to your success, whenever you need us.</p>
+                    </div>                    
+                </div>                                                                 
+            </div><!-- END ROW -->
+        </div><!-- END CONTAINER -->
+    </section>
+    
      
 
 	<!-- END WHY CHOOSE US -->
@@ -4908,13 +4913,22 @@ body {
                         <form action="#" class="home_subs" method="POST">
                             {% csrf_token %}
                             <input type="email" class="subscribe__input" placeholder="Enter your Email Address" name="email" required>
-                            <button type="submit" class="subscribe__btn"><i class="fa fa-paper-plane-o"></i></button>
+                            <button type="submit" class="subscribe__btn"><i class="sf_top"></i></button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Add this somewhere in your base template -->
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 
 	
 	<!-- 

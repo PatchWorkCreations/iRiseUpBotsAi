@@ -1060,3 +1060,109 @@ def delete_lesson(request, lesson_id):
         lesson.delete()
         return redirect('edit_course', course_id=lesson.parent_sub_course.parent_course.id)
     return render(request, 'customadmin/confirm_delete.html', {'lesson': lesson})
+
+
+# views.py
+from django.shortcuts import render, redirect
+from myapp.models import BlogPost  # Make sure to import your BlogPost model
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from myapp.models import BlogPost  # Import your BlogPost model
+from django.contrib import messages  # For displaying messages
+
+@login_required
+def add_blog(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = []  # Initialize content as a list
+
+        # Handle content blocks
+        block_types = request.POST.getlist('block_type')
+        block_contents = request.POST.getlist('content')
+
+        for block_type, block_content in zip(block_types, block_contents):
+            content.append({
+                'type': block_type,
+                'content': block_content,
+            })
+
+        print("Content being saved:", content)  # Log the content
+
+        # Create the blog post
+        BlogPost.objects.create(
+            title=title,
+            author=request.user,  # Assign the currently logged-in user as the author
+            content=content
+        )
+        messages.success(request, 'Blog post added successfully!')
+        return redirect('blog_list')  # Redirect to the list of blog posts after saving
+
+    return render(request, 'customadmin/add_blog.html')
+
+
+# views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from myapp.models import BlogPost  # Ensure you have a BlogPost model
+from django.contrib import messages  # For displaying messages
+
+def blog_list(request):
+    blogs = BlogPost.objects.all()  # Get all blog posts
+    return render(request, 'customadmin/blog_list.html', {'blogs': blogs})
+
+
+from django.shortcuts import get_object_or_404, redirect, render
+from myapp.models import BlogPost  # Ensure your BlogPost model is imported
+from django.contrib import messages  # For displaying messages
+import json  # Import for handling JSON data
+
+@login_required
+def edit_blog(request, blog_id):
+    blog_post = get_object_or_404(BlogPost, id=blog_id)
+
+    if request.method == 'POST':
+        blog_post.title = request.POST.get('title')
+        
+        # Check if the content is a JSON string and parse it, otherwise assume it's already a list
+        content = request.POST.getlist('content')  # Assuming this is how you're sending the content from the form
+        block_types = request.POST.getlist('block_type')
+
+        content_data = []  # Initialize content as a list
+        for block_type, block_content in zip(block_types, content):
+            content_data.append({
+                'type': block_type,
+                'content': block_content,
+            })
+
+        # Save the updated content as a JSON string
+        blog_post.content = json.dumps(content_data)
+        
+        # Fetch the current user instance and assign it to the blog post
+        blog_post.author = request.user  # Assuming you want to set the logged-in user as the author
+
+        try:
+            blog_post.save()
+            messages.success(request, 'Blog post updated successfully!')
+            return redirect('blog_detail', post_id=blog_post.id)  # Adjust this as needed
+        except Exception as e:
+            messages.error(request, f"Error updating blog post: {e}")
+
+    else:
+        # Load existing content blocks, ensuring it's handled properly
+        if isinstance(blog_post.content, str):  # If it's a string, decode it
+            content_blocks = json.loads(blog_post.content)
+        else:
+            content_blocks = blog_post.content  # Assuming it's already a list
+
+    return render(request, 'customadmin/edit_blog.html', {'blog_post': blog_post, 'content_blocks': content_blocks})
+
+
+def delete_blog(request, blog_id):
+    blog = get_object_or_404(BlogPost, id=blog_id)
+
+    if request.method == 'POST':
+        blog.delete()
+        messages.success(request, 'Blog deleted successfully!')
+        return redirect('blog_list')
+
+    return render(request, 'customadmin/delete_blog.html', {'blog': blog})

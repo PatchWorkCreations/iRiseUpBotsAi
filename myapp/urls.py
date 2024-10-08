@@ -16,7 +16,14 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('faq/', views.faq, name='faq'),
     path('index-3/', views.index3, name='index3'),
-    path('news-detail/', views.newsdetail, name='newsdetail'),
+
+    path('blogs/<int:post_id>/', views.blog_detail, name='blog_detail'),
+    path('like/<int:post_id>/', views.blog_like_post, name='blog_like_post'),
+    path('dislike/<int:post_id>/', views.blog_dislike_post, name='blog_dislike_post'),
+    path('blogs/<int:post_id>/comment/', views.blog_add_comment, name='blog_add_comment'),
+    path('blogs/category/<int:category_id>/', views.blog_category, name='blog_category'),
+    path('blogs/search/', views.blog_search, name='blog_search'),
+
     path('not-found/', views.notfound, name='notfound'),
     path('pricing/', views.pricing, name='pricing'),
     path('register/', views.register, name='register'),
@@ -209,4 +216,6 @@ urlpatterns = [
 
     path('chat/', views.chat_interface, name='chat_interface'),
     path('api/chat/', views.get_response, name='get_response'),
+
+    path('subscribe/', views.subscribe_newsletter, name='subscribe_newsletter'),
 ]

@@ -46,4 +46,9 @@ urlpatterns = [
 
     path('sub-course/<int:sub_course_id>/update-order/', views.update_sub_course_order, name='update_sub_course_order'),
     path('lesson/<int:lesson_id>/update-order/', views.update_lesson_order, name='update_lesson_order'),
+    
+    path('add-blog/', views.add_blog, name='add_blog'),  # Ensure this matches
+    path('blogs/', views.blog_list, name='blog_list'),   # This should also match
+    path('blogs/edit/<int:blog_id>/', views.edit_blog, name='edit_blog'),
+    path('blogs/delete/<int:blog_id>/', views.delete_blog, name='delete_blog'),
 ]

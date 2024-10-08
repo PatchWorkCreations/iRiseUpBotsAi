@@ -450,3 +450,48 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.subscription_type} - {self.status}"
+
+
+# models.py
+from django.db import models
+
+class Subscriber(models.Model):
+    email = models.EmailField(unique=True, null=True)  # Allows NULL values for email
+    subscribed_on = models.DateTimeField(auto_now_add=True)  # Timestamp of subscription
+
+    def __str__(self):
+        return self.email if self.email else "No Email"  # Handle case where email is NULL
+
+
+from django.db import models
+from django.core.validators import MinValueValidator
+from django.contrib.auth.models import User  # Import User model for the author field
+
+class BlogPost(models.Model):
+    title = models.CharField(max_length=255, null=True, blank=True)  # Allow title to be nullable
+    author = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)  # Allow author to be nullable and set to NULL if user is deleted
+    content = models.JSONField(null=True, blank=True)  # Allow content to be nullable
+    created_at = models.DateTimeField(auto_now_add=True)  # This field will still have a default value
+    
+    # New fields for likes and dislikes
+    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)  # Users who liked the post
+    dislikes = models.ManyToManyField(User, related_name='disliked_posts', blank=True)  # Users who disliked the post
+
+    def total_likes(self):
+        return self.likes.count()  # Return the total number of likes
+
+    def total_dislikes(self):
+        return self.dislikes.count()  # Return the total number of dislikes
+
+    def __str__(self):
+        return self.title or "Untitled"  # Return a default string if title is None
+
+
+class BlogComment(models.Model):
+    post = models.ForeignKey(BlogPost, related_name='comments', on_delete=models.CASCADE)  # Relate comments to blog posts
+    author = models.ForeignKey(User, on_delete=models.CASCADE)  # Link the comment to a user
+    content = models.TextField()  # Content of the comment
+    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp for comment creation
+
+    def __str__(self):
+        return f"Comment by {self.author} on {self.post.title}"  # Representation of the comment

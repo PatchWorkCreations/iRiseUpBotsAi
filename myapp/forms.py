@@ -251,3 +251,15 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['avatar', 'bio']  # Include other fields as necessary
+
+from django import forms
+from myapp.models import BlogComment
+
+class BlogCommentForm (forms.ModelForm):
+    class Meta:
+        model = BlogComment
+        fields = ['content']  # Adjust fields as necessary
+        widgets = {
+            'content': forms.Textarea(attrs={'placeholder': 'Write your comment here...'}),
+        }
+
