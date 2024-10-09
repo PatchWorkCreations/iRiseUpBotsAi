@@ -4,7 +4,37 @@
 
 {% load static %}
 {% block content %}
+<style>
+    .blog-content h2 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 24px; /* Adjust as necessary */
+    color: var(--color-five); /* Or any color you prefer */
+}
 
+.blog-content h3 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 20px; /* Adjust as necessary */
+    color: var(--color-six); /* Or any color you prefer */
+}
+
+.blog-content p {
+    margin-bottom: 15px; /* Space between paragraphs */
+    line-height: 1.6; /* Improved readability */
+}
+
+.blog-content ul {
+    margin-top: 10px;
+    margin-bottom: 15px; /* Space below lists */
+    padding-left: 20px; /* Indent lists */
+}
+
+.blog-content li {
+    margin-bottom: 5px; /* Space between list items */
+}
+
+</style>
 <body>
 
 <div class="page-wrapper">
@@ -165,7 +195,7 @@
 	            </div>
 
 	            <!-- Sidebar Side -->
-                <div class="sidebar-side col-lg-4 col-md-12 col-sm-12" style="border: 1px rgba(47, 45, 45, 0.844);">
+                <div class="sidebar-side col-lg-4 col-md-12 col-sm-12">
                 	<aside class="sidebar">
 						<div class="sidebar-inner">
 

@@ -56,3 +56,4 @@ class BlogAdmin(admin.ModelAdmin):
     date_hierarchy = 'publish_date'  # Adds a date-based drilldown navigation
     ordering = ('-publish_date',)  # Orders by publish date descending
 
+
