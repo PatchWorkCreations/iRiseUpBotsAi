@@ -1411,7 +1411,7 @@ def process_payment(request):
                     'Please log in and change your password.\n'
                     'You now have access to the course menu based on your selected plan.'
                 )
-                send_mail(subject, message, 'juliavictorio16@Gmail.com', [user_email])
+                send_mail(subject, message, 'support@iriseup.ai', [user_email])
 
             logger.info(f"User {user_email} processed for payment.")
 
