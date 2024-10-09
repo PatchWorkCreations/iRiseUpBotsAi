@@ -43,4 +43,16 @@ from .models import ForumCategory
 # Register the ForumCategory model
 admin.site.register(ForumCategory)
 
+# Registering the Blog model in the admin
+from django.contrib import admin
+from .models import BlogPost  # Import your BlogPost model
+
+@admin.register(BlogPost)
+class BlogAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("title",)}  # Automatically generate the slug from the title
+    list_display = ('title', 'author', 'publish_date', 'read_time')
+    search_fields = ('title', 'content', 'author')  # Allows searching by title, content, and author
+    list_filter = ('publish_date', 'author')  # Filters for author and publish date
+    date_hierarchy = 'publish_date'  # Adds a date-based drilldown navigation
+    ordering = ('-publish_date',)  # Orders by publish date descending
 

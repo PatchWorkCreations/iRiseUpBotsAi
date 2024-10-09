@@ -6309,7 +6309,7 @@
 .sidebar-page-container {
   position: relative;
   padding: 100px 0px 70px;
-  background-color: var(--color-four);
+  background-color: var(--color-two);
 }
 
 .sidebar-page-container .content-side,
@@ -6324,10 +6324,26 @@
 
 .sidebar-page-container .sidebar-inner {
   position: relative;
-  padding: 30px 30px;
+  padding: 30px 30px; /* Maintain original padding */
   border-radius: 8px;
-  background-color: var(--color-nine);
+  background-color: var(--color-two);
+  border: 1px solid var(--color-ten); /* Adding a border */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adding a subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
 }
+
+.sidebar-page-container .sidebar-inner:hover {
+  transform: translateY(-2px); /* Slightly raise on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+}
+
+/* Optional: Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar-page-container .sidebar-inner {
+      padding: 20px; /* Reduced padding on smaller screens */
+  }
+}
+
 
 /* Sidebar Widget */
 
@@ -6335,7 +6351,7 @@
   position: relative;
   padding-bottom: 30px;
   margin-bottom: 30px;
-  border-bottom: 1px solid rgba(var(--white-color-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--color-seven), 0.1);
 }
 
 .sidebar-widget:last-child {
@@ -6382,7 +6398,7 @@
 
 .sidebar .search-box .form-group input::placeholder,
 .sidebar .search-box .form-group textarea::placeholder {
-  color: var(--color-five);
+  color: var(--color-two);
 }
 
 .sidebar .search-box .form-group button {
@@ -6649,9 +6665,14 @@
 
 .blog-detail_image img {
   position: relative;
-  width: 100%;
+  width: 100%; /* Make the image responsive */
+  height: auto; /* Maintain the aspect ratio */
+  max-width: 600px; /* Set a maximum width for the image */
+  max-height: 400px; /* Optional: set a maximum height for the image */
   display: block;
+  margin: 0 auto; /* Center the image if it's smaller than the container */
 }
+
 
 .blog-detail_content {
   position: relative;
@@ -6935,11 +6956,19 @@
 
 .blog-author_box {
   position: relative;
-  margin-top: 40px;
-  border-radius: 8px;
+  margin-top: 20px;
   margin-bottom: 30px;
   padding: 30px 30px 25px;
-  background-color: var(--color-nine);
+  border-radius: 8px;
+  background-color: var(--color-two);
+  border: 1px solid var(--color-ten); /* Adding a border */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adding a subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+}
+
+.blog-author_box:hover {
+  transform: translateY(-2px); /* Slightly raise on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
 }
 
 .blog-author-box_content {
@@ -6955,20 +6984,21 @@
   height: 120px;
   overflow: hidden;
   display: inline-block;
-  border-radius: 150px;
-  border: 1px solid var(--main-color);
+  border-radius: 50%; /* Changed to 50% for a perfect circle */
+  border: 2px solid var(--main-color); /* Slightly thicker border for better visibility */
 }
 
 .blog-author_box h5 {
   font-weight: 600;
   color: var(--color-five);
+  font-size: 18px; /* Slightly larger font size for better readability */
 }
 
 .blog-author_box-designation {
   position: relative;
   font-size: 14px;
   margin-top: 5px;
-  color: var(--color-six);
+  color: var(--color-eight);
 }
 
 .blog-author_box-text {
@@ -6976,7 +7006,19 @@
   font-size: 16px;
   margin-top: 15px;
   line-height: 26px;
-  color: var(--color-six);
+  color: var(--color-eight);
+}
+
+/* Optional: Responsive adjustments */
+@media (max-width: 768px) {
+  .blog-author-box_content {
+      padding-left: 20px; /* Reduce padding on smaller screens */
+  }
+
+  .blog-author-box_image {
+      width: 80px; /* Reduce image size on smaller screens */
+      height: 80px; /* Maintain aspect ratio */
+  }
 }
 
 .author-social_links {
@@ -7016,7 +7058,8 @@
   margin-top: 30px;
   padding: 35px 30px;
   border-radius: 8px;
-  background-color: var(--color-nine);
+  background-color: var(--color-two);
+  border: 1px solid var(--color-ten);
 }
 
 .comment-form .group-title {
@@ -7073,7 +7116,8 @@
   -o-transition: all 300ms ease;
   -moz-transition: all 300ms ease;
   transition: all 300ms ease;
-  background-color: var(--color-ten);
+  background-color: var(--color-two);
+  border: 2px solid rgba(69, 65, 65, 0.95);/* Change border color to black */
 }
 
 .comment-form .form-group textarea::-webkit-input-placeholder,
@@ -7088,6 +7132,7 @@
 .comment-form .form-group select:focus,
 .comment-form .form-group textarea:focus {
   color: var(--color-five);
+  border-color: black; /* Ensure border stays black on focus */
 }
 
 .comment-form .form-group textarea {
@@ -7107,7 +7152,8 @@
   -o-transition: all 300ms ease;
   -moz-transition: all 300ms ease;
   transition: all 300ms ease;
-  background-color: var(--color-ten);
+  background-color: var(--color-two);
+  border: 2px solid rgba(69, 65, 65, 0.95); /* Change textarea border color to black */
 }
 
 .comment-form .form-group button {
@@ -7121,6 +7167,7 @@
   margin-bottom: 10px;
   color: var(--color-six);
 }
+
 
 /*** 
 

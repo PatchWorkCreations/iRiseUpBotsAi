@@ -7,25 +7,21 @@
 
 <style>
 	.news-block_one-content p {
-    color: aliceblue !important;
-}
+    	color: rgb(136, 134, 134) !important;
+	}
 
-.news-block_one-content a {
-    color: aliceblue !important; 
-}
-
+	.news-block_one-content a {
+    	color: rgb(0, 0, 0) !important; 
+	}
 </style>
 
-
 <body>
-
 <div class="page-wrapper">
-	
 	<!-- Cursor -->
 	<div class="cursor"></div>
 	<div class="cursor-follower"></div>
 	<!-- Cursor End -->
- 	
+
 	<!-- Preloader -->
 	<div class="loader-wrap">
 		<div class="preloader">
@@ -47,20 +43,19 @@
 	</div>
 	<!-- Preloader End -->
 	
-	<!-- Main Header -->
-{% include 'header.html' %}
+	{% include 'header.html' %}
 	<!-- End Main Header -->
 	
 	<!-- Page Title -->
     <section class="page-title">
 		<div class="page-title-icon"></div>
-			<div class="page-title-icon-two"></div>
-			<div class="page-title-shadow"></div>
-			<div class="page-title-shadow-two"></div>
+		<div class="page-title-icon-two"></div>
+		<div class="page-title-shadow"></div>
+		<div class="page-title-shadow-two"></div>
         <div class="auto-container">
-			<h2>Our blog</h2>
+			<h2>Our Blog</h2>
 			<ul class="bread-crumb clearfix">
-				<li><a href="{% url 'index' %}"">Home</a></li>
+				<li><a href="{% url 'index' %}">Home</a></li>
 				<li>Blog</li>
 			</ul>
         </div>
@@ -72,137 +67,43 @@
 		<div class="auto-container">
 			<div class="row clearfix">
 
+				{% for blog in blogs %}
 				<!-- News Block One -->
 				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
 					<div class="news-block_one-inner">
 						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail' %}"><img src="{% static 'myapp/images/resource/news-7.jpg' %}" alt="" /></a>
+							<a href="{{ blog.get_absolute_url }}"><img src="{{ blog.image.url }}" alt="{{ blog.title }}" /></a>
 						</div>
 						<div class="news-block_one-content">
-							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail' %}">Bye-Bye Busy Work: How AI Can Take Over Tedious Tasks So You Don’t Have To</a></h5>
-							<p>AI can swoop in like a superhero and save the day by automating your emails, scheduling social media posts, and managing customer service inquiries.</p>
-							<a class="news-block_one-more" href="{% url 'newsdetail' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
+							<div class="news-block_one-time">{{ blog.author }} <span>{{ blog.read_time }} min read</span></div>
+							<h5 class="news-block_one-title">
+								<a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a>
+							</h5>
+							<p>{{ blog.excerpt|truncatewords:30 }}</p>
+							
+							<a class="news-block_one-more" href="{{ blog.get_absolute_url }}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
 						</div>
 					</div>
 				</div>
-
-				<!-- News Block One -->
-				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
-					<div class="news-block_one-inner">
-						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail1' %}"><img src="{% static 'myapp/images/resource/news-8.jpg' %}" alt="" /></a>
-						</div>
-						<div class="news-block_one-content">
-							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail1' %}">Less Grind, More Growth: Using AI to Free Up Your Time</a></h5>
-							<p>AI tools like iriseup.ai can automate daily operations, supercharge your marketing, and enhance customer support to help you grow your startup and enjoy life.</p>
-							<a class="news-block_one-more" href="{% url 'newsdetail1' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
-						</div>
-					</div>
-				</div>
-
-				<!-- News Block One -->
-				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
-					<div class="news-block_one-inner">
-						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail2' %}"><img src="{% static 'myapp/images/resource/news-9.jpg' %}" alt="" /></a>
-						</div>
-						<div class="news-block_one-content">
-							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail2' %}">Start Smart: Integrate AI into Your New Business from Day One</a></h5>
-							<p>Integrating AI from day one gives you a competitive edge, helping you automate administrative tasks, enhance customer support, and optimize marketing efforts.</p>
-							<a class="news-block_one-more" href="{% url 'newsdetail2' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
-						</div>
-					</div>
-				</div>
-
-				<!-- News Block One -->
-				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
-					<div class="news-block_one-inner">
-						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail3' %}"><img src="{% static 'myapp/images/resource/news-10.jpg' %}" alt="" /></a>
-						</div>
-						<div class="news-block_one-content">
-							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail3' %}">Real-Life AI Success Stories: How Small Businesses Are Winning Big</a></h5>
-							<p>Discover how small businesses are leveraging AI to achieve incredible results, from boosting sales to improving customer satisfaction.</p>
-							<a class="news-block_one-more" href="{% url 'newsdetail3' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
-						</div>
-					</div>
-				</div>
-
-				<!-- News Block One -->
-				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
-					<div class="news-block_one-inner">
-						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail4' %}"><img src="{% static 'myapp/images/resource/news-11.jpg' %}" alt="" /></a>
-						</div>
-						<div class="news-block_one-content">
-							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail4' %}">Customer Service Superpowers: AI Bots That Work Around the Clock</a></h5>
-							<p>AI chatbots can provide stellar customer service 24/7, handling inquiries and assisting with transactions without requiring a break.</p>
-							<a class="news-block_one-more" href="{% url 'newsdetail4' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
-						</div>
-					</div>
-				</div>
-
-				<!-- News Block One -->
-				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
-					<div class="news-block_one-inner">
-						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail6' %}"><img src="{% static 'myapp/images/resource/news-12.jpg' %}" alt="" /></a>
-						</div>
-						<div class="news-block_one-content">
-							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail6' %}">Turn Data into Gold: How AI Helps You Make Smarter Business Decisions</a></h5>
-							<p>AI can transform mountains of raw data into actionable insights, helping you make smarter business decisions and drive growth.</p>
-							<a class="news-block_one-more" href="{% url 'newsdetail6' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
-						</div>
-					</div>
-				</div>
-
-				<!-- News Block One -->
-				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
-					<div class="news-block_one-inner">
-						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail7' %}"><img src="{% static 'myapp/images/resource/news-13.jpg' %}" alt="" /></a>
-						</div>
-						<div class="news-block_one-content">
-							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail7' %}">The Ultimate AI Toolbox: Must-Have Tools for Every Entrepreneur</a></h5>
-							<p>Discover the coolest AI tools that can help you crush it in business, from customer engagement to financial management.</p>
-							<a class="news-block_one-more" href="{% url 'newsdetail7' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
-						</div>
-					</div>
-				</div>
-
-				<!-- News Block One -->
-				<div class="news-block_one col-lg-4 col-md-6 col-sm-12">
-					<div class="news-block_one-inner">
-						<div class="news-block_one-image">
-							<a href="{% url 'newsdetail8' %}"><img src="{% static 'myapp/images/resource/news-14.jpg' %}" alt="" /></a>
-						</div>
-						<div class="news-block_one-content">
-							<div class="news-block_one-time">By Admin <span>6 min read</span></div>
-							<h5 class="news-block_one-title"><a href="{% url 'newsdetail8' %}">Marketing Magic: How AI Can Make Your Campaigns Smarter</a></h5>
-							<p>AI can optimize your marketing campaigns, personalize messaging, and make data-driven decisions to reach the right audience effectively.</p>
-							<a class="news-block_one-more" href="{% url 'newsdetail8' %}">Read more <i class="fa-solid fa-plus fa-fw"></i></a>
-						</div>
-					</div>
-				</div>
+				{% endfor %}
 
 			</div>
 
-			<!-- Styled Pagination -->
+			<!-- Pagination (optional, depending on blog count) -->
+			{% if is_paginated %}
 			<ul class="styled-pagination text-center">
-				<li><a href="#" class="active">1</a></li>
-				<li><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li class="next"><a href="#"><span class="fa-solid fa-angle-right fa-fw"></span></a></li>
+				{% if page_obj.has_previous %}
+					<li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+				{% endif %}
+				{% for num in page_obj.paginator.page_range %}
+					<li><a href="?page={{ num }}" class="{% if page_obj.number == num %}active{% endif %}">{{ num }}</a></li>
+				{% endfor %}
+				{% if page_obj.has_next %}
+					<li class="next"><a href="?page={{ page_obj.next_page_number }}"><span class="fa-solid fa-angle-right fa-fw"></span></a></li>
+				{% endif %}
 			</ul>
-			<!-- End Styled Pagination -->
-
+			{% endif %}
+			<!-- End Pagination -->
 		</div>
 	</section>
 	<!-- End News Three -->
@@ -213,6 +114,5 @@
 
 	<!-- Main Footer -->
 	{% include 'footer.html' %}
-<!-- End PageWrapper -->
-
-{% endblock %}
+    <!-- End PageWrapper -->
+    {% endblock %}

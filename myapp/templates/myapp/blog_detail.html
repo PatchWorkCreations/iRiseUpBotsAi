@@ -1,0 +1,240 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}{{ blog.title }}{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="page-wrapper">
+	
+	<!-- Cursor -->
+	<div class="cursor"></div>
+	<div class="cursor-follower"></div>
+	<!-- Cursor End -->
+ 	
+	<!-- Preloader -->
+	<div class="loader-wrap">
+		<div class="preloader">
+			<div class="preloader-close">x</div>
+			<div id="handle-preloader" class="handle-preloader">
+				<div class="animation-preloader">
+					<div class="txt-loading">
+						<span data-text-preloader="L" class="letters-loading">L</span>
+						<span data-text-preloader="O" class="letters-loading">O</span>
+						<span data-text-preloader="A" class="letters-loading">A</span>
+						<span data-text-preloader="D" class="letters-loading">D</span>
+						<span data-text-preloader="I" class="letters-loading">I</span>
+						<span data-text-preloader="N" class="letters-loading">N</span>
+						<span data-text-preloader="G" class="letters-loading">G</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Preloader End -->
+	
+	{% include 'header.html' %}
+	<!-- End Main Header -->
+	
+	<!-- Page Title -->
+    <section class="page-title">
+		<div class="page-title-icon"></div>
+		<div class="page-title-icon-two"></div>
+		<div class="page-title-shadow"></div>
+		<div class="page-title-shadow-two"></div>
+        <div class="auto-container">
+			<h2>{{ blog.title }}</h2>
+			<ul class="bread-crumb clearfix">
+				<li><a href="{% url 'index' %}">Home</a></li>
+				<li>News Detail</li>
+			</ul>
+        </div>
+    </section>
+    <!-- End Page Title -->
+
+	<!-- Sidebar Page Container -->
+	<div class="sidebar-page-container">
+	    <div class="auto-container">
+	        <div class="row clearfix">
+	            
+	            <!-- Content Side -->
+	            <div class="content-side col-lg-8 col-md-12 col-sm-12">
+	                <div class="blog-detail">
+	                    <div class="blog-detail_inner">
+	                        <div class="blog-detail_image">
+	                            <img src="{{ blog.image.url }}" alt="{{ blog.title }}" />
+	                        </div>
+	                        <div class="blog-detail_content">
+	                            <h3 class="blog-detail_heading">{{ blog.title }}</h3>
+	                            <div class="blog-detail_author-outer d-flex align-items-center flex-wrap">
+	                                <div class="blog-detail-author d-flex align-items-center flex-wrap">
+	                                    <div class="blog-detail-author-image">
+	                                        <img src="{% static 'images/resource/author-6.png' %}" alt="{{ blog.author }}" />
+	                                    </div>
+	                                    <i>By {{ blog.author }}</i>
+	                                </div>
+	                                <ul class="blog-detail-meta d-flex align-items-center flex-wrap">
+	                                    <li><span class="icon fa-regular fa-calendar fa-fw"></span>{{ blog.publish_date }}</li>
+	                                    <li><span class="icon fa-regular fa-comment-dots fa-fw"></span>{{ blog.comments.count }} Comments</li>
+	                                </ul>
+	                            </div>
+	                            <p>{{ blog.content|safe|linebreaksbr }}</p>
+
+	                            <!-- Post Share Options-->
+	                            <div class="post-share-options">
+	                                <div class="post-share-inner d-flex justify-content-between flex-wrap">
+	                                    <div class="post-tags">
+	                                        {% for tag in blog.tags.all %}
+	                                            <a href="#">{{ tag.name }}</a>
+	                                        {% endfor %}
+	                                    </div>
+	                                    <ul class="social-links">
+	                                        <li><a href="#" class="fa-brands fa-facebook-f fa-fw"></a></li>
+	                                        <li><a href="#" class="fa-brands fa-twitter fa-fw"></a></li>
+	                                        <li><a href="#" class="fa-brands fa-google fa-fw"></a></li>
+	                                        <li><a href="#" class="fa-brands fa-dribbble fa-fw"></a></li>
+	                                    </ul>
+	                                </div>
+	                            </div>
+
+	                            <!-- Author Box -->
+	                            <div class="blog-author_box">
+	                                <div class="blog-author-box_inner">
+	                                    <div class="blog-author-box_content">
+	                                        <div class="blog-author-box_image">
+	                                            <img src="{% static 'images/favicon.png' %}" alt="{{ blog.author }}" />
+	                                        </div>
+	                                        <h5>{{ blog.author }}</h5>
+	                                        <div class="blog-author_box-designation">Author</div>
+	                                        <div class="blog-author_box-text">{{ blog.author_bio }}</div>
+	                                        <ul class="author-social_links">
+	                                            <li><a href="#" class="fa-brands fa-facebook-f fa-fw"></a></li>
+	                                            <li><a href="#" class="fa-brands fa-twitter fa-fw"></a></li>
+	                                            <li><a href="#" class="fa-brands fa-google fa-fw"></a></li>
+	                                            <li><a href="#" class="fa-brands fa-dribbble fa-fw"></a></li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+
+	                            <!-- Comment Section (Optional) -->
+	                            <div class="comment-form_outer">
+	                                <div class="group-title">
+	                                    <h3>Leave a comment</h3>
+	                                    <div class="form-text">Your email address will not be published. Required fields are marked *</div>
+	                                </div>
+	                                <div class="comment-form">
+	                                    <form method="post" action="{% url 'blog_detail' blog.slug %}">
+	                                        {% csrf_token %}
+	                                        <div class="row clearfix">
+	                                            
+	                                            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+	                                                <label>Name*</label>
+	                                                <input type="text" name="name" required>
+	                                            </div>
+	                                            
+	                                            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+	                                                <label>Email*</label>
+	                                                <input type="email" name="email" required>
+	                                            </div>
+	                                            
+	                                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+	                                                <label>Type Comment here*</label>
+	                                                <textarea name="comment" required></textarea>
+	                                            </div>
+	                                            
+	                                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+	                                                <button type="submit" class="template-btn btn-style-one">
+	                                                    <span class="btn-wrap">
+	                                                        <span class="text-one">Submit now</span>
+	                                                        <span class="text-two">Submit now</span>
+	                                                    </span>
+	                                                </button>
+	                                            </div>
+	                                        </div>
+	                                    </form>
+	                                </div>
+	                            </div>
+	                            <!--End Comment Form -->
+
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+
+	            <!-- Sidebar Side -->
+                <div class="sidebar-side col-lg-4 col-md-12 col-sm-12" style="border: 1px rgba(47, 45, 45, 0.844);">
+                	<aside class="sidebar">
+						<div class="sidebar-inner">
+
+							<!-- Search Widget -->
+							<div class="sidebar-widget search-box">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Search here</h5>
+									<form method="get" action="{% url 'blog' %}">
+										<div class="form-group">
+											<input type="search" name="search" value="" placeholder="Search..." required>
+											<button type="submit"><span class="icon fa fa-search"></span></button>
+										</div>
+									</form>
+								</div>
+							</div>
+							
+
+							<!-- Post Widget -->
+							<div class="sidebar-widget post-widget">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Latest post</h5>
+
+									{% for latest_blog in latest_blogs %}
+									<div class="post">
+										<div class="thumb"><a href="{{ latest_blog.get_absolute_url }}"><img src="{{ latest_blog.image.url }}" alt="{{ latest_blog.title }}"></a></div>
+										<h6><a href="{{ latest_blog.get_absolute_url }}">{{ latest_blog.title }}</a></h6>
+										<div class="post-date"><i class="fa-regular fa-calendar fa-fw"></i> {{ latest_blog.publish_date }}</div>
+									</div>
+									{% endfor %}
+
+								</div>
+							</div>
+
+							<!-- Service Widget -->
+							<div class="sidebar-widget category-widget">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Categories</h5>
+									<ul class="service-list">
+										{% for category in blog.categories.all %}
+										<li><a href="#">{{ category.name }} <span>({{ category.blog_set.count }})</span></a></li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+
+							<!-- Popular tags -->
+							<div class="sidebar-widget popular-tags">
+								<div class="widget-content">
+									<h5 class="sidebar-widget_title">Popular tags</h5>
+									{% for tag in blog.tags.all %}
+									<a href="#">{{ tag.name }}</a>
+									{% endfor %}
+								</div>
+							</div>
+
+						</div>
+					</aside>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- End Sidebar Page Container -->
+	
+	<!-- CTA One -->
+	{% include 'ctaone.html' %}
+	<!-- End CTA One -->
+
+	<!-- Main Footer -->
+	{% include 'footer.html' %}
+    <!-- End PageWrapper -->
+    {% endblock %}
