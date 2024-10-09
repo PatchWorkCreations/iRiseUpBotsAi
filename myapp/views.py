@@ -2757,6 +2757,71 @@ def heritage_question_21(request):
     return render(request, 'myapp/quiz/heritage_quiz/question_21.html')
 
 
+import os
+import openai
+import logging
+
+# Get the API key from the environment
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
+# Debugging print statement to check if the key is loaded
+print(f"API Key: {OPENAI_API_KEY}")
+
+if not OPENAI_API_KEY:
+    raise ValueError("OpenAI API Key is missing!")
+
+# Initialize OpenAI client
+client = openai.OpenAI(api_key=OPENAI_API_KEY)
+
+def get_response(request):
+    if request.method == 'POST':
+        user_message = request.POST.get('message')
+
+        # Check if the message is empty
+        if not user_message or user_message.strip() == "":
+            return JsonResponse({'response': 'Error: Message cannot be empty.'})
+
+        # Retrieve the conversation history from the session
+        conversation_history = request.session.get('conversation_history', [])
+
+        # Append the user's message to the conversation history
+        conversation_history.append({"role": "user", "content": user_message})
+
+        try:
+            # Adjust the system prompt to improve empathy and handling of emotional responses
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are Ari, a kind, respectful, and emotionally intelligent assistant for iRiseup.ai. "
+                    "When users express feelings like sadness, grief, or other emotions, respond with deep empathy. "
+                    "Ask clarifying questions when something is ambiguous, and only provide technical or product-based help when the user specifically asks for it or when it feels appropriate."
+                    "Your goal is to assist users with any requests they may have, while also specializing in content creation, e-commerce, social media management, and digital products. "
+                    "However, focus on helping them first, and only introduce iRiseup services when they align with the user's needs."
+                    }
+                ] + conversation_history  # Include the full conversation history
+            )
+
+            # Extract the response from the API
+            message = response.choices[0].message.content
+
+            # Append Ari's response to the conversation history
+            conversation_history.append({"role": "assistant", "content": message})
+
+            # Update the session with the new conversation history
+            request.session['conversation_history'] = conversation_history
+
+        except Exception as e:
+            # Log the error and return a detailed error response
+            logger.error(f"OpenAI API Error: {e}")
+            return JsonResponse({'response': f'Error: Unable to get a response from ChatGPT. {str(e)}'})
+
+        # Return the successful response
+        return JsonResponse({'response': message})
+
+    # If the request method is not POST, return an error
+    return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+from django.shortcuts import render
 
 def chat_interface(request):
     return render(request, 'myapp/course_list/chat_interface.html')
