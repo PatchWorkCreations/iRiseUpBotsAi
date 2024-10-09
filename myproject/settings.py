@@ -132,15 +132,6 @@ LOGOUT_REDIRECT_URL = 'custom_login'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.office365.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'support@iriseup.ai'  # Your Office 365 email
-EMAIL_HOST_PASSWORD = '^lR#L%aJwgS'  # Your email account's regular password
-DEFAULT_FROM_EMAIL = 'support@iriseup.ai'
-
-
 # In your Django settings (settings.py), add or update the LOGGING configuration:
 
 LOGGING = {
@@ -245,3 +236,11 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 
 #redis://default:lGwEqNTvstKGbtAZqQlkSXYNeXWsvCXe@junction.proxy.rlwy.net:23867 redis url
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.office365.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # Use the email from .env
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # Use the password from .env
+DEFAULT_FROM_EMAIL = env('EMAIL_HOST_USER')  # Use the same email for sending
