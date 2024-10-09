@@ -138,7 +138,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'support@iriseup.ai'  # Your Office 365 email
 EMAIL_HOST_PASSWORD = 'Psalm149$$$'  # Your email account's regular password
-DEFAULT_FROM_EMAIL = 'your_email@yourdomain.com'
+DEFAULT_FROM_EMAIL = 'support@iriseup.ai'
 
 
 # In your Django settings (settings.py), add or update the LOGGING configuration:
