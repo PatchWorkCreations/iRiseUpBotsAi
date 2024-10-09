@@ -1222,9 +1222,9 @@ def personalized_plan(request):
 
 
 # Initialize the Square Client
-client = Client(
-    access_token=settings.SQUARE_ACCESS_TOKEN,  # Securely retrieved from environment variables
-    environment='sandbox'  # Use 'production' for live transactions
+square_client = Client(
+    access_token=settings.SQUARE_ACCESS_TOKEN,
+    environment='sandbox',
 )
 
 def determine_amount_based_on_plan(selected_plan):
@@ -1314,7 +1314,7 @@ def process_payment(request):
                 return JsonResponse({"error": "Invalid plan selected."}, status=400)
 
             # Step 1: Create a new customer or retrieve the existing one
-            customer_result = client.customers.create_customer(
+            customer_result = square_client.customers.create_customer(
                 body={
                     "given_name": data.get('givenName'),
                     "family_name": data.get('familyName'),
@@ -1337,7 +1337,7 @@ def process_payment(request):
             customer_id = customer_result.body['customer']['id']
 
             # Step 2: Make the payment request with the verification token and store the card on file
-            payment_result = client.payments.create_payment(
+            payment_result = square_client.payments.create_payment(
                 body={
                     "source_id": card_token,
                     "idempotency_key": str(uuid.uuid4()),
@@ -1368,7 +1368,7 @@ def process_payment(request):
             payment_id = payment_result.body['payment']['id']
 
             # Step 3: Store the card on file for the customer
-            card_result = client.cards.create_card(
+            card_result = square_client.cards.create_card(
                 body={
                     "idempotency_key": str(uuid.uuid4()),
                     "source_id": payment_id,
@@ -2756,22 +2756,22 @@ def heritage_question_21(request):
 
     return render(request, 'myapp/quiz/heritage_quiz/question_21.html')
 
-
 import os
 import openai
 import logging
+from django.http import JsonResponse
 
-# Get the API key from the environment
+# Initialize logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Get the OpenAI API key from the environment
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-
-# Debugging print statement to check if the key is loaded
-print(f"API Key: {OPENAI_API_KEY}")
-
 if not OPENAI_API_KEY:
     raise ValueError("OpenAI API Key is missing!")
 
 # Initialize OpenAI client
-client = openai.OpenAI(api_key=OPENAI_API_KEY)
+openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 def get_response(request):
     if request.method == 'POST':
@@ -2789,14 +2789,14 @@ def get_response(request):
 
         try:
             # Adjust the system prompt to improve empathy and handling of emotional responses
-            response = client.chat.completions.create(
+            response = openai_client.chat.completions.create(  # Use openai_client instead of client
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are Ari, a kind, respectful, and emotionally intelligent assistant for iRiseup.ai. "
-                    "When users express feelings like sadness, grief, or other emotions, respond with deep empathy. "
-                    "Ask clarifying questions when something is ambiguous, and only provide technical or product-based help when the user specifically asks for it or when it feels appropriate."
-                    "Your goal is to assist users with any requests they may have, while also specializing in content creation, e-commerce, social media management, and digital products. "
-                    "However, focus on helping them first, and only introduce iRiseup services when they align with the user's needs."
+                     "When users express feelings like sadness, grief, or other emotions, respond with deep empathy. "
+                     "Ask clarifying questions when something is ambiguous, and only provide technical or product-based help when the user specifically asks for it or when it feels appropriate. "
+                     "Your goal is to assist users with any requests they may have, while also specializing in content creation, e-commerce, social media management, and digital products. "
+                     "However, focus on helping them first, and only introduce iRiseup services when they align with the user's needs."
                     }
                 ] + conversation_history  # Include the full conversation history
             )
@@ -2820,6 +2820,7 @@ def get_response(request):
 
     # If the request method is not POST, return an error
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
 
 from django.shortcuts import render
 
