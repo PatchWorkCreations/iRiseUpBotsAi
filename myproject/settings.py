@@ -19,12 +19,14 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '0.0.0.0',
     site_domain,
+    'www.iriseupacademy.com'
     # Add any other domains or IPs as needed
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     f'https://{site_domain}',
-    'http://localhost:8000',  # Add other domains as needed
+    'http://localhost:8000', 
+     'https://wwww.iriseupacademy.com' # Add other domains as needed
 ]
 
 # Application definition
