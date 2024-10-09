@@ -57,8 +57,11 @@ def contact(request):
 def faq(request):
     return render(request, 'myapp/faq.html')
 
+from myapp.models import BlogPost
+
 def index2(request):
-    return render(request, 'myapp/index-2.html')
+    recent_blogs = BlogPost.objects.all().order_by('-publish_date')[:3]  # Fetch 3 most recent
+    return render(request, 'myapp/index-2.html', {'recent_blogs': recent_blogs})
 
 def index3(request):
     return render(request, 'myapp/index-3.html')

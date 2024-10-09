@@ -853,30 +853,35 @@ body {
     * ----------------------------------------------------------------------------------------
     */
     /* General styles for home section */
-.home_bg {
-    padding: 100px 0;
+    .home_bg {
+    padding: 80px 0; /* Increased padding for better desktop spacing */
     position: relative;
     height: auto;
 }
 
 .home_content {
-    padding-top: 100px;
-    position: relative;
+    padding-top: 50px; /* Adjust this for spacing at the top */
+    padding-left: 30px; /* Adjust this for spacing on the left side */
+    padding-right: 0; /* Ensure no right padding to avoid affecting the video */
 }
 
-@media only screen and (max-width: 768px) { 
+.home_btn {
+    margin-top: 20px; /* Adjust this for the space between the text and the button */
+}
+
+@media only screen and (max-width: 768px) {
     .home_content {
-        padding-left: 30px;
-        padding-right: 20px;
+        padding-left: 15px; /* Smaller left padding for mobile */
+        padding-right: 15px; /* Keep consistent for mobile */
     }
 }
 
 /* Title and text styles */
 .home_content h1 {
-    font-size: 60px;
+    font-size: 55px; /* Adjusted for desktop */
     font-weight: 700;
-    line-height: 70px;
-    margin-bottom: 20px;
+    line-height: 65px;
+    margin-bottom: 20px; /* Slight margin for desktop */
 }
 
 .home_content h1 span {
@@ -884,7 +889,7 @@ body {
 }
 
 .home_content p {
-    margin-bottom: 40px;
+    margin-bottom: 30px; /* Adjusted margin for better spacing */
     font-weight: 400;
     font-size: 18px;
 }
@@ -894,7 +899,7 @@ body {
     display: inline-block;
     background-color: #2eca7f;
     color: white;
-    padding: 12px 30px;
+    padding: 12px 30px; /* Larger padding for button on desktop */
     border-radius: 50px;
     text-transform: uppercase;
     font-weight: 600;
@@ -915,13 +920,13 @@ body {
 /* Video section styles */
 .home_me_img {
     text-align: center;
-    padding-top: 50px;
+    padding-top: 50px; /* Increased padding for desktop */
 }
 
 .home_me_img iframe {
     width: 100%;
     max-width: 600px;
-    height: 350px;
+    height: 350px; /* Kept consistent for desktop */
     border-radius: 8px;
     margin-bottom: 15px;
 }
@@ -934,24 +939,65 @@ body {
 /* Responsive adjustments */
 @media only screen and (max-width: 768px) {
     .home_content h1 {
-        font-size: 50px;
-        line-height: 60px;
+        font-size: 45px; /* Smaller for mobile */
+        line-height: 55px;
     }
     .home_me_img iframe {
-        height: 300px;
+        height: 300px; /* Adjusted height for mobile */
     }
 }
 
 @media only screen and (max-width: 480px) {
     .home_content h1 {
-        font-size: 40px;
-        line-height: 50px;
+        font-size: 35px; /* Further reduction for very small screens */
+        line-height: 45px;
     }
     .home_me_img iframe {
-        height: 250px;
+        height: 250px; /* Adjusted for small screens */
     }
     .home_me_img img {
         display: none;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .home_bg {
+        padding: 20px 0; /* Further reduced padding for mobile */
+    }
+
+    .home_content {
+        padding-left: 10px; /* Minimal padding for mobile */
+        padding-right: 10px;
+        padding-top: 20px; /* Reduced top padding */
+    }
+
+    .home_content h1 {
+        font-size: 35px; /* Reduced font size for mobile */
+        line-height: 45px;
+        margin-bottom: 10px; /* Reduced margin to close the space */
+    }
+
+    .home_content p {
+        margin-bottom: 15px; /* Tightened spacing for paragraph */
+        font-size: 16px; /* Slightly smaller text */
+    }
+
+    .home_btn {
+        margin-top: 15px; /* Reduced spacing between text and button */
+    }
+    
+    .home_me_img iframe {
+        height: 250px; /* Adjust iframe height to fit mobile screens */
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .home_content h1 {
+        font-size: 30px; /* Smaller for very small screens */
+        line-height: 40px;
+    }
+    .home_content p {
+        font-size: 14px; /* Further reduced for very small screens */
     }
 }
 
@@ -2630,45 +2676,85 @@ body {
     }
     .blog_area_bg{background:rgba(199,201,209,.09);}
     .single_blog {
-        background: #fff;
-        border-radius:0px;
-        margin-bottom: 30px;
-        -webkit-box-shadow: 10px 15px 18px rgba(23, 23, 36, 0.03);
-                box-shadow: 10px 15px 18px rgba(23, 23, 36, 0.03);
-    }
+    background: #fff;
+    border-radius: 8px; /* Added a subtle border radius for a more modern look */
+    margin-bottom: 30px;
+    -webkit-box-shadow: 5px 10px 15px rgba(23, 23, 36, 0.05); /* Softened the shadow for a cleaner look */
+    box-shadow: 5px 10px 15px rgba(23, 23, 36, 0.05); 
+    overflow: hidden; /* Ensures that content stays within the borders */
+}
+
+.single_blog img {
+    width: 100%;
+    max-height: 250px; /* Restricts image height to prevent it from being too tall */
+    object-fit: cover; /* Ensures the image is cropped nicely */
+    border-bottom: 5px solid #2eca7f; /* Added a decorative bottom border */
+}
+
+.content_box {
+    padding: 25px; /* Reduced padding for a tighter layout */
+}
+
+.single_blog h2 {
+    line-height: 28px; /* Adjusted for better readability */
+    font-size: 18px; /* Reduced font size slightly */
+    margin-bottom: 12px; /* Reduced the bottom margin */
+}
+
+.single_blog h2 a {
+    color: #1a2d62;
+    font-weight: 700; /* Slightly reduced font weight */
+    margin-bottom: 30px;
+    display: block;
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.single_blog h2 a:hover {
+    color: #2eca7f; /* Changed hover color */
+}
+
+.single_blog p {
+    margin-bottom: 10px; /* Added a small margin for paragraph spacing */
+}
+
+.single_blog span {
+    text-transform: capitalize;
+    margin-bottom: 10px;
+    display: inline-block;
+    font-size: 14px; /* Made span text slightly smaller */
+    color: #888888;
+}
+
+.single_blog span a {
+    color: #2eca7f;
+    font-weight: 700;
+    transition: color 0.3s ease; /* Added smooth transition */
+}
+
+.single_blog span a:hover {
+    color: #1a2d62; /* Changed hover color for contrast */
+}
+
+/* Adjustments for mobile screens */
+@media only screen and (max-width: 768px) {
     .single_blog img {
-        width: 100%;
+        max-height: 180px; /* Reduced image height for mobile */
     }
-    .content_box{padding: 35px;}
+
+    .content_box {
+        padding: 20px; /* Reduced padding on mobile for a more compact look */
+    }
+
     .single_blog h2 {
-        line-height: 32px;
-        font-size: 20px;
-        margin-bottom: 15px;
+        font-size: 16px; /* Smaller text on mobile */
+        line-height: 24px;
     }
-    .single_blog h2 a {
-        color: #1a2d62;
-        font-weight: 800;
-        margin-bottom: 40px;
-        display: block;
-    }
-    .single_blog h2 a:hover{color:#2eca7f;}
-    .single_blog p{margin-bottom:0px;}
+
     .single_blog span {
-        text-transform: capitalize;
-        margin-bottom: 10px;
-        display: inline-block;
+        font-size: 12px; /* Reduced font size for spans */
     }
-    .single_blog span a {
-        color: #2eca7f;
-        font-weight: 700;
-    }
-    .single_blog span a:hover{color:#2eca7f;}
-    .single_blog_two span{margin-top:0px;}
-    .single_blog_two p{margin-bottom:30px;}
-    .arti_img_two img{
-    width:100%;
-    margin-bottom:20px;
-    }
+}
+
     .arti_btn {
         color: #2eca7f;
         font-weight: 600;
@@ -5207,63 +5293,38 @@ END ROW -->
 	
 	<!-- START BLOG -->
 	<section id="blog" class="blog_area section-padding">
-		<div class="container">
-			<div class="section-title">
-				<h2>News</h2>
-				<p>Our Latest <span><u>Blogs</u></span></p>
-			</div>	
-			<div class="row">		
-				<div class="col-lg-4 col-sm-4 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
-					<div class="single_blog">
-						<div class="content_box">
-							<span>August 25, 2023 | <a href="{% url 'start_quiz' %}">Design</a></span>
-							<h2><a href="{% url 'start_quiz' %}">Professional Mobile Painting and Sculpting</a></h2>
-							<a href="{% url 'start_quiz' %}" class="cta">
-								<span>READ MORE</span>
-								<svg width="13px" height="10px" viewBox="0 0 13 10">
-									<path d="M1,5 L11,5"></path>
-									<polyline points="8 1 12 5 8 9"></polyline>
-								</svg>
-							</a>
-						</div>
-					</div>
-					<!-- Repeat for more blogs if needed -->
-				</div>
-				<div class="col-lg-4 col-sm-4 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
-					<div class="single_blog">
-						<img src="{% static 'myapp/images/blog/2.png' %}" class="img-fluid" alt="Professional Ceramic Moulding">
-						<div class="content_box">
-							<span>August 26, 2023 | <a href="{% url 'start_quiz' %}">Education</a></span>
-							<h2><a href="{% url 'start_quiz' %}">Professional Ceramic Moulding for Beginner</a></h2>
-							<a href="{% url 'start_quiz' %}" class="cta">
-								<span>READ MORE</span>
-								<svg width="13px" height="10px" viewBox="0 0 13 10">
-									<path d="M1,5 L11,5"></path>
-									<polyline points="8 1 12 5 8 9"></polyline>
-								</svg>
-							</a>							
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-4 col-sm-4 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
-					<div class="single_blog">
-						<img src="#" class="img-fluid" alt="Education Leaders">
-						<div class="content_box">
-							<span>August 28, 2023 | <a href="{% url 'start_quiz' %}">Programming</a></span>
-							<h2><a href="{% url 'start_quiz' %}">Education Is About Creating Leaders For Tomorrow</a></h2>
-							<a href="{% url 'start_quiz' %}" class="cta">
-								<span>READ MORE</span>
-								<svg width="13px" height="10px" viewBox="0 0 13 10">
-									<path d="M1,5 L11,5"></path>
-									<polyline points="8 1 12 5 8 9"></polyline>
-								</svg>
-							</a>							
-						</div>
-					</div>
-				</div>						
-			</div>
-		</div>
-	</section>
+        <div class="container">
+            <div class="section-title">
+                <h2>News</h2>
+                <p>Our Latest <span><u>Blogs</u></span></p>
+            </div>  
+            <div class="row">  
+                {% for blog in recent_blogs %}
+                <div class="col-lg-4 col-sm-4 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.{{ forloop.counter }}s" data-wow-offset="0">
+                    <div class="single_blog">
+                        {% if blog.image %}
+                        <img src="{{ blog.image.url }}" class="img-fluid" alt="{{ blog.title }}">
+                        {% else %}
+                        <img src="{% static 'myapp/images/blog/placeholder.png' %}" class="img-fluid" alt="Placeholder image">
+                        {% endif %}
+                        <div class="content_box">
+                            <span>{{ blog.created_at|date:"F d, Y" }} | <a href="{{ blog.get_absolute_url }}">{{ blog.category }}</a></span>
+                            <h2><a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a></h2>
+                            <a href="{{ blog.get_absolute_url }}" class="cta">
+                                <span>READ MORE</span>
+                                <svg width="13px" height="10px" viewBox="0 0 13 10">
+                                    <path d="M1,5 L11,5"></path>
+                                    <polyline points="8 1 12 5 8 9"></polyline>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    
 
 	{% include 'footer.html' %}
 {% endblock %}
