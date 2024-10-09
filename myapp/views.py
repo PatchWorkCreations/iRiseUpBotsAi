@@ -2755,3 +2755,122 @@ def heritage_question_21(request):
         return redirect('some_next_view')  # Redirect to the next view or complete the process
 
     return render(request, 'myapp/quiz/heritage_quiz/question_21.html')
+
+
+
+def chat_interface(request):
+    return render(request, 'myapp/course_list/chat_interface.html')
+
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Subscriber  # Assuming you have a Subscriber model
+from django.views.decorators.http import require_POST
+
+@require_POST
+def subscribe_newsletter(request):
+    email = request.POST.get('email')
+    
+    # Optional: Check if email is already subscribed
+    if Subscriber.objects.filter(email=email).exists():
+        messages.warning(request, 'You are already subscribed!')
+        return redirect('myapp/index-2.html')  # Redirect to an appropriate page
+
+    # Create a new subscriber
+    Subscriber.objects.create(email=email)
+
+    # Optional: Send a welcome email (you can implement this with Django's email functionality)
+
+    messages.success(request, 'Thank you for subscribing!')
+    return redirect('myapp/index-2.html')  # Redirect to an appropriate page
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from myapp.models import BlogPost, BlogComment  # Ensure BlogComment is imported
+from myapp.forms import BlogCommentForm  # Assuming you have a form for comments
+from django.contrib import messages
+
+# Function to display blog post detail
+def newsdetail(request, slug):
+    blog = get_object_or_404(BlogPost, slug=slug)
+    latest_blogs = BlogPost.objects.order_by('-publish_date')[:3]  # Fetch latest 3 blogs
+
+    return render(request, 'myapp/blog_detail.html', {
+        'blog': blog,
+        'latest_blogs': latest_blogs,
+    })
+
+def blog_detail(request, slug):
+    blog = get_object_or_404(BlogPost, slug=slug)
+    latest_blogs = BlogPost.objects.order_by('-publish_date')[:3]
+
+    return render(request, 'myapp/blog_detail.html', {
+        'blog': blog,
+        'latest_blogs': latest_blogs,
+    })
+
+
+# Blog List View
+def blog(request):
+    blogs = BlogPost.objects.all().order_by('-publish_date')  # Updated from Blog to BlogPost
+    return render(request, 'myapp/blog.html', {'blogs': blogs})
+
+# Function to like a blog post
+@login_required
+def blog_like_post(request, post_id):
+    blog_post = get_object_or_404(BlogPost, id=post_id)
+    if request.user in blog_post.likes.all():
+        blog_post.likes.remove(request.user)
+    else:
+        blog_post.likes.add(request.user)
+        blog_post.dislikes.remove(request.user)  # Ensure a user can't like and dislike at the same time
+    return JsonResponse({'total_likes': blog_post.total_likes()})
+
+# Function to dislike a blog post
+@login_required
+def blog_dislike_post(request, post_id):
+    blog_post = get_object_or_404(BlogPost, id=post_id)
+    if request.user in blog_post.dislikes.all():
+        blog_post.dislikes.remove(request.user)
+    else:
+        blog_post.dislikes.add(request.user)
+        blog_post.likes.remove(request.user)  # Ensure a user can't like and dislike at the same time
+    return JsonResponse({'total_dislikes': blog_post.total_dislikes()})
+
+# Function to add a comment to a blog post
+@login_required
+def blog_add_comment(request, post_id):
+    blog_post = get_object_or_404(BlogPost, id=post_id)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        comment = BlogComment.objects.create(  # Ensure BlogComment is used
+            post=blog_post,
+            author=request.user,
+            content=content
+        )
+        return redirect('blog_detail', slug=blog_post.slug)  # Update redirect to use slug
+
+# Function to display all posts in a category
+def blog_category(request, category_id):
+    category = get_object_or_404(ForumCategory, id=category_id)
+    posts = category.forum_posts.all()
+    return render(request, 'myapp/blog_category.html', {'category': category, 'posts': posts})
+
+# Function to search for blog posts
+def blog_search(request):
+    query = request.GET.get('q')
+    results = BlogPost.objects.filter(title__icontains=query) | BlogPost.objects.filter(content__icontains=query)
+    return render(request, 'myapp/blog_search_results.html', {'results': results, 'query': query})
+
+# Sidebar data function
+def sidebar_data():
+    latest_posts = BlogPost.objects.order_by('-created_at')[:5]  # Get the latest 5 posts
+    return {
+        'latest_posts': latest_posts,
+    }
+
+def side_bar(request, blog_id):
+    blog = get_object_or_404(BlogPost, id=blog_id)
+    return render(request, 'myapp/side_bar.html', {'blog': blog})
