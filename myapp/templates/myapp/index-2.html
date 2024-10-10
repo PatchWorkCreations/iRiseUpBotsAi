@@ -1,12 +1,12 @@
 {% extends "myapp/base.html" %}
 
-{% block title %}iRiseUp.ai | Best Courses for Retirees to Build Wealth{% endblock %}
+{% block title %}iRiseUp Academy | Best Courses for Retirees to Build Wealth{% endblock %}
 
 {% load static %}
 
 <!-- Meta Description for SEO -->
 {% block meta_description %}
-    <meta name="description" content="Discover the best courses at iRiseUp.ai designed specifically for retirees looking to learn new skills and generate extra income. Join our top-rated programs to empower your financial future.">
+    <meta name="description" content="Discover the best courses at iRiseUp Academy designed specifically for retirees looking to learn new skills and generate extra income. Join our top-rated programs to empower your financial future.">
 {% endblock %}
 
 {% block styles %}
@@ -90,7 +90,7 @@ body {
       font-size: 14px;
       font-weight: 700;
       padding: 0;
-      line-height: 1px;
+      line-height: 1.4px;
       margin: 0 0 10px 0;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -4722,19 +4722,20 @@ body {
                 <!-- Left Column: Text and Button -->
                 <div class="col-lg-6 col-sm-6 col-xs-12">
                     <div class="home_content">
-                        <h1><span>Empower Your Future</span> With iRiseUp Courses</h1>
-                        <p>Discover personalized courses designed to help you stay relevant, build new skills, and take charge of your future. Whether you're over 40 or looking to pivot, it's never too late to learn and grow with iRiseUp.</p>
+                        <h1><span>Empower Your Future</span> With iRiseUp Academy</h1>
+                        <p>Discover personalized courses designed to help you stay relevant, build new skills, and take charge of your future. Whether you're over 40 or looking to pivot, it's never too late to learn and grow with iRiseUp Academy.</p>
                     </div>
                     <div class="home_btn">
-                        <a href="{% url 'start_quiz' %}" class="cta">
+                        <a href="{% url 'start_quiz' %}" class="cta" aria-label="Explore Our Courses">
                             <span>Explore Our Courses</span>
-                            <svg width="13px" height="10px" viewBox="0 0 13 10">
+                            <svg width="13px" height="10px" viewBox="0 0 13 10" role="img" aria-hidden="true">
                                 <path d="M1,5 L11,5"></path>
                                 <polyline points="8 1 12 5 8 9"></polyline>
                             </svg>
                         </a>
                     </div>
-                </div><!-- END COL -->
+                </div>
+                <!-- END COL -->
     
                 <!-- Right Column: YouTube Video -->
                 <div class="col-lg-6 col-sm-6 col-xs-12">
@@ -4760,89 +4761,89 @@ body {
 	<!-- START ABOUT US HOME ONE -->
 	<section class="tp_feature">
         <div class="container-fluid">            
-             <div class="row">                    
-                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
-                     <div class="single_tp">
-                         <h3>Content Writing & Blogging</h3>
-                         <p>Master the art of storytelling, blogging, and content creation to engage audiences and build your personal or business brand.</p>
-                         <a href="{% url 'start_quiz' %}" class="cta">
-                             <span>Explore</span>
-                             <svg width="13px" height="10px" viewBox="0 0 13 10">
-                                 <path d="M1,5 L11,5"></path>
-                                 <polyline points="8 1 12 5 8 9"></polyline>
-                             </svg>
-                         </a>
-                     </div>
-                 </div>             
-                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
-                     <div class="single_tp">
-                         <h3>Graphic Design</h3>
-                         <p>Learn essential graphic design skills to create stunning visuals that stand out and communicate effectively.</p>
-                         <a href="{% url 'start_quiz' %}" class="cta">
-                             <span>Explore</span>
-                             <svg width="13px" height="10px" viewBox="0 0 13 10">
-                                 <path d="M1,5 L11,5"></path>
-                                 <polyline points="8 1 12 5 8 9"></polyline>
-                             </svg>
-                         </a>
-                     </div>
-                 </div>             
-                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
-                     <div class="single_tp">
-                         <h3>Digital Marketing</h3>
-                         <p>Develop your digital marketing expertise to grow your online presence, reach your target audience, and boost sales.</p>
-                         <a href="{% url 'start_quiz' %}" class="cta">
-                             <span>Explore</span>
-                             <svg width="13px" height="10px" viewBox="0 0 13 10">
-                                 <path d="M1,5 L11,5"></path>
-                                 <polyline points="8 1 12 5 8 9"></polyline>
-                             </svg>
-                         </a>
-                     </div>
-                 </div>                             
-             </div><!-- END ROW -->
-             <div class="row">
-                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
-                     <div class="single_tp">
-                         <h3>Video Editing</h3>
-                         <p>Learn the tools and techniques of professional video editing to create engaging content for social media, websites, and more.</p>
-                         <a href="{% url 'start_quiz' %}" class="cta">
-                             <span>Explore</span>
-                             <svg width="13px" height="10px" viewBox="0 0 13 10">
-                                 <path d="M1,5 L11,5"></path>
-                                 <polyline points="8 1 12 5 8 9"></polyline>
-                             </svg>
-                         </a>
-                     </div>
-                 </div>     
-                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
-                     <div class="single_tp">
-                         <h3>Photography</h3>
-                         <p>Hone your photography skills, from camera basics to advanced editing techniques, to capture stunning visuals.</p>
-                         <a href="{% url 'start_quiz' %}" class="cta">
-                             <span>Explore</span>
-                             <svg width="13px" height="10px" viewBox="0 0 13 10">
-                                 <path d="M1,5 L11,5"></path>
-                                 <polyline points="8 1 12 5 8 9"></polyline>
-                             </svg>
-                         </a>
-                     </div>
-                 </div>             
-                 <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
-                     <div class="single_tp">
-                         <h3>Social Media Management</h3>
-                         <p>Manage and grow social media accounts with confidence, building engagement and connections across platforms.</p>
-                         <a href="{% url 'start_quiz' %}" class="cta">
-                             <span>Explore</span>
-                             <svg width="13px" height="10px" viewBox="0 0 13 10">
-                                 <path d="M1,5 L11,5"></path>
-                                 <polyline points="8 1 12 5 8 9"></polyline>
-                             </svg>
-                         </a>
-                     </div>
-                 </div>                             
-             </div><!-- END ROW -->
-         </div><!-- END CONTAINER -->
+            <div class="row">
+                <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
+                    <div class="single_tp">
+                        <h3>Content Writing & Blogging</h3>
+                        <p>Learn how to create stories and content that grab attention, build your brand, and connect with your audience.</p>
+                        <a href="{% url 'start_quiz' %}" class="cta" aria-label="Explore Content Writing & Blogging">
+                            <span>Explore</span>
+                            <svg width="13px" height="10px" viewBox="0 0 13 10" role="img" aria-hidden="true">
+                                <path d="M1,5 L11,5"></path>
+                                <polyline points="8 1 12 5 8 9"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
+                    <div class="single_tp">
+                        <h3>Graphic Design</h3>
+                        <p>Pick up key design skills to create eye-catching visuals that tell your story and stand out online.</p>
+                        <a href="{% url 'start_quiz' %}" class="cta" aria-label="Explore Graphic Design">
+                            <span>Explore</span>
+                            <svg width="13px" height="10px" viewBox="0 0 13 10" role="img" aria-hidden="true">
+                                <path d="M1,5 L11,5"></path>
+                                <polyline points="8 1 12 5 8 9"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
+                    <div class="single_tp">
+                        <h3>Digital Marketing</h3>
+                        <p>Master the basics of digital marketing to grow your online presence, reach more people, and boost sales.</p>
+                        <a href="{% url 'start_quiz' %}" class="cta" aria-label="Explore Digital Marketing">
+                            <span>Explore</span>
+                            <svg width="13px" height="10px" viewBox="0 0 13 10" role="img" aria-hidden="true">
+                                <path d="M1,5 L11,5"></path>
+                                <polyline points="8 1 12 5 8 9"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
+                    <div class="single_tp">
+                        <h3>Video Editing</h3>
+                        <p>Discover simple tools and techniques to edit videos like a pro, perfect for social media and websites.</p>
+                        <a href="{% url 'start_quiz' %}" class="cta" aria-label="Explore Video Editing">
+                            <span>Explore</span>
+                            <svg width="13px" height="10px" viewBox="0 0 13 10" role="img" aria-hidden="true">
+                                <path d="M1,5 L11,5"></path>
+                                <polyline points="8 1 12 5 8 9"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
+                    <div class="single_tp">
+                        <h3>Photography</h3>
+                        <p>Learn photography from the basics to expert editing to capture and create stunning images.</p>
+                        <a href="{% url 'start_quiz' %}" class="cta" aria-label="Explore Photography">
+                            <span>Explore</span>
+                            <svg width="13px" height="10px" viewBox="0 0 13 10" role="img" aria-hidden="true">
+                                <path d="M1,5 L11,5"></path>
+                                <polyline points="8 1 12 5 8 9"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4 col-xs-12 no-padding wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
+                    <div class="single_tp">
+                        <h3>Social Media Management</h3>
+                        <p>Get the tools and confidence to manage social media accounts, build engagement, and connect with followers.</p>
+                        <a href="{% url 'start_quiz' %}" class="cta" aria-label="Explore Social Media Management">
+                            <span>Explore</span>
+                            <svg width="13px" height="10px" viewBox="0 0 13 10" role="img" aria-hidden="true">
+                                <path d="M1,5 L11,5"></path>
+                                <polyline points="8 1 12 5 8 9"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTAINER -->
      </section>
     
 	<!-- END ABOUT US HOME ONE -->	
@@ -4855,26 +4856,26 @@ body {
             <div class="row">                                
                 <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
                     <div class="ab_img">
-                        <img src="{% static 'myapp/images/iriseup/Happy_friends.jpg' %}" class="img-fluid" alt="Learn New Skills at iRiseUp">
+                        <img src="{% static 'myapp/images/iriseup/Happy_friends.jpg' %}" class="img-fluid" alt="Learn New Skills at iRiseUp Academy">
                     </div>
                 </div><!--- END COL -->                    
                 <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
                     <div class="ab_content">
-                        <h2>Learn new skills to go <u><span>ahead in your </span></u> career.</h2>
-                        <p>At iRiseUp, we offer a range of courses that help you stay competitive and develop the skills you need for today’s rapidly changing job market. From digital marketing to virtual assistance, you’ll find the perfect course to match your goals.</p>
+                        <h2>Learn new skills to get <u><span>ahead in your career</span></u>.</h2>
+                        <p>At iRiseUp Academy, we offer a range of courses designed to help you stay competitive in today's fast-evolving job market. From digital marketing to virtual assistance, we have the perfect course to help you achieve your goals and build a better future.</p>
                     </div>
                     <div class="abmv">
                         <span class="fas fa-medal" style="font-size: 24px; color: #00796b;"></span> <!-- Medal icon -->
                         <h4>Our Mission</h4>
-                        <p>Empowering individuals, especially those over 40, to take control of their futures through accessible and practical learning experiences.</p>
+                        <p>Empowering individuals, especially those over 40, to take charge of their future through accessible, practical learning that works for everyone.</p>
                     </div>
                     <div class="abmv">
                         <span class="fas fa-lightbulb" style="font-size: 24px; color: #00796b;"></span> <!-- Light bulb icon -->
                         <h4>Our Vision</h4>
-                        <p>To be a global leader in providing innovative, tech-based learning solutions that help individuals build rewarding careers and personal growth.</p>
-                    </div>    
+                        <p>To lead globally in offering innovative, tech-forward learning solutions that help people build rewarding careers and foster personal growth.</p>
+                    </div>
                     <a class="btn_one" href="{% url 'start_quiz' %}">Discover More</a>
-                     
+                
                 </div><!--- END COL -->                                  
             </div><!--- END ROW -->
         </div><!--- END CONTAINER -->
@@ -4888,8 +4889,8 @@ body {
     <section class="marketing_content_area section-padding">
         <div class="container">
             <div class="section-title">
-                <h2>Why Choose iRiseUp</h2>
-                <p>Discover the <span><u>top features</u></span> of learning with iRiseUp.</p>
+                <h2>Why Choose iRiseUp Academy for Learning New Skills</h2>
+                <p>Discover the <span><u>top reasons</u></span> why iRiseUp Academy is the perfect place for those looking to start side hustles, prepare for retirement jobs, or learn new, easy-to-master skills.</p>
             </div>      
             <div class="row">                                    
                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
@@ -4898,7 +4899,7 @@ body {
                             <span class="fas fa-laptop" style="font-size: 24px; color: #00796b;"></span>
                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Learn Anytime, Anywhere</a></h2>
                         </div>
-                        <p>Our online platform allows you to access courses from any device, anytime, so you can learn on your own schedule, no matter where you are.</p>
+                        <p>Access courses from any device, whenever it suits you. Perfect for retirees, side hustlers, or those balancing multiple jobs looking to upskill at their own pace.</p>
                     </div>                    
                 </div>                                 
                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
@@ -4907,7 +4908,7 @@ body {
                             <span class="fas fa-chalkboard-teacher" style="font-size: 24px; color: #00796b;"></span>
                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Expert Instructors</a></h2>
                         </div>  
-                        <p>Learn from industry professionals with years of experience, ensuring that you gain valuable insights and practical skills from the best in the field.</p>
+                        <p>Learn directly from industry professionals with real-world experience. Whether you're looking to change careers or start a side hustle, we ensure you get the best guidance.</p>
                     </div>                    
                 </div>                                 
                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
@@ -4916,7 +4917,7 @@ body {
                             <span class="fas fa-users" style="font-size: 24px; color: #00796b;"></span>
                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Community Support</a></h2>
                         </div>  
-                        <p>Join a growing community of learners and professionals. Share insights, ask questions, and collaborate with others working towards similar goals.</p>
+                        <p>Join a thriving community of learners, where you can connect with others starting new retirement jobs, side hustles, or looking to develop in-demand skills.</p>
                     </div>                    
                 </div>                                 
                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
@@ -4925,7 +4926,7 @@ body {
                             <span class="fas fa-calendar-alt" style="font-size: 24px; color: #00796b;"></span>
                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Personalized Course Planning</a></h2>
                         </div>  
-                        <p>Our tailored course recommendations help you focus on the skills that matter most to your career goals, ensuring a more effective learning experience.</p>
+                        <p>Receive tailored course suggestions based on your career goals—whether you're planning for a new career after retirement or looking to master an easy job on the side.</p>
                     </div>                    
                 </div>                                 
                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" data-wow-offset="0">
@@ -4934,7 +4935,7 @@ body {
                             <span class="fas fa-chart-line" style="font-size: 24px; color: #00796b;"></span>
                             <h2><a href="{% url 'start_quiz' %}" target="_blank">Progress Tracking</a></h2>
                         </div>      
-                        <p>Stay motivated with our progress tracking system, allowing you to see your achievements and stay on course as you develop new skills.</p>
+                        <p>Track your learning progress and achievements as you build new skills. Whether you're starting a new retirement job or upskilling for a side hustle, you'll stay motivated and on course.</p>
                     </div>                    
                 </div>                                 
                 <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" data-wow-offset="0">
@@ -4943,35 +4944,36 @@ body {
                             <span class="fas fa-headset" style="font-size: 24px; color: #00796b;"></span>
                             <h2><a href="{% url 'start_quiz' %}" target="_blank">24/7 Dedicated Support</a></h2>
                         </div>      
-                        <p>Our support team is here to help you with any issues or questions, any time of day. We're committed to your success, whenever you need us.</p>
+                        <p>Need help? Our support team is available 24/7 to assist you, so you can focus on building your skills, starting new side hustles, or preparing for your next career move.</p>
                     </div>                    
                 </div>                                                                 
             </div><!-- END ROW -->
         </div><!-- END CONTAINER -->
     </section>
     
+    
      
 
 	<!-- END WHY CHOOSE US -->
 <!-- START COURSE PROMOTION -->
 <section class="course_promo section-padding">
-    <div class="container">                                    
-        <div class="row">                                
+    <div class="container">
+        <div class="row">
             <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
                 <div class="cp_content">
                     <h4>The Best Platform for Learning New Skills</h4>
                     <h2>One Platform, Countless <span><u>Courses</u></span> to Build Your Future</h2>
-                    <p>Whether you’re looking to master digital marketing, web development, graphic design, or start a side hustle, iRiseUp provides the tools and guidance you need to thrive. Learn at your own pace with courses designed for busy individuals.</p>
+                    <p>Whether you’re aiming to master digital marketing, web development, graphic design, or kick-start a side hustle, iRiseUp Academy equips you with the tools and guidance you need to thrive. Our flexible courses are tailored for busy individuals, allowing you to learn at your own pace.</p>
                     <ul>
                         <li><span class="ti-check"></span>9/10 Average Student Satisfaction Rate</li>
                         <li><span class="ti-check"></span>96% Course Completion Rate</li>
-                        <li><span class="ti-check"></span>Friendly Environment & Expert Instructors</li>
+                        <li><span class="ti-check"></span>Supportive Environment & Expert Instructors</li>
                     </ul>
                 </div>
                 <div class="cp_btn">
-                    <a href="{% url 'start_quiz' %}" class="cta">
+                    <a href="{% url 'start_quiz' %}" class="cta" aria-label="Explore Courses at iRiseUp Academy">
                         <span>Explore Our Courses</span>
-                        <svg width="13px" height="10px" viewBox="0 0 13 10">
+                        <svg width="13px" height="10px" viewBox="0 0 13 10" role="img" aria-hidden="true">
                             <path d="M1,5 L11,5"></path>
                             <polyline points="8 1 12 5 8 9"></polyline>
                         </svg>
@@ -4980,12 +4982,14 @@ body {
             </div>
             <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
                 <div class="cp_img">
-                    <img src="{% static 'myapp/images/iriseup/2.png' %}" class="img-fluid" alt="Learn New Skills Online with iRiseUp">
+                    <img src="{% static 'myapp/images/iriseup/2.png' %}" class="img-fluid" alt="Learn New Skills Online with iRiseUp Academy">
                 </div>
-            </div>              
+            </div>
         </div>
     </div>
 </section>
+
+
 
 	
 	<!-- START NEWSLETTER -->
@@ -4994,7 +4998,7 @@ body {
             <div class="row text-center">            
                 <div class="col-lg-6 offset-lg-3 col-sm-12 col-xs-12">
                     <div class="subs_form">
-                        <h3>Stay Updated with iRiseUp! No Spam, Just Valuable Insights.</h3>
+                        <h3>Stay Updated with iRiseUp Academy! No Spam, Just Valuable Insights.</h3>
                         <p>Get the latest tips, updates, and special offers directly to your inbox. Join our community of learners and stay ahead in your career!</p>
                         <form action="#" class="home_subs" method="POST">
                             {% csrf_token %}
@@ -5131,68 +5135,74 @@ END ROW -->
         <div class="container">
             <div class="section-title">
                 <h2>What Our Students Say</h2>
-                <p>See Why <span><u>People Love Learning</u></span> with iRiseUp</p>
-            </div>      
-            <div class="row">                                
+                <p>See Why <span><u>People Love Learning</u></span> with iRiseUp Academy</p>
+            </div>
+            <div class="row">
                 <div class="col-lg-12">
                     <div id="testimonial-slider" class="owl-carousel">
                         <div class="testimonial">
-                            <div class="testimonial_content">                                                    
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <p>"iRiseUp helped me upgrade my skills in digital marketing. The courses are top-notch, and the support is fantastic!"</p>
+                            <div class="testimonial_content">
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <p>"iRiseUp Academy helped me upgrade my skills in digital marketing. The courses are top-notch, and the support is fantastic!"</p>
                             </div>
                             <div class="testi_pic_title tpt_one">
                                 <div class="pic">
-                                    <img src="{% static 'myapp/images/all-img/t1.png' %}" alt="James Clayton">
+                                    <img src="{% static 'myapp/images/all-img/t1.png' %}" alt="James Clayton - Digital Marketing Specialist">
                                 </div>
                                 <h4>James Clayton</h4>
-                                <small class="post">- Digital Marketing Specialist</small>  
+                                <small class="post">- Digital Marketing Specialist</small>
                             </div>
                         </div><!-- END TESTIMONIAL -->
                         <div class="testimonial">
-                            <div class="testimonial_content">                                                    
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <p>"Learning web development with iRiseUp has been a game-changer. The hands-on approach made it easy to understand!"</p>
+                            <div class="testimonial_content">
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <p>"The permaculture courses at iRiseUp Academy have been life-changing. I now have a deeper understanding of sustainable living and how to apply permaculture principles to create thriving ecosystems."</p>
                             </div>
                             <div class="testi_pic_title tpt_two">
                                 <div class="pic">
-                                    <img src="{% static 'myapp/images/all-img/t2.png' %}" alt="James Simmons">
+                                    <img src="{% static 'myapp/images/all-img/t2.png' %}" alt="Laura Green - Permaculture Enthusiast">
                                 </div>
-                                <h4>James Simmons</h4>
-                                <small class="post">- Web Developer</small>  
+                                <h4>Laura Green</h4>
+                                <small class="post">- Permaculture Enthusiast</small>
                             </div>
                         </div><!-- END TESTIMONIAL -->
                         <div class="testimonial">
-                            <div class="testimonial_content">                                                    
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <p>"Thanks to iRiseUp, I now feel confident managing social media campaigns for my clients. The courses were easy to follow!"</p>
+                            <div class="testimonial_content">
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <p>"Thanks to iRiseUp Academy, I now feel confident managing social media campaigns for my clients. The courses were easy to follow!"</p>
                             </div>
                             <div class="testi_pic_title tpt_three">
                                 <div class="pic">
-                                    <img src="{% static 'myapp/images/all-img/t3.png' %}" alt="Alex Feroundo">
+                                    <img src="{% static 'myapp/images/all-img/t3.png' %}" alt="Alex Feroundo - Social Media Manager">
                                 </div>
                                 <h4>Alex Feroundo</h4>
-                                <small class="post">- Social Media Manager</small>  
+                                <small class="post">- Social Media Manager</small>
                             </div>
                         </div><!-- END TESTIMONIAL -->
                     </div><!-- END TESTIMONIAL SLIDER -->
-                </div><!-- END COL  -->                                                                                         
+                </div><!-- END COL  -->
             </div><!-- END ROW -->
         </div><!-- END CONTAINER -->
     </section>
-
+    
 	<!-- END TESTIMONIALS -->
 	
 	<!-- 
