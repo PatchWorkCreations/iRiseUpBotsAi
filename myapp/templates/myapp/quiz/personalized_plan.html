@@ -85,102 +85,121 @@
 
     <div class="card mt-4" style="background-color: #f7f7fc; border-radius: 20px; padding: 30px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
         <div class="card-body text-center">
-            <h3 class="ai-title">AI is easier than you think</h3>
+            <h3 class="ai-title">Starting a new skill is easier than you think</h3>
             <div class="ai-content d-flex align-items-center justify-content-center">
                 <img src="{% static 'myapp/images/quiz/ai_image.png' %}" alt="Goal" class="img-fluid ai-image">
                 <div class="ai-days ms-4">
-                    <div class="ai-day">Day 1 <span class="ai-day-desc">Images</span></div>
-                    <div class="ai-day">Day 2 <span class="ai-day-desc">Writing</span></div>
-                    <div class="ai-day">Day 3 <span class="ai-day-desc">Speech</span></div>
+                    <div class="ai-day">Day 1 <span class="ai-day-desc">Visual Design & Creativity</span></div>
+                    <div class="ai-day">Day 2 <span class="ai-day-desc">Content Writing & Blogging</span></div>
+                    <div class="ai-day">Day 3 <span class="ai-day-desc">Effective Communication & Presentation</span></div>
                 </div>
             </div>
             <ul class="list-unstyled ai-benefits mt-4">
-                <li>👌 No prior AI knowledge is required</li>
-                <li>🎓 No need for a university degree</li>
-                <li>🕒 Work at your own pace and terms</li>
+                <li>👌 No prior experience is required</li>
+                <li>🎓 You don’t need a formal degree to succeed</li>
+                <li>🕒 Learn at your own pace and on your own terms</li>
             </ul>
         </div>
     </div>
     
+    
     <div class="readiness_level" style="padding-top: 20px;">    
-    <h2 class="readiness-title" style="text-align: left;">Your readiness: <span class="readiness-percentage">83%</span></h2>
-    <div class="readiness-box">
-        <p><strong class="highlighted-text">4-week</strong> program is enough for you to start your AI journey <span class="icon">💡</span></p>
+        <h2 class="readiness-title" style="text-align: left;">Your readiness: <span class="readiness-percentage">83%</span></h2>
+        <div class="readiness-box">
+            <p><strong class="highlighted-text">4-week</strong> program is enough for you to start your learning journey <span class="icon">💡</span></p>
+        </div>
     </div>
-    </div>
+    
 
     <div style="padding-top: 30px;">
         <div>
             <h3 style="font-size: x-large;">Try our program and you will:</h3>
             <ul class="list-unstyled" style="text-align: left;">
-                <li>✔️ Master AI tools that can boost your income</li>
+                <li>✔️ Master tools and skills that can boost your income</li>
                 <li>✔️ Discover new digital professions and income sources</li>
-                <li>✔️ Learn key AI terms and lessons</li>
+                <li>✔️ Learn essential skills for your chosen career path</li>
             </ul>
-
+        
             <div class="row goals-container">
-            <div class="col-md-6 goal-box">
-                <h4>Your goal</h4>
-                <p><span class="goal-icon">🛡️</span><strong>{{ main_goal }}</strong></p>
-            </div>
-            <div class="col-md-6 goal-box">
-                <h4>Your target</h4>
-                <p><span class="target-icon">📈</span><strong>{{ special_goal }}</strong></p>
-            </div>
-           </div>    
-
-           <div id="plan-selection-section" class="plan-selection-container">
-            <div class="plan-option">
-                <input type="radio" id="1-week-plan" name="plan" value="1-week">
-                <label for="1-week-plan">
-                    <div class="plan-header">
-                        <span>1-WEEK PLAN</span>
-                        <span>$12.87</span> <!-- Updated total price -->
-                    </div>
-                    <div class="plan-price">
-                        <span>$1.84</span> <!-- Updated per-day price -->
-                        <span>per day</span>
-                    </div>
-                </label>
-            </div>
-            
-            <div class="plan-option most-popular">
-                <input type="radio" id="4-week-plan" name="plan" value="4-week" checked>
-                <label for="4-week-plan">
-                    <div class="most-popular-badge">
-                        <span>👍 MOST POPULAR</span>
-                    </div>
-                    <div class="plan-header" style="padding-top: 55px;">
-                        <span>4-WEEK PLAN</span>
-                        <span>$37.95</span> <!-- Updated total price -->
-                    </div>
-                    <div class="plan-price">
-                        <span>$1.36</span> <!-- Updated per-day price -->
-                        <span>per day</span>
-                    </div>
-                </label>
-            </div>
-            
-            <div class="plan-option">
-                <input type="radio" id="12-week-plan" name="plan" value="12-week">
-                <label for="12-week-plan">
-                    <div class="plan-header">
-                        <span>12-WEEK PLAN</span>
-                        <span>$97.00</span> <!-- Updated total price -->
-                    </div>
-                    <div class="plan-price">
-                        <span>$1.15</span> <!-- Updated per-day price -->
-                        <span>per day</span>
-                    </div>
-                </label>
+                <div class="col-md-6 goal-box">
+                    <h4>Your goal</h4>
+                    <p><span class="goal-icon">🛡️</span><strong>{{ main_goal }}</strong></p>
+                </div>
+                <div class="col-md-6 goal-box">
+                    <h4>Your target</h4>
+                    <p><span class="target-icon">📈</span><strong>{{ special_goal }}</strong></p>
+                </div>
+            </div>    
+        
+            <div id="plan-selection-section" class="plan-selection-container">
+                <div class="plan-option">
+                    <input type="radio" id="1-week-plan" name="plan" value="1-week">
+                    <label for="1-week-plan">
+                        <div class="plan-header">
+                            <span>1-WEEK PLAN</span>
+                            <span>$12.87</span>
+                        </div>
+                        <div class="plan-price">
+                            <span>$1.84</span>
+                            <span>per day</span>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="plan-option most-popular">
+                    <input type="radio" id="4-week-plan" name="plan" value="4-week" checked>
+                    <label for="4-week-plan">
+                        <div class="most-popular-badge">
+                            <span>👍 MOST POPULAR</span>
+                        </div>
+                        <div class="plan-header" style="padding-top: 55px;">
+                            <span>4-WEEK PLAN</span>
+                            <span>$37.95</span>
+                        </div>
+                        <div class="plan-price">
+                            <span>$1.36</span>
+                            <span>per day</span>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="plan-option">
+                    <input type="radio" id="12-week-plan" name="plan" value="12-week">
+                    <label for="12-week-plan">
+                        <div class="plan-header">
+                            <span>12-WEEK PLAN</span>
+                            <span>$97.00</span>
+                        </div>
+                        <div class="plan-price">
+                            <span>$1.15</span>
+                            <span>per day</span>
+                        </div>
+                    </label>
+                </div>
+        
+                <!-- New Lifetime Access Plan -->
+                <div class="plan-option lifetime-plan">
+                    <input type="radio" id="lifetime-plan" name="plan" value="lifetime">
+                    <label for="lifetime-plan">
+                        <div class="lifetime-plan-details">
+                            <span class="lifetime-plan-header">LIFETIME ACCESS</span>
+                            <span class="lifetime-plan-description">One-time payment for unlimited access</span>
+                        </div>
+                        <div class="lifetime-plan-price">
+                            <span>$297.00</span>
+                        </div>
+                    </label>
+                </div>
+                
             </div>
         </div>
+    </div>
         
                 
 
                 <div class="plan-info">
                     <p>🎯 People using plan for 3 months achieve twice as many results as for 1 month</p>
-                    <p><small>*According to a research by iRiseUp.Ai, 2023</small></p>
+                    <p><small>*According to a research by iRiseUp Academy, 2023</small></p>
                 </div>
 
                 <div class="plan-button">
@@ -1214,6 +1233,7 @@ document.addEventListener('DOMContentLoaded', function () {
     align-items: flex-end;
     font-size: 1.5rem;
     color: #333;
+    padding-left: 10px;
 }
 
 .plan-price span:last-child {
@@ -1253,6 +1273,60 @@ document.addEventListener('DOMContentLoaded', function () {
     border-radius: 10px;
     background-color: #f0f4ff; /* Change background color */
     box-shadow: 0 0 15px rgba(78, 115, 223, 0.15); /* Add shadow for the most popular option */
+}
+/* Lifetime Access Plan Styling */
+.plan-option.lifetime-plan {
+    border: 2px solid #28a745;
+    background-color: #f9f9f9; /* Neutral background */
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.plan-option.lifetime-plan input[type="radio"] {
+    display: none; /* Hide default radio button */
+}
+
+.plan-option.lifetime-plan input[type="radio"]:checked + label {
+    border-color: #28a745; /* Green highlight when selected */
+    background-color: #f0fdf0; /* Light green background */
+}
+
+.plan-option.lifetime-plan label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* Lifetime Plan Details */
+.lifetime-plan-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.lifetime-plan-header {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #28a745;
+}
+
+.lifetime-plan-description {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Lifetime Plan Price Styling */
+.lifetime-plan-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #28a745;
 }
 
 

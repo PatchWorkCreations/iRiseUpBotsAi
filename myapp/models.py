@@ -16,6 +16,8 @@ class SquareCustomer(models.Model):
         return f"{self.user.username} - {self.customer_id}"
 
 
+from django.db import models
+
 class Course(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField(default="Default description")
@@ -23,9 +25,14 @@ class Course(models.Model):
     units = models.IntegerField()
     hours = models.FloatField()
     category = models.CharField(max_length=100, null=True, blank=True)
+    order = models.PositiveIntegerField(default=0)  # New field to store the order of the courses
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ['order']  # This ensures courses are always ordered by the 'order' field
+
 
 class SubCourse(models.Model):
     parent_course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='sub_courses')

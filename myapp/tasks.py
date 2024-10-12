@@ -56,7 +56,7 @@ def complete_lesson_task(user_id, lesson_id):
 
 @shared_task(name="send_welcome_email_task")
 def send_welcome_email(email):
-    subject = 'Welcome to iRiseUp.Ai!'
+    subject = 'Welcome to iRiseUp Academy!'
     html_message = render_to_string('welcome_email.html', {'email': email})
     plain_message = strip_tags(html_message)
     from_email = 'hello@iriseupacademy.com'  # Replace with your actual sender email

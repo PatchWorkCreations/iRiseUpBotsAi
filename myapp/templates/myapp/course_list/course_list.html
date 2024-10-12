@@ -3,19 +3,19 @@
 {% block title %}Courses{% endblock %}
 
 {% block content %}
-{% include 'myapp/quiz/header.html' %}
 <div class="container mt-5">
     <div class="jumbotron">
         <h1 class="display-4">All Courses</h1>
-        <p class="lead">Here you can manage your courses.</p>
+        <p class="lead">Here you can manage and reorder your courses.</p>
         <hr class="my-4">
         <a href="{% url 'add_course' %}" class="btn btn-primary btn-lg">Add New Course</a>
     </div>
 
     <section>
-        <ul class="list-group mt-4">
+        <!-- Draggable list for reordering the courses -->
+        <ul id="sortable-course-list" class="list-group mt-4">
             {% for course in courses %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center" data-course-id="{{ course.pk }}">
                     {{ course.title }}
                     <div>
                         <a href="{% url 'course_detail' course.pk %}" class="btn btn-info btn-sm">View</a>
@@ -25,6 +25,9 @@
                 </li>
             {% endfor %}
         </ul>
+
+        <!-- Add a button to save the new order -->
+        <button id="save-order-btn" class="btn btn-success mt-4">Save Order</button>
     </section>
 </div>
 
@@ -51,18 +54,52 @@
         </div>
     </div>
 </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
+<!-- Include jQuery and jQuery UI for sortable functionality -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
 <script>
-    $('#deleteModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var courseId = button.data('course-id');
-        var courseTitle = button.data('course-title');
-        var modal = $(this);
-        modal.find('#courseTitle').text(courseTitle);
-        modal.find('#deleteForm').attr('action', '/customadmin/courses/' + courseId + '/delete/');
+    $(document).ready(function() {
+        // Make the course list sortable using jQuery UI
+        $('#sortable-course-list').sortable();
+
+        // Save the new order when the "Save Order" button is clicked
+        $('#save-order-btn').on('click', function() {
+            var courseOrder = [];
+            $('#sortable-course-list li').each(function() {
+                courseOrder.push($(this).data('course-id'));
+            });
+
+            // Send the new order to the server
+            $.ajax({
+                url: '{% url "reorder_courses" %}',  // Django view to handle order saving
+                method: 'POST',
+                data: {
+                    order: courseOrder,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    alert('Course order has been saved successfully!');
+                    location.reload();  // Optionally reload the page to reflect new order
+                },
+                error: function(error) {
+                    alert('There was an error saving the order. Please try again.');
+                }
+            });
+        });
+
+        // Handle delete modal
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var courseId = button.data('course-id');
+            var courseTitle = button.data('course-title');
+            var modal = $(this);
+            modal.find('#courseTitle').text(courseTitle);
+            modal.find('#deleteForm').attr('action', '/customadmin/courses/' + courseId + '/delete/');
+        });
     });
 </script>
 {% endblock %}

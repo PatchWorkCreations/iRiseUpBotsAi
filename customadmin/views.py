@@ -187,6 +187,25 @@ def add_course(request):
     
     return render(request, 'customadmin/add_course.html', {'course_form': course_form})
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from myapp.models import Course
+
+@csrf_exempt
+def reorder_courses(request):
+    if request.method == 'POST':
+        order = request.POST.getlist('order[]')
+
+        # Loop through the received course IDs and update their order field
+        for idx, course_id in enumerate(order):
+            course = Course.objects.get(pk=course_id)
+            course.order = idx  # Update order based on the index in the list
+            course.save()
+
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 
 import csv
 from myapp.models import Course, SubCourse, Lesson

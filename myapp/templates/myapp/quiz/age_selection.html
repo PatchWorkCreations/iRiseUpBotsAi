@@ -2,6 +2,17 @@
 {% load static %}
 {% block title %}Select Age{% endblock %}
 {% block content %}
+<style>
+    small {
+    font-size: 14px; /* Adjust the font size to be smaller than the regular text */
+    color: #6c757d;  /* A neutral color like grey */
+    font-weight: 400; /* Keep the weight lighter for a softer look */
+    display: block;   /* Ensures it appears on a new line under the main text */
+    margin-top: 5px;  /* Adds some space between the main text and the <small> text */
+    line-height: 15px;
+}
+
+</style>
 {% include 'myapp/quiz/header.html' %}
 <div class="mobile-container">
 <div class="container text-center">
@@ -13,12 +24,12 @@
                 {% if gender == 'Male' %}
                     <button type="submit" name="age_range" value="Legacy" class="btn btn-light btn-age">
                         <img src="{% static 'myapp/images/quiz/male_age_35-44.webp' %}" alt="Age 35-44" class="img-fluid age-image" />
-                        <p>Legacy</p>
+                        <p>Legacy<br><small>Experienced Entrepreneur</small></p>
                     </button>
                 {% elif gender == 'Female' %}
                     <button type="submit" name="age_range" value="Legacy" class="btn btn-light btn-age">
                         <img src="{% static 'myapp/images/quiz/female_age 35-44.webp' %}" alt="Age 35-44" class="img-fluid age-image" />
-                        <p>Legacy</p>
+                        <p>Legacy<br><small>Experienced Entrepreneur</small></p>
                     </button>
                 {% endif %}
             </div>
@@ -26,21 +37,22 @@
                 {% if gender == 'Male' %}
                     <button type="submit" name="age_range" value="Heritage" class="btn btn-light btn-age">
                         <img src="{% static 'myapp/images/quiz/male_age_45+.webp' %}" alt="Age 45+" class="img-fluid age-image" />
-                        <p>Heritage</p>
+                        <p>Heritage<br><small>Seasoned Innovator</small></p>
                     </button>
                 {% elif gender == 'Female' %}
                     <button type="submit" name="age_range" value="Heritage" class="btn btn-light btn-age">
                         <img src="{% static 'myapp/images/quiz/female_45+.webp' %}" alt="Age 45+" class="img-fluid age-image" />
-                        <p>Heritage</p>
+                        <p>Heritage<br><small>Seasoned Innovator</small></p>
                     </button>
                 {% endif %}
             </div>
         </div>
     </form>
+    
     <p>
         By choosing your heritage or legacy, you agree with <a href="#">Terms and Conditions</a>, <a href="#">Privacy Policy</a>, <a href="#">Subscription Terms</a>
     </p>
-    <p>iRiseUp.ai, Limassol, Cyprus. 2024 &copy; All Rights Reserved.</p>
+    <p>iRiseUp Academy, Columbus Ohio. 2024 &copy; All Rights Reserved.</p>
 </div>
 </div>
 

@@ -51,4 +51,6 @@ urlpatterns = [
     path('blogs/', views.blog_list, name='blog_list'),   # This should also match
     path('blogs/edit/<int:blog_id>/', views.edit_blog, name='edit_blog'),
     path('blogs/delete/<int:blog_id>/', views.delete_blog, name='delete_blog'),
+
+    path('reorder-courses/', views.reorder_courses, name='reorder_courses'),
 ]

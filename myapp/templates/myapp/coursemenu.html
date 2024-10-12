@@ -5,141 +5,95 @@
 {% block content %}
 <style>
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f6f9;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+}
 
-    .container {
-        width: 90%;
-        max-width: 1200px;
-        background: #fff;
-        padding: 25px;
-        padding-bottom: 60px;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
-        box-sizing: border-box;
-        margin-bottom: 60px;
-    }
+/* Mobile container centered and padded */
+.mobile-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+}
 
-    h1 {
-        text-align: center;
-        color: #333;
-        margin-bottom: 30px;
-        font-size: 32px;
-    }
+/* Center the course menu and ensure full visibility */
+.coursemenu_container {
+    width: 90%;
+    max-width: 1200px;
+    background: #fff;
+    padding: 25px;
+    padding-bottom: 60px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-sizing: border-box;
+    margin-bottom: 60px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    /* Tabs styling */
-    .tabs {
-        display: flex;
-        justify-content: space-between;
-        max-width: 100%;
-        margin-bottom: 20px;
-    }
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 32px;
+}
 
-    .tab {
-        flex: 1;
-        text-align: center;
-        padding: 10px 20px;
-        border-radius: 25px;
-        cursor: pointer;
-        font-weight: bold;
-        border: 1px solid transparent;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .tab.active {
-        background-color: #e7f1ff;
-        color: #007bff;
-        border: 1px solid #007bff;
-    }
-
-    /* Course Section styling */
-    .course-section {
-        margin-top: 20px;
-        display: none; /* Hide all sections initially */
-    }
-
-    .course-section.active {
-        display: block; /* Only the active section will be shown */
-    }
-
-    .course-section h2 {
-        font-size: 28px;
-        color: #444;
-        margin-bottom: 20px;
-    }
-
-    .recommended-container h2 {
-    font-size: 28px;
-    color: #333; /* A darker shade for better visibility */
+/* Tabs styling */
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    max-width: 100%;
     margin-bottom: 20px;
-    font-weight: bold; /* Make it stand out as a section title */
-    text-align: left; /* Align the text to the left for a clean layout */
-    line-height: 1.2; /* Slightly reduce line height for tighter spacing */
-    letter-spacing: 0.5px; /* Add a slight letter spacing for readability */
-    padding-left: 10px; /* Add padding for consistency in the layout */
-    border-left: 5px solid #007bff; /* A blue left border to highlight the section */
 }
 
-
-    .course-card {
-        background-color: #f9faff;
-        border: 1px solid #e4e7ed;
-        border-radius: 8px;
-        padding: 20px;
-        text-align: center;
-        flex-basis: 240px;
-        max-width: 100%;
-        margin: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .course-image img {
-    border-radius: 8px;
-    max-width: 100%;  /* Percentage for responsive design */
-    height: auto;    /* Maintain aspect ratio */
-    display: block;
-    margin: 0 auto 10px;
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    border: 1px solid transparent;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.tab.active {
+    background-color: #e7f1ff;
+    color: #007bff;
+    border: 1px solid #007bff;
+}
 
-    h3 {
-        font-size: 18px;
-        color: #2c3e50;
-        margin-bottom: 10px;
-        line-height: 1.2;
-        hyphens: auto;
-        word-wrap: normal;
-        text-align: center;
-    }
+/* Course Section styling */
+.course-section {
+    margin-top: 20px;
+    display: none; /* Hide all sections initially */
+}
 
-    .progress-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
-    }
+.course-section.active {
+    display: block; /* Only the active section will be shown */
+}
 
-    .progress-bar {
-        background-color: #e0e0e0;
-        border-radius: 12px;
-        width: 80%;
-        height: 8px;
-    }
+.course-section h2 {
+    font-size: 28px;
+    color: #444;
+    margin-bottom: 20px;
+}
 
-    .progress {
-        background-color: #42a5f5;
-        height: 100%;
-        border-radius: 12px;
-    }
+.recommended-container h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 10px;
+    border-left: 5px solid #007bff;
+}
 
-    /* Ensure the course card container is a flex container */
+/* Ensure the course card container is a flex container */
 .course-card {
     display: flex;
     flex-direction: column;
@@ -156,7 +110,25 @@
     height: auto;
 }
 
-/* Make sure the button stays at the bottom of the card */
+/* Ensure full image visibility */
+.course-image img {
+    border-radius: 8px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+h3 {
+    font-size: 18px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    word-wrap: break-word;
+    text-align: center;
+}
+
+/* Ensure the button stays at the bottom of the card */
 .view-btn {
     display: inline-block;
     background-color: #42a5f5;
@@ -167,44 +139,40 @@
     font-size: 12px;
     text-transform: uppercase;
     cursor: pointer;
-    margin-top: auto; /* This ensures the button is pushed to the bottom of the card */
+    margin-top: auto;
 }
 
-/* Change color when hovering over the button */
 .view-btn:hover {
     background-color: #1e88e5;
 }
 
+/* Course grid */
+.course-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: space-between;
+}
 
-
-    /* Course grid */
-    .course-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        justify-content: space-between;
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .course-card {
+        width: calc(33.333% - 20px); /* 3 cards per row on smaller screens */
     }
+}
 
-    
-
-    /* Responsive adjustments */
-    @media (max-width: 1200px) {
-        .course-card {
-            width: calc(33.333% - 20px); /* 3 cards per row on smaller screens */
-        }
+@media (max-width: 768px) {
+    .course-card {
+        width: calc(50% - 20px); /* 2 cards per row on tablets */
     }
+}
 
-    @media (max-width: 768px) {
-        .course-card {
-            width: calc(50% - 20px); /* 2 cards per row on tablets */
-        }
+@media (max-width: 480px) {
+    .course-card {
+        width: calc(100% - 20px); /* 1 card per row on mobile */
     }
+}
 
-    @media (max-width: 480px) {
-        .course-card {
-            width: calc(100% - 20px); /* 1 card per row on mobile */
-        }
-    }
 
     #full-page-loader {
         position: fixed;
@@ -299,7 +267,7 @@
 </div>
 
 <div class="mobile-container">
-    <div class="container">
+    <div class="coursemenu_container">
         <h1>My Courses</h1>
 
         <!-- Tabs for Ongoing, Completed, Saved, Favorite -->

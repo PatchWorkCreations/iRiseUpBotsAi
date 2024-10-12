@@ -156,7 +156,7 @@ html_template = """
 				<!-- Sec Title -->
 				<div class="sec-title">
 					<div class="sec-title_title">How Its work</div>
-					<h2 class="sec-title_heading">iRiseUp.Ai <span>typically operate</span> in <br> a three steps</h2>
+					<h2 class="sec-title_heading">iRiseUp Academy <span>typically operate</span> in <br> a three steps</h2>
 				</div>
 				<div class="steps-one_button">
 					<a href="{{% url 'about' %}}" class="template-btn btn-style-two">
@@ -229,7 +229,7 @@ html_template = """
 				<div class="d-flex justify-content-between align-items-center flex-wrap">
 					<div class="left-box">
 						<div class="sec-title_title">problem & solutions</div>
-						<h2 class="sec-title_heading">Unveiling <span>solutions</span> for common dilemmas in iRiseUp.Ai</h2>
+						<h2 class="sec-title_heading">Unveiling <span>solutions</span> for common dilemmas in iRiseUp Academy</h2>
 					</div>
 					<div class="right-box">
 						<p>Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa  Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis l consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna</p>
