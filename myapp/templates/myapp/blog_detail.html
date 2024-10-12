@@ -235,11 +235,12 @@
 									<h5 class="sidebar-widget_title">Categories</h5>
 									<ul class="service-list">
 										{% for category in blog.categories.all %}
-										<li><a href="#">{{ category.name }} <span>({{ category.blog_set.count }})</span></a></li>
+										<li><a href="#">{{ category.name }} <span>({{ category.blogs.count }})</span></a></li> <!-- Notice the change here -->
 										{% endfor %}
 									</ul>
 								</div>
 							</div>
+							
 
 							<!-- Popular tags -->
 							<div class="sidebar-widget popular-tags">

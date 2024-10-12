@@ -47,13 +47,23 @@ admin.site.register(ForumCategory)
 from django.contrib import admin
 from .models import BlogPost  # Import your BlogPost model
 
+from django.contrib import admin
+from .models import BlogPost, BlogComment
+
+# Define the inline for comments
+class BlogCommentInline(admin.TabularInline):  # or use admin.StackedInline for a different layout
+    model = BlogComment
+    extra = 1  # How many empty comment forms to display by default
+
+# Register the BlogPost model with the inline comments
 @admin.register(BlogPost)
 class BlogAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("title",)}  # Automatically generate the slug from the title
+    prepopulated_fields = {"slug": ("title",)}
     list_display = ('title', 'author', 'publish_date', 'read_time')
-    search_fields = ('title', 'content', 'author')  # Allows searching by title, content, and author
-    list_filter = ('publish_date', 'author')  # Filters for author and publish date
-    date_hierarchy = 'publish_date'  # Adds a date-based drilldown navigation
-    ordering = ('-publish_date',)  # Orders by publish date descending
+    search_fields = ('title', 'content', 'author__username')
+    list_filter = ('publish_date', 'author')
+    date_hierarchy = 'publish_date'
+    ordering = ('-publish_date',)
+    inlines = [BlogCommentInline]  # This will add the inline for comments
 
 

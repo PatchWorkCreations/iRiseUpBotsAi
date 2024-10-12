@@ -473,25 +473,38 @@ from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import User  # Assuming you have this imported
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Tag(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
-    content = models.TextField()  # Change back to TextField
+    content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     publish_date = models.DateField()
     image = models.ImageField(blank=True, null=True, upload_to='blog_images/')
     slug = models.SlugField(unique=True)
-    category = models.CharField(max_length=100)
-
+    categories = models.ManyToManyField(Category, related_name='blogs')
+    tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
 
     def get_absolute_url(self):
         return reverse('blog_detail', args=[self.slug])
-    
+
     def read_time(self):
         word_count = len(self.content.split())
         return f"{word_count // 200} min read"
-    
+
     def __str__(self):
         return self.title
+
 
 class BlogComment(models.Model):
     post = models.ForeignKey(BlogPost, related_name='comments', on_delete=models.CASCADE)

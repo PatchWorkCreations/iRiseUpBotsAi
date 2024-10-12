@@ -1,46 +1,6 @@
-	/*
-Author       : themes_mountain
-Template Name: Penn - Education HTML Template
-Version      : 1.0
-*/
-/*=============================================================
-    CSS INDEX
-    =============================
-    01. GENERAL STYLE (body, link color, section-title, preloader btn, overlay, section-padding etc)
-    02. START BOOTSTRAP NAVIGATION OVERRIDES
-    03. START HOMEPAGE CSS STYLE
-    04. START TOP PROMO DESIGN
-    05. START ABOUT CSS DESIGN
-    06. START COUNTER DESIGN
-    07. START FEATURES DESIGN
-    08. START COURSE DESIGN
-    09. START COURSE PROMOTION DESIGN
-    10. START TOPIC DESIGN
-    11. START REVIEWS DESIGN
-    12. START TEAM DESIGN
-    13. START BLOG DESIGN
-    14. START FOOTER DESIGN
-    15. START PARTNER DESIGN
-    16. START SECTION TOP DESIGN
-    17. START PRICING DESIGN
-    18. START EVENTS DESIGN
-    19. START FAQ DESIGN
-    20. START ERROR DESIGN
-    21. START LOGIN AND REGISTER DESIGN
-    22. START CONTACT DESIGN
-    23. START ABOUT PAGE DESIGN
-    23. START NEWSLETTER DESIGN
-    24. START FREE COURSE+INSTRUCTOR DESIGN
-  =============================================================*/
-/*
-* ----------------------------------------------------------------------------------------
-* 01.GENERAL STYLE
-* ----------------------------------------------------------------------------------------
-*/
-
 body {
     color:#888;
-    font-family: 'Mulish', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 16px;
     font-weight: 500;
     line-height: 26px;
@@ -58,12 +18,12 @@ body {
     h6 {
       letter-spacing: 0px;
       margin: 0px;
-      font-family: 'Mulish', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       color: #1a2d62;
       font-weight: 400;
     }
     a {
-        font-family: 'Mulish', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         text-decoration: none;
         -webkit-transition: all 0.2s;
         -o-transition: all 0.2s;
@@ -95,7 +55,7 @@ body {
     b, strong {
         font-weight: 600;
     }
-    span{font-family: 'Mulish', sans-serif;}
+    span{font-family: 'Montserrat', sans-serif;}
     .no-padding { padding: 0 }
     
     /*END PRELOADER DESIGN*/
@@ -110,7 +70,7 @@ body {
       font-size: 14px;
       font-weight: 700;
       padding: 0;
-      line-height: 1px;
+      line-height: 1.4px;
       margin: 0 0 10px 0;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -188,6 +148,24 @@ body {
         z-index: 99999;
         overflow: hidden;
     }
+
+    @media (max-width: 768px) {
+    .section-title h2 {
+        font-size: 28px; /* Smaller font size for mobile */
+        line-height: 1.3;
+        margin-bottom: 15px;
+    }
+
+    .section-title p {
+        font-size: 16px; /* Slightly smaller text */
+        margin-bottom: 20px;
+    }
+
+    /* Reduce padding for mobile */
+    .section-padding {
+        padding: 40px 15px;
+    }
+}
     
     #loader {
         display: block;
@@ -872,146 +850,162 @@ body {
     * 03. START HOMEPAGE CSS STYLE
     * ----------------------------------------------------------------------------------------
     */
-    .home_bg{
-    height:900px;
-    position:relative;
+    /* General styles for home section */
+/* General Section Styling */
+.home_bg {
+    padding: 80px 0; /* Ample padding for desktop */
+    position: relative;
+    height: auto;
+}
+
+.home_content {
+    padding-top: 50px;
+    padding-left: 30px;
+    padding-right: 0;
+}
+
+.home_btn {
+    margin-top: 20px; /* Spacing between text and button */
+}
+
+/* Title Styling */
+.home_content h1 {
+    font-size: 45px; /* Desktop size */
+    font-weight: 700;
+    line-height: 55px; /* Adjusted for better readability */
+    margin-bottom: 20px; /* Spacing between title and paragraph */
+    text-align: left;
+}
+
+.home_content h1 span {
+    color: #2eca7f; /* Highlight color for key text */
+    display: inline-block;
+    margin-bottom: 10px; /* Ensuring spacing between lines */
+}
+
+/* Paragraph Styling */
+.home_content p {
+    margin-bottom: 30px; /* Adjusted margin for better spacing */
+    font-weight: 400;
+    font-size: 18px; /* Readable font size for desktop */
+}
+
+/* Button Styling */
+.home_btn .cta {
+    display: inline-block;
+    background-color: #2eca7f;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.home_btn .cta:hover {
+    background-color: #29b573; /* Hover effect for button */
+}
+
+.home_btn svg {
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+/* Video Section Styling */
+.home_me_img {
+    text-align: center;
+    padding-top: 50px; /* Spacing at the top for desktop */
+}
+
+.home_me_img iframe {
+    width: 100%;
+    max-width: 600px;
+    height: 350px; /* Consistent height for video on desktop */
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.home_me_img p {
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Responsive Adjustments */
+
+/* Tablet and Medium-Screen Adjustments */
+@media only screen and (max-width: 768px) {
+    .home_bg {
+        padding: 20px 0; /* Reduced padding for tablets */
     }
-    .home_bg2{
-    height:700px;
-    position:relative;
+
+    .home_content {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 20px;
     }
-    .home_content{padding-top:250px;position:relative;}
-    .hc_pt{padding-top:150px;position:relative;}
-    @media only screen and (max-width:768px) { 
-    .home_content{padding-left:30px;padding-right: 20px;}
-    }
+
     .home_content h1 {
-        font-size: 80px;
-        font-weight: 700;
-        line-height: 100px;
-        margin-bottom: 20px;
+        font-size: 45px; /* Reduced for tablets */
+        line-height: 55px;
+        margin-bottom: 15px; /* Spacing adjustment */
     }
-     @media only screen and (max-width:960px){
-    .home_content h1 {font-size: 60px;line-height:70px;}
-     }
-    .home_content h1 span{color:#2eca7f;}
+
     .home_content p {
-        margin-bottom: 40px;
-        font-weight: 400;
-        font-size: 18px;
-    }
-    .home_me_img{	
-    position: absolute;
-        z-index: 9;
-        bottom: 0;}
-    .home_me_img img{position:relative;}
-    .home_img_two{padding-top:150px;padding-left:50px;}
-    
-    @media only screen and (max-width:480px) { 
-    .home_me_img img{display:none;}
-    .home_img_two{display:none;}
-    }
-    /*HOME THREE CSS*/
-    .home_img_bg {
-        height: 750px;
-        position:relative;
-    }
-    .home_img_bg::before {
-        background: #1a1936;
-        content: "";
-        height: 100%;
-        filter: alpha(opacity=80);
-        position: absolute;
-        width: 100%;
-        opacity: 0.8;
-    }
-    .hero-text{position:relative;}
-    .hero-text h1 {
-        color: #fff;
-        font-size: 90px;
-        font-weight: 700;
-        letter-spacing: 0;
-        line-height: 90px;
-        padding-top: 150px;
-        text-transform: capitalize;
         margin-bottom: 20px;
+        font-size: 16px; /* Slightly smaller text for tablets */
     }
-    .hero-text h1 span{
-    color:#2eca7f;
+
+    .home_btn {
+        margin-top: 15px;
     }
-    @media only screen and (max-width:480px){
-    .hero-text h1 {
-    font-size: 60px;
-    line-height:70px;
+
+    .home_me_img iframe {
+        height: 300px; /* Adjusted height for tablets */
     }
+}
+
+/* Mobile and Small-Screen Adjustments */
+@media only screen and (max-width: 480px) {
+    .home_content h1 {
+        font-size: 35px; /* Further reduction for small screens */
+        line-height: 45px;
+        margin-bottom: 10px;
     }
-    .hero-text p {
-        color: #fff;
-        margin-bottom: 30px;
+
+    .home_content p {
+        margin-bottom: 15px;
+        font-size: 14px; /* Smaller text for mobile */
     }
-    .hero-text-img {
-        position: absolute;
-        bottom: 0;
-        z-index: 9;
+
+    .home_btn {
+        margin-top: 15px; /* Reduced spacing for smaller screens */
     }
-    .hero-text-img img{position:relative;}
-    @media only screen and (max-width:480px) { 
-    .hero-text-img img{display:none;}
+
+    .home_me_img iframe {
+        height: 250px; /* Adjusted for small screens */
     }
-    /*END HOME THREE CSS*/
-    .home_ps {
-        background: #fff;
-        width: 200px;
-        padding: 20px;
-        border-radius: 30px;
-        box-shadow: 0px 0 30px rgba(1, 41, 112, 0.08);
-        position: absolute;
-        top: 50%;
+}
+
+/* Extra Small Screens (e.g., very small mobile devices) */
+@media only screen and (max-width: 360px) {
+    .home_content h1 {
+        font-size: 30px; /* Further reduction for very small screens */
+        line-height: 40px;
     }
-    .home_ps img {
-        width: 40px;
-        float: left;
-        margin-right: 10px;
+
+    .home_content p {
+        font-size: 14px;
     }
-    .home_ps h2 {
-        overflow: hidden;
-        font-weight: 800;
+
+    .home_me_img iframe {
+        height: 220px; /* Smaller video height for very small screens */
     }
-    .home_ps span{font-size: 14px;}
+}
+
+
     
-    .home_ps2 {
-        background: #fff;
-        width: 200px;
-        padding: 20px;
-        border-radius: 30px;
-            position: absolute;
-        top: 10%;
-        right:0;
-        box-shadow: 0px 0 30px rgba(1, 41, 112, 0.08);
-    }
-    .home_ps2 img {
-        width: 40px;
-        float: left;
-        margin-right: 10px;
-    }
-    .home_ps2 h2 {
-        overflow: hidden;
-        font-weight: 800;
-    }
-    .home_ps2 span{font-size: 14px;}
-    .home_tag{margin-top:30px;}
-    .home_tag span{}
-    .home_tag a {
-        color: #1a2d62;
-        font-weight: 600;
-        padding: 0 5px;
-        text-decoration: underline;
-        transition: 0.3s;
-    }
-    .home_tag a:hover{color: #2eca7f;}
-    @media only screen and (max-width:480px) { 
-    #kenburns_061{margin-top:75px;}
-    }
     /*
     * ----------------------------------------------------------------------------------------
     * 03. END HOMEPAGE CSS STYLE
@@ -2239,118 +2233,124 @@ body {
     * 11. START REVIEWS DESIGN
     * ----------------------------------------------------------------------------------------
     */
+
     .testi_home_area {
-        background: url(../images/banner/shapes-bg.png) no-repeat;
-        background-position: top center;
-        background-size:cover;
-        padding-bottom: 100px;
-    }
-    .testimonial {
-        background: #fff;
-        border-radius: 5px;
-        margin: 0px 15px;
-        -webkit-box-shadow: 0 10px 20px -10px rgba(0,64,128,.3);
-        box-shadow:0 10px 20px -10px rgba(0,64,128,.3);
-        margin-bottom: 30px;
-    }
-    .testimonial_content{padding: 30px;}
-    .testimonial_content h3 {
-        font-weight: 600;
-        font-size: 20px;
-        color:#1a2d62;
-    }
-    .testimonial_content i {
-        color: #ffbd35;
-        font-size: 22px;
-    }
-    .testimonial_content p {
-        overflow: hidden;
-        margin-top: 15px;
-    }
-    .testi_pic_title{
-    
-    padding:20px;
-    }
-    .tpt_one{background:rgba(46,202,127,0.2);}
-    .tpt_two{background:#fff8ee;}
-    .tpt_three{background:#eef4ff;}
-    .testi_pic_title .pic{
-        float: left;
-        width:70px;
-        height:70px;
-        margin-right: 15px;
-    }
-    .testi_pic_title .pic img {
-        width: 100%;
-        height: 100%;
-        border-radius: 100px;
-    }
-    .testi_pic_title h4 {
-        font-size: 20px;
-        font-weight: 700;
-        margin-top: 10px;
-    }
-    .testi_pic_title small {
-        font-weight: 400;
-        color: #1b2032;
-        font-size: 14px;
-        margin-top: 8px;
-        display: block;
-        font-family: 'Poppins', sans-serif;
-    }
-    .owl-theme{-webkit-transition:0.4s;-o-transition:0.4s;transition:0.4s;}
-    .owl-theme .owl-controls{
-        width: 100%;
-        height: 50px;
-        display: block!important;
-        opacity: 1;
-        position: absolute;
-        top: -32%;
-        -webkit-transition:0.4s;
-        -o-transition:0.4s;
-        transition:0.4s;
-    }
-    .owl-theme .owl-controls .owl-buttons div {
-        width: 46px;
-        height: 46px;
-        line-height: 42px;
-        opacity: 1;
-        border-radius: 3px;
-        background: #fff;
-        border: 1px solid #ededed;
-        -webkit-transition: 0.4s;
-        -o-transition: 0.4s;
-        transition: 0.4s;
-        -webkit-box-shadow:0px 0px 150px 0px rgba(78, 67, 250, 0.06);
-                box-shadow:0px 0px 150px 0px rgba(78, 67, 250, 0.06);
-    }
-    
-    .owl-theme .owl-controls .owl-buttons div:hover{
-    background:#2eca7f;
-    border:1px solid #2eca7f;
-    display:block;
-    }
-    .owl-prev{
-        position: absolute;
-        left:89%;
-    }
-    .owl-next{
-        position: absolute;
-        right: 1%;
-    }
-    .owl-prev:after,
-    .owl-next:after{
-        content: "\f104";
-        font-family: 'FontAwesome';
-        font-size: 26px;
-        color: #1a2d62;
-        opacity: 1;
-    }
-    .owl-next:after{ content: "\f105"; }
-    @media only screen and (max-width: 768px){
-        .owl-theme .owl-controls{ margin-top: 20px; }
-         .owl-theme .owl-controls{display:none!important; }
-    }
+    background: url(../images/banner/shapes-bg.png) no-repeat;
+    background-position: top center;
+    background-size: cover;
+    padding-bottom: 100px;
+}
+
+.testimonial {
+    background: #fff;
+    border-radius: 10px;
+    margin: 0px 15px;
+    box-shadow: 0 10px 30px rgba(0,64,128,.2);
+    margin-bottom: 30px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.testimonial:hover {
+    transform: translateY(-10px);
+}
+
+.testimonial_content {
+    padding: 30px;
+    text-align: center;
+}
+
+.testimonial_content i {
+    color: #ffbd35;
+    font-size: 22px;
+}
+
+.testimonial_content p {
+    font-size: 16px;
+    color: #666;
+    margin-top: 15px;
+    font-style: italic;
+}
+
+.testi_pic_title {
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.tpt_one { background-color: rgba(46,202,127,0.1); }
+.tpt_two { background-color: rgba(255,248,238,0.1); }
+.tpt_three { background-color: rgba(238,244,255,0.1); }
+
+.testi_pic_title .pic {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.testi_pic_title .pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.testi_pic_title h4 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 10px;
+    color: #333;
+}
+
+.testi_pic_title small {
+    font-weight: 400;
+    color: #888;
+    font-size: 14px;
+}
+
+.owl-theme .owl-controls {
+    margin-top: 20px;
+}
+
+.owl-prev, .owl-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.owl-prev:hover, .owl-next:hover {
+    background-color: #2eca7f;
+}
+
+.owl-prev {
+    left: 15px;
+}
+
+.owl-next {
+    right: 15px;
+}
+
+.owl-prev:after, .owl-next:after {
+    content: "\f104";
+    font-family: 'FontAwesome';
+    font-size: 20px;
+    color: #1a2d62;
+}
+
+.owl-next:after {
+    content: "\f105";
+}
+
     /*
     * ----------------------------------------------------------------------------------------
     * 11.END REVIEWS DESIGN
@@ -2456,7 +2456,7 @@ body {
         margin: 15px 0;
         /* margin: 0 5px; */
     }
-    .sth_det u{font-family:'Mulish', sans-serif;}
+    .sth_det u{font-family:'Montserrat', sans-serif;}
     /*END HOME PAGE TEAM DESIGN*/
     
     /*START TEAM PAGE THREE CSS*/
@@ -2591,7 +2591,7 @@ body {
     }
     .sth_det2 u{
     color: #1a2d62;
-    font-family:'Mulish', sans-serif;
+    font-family:'Montserrat', sans-serif;
     }
     /*END TEAM PAGE THREE CSS*/
     /*START SINGLE TEAM DETAILS*/
@@ -2680,45 +2680,85 @@ body {
     }
     .blog_area_bg{background:rgba(199,201,209,.09);}
     .single_blog {
-        background: #fff;
-        border-radius:0px;
-        margin-bottom: 30px;
-        -webkit-box-shadow: 10px 15px 18px rgba(23, 23, 36, 0.03);
-                box-shadow: 10px 15px 18px rgba(23, 23, 36, 0.03);
-    }
+    background: #fff;
+    border-radius: 8px; /* Added a subtle border radius for a more modern look */
+    margin-bottom: 30px;
+    -webkit-box-shadow: 5px 10px 15px rgba(23, 23, 36, 0.05); /* Softened the shadow for a cleaner look */
+    box-shadow: 5px 10px 15px rgba(23, 23, 36, 0.05); 
+    overflow: hidden; /* Ensures that content stays within the borders */
+}
+
+.single_blog img {
+    width: 100%;
+    max-height: 250px; /* Restricts image height to prevent it from being too tall */
+    object-fit: cover; /* Ensures the image is cropped nicely */
+    border-bottom: 5px solid #2eca7f; /* Added a decorative bottom border */
+}
+
+.content_box {
+    padding: 25px; /* Reduced padding for a tighter layout */
+}
+
+.single_blog h2 {
+    line-height: 28px; /* Adjusted for better readability */
+    font-size: 18px; /* Reduced font size slightly */
+    margin-bottom: 12px; /* Reduced the bottom margin */
+}
+
+.single_blog h2 a {
+    color: #1a2d62;
+    font-weight: 700; /* Slightly reduced font weight */
+    margin-bottom: 30px;
+    display: block;
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.single_blog h2 a:hover {
+    color: #2eca7f; /* Changed hover color */
+}
+
+.single_blog p {
+    margin-bottom: 10px; /* Added a small margin for paragraph spacing */
+}
+
+.single_blog span {
+    text-transform: capitalize;
+    margin-bottom: 10px;
+    display: inline-block;
+    font-size: 14px; /* Made span text slightly smaller */
+    color: #888888;
+}
+
+.single_blog span a {
+    color: #2eca7f;
+    font-weight: 700;
+    transition: color 0.3s ease; /* Added smooth transition */
+}
+
+.single_blog span a:hover {
+    color: #1a2d62; /* Changed hover color for contrast */
+}
+
+/* Adjustments for mobile screens */
+@media only screen and (max-width: 768px) {
     .single_blog img {
-        width: 100%;
+        max-height: 180px; /* Reduced image height for mobile */
     }
-    .content_box{padding: 35px;}
+
+    .content_box {
+        padding: 20px; /* Reduced padding on mobile for a more compact look */
+    }
+
     .single_blog h2 {
-        line-height: 32px;
-        font-size: 20px;
-        margin-bottom: 15px;
+        font-size: 16px; /* Smaller text on mobile */
+        line-height: 24px;
     }
-    .single_blog h2 a {
-        color: #1a2d62;
-        font-weight: 800;
-        margin-bottom: 40px;
-        display: block;
-    }
-    .single_blog h2 a:hover{color:#2eca7f;}
-    .single_blog p{margin-bottom:0px;}
+
     .single_blog span {
-        text-transform: capitalize;
-        margin-bottom: 10px;
-        display: inline-block;
+        font-size: 12px; /* Reduced font size for spans */
     }
-    .single_blog span a {
-        color: #2eca7f;
-        font-weight: 700;
-    }
-    .single_blog span a:hover{color:#2eca7f;}
-    .single_blog_two span{margin-top:0px;}
-    .single_blog_two p{margin-bottom:30px;}
-    .arti_img_two img{
-    width:100%;
-    margin-bottom:20px;
-    }
+}
+
     .arti_btn {
         color: #2eca7f;
         font-weight: 600;
