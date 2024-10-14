@@ -90,34 +90,92 @@
         font-style: italic;
     }
 
+    /* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #17a2b8;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Rounded slider */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+
 </style>
 
 <div class="form-container">
     <h2>Create a New Post</h2>
     {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="form-errors">
+            <ul>
+                {% for field in form %}
+                    {% if field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ field.errors }}</li>
+                    {% endif %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
                 {% endfor %}
             </ul>
-        {% endif %}
-
-        {% if form.errors %}
-            <div class="form-errors">
-                <ul>
-                    {% for field in form %}
-                        {% if field.errors %}
-                            <li><strong>{{ field.label }}:</strong> {{ field.errors }}</li>
-                        {% endif %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
+        </div>
+    {% endif %}
+    
     <form method="post">
         {% csrf_token %}
+        
         <div class="form-group">
             <label for="category">Select a Topic Group:</label>
             <select name="category" id="category" class="form-control" onchange="toggleNewCategory(this)">
@@ -144,6 +202,18 @@
             {{ form.content }}
         </div>
 
+        <div class="form-group">
+            <label for="anonymous">Post Anonymously:</label>
+            <label class="switch">
+                <input type="checkbox" id="id_anonymous" name="anonymous">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        
+        <div id="author-info" class="form-group">
+            <p>This post will show your username.</p>
+        </div>
+        
         <button type="submit" class="btn btn-success">Create Post</button>
     </form>
 </div>
@@ -157,6 +227,40 @@
             newCategoryGroup.style.display = 'none';
         }
     }
+
+    const anonymousCheckbox = document.getElementById("id_anonymous");
+const authorInfo = document.getElementById("author-info");
+
+// Toggle visibility based on toggle switch state
+anonymousCheckbox.addEventListener("change", function() {
+    if (anonymousCheckbox.checked) {
+        authorInfo.style.display = "none";  // Hide author info if anonymous is checked
+    } else {
+        authorInfo.style.display = "block";  // Show author info if anonymous is unchecked
+    }
+});
+
+// Trigger the visibility logic on page load in case the form is pre-filled
+window.addEventListener('DOMContentLoaded', (event) => {
+    if (anonymousCheckbox.checked) {
+        authorInfo.style.display = "none";  // Hide author info if anonymous is checked on page load
+    } else {
+        authorInfo.style.display = "block";  // Show author info if not checked
+    }
+});
+
+// Update submit button text based on anonymous toggle state
+const submitButton = document.querySelector(".btn-success");
+
+anonymousCheckbox.addEventListener("change", function() {
+    if (anonymousCheckbox.checked) {
+        submitButton.textContent = "Submit Anonymously";
+    } else {
+        submitButton.textContent = "Create Post";
+    }
+});
+
 </script>
+
 
 {% endblock %}

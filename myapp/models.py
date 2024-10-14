@@ -359,7 +359,7 @@ class ForumCategory(models.Model):
 class ForumPost(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) 
     category = models.ForeignKey(ForumCategory, on_delete=models.CASCADE, related_name='posts', db_index=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -194,7 +194,14 @@
         <div class="user-info">
             <h2>{{ user.username }}</h2>
             <p class="user-email">{{ user.email }}</p>
-            <p class="user-bio">{{ user_profile.bio|default:"No bio available." }}</p>
+            <p class="user-bio">
+                {% if user_profile.bio %}
+                    {{ user_profile.bio }}
+                {% else %}
+                    No bio available.
+                {% endif %}
+            </p>
+                                
         </div>
         <div class="user-stats">
             <p><strong>{{ user_posts.count }}</strong> Posts</p>

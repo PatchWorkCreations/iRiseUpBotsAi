@@ -229,7 +229,16 @@
 <div class="post-container">
     <h2 class="post-title">{{ post.title }}</h2>
     <p class="post-content">{{ post.content }}</p>
-    <p class="post-meta">Posted by {{ post.author }} on {{ post.created_at|date:"F j, Y, g:i a" }}</p>
+    <p class="post-meta">
+        Posted by 
+        {% if post.author %}
+            {{ post.author.username }}
+        {% else %}
+            Anonymous
+        {% endif %}
+        on {{ post.created_at|date:"F j, Y, g:i a" }}
+    </p>
+    
 
     <!-- Likes, Dislikes, Share -->
     <div class="post-interactions" id="post-{{ post.id }}">
@@ -252,7 +261,13 @@
     <ul class="comments-list">
         {% for comment in comments %}
             <li class="comment-item">
-                <p class="comment-author">{{ comment.author }}</p>
+                <p class="comment-author">
+                    {% if comment.author %}
+                        {{ comment.author.username }}
+                    {% else %}
+                        Anonymous
+                    {% endif %}
+                </p>
                 <p class="comment-content">{{ comment.content }}</p>
                 <p class="comment-meta">Posted on {{ comment.created_at|date:"F j, Y, g:i a" }}</p>
 
@@ -269,7 +284,13 @@
                     <ul class="comments-list">
                         {% for reply in comment.replies.all %}
                             <li class="comment-item">
-                                <p class="comment-author">{{ reply.author }}</p>
+                                <p class="comment-author">
+                                    {% if reply.author %}
+                                        {{ reply.author.username }}
+                                    {% else %}
+                                        Anonymous
+                                    {% endif %}
+                                </p>
                                 <p class="comment-content">{{ reply.content }}</p>
                                 <p class="comment-meta">Posted on {{ reply.created_at|date:"F j, Y, g:i a" }}</p>
                             </li>
@@ -280,6 +301,7 @@
         {% endfor %}
     </ul>
 </div>
+
 
 <script>
 function likePost(postId) {

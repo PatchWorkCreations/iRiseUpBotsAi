@@ -193,9 +193,11 @@ from django import forms
 from .models import ForumPost, ForumComment, ForumCategory
 
 class ForumPostForm(forms.ModelForm):
+    anonymous = forms.BooleanField(required=False, label="Post anonymously")
+
     class Meta:
         model = ForumPost
-        fields = ['title', 'content', 'category']  # Ensure 'category' is included
+        fields = ['title', 'content', 'category' , 'anonymous']  # Ensure 'category' is included
 
 class ForumCommentForm(forms.ModelForm):
     class Meta:
@@ -244,13 +246,12 @@ class AvatarForm(forms.ModelForm):
         if user:
             self.fields['avatar'].choices = self.instance.get_avatar_choices()
 
-from django import forms
-from .models import UserProfile
+
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['avatar', 'bio']  # Include other fields as necessary
+        fields = ['bio']  # Only update the bio field
 
 from django import forms
 from myapp.models import BlogComment

@@ -390,10 +390,13 @@ document.addEventListener('DOMContentLoaded', function () {
         return 3795;  // $37.95 in cents
     } else if (plan === '12-week') {
         return 9700;  // $97.00 in cents
+    } else if (plan === 'lifetime') {
+        return 29700;  // $297.00 in cents
     } else {
-        return 0;
+        return 0;  // Default to 0 for unrecognized plans
     }
 }
+
 
 
     // Function to set the selected plan in the session via AJAX
@@ -416,11 +419,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Event listener for plan selection
+        //document.querySelectorAll('input[name="plan"]').forEach(planInput => {
+        //    planInput.addEventListener('change', function() {
+        //        setSelectedPlanInSession(this.value);
+        //    });
+        //});
+
         document.querySelectorAll('input[name="plan"]').forEach(planInput => {
             planInput.addEventListener('change', function() {
-                setSelectedPlanInSession(this.value);
+                setSelectedPlanInSession(this.value);  
             });
         });
+
 
 
     // New: Add the verifyBuyer function with the correct amount and CHARGE_AND_STORE intent
@@ -554,11 +564,12 @@ async function setSelectedPlan(plan) {
 }
 
 // Event listener for plan selection
-document.querySelectorAll('input[name="plan"]').forEach(planInput => {
-    planInput.addEventListener('change', function() {
-        setSelectedPlan(this.value);  // Call the correct function here
-    });
-});
+
+        document.querySelectorAll('input[name="plan"]').forEach(planInput => {
+            planInput.addEventListener('change', function() {
+                setSelectedPlanInSession(this.value);  
+            });
+        });
 
 // Helper function to get CSRF token from cookies (Django uses CSRF tokens for POST requests)
 function getCookie(name) {
@@ -617,13 +628,14 @@ document.addEventListener('DOMContentLoaded', function () {
         let price;
 
         if (selectedPlan.value === '1-week') {
-         price = '12.87';  // Updated price for 1-week plan
-    } else if (selectedPlan.value === '4-week') {
-        price = '37.95';  // Updated price for 4-week plan
-    } else if (selectedPlan.value === '12-week') {
-        price = '97.00';  // Updated price for 12-week plan
-    }
-
+            price = '12.87';  // 1-week plan
+        } else if (selectedPlan.value === '4-week') {
+            price = '37.95';  // 4-week plan
+        } else if (selectedPlan.value === '12-week') {
+            price = '97.00';  // 12-week plan
+        } else if (selectedPlan.value === 'lifetime') {
+            price = '297.00';  // Lifetime plan
+        }
 
         selectedPlanPrice.textContent = `$${price}`;
         selectedPlanRenewalPrice.textContent = `$${price}`;

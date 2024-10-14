@@ -12,14 +12,16 @@
             <span class="footer-text">Guides</span>
         </a>
         
-        <!-- Personal Assistant Section -->
-        <a href="{% url 'chat_interface' %}" class="footer-item">
+        <!-- Personal Assistant Section with Notification Badge -->
+        <a href="{% url 'chat_interface' %}" class="footer-item personal-assistant">
             <span class="footer-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="gray" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-headphones">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-headphones">
                     <path d="M3 18v-6a9 9 0 0118 0v6a3 3 0 01-3 3h-2a3 3 0 01-3-3v-1h-4v1a3 3 0 01-3 3H6a3 3 0 01-3-3z"></path>
                 </svg>
+                <!-- Notification Badge -->
+                
             </span>
-            <span class="footer-text">Personal Assistant</span>
+            <span class="footer-text" style="color: green;">Personal Assistant</span>
         </a>
 
         <!-- Forum Section -->
@@ -57,6 +59,7 @@
     justify-content: space-around;
     align-items: center;
     border-radius: 10px 10px 0 0;
+    z-index: 999;
 }
 
 .footer-container {
@@ -69,11 +72,13 @@
     text-align: center;
     flex: 1;
     text-decoration: none;
+    position: relative;
 }
 
 .footer-icon {
     display: block;
     margin-bottom: 5px;
+    position: relative;
 }
 
 .footer-text {
@@ -88,6 +93,40 @@
 .footer-icon svg {
     display: block;
     margin: 0 auto;
+    position: relative;
+}
+
+
+/* Shake animation */
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
 
 </style>
+
+<script>
+    // Add JavaScript to dynamically change the notification count if needed
+    document.addEventListener('DOMContentLoaded', function() {
+        // Example to update the notification badge dynamically
+        const notificationBadge = document.querySelector('.notification-badge');
+        
+        // You can replace the number with dynamic value
+        let notificationCount = 1; // Example notification count
+        
+        if (notificationCount > 0) {
+            notificationBadge.textContent = notificationCount;
+        } else {
+            notificationBadge.style.display = 'none'; // Hide badge if no notifications
+        }
+    });
+</script>

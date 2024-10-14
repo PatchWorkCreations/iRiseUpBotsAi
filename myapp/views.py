@@ -1230,6 +1230,19 @@ square_client = Client(
     environment='sandbox',
 )
 
+def setSelectedPlanInSession(request):
+    selected_plan = request.POST.get('plan')
+    logger.info(f"Selected plan: {selected_plan}")  # Log the plan value received
+    allowed_plans = ['1-week', '4-week', '12-week', 'lifetime']
+
+    if selected_plan not in allowed_plans:
+        logger.error(f"Invalid plan selected: {selected_plan}")  # Log the invalid plan case
+        return JsonResponse({'success': False, 'error': 'Invalid plan selected.'})
+
+    request.session['selected_plan'] = selected_plan
+    return JsonResponse({'success': True})
+
+
 def determine_amount_based_on_plan(selected_plan):
     if selected_plan == '1-week':
         return 1287  # $12.87 in cents
@@ -1237,6 +1250,8 @@ def determine_amount_based_on_plan(selected_plan):
         return 3795  # $37.95 in cents
     elif selected_plan == '12-week':
         return 9700  # $97.00 in cents
+    elif selected_plan == 'lifetime':
+        return 29700  # $297.00 in cents
     else:
         return 0  # Default to 0 for unrecognized plans
 
@@ -1258,6 +1273,8 @@ def grant_course_access(user, selected_plan):
         expiration_date = timezone.now() + timedelta(weeks=4)
     elif selected_plan == '12-week':
         expiration_date = timezone.now() + timedelta(weeks=12)
+    elif selected_plan == 'lifetime':
+        expiration_date = None 
     else:
         # Handle the case where the selected plan is not recognized
         expiration_date = timezone.now() + timedelta(weeks=4)  # Default to 1 week if plan is unrecognized
@@ -1428,27 +1445,31 @@ def process_payment(request):
             )
 
             # Step 7: Compute expiration date and next billing date
+            # Compute expiration date and next billing date
             expiration_date = None
             next_billing_date = None
             if selected_plan == '1-week':
                 expiration_date = timezone.now() + timedelta(weeks=1)
-                next_billing_date = expiration_date  # Set next billing date to the expiration date for recurring
+                next_billing_date = expiration_date
             elif selected_plan == '4-week':
                 expiration_date = timezone.now() + timedelta(weeks=4)
                 next_billing_date = expiration_date
             elif selected_plan == '12-week':
                 expiration_date = timezone.now() + timedelta(weeks=12)
                 next_billing_date = expiration_date
+            elif selected_plan == 'lifetime':
+                expiration_date = None  # No expiration
+                next_billing_date = None  # No recurring billing for lifetime
 
-            # Step 8: Create or update UserCourseAccess to reflect the expiration date and selected plan
-            if expiration_date:
-                UserCourseAccess.objects.update_or_create(
-                    user=user,
-                    defaults={
-                        'expiration_date': expiration_date,
-                        'selected_plan': selected_plan  # Save the selected plan here
-                    }
-                )
+            # Update UserCourseAccess for lifetime plan
+            UserCourseAccess.objects.update_or_create(
+                user=user,
+                defaults={
+                    'expiration_date': expiration_date,
+                    'selected_plan': selected_plan
+                }
+            )
+
 
 
             # Step 9: Create a transaction with a success status and recurring info
@@ -2248,7 +2269,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def forum_post_detail(request, post_id):
     post = get_object_or_404(ForumPost, id=post_id)
-    comments = post.forum_comments.filter(parent=None)
+    comments = post.forum_comments.filter(parent=None)  # Only top-level comments
     form = ForumCommentForm()
 
     if request.method == 'POST':
@@ -2256,7 +2277,13 @@ def forum_post_detail(request, post_id):
         if form.is_valid():
             new_comment = form.save(commit=False)
             new_comment.post = post
-            new_comment.author = request.user
+
+            # Check if the comment is posted anonymously
+            if form.cleaned_data.get('anonymous'):  # Assuming you have an 'anonymous' field in the form
+                new_comment.author = None  # Set author to None for anonymous comments
+            else:
+                new_comment.author = request.user  # Set author as the logged-in user
+
             new_comment.save()
             return redirect('forum_post_detail', post_id=post.id)
 
@@ -2268,38 +2295,41 @@ def forum_post_detail(request, post_id):
 
 
 from django.shortcuts import render, redirect
-from .models import ForumPost, ForumCategory
-from .forms import ForumPostForm
+from myapp.models import ForumPost, ForumCategory
+from myapp.forms import ForumPostForm
 from django.contrib import messages
 
 def create_forum_post(request):
     if request.method == 'POST':
-        # Copy POST data to mutable data
         post_data = request.POST.copy()
         new_category_name = post_data.get('new_category')
 
         if new_category_name:
             # Create the new category if it doesn't exist
             category, created = ForumCategory.objects.get_or_create(name=new_category_name)
-            # Set the category ID in the form data to the newly created category
             post_data['category'] = category.id
 
         # Bind the form with the modified data
         form = ForumPostForm(post_data)
 
         if form.is_valid():
-            form.instance.author = request.user
+            # Check if user opted to post anonymously
+            if form.cleaned_data.get('anonymous'):
+                form.instance.author = None  # Set author to None if anonymous
+            else:
+                form.instance.author = request.user  # Otherwise, assign logged-in user as author
+
             form.save()
             messages.success(request, "Your post has been created successfully.")
             return redirect('forum_post_detail', post_id=form.instance.id)
         else:
             messages.error(request, "There was an error with your submission. Please check the form.")
-            print(form.errors)  # For debugging
     else:
         form = ForumPostForm()
 
     categories = ForumCategory.objects.all()
     return render(request, 'myapp/forum/create_forum_post.html', {'form': form, 'categories': categories})
+
 
 
 def search(request):
@@ -2402,29 +2432,39 @@ def forum_profile_view(request):
     return render(request, 'myapp/forum/profile.html', context)
 
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from myapp.forms import UserProfileForm
+from myapp.models import UserProfile
+
 @login_required
 def edit_profile(request):
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    user_profile = UserProfile.objects.get_or_create(user=request.user)[0]  # Get or create user profile
+
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
-            form.save()
-            return redirect('profile')
+            form.save()  # This will update the bio (and avatar if included)
+            return redirect('profile')  # Redirect to profile page after successful save
     else:
         form = UserProfileForm(instance=user_profile)
-    return render(request, 'myapp/forum/edit_profile.html', {'form': form})
+
+    return render(request, 'myapp/forum/edit_profile.html', {'form': form})  # Make sure to use the correct template
+
 
 @login_required
 def edit_avatar(request):
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    user_profile = UserProfile.objects.get_or_create(user=request.user)[0]  # Only access the user_profile object
+
     if request.method == 'POST':
         form = AvatarForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            return redirect('profile')  # Redirect after saving
     else:
         form = AvatarForm(instance=user_profile)
-    return render(request, 'myapp/forum/edit_avatar.html', {'form': form, 'user_profile': user_profile})
+
+    return render(request, 'myapp/forum/edit_avatar.html', {'form': form})
 
 
 from django.http import JsonResponse
