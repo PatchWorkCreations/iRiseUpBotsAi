@@ -15,6 +15,17 @@ def dashboard(request):
     courses = Course.objects.all()
     return render(request, 'customadmin/dashboard.html', {'courses': courses})
 
+# views.py
+from django.shortcuts import redirect, get_object_or_404
+from myapp.models import Course
+
+def toggle_course_status(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    if request.method == 'POST':
+        course.is_active = not course.is_active
+        course.save()
+    return redirect('dashboard')  # Redirect to the dashboard
+
 
 def course_list(request):
     courses = Course.objects.all()
@@ -708,7 +719,7 @@ def delete_course(request, course_id):
         
         # Delete the course
         course.delete()
-        return redirect('course_list')
+        return redirect('dashboard')
     return render(request, 'customadmin/confirm_delete.html', {'course': course})
 
 class CustomLoginView(LoginView):

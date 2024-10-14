@@ -1,16 +1,152 @@
 {% extends "myapp/quiz/quiz_base.html" %}
+{% load custom_filters %}
 {% load static %}
 {% block content %}
-{% include 'myapp/forum/forum_header.html' %}
-<h2>Edit Profile</h2>
+<style>
+    /* Main container */
+    .profile-edit-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border: 1px solid #e6e6e6;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-<form method="post">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="{{ form.bio.id_for_label }}">Bio:</label>
-        {{ form.bio }}  <!-- Render the bio field -->
+    /* Header section */
+    .profile-edit-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .profile-edit-header h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .profile-edit-header p {
+        color: #555;
+        font-size: 14px;
+    }
+
+    /* Form group */
+    .form-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-label {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        height: 120px;
+        padding: 12px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        transition: border-color 0.2s ease;
+    }
+
+    .form-control:focus {
+        border-color: #1da1f2; /* Twitter blue color */
+        outline: none;
+        box-shadow: 0 0 5px rgba(29, 161, 242, 0.3);
+    }
+
+    .form-help {
+        font-size: 12px;
+        color: #999;
+        margin-top: 5px;
+    }
+
+    /* Button Styles */
+    .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+        border-radius: 25px;
+        text-align: center;
+        font-weight: 600;
+        transition: background-color 0.2s ease;
+        text-decoration: none;
+        cursor: pointer;
+        width: 150px; /* Same width for both buttons */
+    }
+
+    .btn-save {
+        background-color: #1da1f2; /* Twitter blue */
+        color: #ffffff;
+        border: none;
+    }
+
+    .btn-save:hover {
+        background-color: #0d8ddb;
+    }
+
+    .btn-cancel {
+        background-color: #e0e0e0;
+        color: #333;
+    }
+
+    .btn-cancel:hover {
+        background-color: #bcbcbc;
+    }
+
+    /* Form actions for save and cancel buttons */
+    .form-actions {
+        display: flex;
+        justify-content: center; /* Align buttons in the center */
+        align-items: center;
+        gap: 20px; /* Add space between buttons */
+    }
+
+    @media (max-width: 768px) {
+        .profile-edit-container {
+            padding: 20px;
+            margin: 20px;
+        }
+
+        .form-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .btn-cancel {
+            margin-top: 10px;
+            margin-left: 0;
+        }
+    }
+</style>
+
+{% include 'myapp/forum/forum_header.html' %}
+
+<div class="profile-edit-container">
+    <div class="profile-edit-header">
+        <h2>Edit Profile</h2>
+        <p>Update your personal information and customize your profile.</p>
     </div>
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-</form>
+
+    <form method="post" class="profile-edit-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.bio.id_for_label }}" class="form-label">Bio</label>
+            {{ form.bio }}  <!-- No need for 'add_class', as we will handle this via the form definition -->
+            <small class="form-help">Describe yourself in a few sentences. Max 160 characters.</small>
+        </div>
+        <div class="form-group form-actions">
+            <button type="submit" class="btn btn-save">Save Changes</button>
+            <a href="{% url 'forum_profile' %}" class="btn btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
 
 {% endblock %}
+

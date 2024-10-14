@@ -9284,7 +9284,7 @@ body {
   * ----------------------------------------------------------------------------------------
   */
   .marketing_content_area {
-      background: url(../images/all-img/section-bg-1.png);
+
       padding-bottom: 50px;
       background-size: cover;
       background-position: center;
@@ -9662,7 +9662,7 @@ body {
       transition: 0.3s;
   }
   .vid_area{
-      background: url(../images/banner/course-bg-p2.png);
+    
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -9805,7 +9805,7 @@ body {
       }
   }
   .bc_three{
-      background: url(../images/banner/course-bg.png);
+    
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -10214,7 +10214,7 @@ body {
   * ----------------------------------------------------------------------------------------
   */
   .course_promo {
-      background: url(../images/banner/section-bg-2.png);
+    
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -10320,7 +10320,7 @@ body {
   */
   .topic_content_area {
       padding-bottom: 50px;
-      background: url(../images/banner/topic.png);
+    
       background-position: center;
       background-size: cover;
   }
@@ -10363,7 +10363,7 @@ body {
   */
 
   .testi_home_area {
-  background: url(../images/banner/shapes-bg.png) no-repeat;
+ 
   background-position: top center;
   background-size: cover;
   padding-bottom: 100px;
@@ -10802,7 +10802,7 @@ body {
   */
   .blog_area{
       padding-bottom: 50px;
-      background: url(../images/banner/blog-bg.png) no-repeat;
+  
       background-position: top center;
       background-size:cover;
   }
@@ -11364,7 +11364,7 @@ body {
   .section-top {
       padding-top: 200px;
       position: relative;
-      background: url(../images/banner/section-top.png);
+    
       background-size: cover;
       background-position: center;
       padding-bottom: 120px;

@@ -26,6 +26,7 @@ class Course(models.Model):
     hours = models.FloatField()
     category = models.CharField(max_length=100, null=True, blank=True)
     order = models.PositiveIntegerField(default=0)  # New field to store the order of the courses
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title

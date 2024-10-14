@@ -4,62 +4,113 @@
     <meta charset="UTF-8">
     <title>Welcome to iRiseUp Academy</title>
     <style>
-        /* Add some basic styles */
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
             color: #333;
-            line-height: 1.5;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
         }
         .container {
             width: 100%;
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
         .header {
+            background-color: #5860F8;
+            color: #ffffff;
+            padding: 20px;
             text-align: center;
-            padding-bottom: 20px;
         }
         .header img {
-            max-width: 150px;
+            max-width: 120px;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
         }
         .content {
+            padding: 30px 20px;
             text-align: left;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
+            background-color: #ffffff;
         }
-        .footer {
-            text-align: center;
-            padding-top: 20px;
-            font-size: 12px;
-            color: #888;
+        .content p {
+            font-size: 16px;
+            margin-bottom: 20px;
         }
         .button {
             display: inline-block;
-            padding: 10px 20px;
-            color: #fff;
+            padding: 12px 25px;
+            color: #ffffff;
             background-color: #5860F8;
             text-decoration: none;
             border-radius: 5px;
+            font-size: 16px;
             margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #4752c4;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #888;
+            font-size: 12px;
+        }
+        .footer p {
+            margin: 0;
+        }
+        .footer a {
+            color: #5860F8;
+            text-decoration: none;
+        }
+        /* Responsive Design */
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100%;
+            }
+            .content {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Email Header -->
         <div class="header">
+            <img src="https://drive.google.com/uc?export=view&id=1yalweCZDS7AFo-PUhHEAVqfCi4ydXICd
+            " alt="iRiseUp Academy Logo">
+            <h1>Welcome to iRiseUp Academy!</h1>
         </div>
-        <h1>Welcome to iRiseUp Academy!</h1>
-        <p>Thank you for joining us. We're excited to have you on board!</p>
-        <p>We're thrilled to help you start your journey. If you have any questions, feel free to reach out.</p>
-        <p>Best regards,<br>iRiseUp Team</p>
+
+        <!-- Email Content -->
+        <div class="content">
+            <p>Hello,</p>
+            <p>Thank you for joining iRiseUp Academy! We are excited to have you with us and look forward to helping you grow on your journey.</p>
+            <p>If you have any questions or need support, feel free to <a href="mailto:support@iriseup.com">reach out to us</a>.</p>
+            <p>We're here to support you every step of the way!</p>
+
+            <!-- Call to Action Button -->
+            <a href="https://iriseupacademy.com/start_quiz/" class="button">Get Started Now</a>
+
+            <p>Best regards,<br><strong>The iRiseUp Academy Team</strong></p>
+        </div>
+
+        <!-- Email Footer -->
         <div class="footer">
-            <p>Remember, the sooner you start, the sooner you get wealthier!</p>
-            <p>You are receiving this from iRiseUp Academy as you have expressed your interest in our products and services.</p>
-            <p>iRiseUp, 123 Main St, Ohio, USA</p>
+            <p>Remember, the sooner you start, the sooner you achieve greatness!</p>
+            <p>iRiseUp Academy, 123 Main St, Columbus, Ohio, USA</p>
+            <p><a href="https://iriseupacademy.com/unsubscribe">Unsubscribe</a> from these notifications.</p>
         </div>
     </div>
 </body>

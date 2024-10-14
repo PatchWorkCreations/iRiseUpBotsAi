@@ -110,6 +110,12 @@ h1 {
     height: auto;
 }
 
+.course-card.inactive {
+        background-color: #f0f0f0; /* Gray background for inactive courses */
+        filter: grayscale(100%); /* Optional: make the image grayscale */
+        cursor: not-allowed; /* Show not-allowed cursor for inactive cards */
+    }
+
 /* Ensure full image visibility */
 .course-image img {
     border-radius: 8px;
@@ -118,6 +124,17 @@ h1 {
     display: block;
     margin: 0 auto 10px;
 }
+
+.coming-soon {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 5px 10px;
+        background-color: #6c757d;
+        color: #fff;
+        font-size: 12px;
+        border-radius: 5px;
+    }
 
 h3 {
     font-size: 18px;
@@ -145,6 +162,11 @@ h3 {
 .view-btn:hover {
     background-color: #1e88e5;
 }
+
+.disabled-btn {
+        background-color: #6c757d;
+        pointer-events: none;
+    }
 
 /* Course grid */
 .course-grid {
@@ -284,14 +306,21 @@ h3 {
             {% if ongoing_courses %}
                 <div class="course-grid">
                     {% for course in ongoing_courses %}
-                        <div class="course-card">
+                        <div class="course-card {% if not course.is_active %}inactive{% endif %}">
                             <div class="course-image">
                                 <img src="{{ course.image.url }}" alt="Course Image">
+                                {% if not course.is_active %}
+                                    <span class="badge badge-secondary coming-soon">Coming Soon</span>
+                                {% endif %}
                             </div>
                             <h3>{{ course.title }}</h3>
                             <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
                             <p>{{ course.description }}</p>
-                            <a href="{% url 'course_detail' course.id %}" class="view-btn">Continue Course</a>
+                            {% if course.is_active %}
+                                <a href="{% url 'course_detail' course.id %}" class="view-btn">Continue Course</a>
+                            {% else %}
+                                <span class="view-btn disabled-btn">Not Available</span>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
@@ -371,13 +400,20 @@ h3 {
             <h2>Recommended for You</h2>
             <div class="course-grid">
                 {% for course in recommended_courses_page %}
-                    <div class="course-card">
+                    <div class="course-card {% if not course.is_active %}inactive{% endif %}">
                         <div class="course-image">
                             <img src="{{ course.image.url }}" alt="Course Image">
+                            {% if not course.is_active %}
+                                <span class="badge badge-secondary coming-soon">Coming Soon</span>
+                            {% endif %}
                         </div>
                         <h3>{{ course.title }}</h3>
                         <p>{{ course.units }} Units • {{ course.hours }} Hours</p>
-                        <a href="{% url 'course_detail' course.id %}" class="view-btn">View Details</a>
+                        {% if course.is_active %}
+                            <a href="{% url 'course_detail' course.id %}" class="view-btn">View Details</a>
+                        {% else %}
+                            <span class="view-btn disabled-btn">Not Available</span>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>

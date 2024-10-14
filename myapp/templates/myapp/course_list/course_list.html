@@ -1,34 +1,39 @@
 {% extends "customadmin/base.html" %}
-
-{% block title %}Courses{% endblock %}
+{% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="jumbotron">
-        <h1 class="display-4">All Courses</h1>
-        <p class="lead">Here you can manage and reorder your courses.</p>
+        <h1 class="display-4">Welcome to the Admin Dashboard</h1>
+        <p class="lead">Here you can manage your courses, quizzes, and other content.</p>
         <hr class="my-4">
         <a href="{% url 'add_course' %}" class="btn btn-primary btn-lg">Add New Course</a>
     </div>
 
     <section>
-        <!-- Draggable list for reordering the courses -->
-        <ul id="sortable-course-list" class="list-group mt-4">
+        <h3>All Courses</h3>
+        <ul class="list-group mt-4">
             {% for course in courses %}
-                <li class="list-group-item d-flex justify-content-between align-items-center" data-course-id="{{ course.pk }}">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{ course.title }}
                     <div>
-                        <a href="{% url 'course_detail' course.pk %}" class="btn btn-info btn-sm">View</a>
+                        <!-- Toggle button for enabling/disabling the course -->
+                        <form method="POST" action="{% url 'toggle_course' course.pk %}">
+                            {% csrf_token %}
+                            <label class="switch">
+                                <input type="checkbox" name="is_active" {% if course.is_active %}checked{% endif %} onchange="this.form.submit()">
+                                <span class="slider round"></span>
+                            </label>
+                        </form>
+                        <a href="{% url 'course_detail' course.pk %}" class="btn btn-info btn-sm {% if not course.is_active %}disabled{% endif %}">View</a>
                         <a href="{% url 'edit_course' course.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-course-id="{{ course.pk }}" data-course-title="{{ course.title }}">Delete</button>
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-item-id="{{ course.pk }}" data-item-title="{{ course.title }}" data-item-type="course">Delete</button>
                     </div>
                 </li>
             {% endfor %}
         </ul>
-
-        <!-- Add a button to save the new order -->
-        <button id="save-order-btn" class="btn btn-success mt-4">Save Order</button>
     </section>
+
 </div>
 
 <!-- Delete Confirmation Modal -->
@@ -54,44 +59,11 @@
         </div>
     </div>
 </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
-<!-- Include jQuery and jQuery UI for sortable functionality -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-
 <script>
-    $(document).ready(function() {
-        // Make the course list sortable using jQuery UI
-        $('#sortable-course-list').sortable();
-
-        // Save the new order when the "Save Order" button is clicked
-        $('#save-order-btn').on('click', function() {
-            var courseOrder = [];
-            $('#sortable-course-list li').each(function() {
-                courseOrder.push($(this).data('course-id'));
-            });
-
-            // Send the new order to the server
-            $.ajax({
-                url: '{% url "reorder_courses" %}',  // Django view to handle order saving
-                method: 'POST',
-                data: {
-                    order: courseOrder,
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                },
-                success: function(response) {
-                    alert('Course order has been saved successfully!');
-                    location.reload();  // Optionally reload the page to reflect new order
-                },
-                error: function(error) {
-                    alert('There was an error saving the order. Please try again.');
-                }
-            });
-        });
-    });
-
     $('#deleteModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var itemId = button.data('item-id');

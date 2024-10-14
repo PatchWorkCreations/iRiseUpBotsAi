@@ -54,4 +54,5 @@ urlpatterns = [
     path('blogs/delete/<int:blog_id>/', views.delete_blog, name='delete_blog'),
 
     path('reorder-courses/', views.reorder_courses, name='reorder_courses'),
+    path('customadmin/courses/<int:pk>/toggle/', views.toggle_course_status, name='toggle_course'),
 ]
