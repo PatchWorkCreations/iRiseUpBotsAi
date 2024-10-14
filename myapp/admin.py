@@ -48,7 +48,7 @@ from django.contrib import admin
 from .models import BlogPost  # Import your BlogPost model
 
 from django.contrib import admin
-from .models import BlogPost, BlogComment
+from .models import BlogPost, BlogComment, Category, Tag  # Import the models
 
 # Define the inline for comments
 class BlogCommentInline(admin.TabularInline):  # or use admin.StackedInline for a different layout
@@ -65,5 +65,14 @@ class BlogAdmin(admin.ModelAdmin):
     date_hierarchy = 'publish_date'
     ordering = ('-publish_date',)
     inlines = [BlogCommentInline]  # This will add the inline for comments
+
+# Register Category and Tag models to make them available in admin
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    search_fields = ['name']
 
 

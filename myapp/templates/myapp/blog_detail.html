@@ -77,7 +77,7 @@
         <div class="auto-container">
 			<h2>{{ blog.title }}</h2>
 			<ul class="bread-crumb clearfix">
-				<li><a href="{% url 'index' %}">Home</a></li>
+				<li><a href="{% url 'index2' %}">Home</a></li>
 				<li>News Detail</li>
 			</ul>
         </div>
@@ -101,7 +101,7 @@
 	                            <div class="blog-detail_author-outer d-flex align-items-center flex-wrap">
 	                                <div class="blog-detail-author d-flex align-items-center flex-wrap">
 	                                    <div class="blog-detail-author-image">
-	                                        <img src="{% static 'images/resource/author-6.png' %}" alt="{{ blog.author }}" />
+	                                        <img src="{% static 'myapp/images/resource/author-6.png' %}" alt="{{ blog.author }}" />
 	                                    </div>
 	                                    <i>By {{ blog.author }}</i>
 	                                </div>
@@ -134,7 +134,8 @@
 	                                <div class="blog-author-box_inner">
 	                                    <div class="blog-author-box_content">
 	                                        <div class="blog-author-box_image">
-	                                            <img src="{% static 'images/favicon.png' %}" alt="{{ blog.author }}" />
+	                                            <img src="{% static 'myapp/images/resource/author-6.png' %}" alt="{{ blog.author }}" />
+												
 	                                        </div>
 	                                        <h5>{{ blog.author }}</h5>
 	                                        <div class="blog-author_box-designation">Author</div>

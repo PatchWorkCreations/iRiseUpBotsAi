@@ -12,6 +12,9 @@
 {% block styles %}
     <link rel="stylesheet" href="{% static 'myapp/css/index.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/themify-icons@0.1.2/css/themify-icons.css">
+</head>
+
 {% endblock %}
 
 {% block content %}
@@ -55,7 +58,7 @@
 			<div class="section-top-title wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
 				<h1>About Us</h1>
 				<ul>
-					<li><a href="#">Home</a></li>
+					<li><a href="{% url 'start_quiz' %}">Home</a></li>
 					<li> / About</li>
 				</ul>
 			</div><!-- //.HERO-TEXT -->
@@ -72,7 +75,7 @@
 				<div class="single_tp">
 					<h3>Quality Education</h3>
 					<p>At iRiseUp Academy, we focus on delivering high-quality courses that are accessible to all. Whether you're starting a side hustle or advancing your career, our courses are designed with your success in mind.</p>
-					<a href="#" class="cta"><span>Explore</span>
+					<a href="{% url 'start_quiz' %}" class="cta"><span>Explore</span>
 					  <svg width="13px" height="10px" viewBox="0 0 13 10">
 						<path d="M1,5 L11,5"></path>
 						<polyline points="8 1 12 5 8 9"></polyline>
@@ -84,7 +87,7 @@
 				<div class="single_tp">
 					<h3>Experienced Instructors</h3>
 					<p>Learn from industry experts who bring years of experience to each course. Our instructors are committed to helping you master new skills and achieve your goals.</p>
-					<a href="#" class="cta"><span>Explore</span>
+					<a href="{% url 'start_quiz' %}" class="cta"><span>Explore</span>
 					  <svg width="13px" height="10px" viewBox="0 0 13 10">
 						<path d="M1,5 L11,5"></path>
 						<polyline points="8 1 12 5 8 9"></polyline>
@@ -96,7 +99,7 @@
 				<div class="single_tp">
 					<h3>Lifetime Support</h3>
 					<p>Our commitment to you doesn’t end when the course finishes. We offer lifetime support to all our students, ensuring you have the resources and help you need for ongoing success.</p>
-					<a href="#" class="cta"><span>Explore</span>
+					<a href="{% url 'start_quiz' %}" class="cta"><span>Explore</span>
 					  <svg width="13px" height="10px" viewBox="0 0 13 10">
 						<path d="M1,5 L11,5"></path>
 						<polyline points="8 1 12 5 8 9"></polyline>
@@ -115,7 +118,7 @@
 		<div class="row">								
 			<div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
 				<div class="ab_img">
-					<img src="{% static 'assets/images/all-img/about2.png' %}" class="img-fluid" alt="About iRiseUp Academy">
+					<img src="{% static 'myapp/images/about1.jpg' %}" class="img-fluid" alt="About iRiseUp Academy">
 				</div>
 			</div><!--- END COL -->					
 			<div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
@@ -123,7 +126,7 @@
 					<h2>Learn new skills to <u><span>advance your</span></u> career.</h2>
 					<p>At iRiseUp Academy, we empower individuals to take charge of their future. From digital marketing to permaculture, our courses are designed to help you stay competitive in today’s ever-evolving job market. Whether you're starting a new side hustle or advancing your current career, our flexible, self-paced courses will give you the skills you need to succeed.</p>
 					<p><strong>Join us today and start building the skills you need for a brighter tomorrow.</strong></p>
-					<a class="btn_one" href="#">Learn More</a>
+					<a class="btn_one" href="{% url 'start_quiz' %}">Learn More</a>
 				</div>						
 			</div><!--- END COL -->								  
 		</div><!--- END ROW -->
@@ -143,60 +146,62 @@
 			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
 				<div class="single_feature_one">
 					<div class="sf_top">
-						<span class="ti-book ss_one"></span>
-						<h2><a href="#">Learn Anywhere, Anytime</a></h2>
+						<span class="fas fa-book ss_one"></span>
+						<h2><a href="{% url 'start_quiz' %}">Learn Anywhere, Anytime</a></h2>
 					</div>
-					<p>Access our courses from any device, at any time, whether you're at home, on the go, or in between. Our platform fits your lifestyle.</p>
+					<p>Access our courses from any device, at any time. Whether you're at home or on the go, iRiseUp Academy fits your lifestyle.</p>
 				</div>
 			</div><!-- END COL -->
 			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
 				<div class="single_feature_one">
 					<div class="sf_top">
-						<span class="ti-heart ss_two"></span>
-						<h2><a href="#">Expert Instructors</a></h2>
+						<span class="fas fa-lightbulb ss_two"></span>
+						<h2><a href="{% url 'start_quiz' %}">Guided by ARI – Your AI Assistant</a></h2>
 					</div>
-					<p>Learn from industry professionals with years of experience, ensuring that you gain the most relevant skills and insights for your career growth.</p>
+					<p>Get personalized support and guidance from ARI, your own AI learning assistant, available 24/7 to answer questions and help you navigate your learning journey.</p>
 				</div>
 			</div><!-- END COL -->
 			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
 				<div class="single_feature_one">
 					<div class="sf_top">
-						<span class="ti-user ss_three"></span>
-						<h2><a href="#">Team Management Skills</a></h2>
+						<span class="fas fa-users ss_three"></span>
+						<h2><a href="{% url 'start_quiz' %}">Leadership & Team Skills</a></h2>
 					</div>
-					<p>Master the skills needed to lead and manage teams effectively, whether you're in a startup or a large organization.</p>
+					<p>Develop essential leadership and team management skills to succeed in any organization, big or small.</p>
 				</div>
 			</div><!-- END COL -->
 			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
 				<div class="single_feature_one">
 					<div class="sf_top">
-						<span class="ti-eye ss_four"></span>
-						<h2><a href="#">Personalized Course Planning</a></h2>
+						<span class="fas fa-ruler-combined ss_four"></span>
+						<h2><a href="{% url 'start_quiz' %}">Customized Learning Path</a></h2>
 					</div>
-					<p>Get personalized recommendations for courses that align with your goals and interests, ensuring you make the most of your learning journey.</p>
+					<p>Receive personalized course recommendations tailored to your goals and interests, ensuring you get the most out of your learning experience.</p>
 				</div>
 			</div><!-- END COL -->
 			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" data-wow-offset="0">
 				<div class="single_feature_one">
 					<div class="sf_top">
-						<span class="ti-light-bulb ss_five"></span>
-						<h2><a href="#">Teacher Monitoring & Support</a></h2>
+						<span class="fas fa-headphones-alt ss_five"></span>
+						<h2><a href="{% url 'start_quiz' %}">24/7 AI-Powered Support</a></h2>
 					</div>
-					<p>Our instructors are dedicated to your success, offering guidance and feedback throughout your learning experience.</p>
+					<p>Need help? ARI, our AI assistant, is available around the clock to assist you with any questions, ensuring a smooth, self-paced learning experience.</p>
 				</div>
 			</div><!-- END COL -->
 			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" data-wow-offset="0">
 				<div class="single_feature_one">
 					<div class="sf_top">
-						<span class="ti-email ss_six"></span>
-						<h2><a href="#">24/7 Dedicated Support</a></h2>
+						<span class="fas fa-chart-line ss_six"></span>
+						<h2><a href="{% url 'start_quiz' %}">Progress Tracking</a></h2>
 					</div>
-					<p>Need help? Our support team is available 24/7 to assist you with any questions or issues you may have, ensuring a seamless learning experience.</p>
+					<p>Track your progress easily with real-time feedback and goal-setting features, helping you stay on course and motivated.</p>
 				</div>
 			</div><!-- END COL -->
 		</div><!-- END ROW -->
 	</div><!-- END CONTAINER -->
 </section>
+
+
 
  <!-- END WHY CHOOSE US -->
 	 
@@ -252,7 +257,7 @@
  
 
  <!-- START FAQ -->
-<section class="faq_area section-padding">
+ <section class="faq_area section-padding">
 	<div class="container">													
 		<div class="section-title">
 			<h2>Frequently Asked Questions</h2>
@@ -264,60 +269,60 @@
 				  <div class="accordion-item">
 					<h2 class="accordion-header" id="headingOne">
 					  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						What does it take to be an excellent author?
+						What is iRiseUp Academy?
 					  </button>
 					</h2>
 					<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
 					  <div class="accordion-body">
-						Great value and so easy to use and saves me so much time! I was shocked by how much time and brain energy it saved me. Simple & easy gotta love that. Great value and so easy to use.
+						iRiseUp Academy is an online learning platform designed to empower individuals with the skills they need to succeed in today's fast-evolving job market. We offer self-paced courses across a variety of fields, providing flexible learning solutions for those who want to advance their careers or explore new interests.
 					  </div>
 					</div>
 				  </div><!-- END ACCORDION ITEM  -->
 				  <div class="accordion-item">
 					<h2 class="accordion-header" id="headingTwo">
 					  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-						Who will view my content?
+						How does iRiseUp Academy work?
 					  </button>
 					</h2>
 					<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
 					  <div class="accordion-body">
-						Great value and so easy to use and saves me so much time! I was shocked by how much time and brain energy it saved me. Simple & easy gotta love that. Great value and so easy to use.
+						iRiseUp Academy offers a self-paced learning experience. You can enroll in courses, access the material immediately, and progress at your own pace. Our AI assistant, ARI, is available 24/7 to guide you through the course, answer questions, and provide personalized recommendations.
 					  </div>
 					</div>
 				  </div><!-- END ACCORDION ITEM  -->
 				  <div class="accordion-item">
 					<h2 class="accordion-header" id="headingThree">
 					  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-						What does it take to become an author?
+						What courses are available at iRiseUp Academy?
 					  </button>
 					</h2>
 					<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
 					  <div class="accordion-body">
-						Great value and so easy to use and saves me so much time! I was shocked by how much time and brain energy it saved me. Simple & easy gotta love that. Great value and so easy to use.
+						We offer a diverse range of courses in business, leadership, digital marketing, content creation, web development, personal growth, and more. Our curriculum is continuously updated to ensure it remains relevant to the changing job market.
 					  </div>
 					</div>
 				  </div><!-- END ACCORDION ITEM  -->
 				  <div class="accordion-item">
 					<h2 class="accordion-header" id="headingFour">
 					  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-						How do I change my password easily?
+						Is there a time limit for completing courses?
 					  </button>
 					</h2>
 					<div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
 					  <div class="accordion-body">
-						Great value and so easy to use and saves me so much time! I was shocked by how much time and brain energy it saved me. Simple & easy gotta love that. Great value and so easy to use.
+						No, all iRiseUp Academy courses are self-paced, meaning you can take as much time as you need to complete them. There are no strict deadlines, and you can always revisit the material even after completion.
 					  </div>
 					</div>
 				  </div><!-- END ACCORDION ITEM  -->	
 				  <div class="accordion-item">
 					<h2 class="accordion-header" id="headingFive">
 					  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
-						How does it create content?
+						What kind of support can I expect while learning?
 					  </button>
 					</h2>
 					<div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
 					  <div class="accordion-body">
-						Great value and so easy to use and saves me so much time! I was shocked by how much time and brain energy it saved me. Simple & easy gotta love that. Great value and so easy to use.
+						You will have access to ARI, our AI assistant, who is available 24/7 to answer questions and provide personalized support throughout your learning journey. Additionally, our human support team is available to assist with any technical issues.
 					  </div>
 					</div>
 				  </div><!-- END ACCORDION ITEM  -->					  
@@ -325,11 +330,12 @@
 			</div><!-- END COL  -->	
 			<div class="col-lg-6 col-sm-6 col-xs-12">
 				<div class="pt_faq">
-					<img src="{% static 'assets/images/all-img/faq.png' %}" class="img-fluid" alt="image" />
+					<img src="{% static 'myapp/images/about2.jpg' %}" class="img-fluid" alt="image" />
 				</div>
 			</div><!-- END COL  -->	
 		</div><!--END  ROW  -->
 	</div><!--- END CONTAINER -->
 </section>	
+
 {% include 'footer.html' %}	
 {% endblock %}

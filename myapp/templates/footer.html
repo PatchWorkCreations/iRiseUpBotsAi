@@ -35,38 +35,24 @@
                         <div class="footer-lists_outer">
                             <div class="row clearfix">
                                 <!-- Column -->
-                                <div class="column col-lg-5 col-md-4 col-sm-6">
-                                    <h5 class="footer-title">Our Services</h5>
+                                <div class="column col-lg-6 col-md-4 col-sm-6">
+                                    <h5 class="footer-title">Quick Links</h5>
                                     <ul class="footer-pages_list">
-                                        <li><a href="#">AI-Powered Copywriting</a></li>
-                                        <li><a href="#">Blog Post Generation</a></li>
-                                        <li><a href="#">Social Media Content Creation</a></li>
-                                        <li><a href="#">Product Descriptions</a></li>
-                                        <li><a href="#">Email Campaigns</a></li>
-                                        <li><a href="#">SEO Optimization</a></li>
+                                        <li><a href="{% url 'start_quiz' %}">Start Quiz</a></li>
+                                        <li><a href="{% url 'blog_list' %}">Blogs</a></li>
+                                        <li><a href="{% url 'about' %}">About</a></li>
+                                        <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                                        <li><a href="{% url 'login' %}">Login</a></li>
                                     </ul>
                                 </div>
+
                                 <!-- Column -->
-                                <div class="column col-lg-3 col-md-4 col-sm-6">
+                                <div class="column col-lg-6 col-md-4 col-sm-6">
                                     <h5 class="footer-title">Resources</h5>
                                     <ul class="footer-pages_list">
-                                        <li><a href="#">Blog</a></li>
-                                        <li><a href="#">FAQs</a></li>
-                                        <li><a href="#">Help Center</a></li>
-                                        <li><a href="#">Case Studies</a></li>
-                                        <li><a href="#">Whitepapers</a></li>
-                                        <li><a href="#">Resource Library</a></li>
-                                    </ul>
-                                </div>
-                                <!-- Column -->
-                                <div class="column col-lg-4 col-md-4 col-sm-6">
-                                    <h5 class="footer-title">About Us</h5>
-                                    <ul class="footer-pages_list">
-                                        <li><a href="#">Our Story</a></li>
-                                        <li><a href="#">Meet the Team</a></li>
-                                        <li><a href="#">Careers</a></li>
-                                        <li><a href="#">Testimonials</a></li>
-                                        <li><a href="#">Contact Us</a></li>
+                                        <li><a href="{% url 'faq' %}">FAQs</a></li>
+                                        <li><a href="{% url 'terms' %}">Terms of Service</a></li>
+                                        <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -80,8 +66,8 @@
     <div class="footer-bottom">
         <div class="auto-container">
             <div class="inner-container d-flex justify-content-between align-items-center flex-wrap">
-                <div class="footer-logo"><a href="{% url 'index' %}"><img src="{% static 'myapp/images/logo.svg' %}" alt="iRiseUp Logo" title="iRiseUp Logo"></a></div>
-                <div class="footer-copyright">&copy; 2024 <a href="{% url 'index' %}">iRiseUp Academy</a>. All rights reserved.</div>
+                <div class="footer-logo"><a href="{% url 'index2' %}"><img src="{% static 'myapp/images/logo.svg' %}" alt="iRiseUp Logo" title="iRiseUp Logo"></a></div>
+                <div class="footer-copyright">&copy; 2024 <a href="{% url 'index2' %}">iRiseUp Academy</a>. All rights reserved.</div>
                 <!-- Social Box -->
                 <div class="footer-social_box">
                     <a href="https://facebook.com/" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>

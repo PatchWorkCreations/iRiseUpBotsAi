@@ -122,6 +122,9 @@
                 {% elif block.type == 'task' %}
                 <textarea name="content_{{ forloop.counter0 }}" rows="4" cols="50" class="form-control mb-2">{{ block.content }}</textarea>
                 
+                {% elif block.type == 'question' %}
+                <input type="text" name="content_{{ forloop.counter0 }}" class="form-control mb-2" placeholder="Write the question" value="{{ block.content }}">
+                
                 {% elif block.type == 'multiple_choice' %}
                 <input type="text" name="question_{{ forloop.counter0 }}" class="form-control mb-2" placeholder="Enter the multiple-choice question" value="{{ block.question }}">
                 <input type="text" name="correct_answer_{{ forloop.counter0 }}" class="form-control mb-2" placeholder="Enter the correct answer" value="{{ block.correct_answer }}">

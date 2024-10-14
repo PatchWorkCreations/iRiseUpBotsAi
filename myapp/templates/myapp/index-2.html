@@ -81,14 +81,20 @@
                 <div class="col-lg-6 col-sm-6 col-xs-12">
                     <div class="home_me_img">
                         <!-- YouTube Embed Code -->
-                        <iframe 
-                            src="https://www.youtube.com/embed/igozhJ_Tk20?autoplay=1&mute=1" 
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen>
-                        </iframe>
-                        <!-- End YouTube Embed Code -->
-                        <p>🔊 Click the video to unmute</p>
+                        <div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;">
+                            <div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;">
+                                <iframe src="https://fast.wistia.net/embed/iframe/q44kzjes3u?seo=false&videoFoam=true" 
+                                        allow="autoplay; fullscreen" 
+                                        allowfullscreen 
+                                        frameborder="0" 
+                                        scrolling="no" 
+                                        class="wistia_embed" 
+                                        name="wistia_embed" 
+                                        style="height:100%;width:100%"></iframe>
+                            </div>
+                        </div>
+                        <script src="https://fast.wistia.net/assets/external/E-v1.js" async></script>
+                        <p>🔊 Click the video to unmute</p>                        
                     </div>
                 </div><!-- END COL -->
             </div><!-- END ROW -->
@@ -219,72 +225,70 @@
     
 <!-- END ABOUT US HOME ONE -->	
 
-    <section class="marketing_content_area section-padding">
-        <div class="container">
-            <div class="section-title">
-                <h2>Why Choose iRiseUp Academy for Learning New Skills</h2>
-                <p>Discover the <span><u>top reasons</u></span> why iRiseUp Academy is the perfect place to grow.</p>
-                <p class="subtext">Prepare for retirement jobs, or learn new, easy-to-master skills.</p>
-            </div>
-                
-            <div class="row">                                    
-                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
-                    <div class="single_feature_one">
-                        <div class="sf_top">
-                            <span class="fas fa-laptop" style="font-size: 24px; color: #00796b;"></span>
-                            <h2><a href="{% url 'start_quiz' %}" target="_blank">Learn Anytime, Anywhere</a></h2>
-                        </div>
-                        <p>Access courses from any device, whenever it suits you. Perfect for retirees, side hustlers, or those balancing multiple jobs looking to upskill at their own pace.</p>
-                    </div>                    
-                </div>                                 
-                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
-                    <div class="single_feature_one">
-                        <div class="sf_top">
-                            <span class="fas fa-chalkboard-teacher" style="font-size: 24px; color: #00796b;"></span>
-                            <h2><a href="{% url 'start_quiz' %}" target="_blank">Expert Instructors</a></h2>
-                        </div>  
-                        <p>Learn directly from industry professionals with real-world experience. Whether you're looking to change careers or start a side hustle, we ensure you get the best guidance.</p>
-                    </div>                    
-                </div>                                 
-                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
-                    <div class="single_feature_one">
-                        <div class="sf_top">
-                            <span class="fas fa-users" style="font-size: 24px; color: #00796b;"></span>
-                            <h2><a href="{% url 'start_quiz' %}" target="_blank">Community Support</a></h2>
-                        </div>  
-                        <p>Join a thriving community of learners, where you can connect with others starting new retirement jobs, side hustles, or looking to develop in-demand skills.</p>
-                    </div>                    
-                </div>                                 
-                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
-                    <div class="single_feature_one">
-                        <div class="sf_top">
-                            <span class="fas fa-calendar-alt" style="font-size: 24px; color: #00796b;"></span>
-                            <h2><a href="{% url 'start_quiz' %}" target="_blank">Personalized Course Planning</a></h2>
-                        </div>  
-                        <p>Receive tailored course suggestions based on your career goals—whether you're planning for a new career after retirement or looking to master an easy job on the side.</p>
-                    </div>                    
-                </div>                                 
-                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" data-wow-offset="0">
-                    <div class="single_feature_one">
-                        <div class="sf_top">
-                            <span class="fas fa-chart-line" style="font-size: 24px; color: #00796b;"></span>
-                            <h2><a href="{% url 'start_quiz' %}" target="_blank">Progress Tracking</a></h2>
-                        </div>      
-                        <p>Track your learning progress and achievements as you build new skills. Whether you're starting a new retirement job or upskilling for a side hustle, you'll stay motivated and on course.</p>
-                    </div>                    
-                </div>                                 
-                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" data-wow-offset="0">
-                    <div class="single_feature_one">
-                        <div class="sf_top">
-                            <span class="fas fa-headset" style="font-size: 24px; color: #00796b;"></span>
-                            <h2><a href="{% url 'start_quiz' %}" target="_blank">24/7 Dedicated Support</a></h2>
-                        </div>      
-                        <p>Need help? Our support team is available 24/7 to assist you, so you can focus on building your skills, starting new side hustles, or preparing for your next career move.</p>
-                    </div>                    
-                </div>                                                                 
-            </div><!-- END ROW -->
-        </div><!-- END CONTAINER -->
-    </section>
+<section class="marketing_content_area section-padding">
+	<div class="container">
+		<div class="section-title">
+			<h2>Why Choose iRiseUp</h2>
+			<p>Discover the <span><u>key features</u></span> that make iRiseUp Academy the perfect platform for learning new skills and advancing your career.</p>
+		</div>
+		<div class="row">
+			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
+				<div class="single_feature_one">
+					<div class="sf_top">
+						<span class="fas fa-book ss_one"></span>
+						<h2><a href="{% url 'start_quiz' %}">Learn Anywhere, Anytime</a></h2>
+					</div>
+					<p>Access our courses from any device, at any time. Whether you're at home or on the go, iRiseUp Academy fits your lifestyle.</p>
+				</div>
+			</div><!-- END COL -->
+			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
+				<div class="single_feature_one">
+					<div class="sf_top">
+						<span class="fas fa-lightbulb ss_two"></span>
+						<h2><a href="{% url 'start_quiz' %}">Guided by ARI – Your AI Assistant</a></h2>
+					</div>
+					<p>Get personalized support and guidance from ARI, your own AI learning assistant, available 24/7 to answer questions and help you navigate your learning journey.</p>
+				</div>
+			</div><!-- END COL -->
+			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s" data-wow-offset="0">
+				<div class="single_feature_one">
+					<div class="sf_top">
+						<span class="fas fa-users ss_three"></span>
+						<h2><a href="{% url 'start_quiz' %}">Leadership & Team Skills</a></h2>
+					</div>
+					<p>Develop essential leadership and team management skills to succeed in any organization, big or small.</p>
+				</div>
+			</div><!-- END COL -->
+			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" data-wow-offset="0">
+				<div class="single_feature_one">
+					<div class="sf_top">
+						<span class="fas fa-ruler-combined ss_four"></span>
+						<h2><a href="{% url 'start_quiz' %}">Customized Learning Path</a></h2>
+					</div>
+					<p>Receive personalized course recommendations tailored to your goals and interests, ensuring you get the most out of your learning experience.</p>
+				</div>
+			</div><!-- END COL -->
+			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s" data-wow-offset="0">
+				<div class="single_feature_one">
+					<div class="sf_top">
+						<span class="fas fa-headphones-alt ss_five"></span>
+						<h2><a href="{% url 'start_quiz' %}">24/7 AI-Powered Support</a></h2>
+					</div>
+					<p>Need help? ARI, our AI assistant, is available around the clock to assist you with any questions, ensuring a smooth, self-paced learning experience.</p>
+				</div>
+			</div><!-- END COL -->
+			<div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" data-wow-offset="0">
+				<div class="single_feature_one">
+					<div class="sf_top">
+						<span class="fas fa-chart-line ss_six"></span>
+						<h2><a href="{% url 'start_quiz' %}">Progress Tracking</a></h2>
+					</div>
+					<p>Track your progress easily with real-time feedback and goal-setting features, helping you stay on course and motivated.</p>
+				</div>
+			</div><!-- END COL -->
+		</div><!-- END ROW -->
+	</div><!-- END CONTAINER -->
+</section>
     
     
      
@@ -561,7 +565,7 @@ END ROW -->
                         <div class="content_box">
                             <span>{{ blog.publish_date|date:"F d, Y" }} | 
                                 {% for category in blog.categories.all %}
-                                <a href="#">{{ category.name }}</a>{% if not forloop.last %}, {% endif %}
+                                <a href="{% url 'start_quiz' %}">{{ category.name }}</a>{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             </span>
                             <h2><a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a></h2>
