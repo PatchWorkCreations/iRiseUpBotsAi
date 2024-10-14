@@ -1518,7 +1518,8 @@ from .models import Subscription
 PAYPAL_PLANS = {
     '1-week': 'P-8UK56244MG445954XM3YQWQA',
     '4-week': 'P-8L991744WP760193RM3YQWQI',
-    '12-week': 'P-75F49223D3934520VM3YQWQI'
+    '12-week': 'P-75F49223D3934520VM3YQWQI',
+    'lifetime': 'P-6SU489143G273160UM4GK5CI'
 }
 
 def get_json_data(request):
@@ -1653,6 +1654,8 @@ def complete_paypal_subscription(request):
 
             # Calculate the amount based on the selected plan
             amount = 0
+            expiration_date = None  # Initialize expiration_date as None for lifetime option
+
             if selected_plan == '1-week':
                 amount = 12.87  # Updated price for 1-week
                 expiration_date = timezone.now() + timedelta(weeks=1)
@@ -1662,9 +1665,15 @@ def complete_paypal_subscription(request):
             elif selected_plan == '12-week':
                 amount = 97.00  # Updated price for 12-week
                 expiration_date = timezone.now() + timedelta(weeks=12)
+            elif selected_plan == 'lifetime':
+                amount = 297.00  # One-time payment for lifetime plan
+                expiration_date = None  # No expiration for lifetime access
             else:
                 logger.error('Invalid plan selected.')
                 return JsonResponse({'success': False, 'error': 'Invalid plan selected.'}, status=400)
+
+            # Further processing logic for payment goes here...
+
 
             # Save subscription details with 'pending' status until confirmed by PayPal
             subscription = Subscription.objects.create(
@@ -1726,7 +1735,9 @@ def set_selected_plan(request):
             data = json.loads(request.body)
             selected_plan = data.get('plan')
 
-            valid_plans = ['1-week', '4-week', '12-week']
+            # Add 'lifetime' to the list of valid plans
+            valid_plans = ['1-week', '4-week', '12-week', 'lifetime']
+
             if selected_plan in valid_plans:
                 request.session['selected_plan'] = selected_plan
                 request.session.save()  # Force session save
@@ -1789,19 +1800,22 @@ def paypal_webhook(request):
                 # Find the subscription
                 subscription = Subscription.objects.get(subscription_id=subscription_id)
 
-                # Extend the user's course access based on the plan
+               # Extend the user's course access based on the plan
                 if subscription.plan == '1-week':
                     subscription.expiration_date = timezone.now() + timedelta(weeks=1)
                 elif subscription.plan == '4-week':
                     subscription.expiration_date = timezone.now() + timedelta(weeks=4)
                 elif subscription.plan == '12-week':
                     subscription.expiration_date = timezone.now() + timedelta(weeks=12)
+                elif subscription.plan == 'lifetime':
+                    subscription.expiration_date = None  # No expiration for lifetime plan
                 subscription.save()
 
                 # Optionally, update the UserCourseAccess expiration date as well
                 user_course_access = UserCourseAccess.objects.get(user=subscription.user)
                 user_course_access.expiration_date = subscription.expiration_date
                 user_course_access.save()
+
 
                 logger.info(f"Renewed access for user {subscription.user.email} until {subscription.expiration_date}")
 

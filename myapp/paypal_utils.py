@@ -14,7 +14,6 @@ paypal_client = PayPalClient(
 )
 
 
-
 def create_paypal_product():
     # Define the API endpoint and headers
     url = "https://api-m.sandbox.paypal.com/v1/catalogs/products"
@@ -55,8 +54,7 @@ def create_paypal_product():
     else:
         print(f"Failed to create PayPal product: {product_response}")
         return None
-
-
+    
 def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interval_count, amount, return_url, cancel_url):
     url = "https://api-m.sandbox.paypal.com/v1/billing/plans"
 
@@ -65,6 +63,9 @@ def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interv
         "Authorization": f"Bearer {paypal_client.access_token}",
         "PayPal-Request-Id": str(uuid.uuid4())
     }
+
+    total_cycles = 1 if plan_name == 'lifetime' else 0  # Set to 1 for lifetime, 0 for other plans (0 means indefinite)
+    
     data = {
         "product_id": product_id,
         "name": f"{plan_name} Plan",
@@ -72,12 +73,12 @@ def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interv
         "billing_cycles": [
             {
                 "frequency": {
-                    "interval_unit": interval_unit,  # e.g., "WEEK" or "MONTH"
+                    "interval_unit": interval_unit,  # "WEEK", "MONTH", or "YEAR" for lifetime
                     "interval_count": interval_count  # e.g., 1 for 1-week or 4 for 4-week
                 },
                 "tenure_type": "REGULAR",
                 "sequence": 1,
-                "total_cycles": 0,  # Set to 0 for indefinite billing until canceled
+                "total_cycles": total_cycles,  # Only one cycle for lifetime plan
                 "pricing_scheme": {
                     "fixed_price": {
                         "value": f"{amount/100:.2f}",  # Convert cents to dollars
@@ -87,7 +88,7 @@ def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interv
             }
         ],
         "payment_preferences": {
-            "auto_bill_outstanding": True,
+            "auto_bill_outstanding": True if plan_name != 'lifetime' else False,  # No auto-bill for lifetime plan
             "setup_fee": {
                 "value": "0",
                 "currency_code": "USD"
@@ -107,12 +108,10 @@ def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interv
 
     response = requests.post(url, headers=headers, json=data)
 
-    # Log full response if it is not JSON
     if response.headers.get('Content-Type') != 'application/json':
         print(f"Received non-JSON response: {response.text}")
         return None
 
-    # Handle JSON parsing safely
     try:
         plan_response = response.json()
     except ValueError as e:
