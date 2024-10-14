@@ -36,13 +36,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete Course</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete the course <strong id="courseTitle"></strong>?
+                Are you sure you want to delete the <strong id="itemType"></strong> <strong id="itemTitle"></strong>?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -90,16 +90,17 @@
                 }
             });
         });
+    });
 
-        // Handle delete modal
-        $('#deleteModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var courseId = button.data('course-id');
-            var courseTitle = button.data('course-title');
-            var modal = $(this);
-            modal.find('#courseTitle').text(courseTitle);
-            modal.find('#deleteForm').attr('action', '/customadmin/courses/' + courseId + '/delete/');
-        });
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var itemId = button.data('item-id');
+        var itemTitle = button.data('item-title');
+        var itemType = button.data('item-type');
+        var modal = $(this);
+        modal.find('#itemTitle').text(itemTitle);
+        modal.find('#itemType').text(itemType);
+        modal.find('#deleteForm').attr('action', '/customadmin/courses/' + itemId + '/delete/');
     });
 </script>
 {% endblock %}
