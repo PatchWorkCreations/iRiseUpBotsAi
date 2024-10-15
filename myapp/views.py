@@ -1399,7 +1399,7 @@ def send_welcomepassword_email(user_email, random_password):
                 <p>Your account has been successfully created. Below is your temporary password:</p>
                 <p><strong>Temporary Password:</strong> {random_password}</p>
                 <p>Please log in and update your password for security.</p>
-                <a href="https://iriseupacademy.com/sign_in" class="button">Log In Now</a>
+                <a href="https://www.iriseupacademy.com/sign_in" class="button">Log In Now</a>
                 <p>Best regards,<br><strong>The iRiseUp Academy Team</strong></p>
             </div>
 
@@ -1761,9 +1761,7 @@ def complete_paypal_subscription(request):
                 user.save()
 
                 # Send email with account details to the newly created user
-                subject = 'Your Account Has Been Created'
-                message = f'Your temporary password is: {random_password}\nPlease log in and change your password.'
-                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user_email])
+                send_welcomepassword_email(user_email, random_password)
                 logger.info(f'New user created and email sent to {user_email}.')
 
             # Ensure the selected plan exists in the session
