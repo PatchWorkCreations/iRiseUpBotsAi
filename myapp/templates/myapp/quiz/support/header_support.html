@@ -1,92 +1,151 @@
 {% load static %}
 <style>
-    
-    .header-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 20px;
-        background-color: #f9f9f9;
-        border-bottom: 1px solid #e0e0e0;
-    }
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
 
-    .header-container .logo {
-        display: flex;
-        align-items: center;
+/* Logo styles */
+.header-container .logo {
+    display: flex;
+    align-items: center;
+}
+
+.header-container .logo img {
+    width: 100px;
+    height: auto;
+    margin-right: 15px;
+}
+
+/* Navigation links */
+.nav-links {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #0d2233;
+    text-decoration: none;
+    margin: 0 20px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-links a:hover {
+    background-color: #1e6dfb;
+    color: #fff;
+}
+
+.nav-links .active {
+    background-color: #1e6dfb;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(30, 109, 251, 0.3);
+}
+
+/* Submit request button */
+.submit-request {
+    padding: 8px 20px;
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e6dfb;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.submit-request:hover {
+    background-color: #1e6dfb;
+    color: #fff;
+    border-color: #1e6dfb;
+}
+
+/* Language selector */
+.language-selector {
+    position: relative;
+    display: inline-block;
+    font-size: 1rem;
+    margin-left: 20px;
+}
+
+.language-selector select {
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    border-radius: 5px;
+    color: #0d2233;
+}
+
+.language-selector select:hover {
+    border-color: #1e6dfb;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 20px;
     }
 
     .header-container .logo img {
-        width: 40px;
-        height: 40px;
-        margin-right: 10px;
-    }
-
-    .header-container .logo h1 {
-        font-size: 1.5rem;
-        color: #0d2233;
-        margin: 0;
-        font-weight: bold;
+        width: 80px; /* Reduce logo size for mobile */
     }
 
     .nav-links {
-        display: flex;
-        align-items: center;
+        display: block;
+        width: 100%;
+        margin-top: 10px;
     }
 
     .nav-links a {
-        color: #0d2233;
-        text-decoration: none;
-        margin: 0 15px;
-        font-size: 1rem;
-    }
-
-    .nav-links a:hover {
-        color: #1e6dfb;
+        display: block;
+        margin: 10px 0;
+        padding: 10px 20px;
+        text-align: left;
+        width: 100%; /* Full width for links on mobile */
+        font-size: 1rem; /* Slightly smaller font size */
     }
 
     .submit-request {
-        padding: 5px 15px;
-        border: 1px solid #e0e0e0;
-        background-color: #fff;
-        border-radius: 5px;
-        font-size: 1rem;
-        color: #0d2233;
-        text-decoration: none;
-    }
-
-    .submit-request:hover {
-        background-color: #1e6dfb;
-        color: #fff;
-        border-color: #1e6dfb;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
     }
 
     .language-selector {
-        position: relative;
-        display: inline-block;
-        font-size: 1rem;
+        width: 100%;
+        margin-top: 10px;
     }
 
     .language-selector select {
-        padding: 5px 10px;
-        font-size: 1rem;
-        border: 1px solid #e0e0e0;
-        background-color: #fff;
-        border-radius: 5px;
-        color: #0d2233;
+        width: 100%;
+        text-align: center;
     }
+}
 
-    .language-selector select:hover {
-        border-color: #1e6dfb;
-    }
 
 </style>
 
 
-
 <div class="header-container">
     <div class="logo">
-        <img src="{% static 'myapp/images/quiz/iriseuplogo.svg' %}" alt="iRiseUp Logo">
-        <h1>iRiseUp</h1>
+        <a href="{% url 'coursemenu' %}">
+            <img src="{% static 'myapp/images/quiz/iriseuplogo.svg' %}" alt="iRiseUp" title="iRiseUp" class="logo-img">
+        </a>
     </div>
     <div class="nav-links">
         <a href="{% url 'support_center' %}" class="{% if request.resolver_match.url_name == 'support_center' %}active{% endif %}">Home</a>

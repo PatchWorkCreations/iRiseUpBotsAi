@@ -1,53 +1,116 @@
 {% load static %}
 
-<div class="mobile-container-navbar">
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="logo">
-            <a href="{% url 'sign_in' %}"> 
-                <img src="{% static 'myapp/images/quiz/iriseuplogo.svg' %}" alt="iRiseUp" title="iRiseUp" class="logo-img">
-            </a>
-        </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'terms_conditions' %}">Terms & Conditions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'privacy_policy' %}">Privacy Policy</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'subscription_terms' %}">Subscription Terms</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'support_center' %}">Support Center</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-</header>
+<!-- Include Bootstrap CSS in the head -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<div class="navbar-container">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <!-- Container to keep the navbar centered on large screens -->
+            <div class="container">
+                <!-- Logo -->
+                <div class="logo">
+                    <a href="{% url 'sign_in' %}">
+                        <img src="{% static 'myapp/images/quiz/iriseuplogo.svg' %}" alt="iRiseUp" title="iRiseUp" class="logo-img">
+                    </a>
+                </div>
+
+                <!-- Hamburger button for mobile view -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Collapsible menu for mobile and full menu for desktop -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'terms_conditions' %}">Terms & Conditions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'privacy_policy' %}">Privacy Policy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'subscription_terms' %}">Subscription Terms</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'support_center' %}">Support Center</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
 </div>
 
-<!-- Ensure the following JS files are included to make the navbar toggler work -->
+<!-- Include jQuery and Bootstrap JavaScript files in the correct order -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-<!-- Add this CSS either in your main stylesheet or within a <style> tag in your HTML -->
+<!-- CSS for the modernized header -->
 <style>
+    /* Basic styling for the logo */
     .logo-img {
-        max-height: 60px; /* Adjust the maximum height to suit your design */
-        max-width: 100%;  /* Ensures the logo scales well on smaller screens */
-        height: auto; /* Maintain aspect ratio */
+        max-height: 60px; /* Set max height to ensure the logo scales well */
+        width: auto;      /* Maintain aspect ratio */
     }
 
-    /* Adjust the logo size on smaller screens if necessary */
+    /* Ensure the navbar is spaced and centers the content */
+    .navbar {
+        padding: 15px 0;
+    }
+
+    /* Container to limit width on larger screens */
+    .container {
+        max-width: 1200px;
+    }
+
+    /* Ensure the hamburger icon is always visible on mobile */
+    .navbar-toggler {
+        border: none;
+    }
+
+    .navbar-toggler-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    /* Make the collapsible navbar look modern */
+    .navbar-collapse {
+        justify-content: flex-end; /* Push links to the right */
+    }
+
+    /* Style the navigation links */
+    .nav-link {
+        font-size: 16px;
+        font-weight: 500;
+        padding: 10px 15px;
+        color: #333;
+        transition: color 0.3s ease;
+    }
+
+    /* Hover effect for navigation links */
+    .nav-link:hover {
+        color: #007bff;
+    }
+
+    /* Responsive styling: Adjust logo size and make sure the menu looks good on small screens */
     @media (max-width: 768px) {
         .logo-img {
             max-height: 50px; /* Smaller logo for mobile devices */
+        }
+
+        .navbar-collapse {
+            background-color: #f8f9fa; /* Background for mobile collapsible menu */
+        }
+
+        .nav-link {
+            text-align: center; /* Center nav links in mobile */
+            padding: 15px 0;
+        }
+
+        .navbar-nav {
+            margin-top: 15px;
         }
     }
 </style>
