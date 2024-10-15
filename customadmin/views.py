@@ -36,6 +36,26 @@ def course_detail(request, course_id):
     sub_courses = course.sub_courses.all()
     return render(request, 'myapp/course_detail.html', {'course': course, 'sub_courses': sub_courses})
 
+{% elif block.type == 'multiple_choice' %}
+                <input type="text" name="question_{{ forloop.counter0 }}" class="form-control mb-2" placeholder="Enter the multiple-choice question" value="{{ block.question }}">
+                <input type="text" name="correct_answer_{{ forloop.counter0 }}" class="form-control mb-2" placeholder="Enter the correct answer" value="{{ block.correct_answer }}">
+                
+                
+                <div id="multiple-choice-options-{{ forloop.counter0 }}">
+                    {% for option in block.options %}
+                    <div class="form-check">
+                        <input type="radio" name="correct_option_{{ forloop.counter0 }}" class="form-check-input" {% if option == block.correct_answer %}checked{% endif %}>
+                        <input type="text" name="option_{{ forloop.counter0 }}[]" value="{{ option }}" class="form-control mb-2" placeholder="Option {{ forloop.counter }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-secondary mb-2" onclick="addOption('{{ forloop.counter0 }}')">Add Option</button>
+                
+
+cause this is how I deal with multiple choice in eidt lesson 
+
+is that possible? 
+
 def extract_subcourses_lessons_from_docx(docx_file, course):
     doc = Document(docx_file)
 
@@ -67,30 +87,6 @@ def extract_subcourses_lessons_from_docx(docx_file, course):
             block_content = ""  # Reset block content after appending it
 
             continue  # Allows processing to continue for other paragraphs
-
-        # Check for Multiple Choice format - e.g., "1. Question?" followed by options like "A. Option"
-        if text[0].isdigit() and "Multiple-Choice Questions" in text:
-            mc_question = {'type': 'multiple_choice', 'question': text, 'options': [], 'correct_answer': None}
-            inside_mc_question = True
-            continue
-
-        # If inside a multiple-choice block, check for options and correct answer
-        if inside_mc_question and text[0] in 'ABCD':
-            mc_question['options'].append(text.split('.')[1].strip())
-            continue
-
-        # Detect the answer (assuming the format like "Answer: C")
-        if "Answer:" in text:
-            mc_question['correct_answer'] = text.split('Answer:')[1].strip()
-            lesson_blocks.append(mc_question)
-            inside_mc_question = False
-            continue
-
-        # Detect Discussion Questions (open-ended questions)
-        if text[0].isdigit() and any(text.lower().startswith(kw) for kw in ["how", "why", "do you", "in your opinion","which"]):
-            question_block = {'type': 'question', 'content': text}
-            lesson_blocks.append(question_block)
-            continue
 
         # Check for Reflection section
         if "Reflection" in text:
@@ -185,6 +181,7 @@ def extract_subcourses_lessons_from_docx(docx_file, course):
     course.units = subcourse_order  # Update based on the number of subcourses
     course.hours = subcourse_order  # 1 hour per subcourse
     course.save()
+
 
 from django.shortcuts import get_object_or_404, redirect, render
 import json
