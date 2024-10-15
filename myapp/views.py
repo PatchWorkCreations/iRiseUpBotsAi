@@ -2202,7 +2202,6 @@ from django.contrib.auth.models import User
 
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'myapp/forgot_password.html'  # The form template for password reset
-    email_template_name = 'myapp/password_reset_email.html'  # The HTML email template
     success_url = reverse_lazy('password_reset_done')  # Redirect after successful form submission
 
     def form_valid(self, form):
