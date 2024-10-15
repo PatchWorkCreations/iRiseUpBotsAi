@@ -2198,7 +2198,6 @@ def save_email_collection(sender, instance, **kwargs):
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
 class CustomPasswordResetView(PasswordResetView):
@@ -2211,15 +2210,20 @@ class CustomPasswordResetView(PasswordResetView):
         This method is called when valid form data has been POSTed.
         We send the password reset email here using your custom function.
         """
-        user = form.get_users().first()  # Get the user who requested the reset
-        if user:
-            # Generate token and uid for the password reset link
-            token = default_token_generator.make_token(user)
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
+        email = form.cleaned_data['email']  # Get the email from the form data
+        users = User.objects.filter(email=email)  # Query for the users with this email
 
-            # Call your custom email function to send the reset email
-            send_resetpassword_email(user.email, token)  # Custom function you created
+        if users.exists():
+            for user in users:
+                # Generate token and uid for the password reset link
+                token = default_token_generator.make_token(user)
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+                # Call your custom email function to send the reset email
+                send_resetpassword_email(user.email, token, uid)  # Call the custom email function
+                
         return super().form_valid(form)
+
 
 def send_resetpassword_email(user_email, token, uid):
     """
