@@ -36,25 +36,6 @@ def course_detail(request, course_id):
     sub_courses = course.sub_courses.all()
     return render(request, 'myapp/course_detail.html', {'course': course, 'sub_courses': sub_courses})
 
-{% elif block.type == 'multiple_choice' %}
-                <input type="text" name="question_{{ forloop.counter0 }}" class="form-control mb-2" placeholder="Enter the multiple-choice question" value="{{ block.question }}">
-                <input type="text" name="correct_answer_{{ forloop.counter0 }}" class="form-control mb-2" placeholder="Enter the correct answer" value="{{ block.correct_answer }}">
-                
-                
-                <div id="multiple-choice-options-{{ forloop.counter0 }}">
-                    {% for option in block.options %}
-                    <div class="form-check">
-                        <input type="radio" name="correct_option_{{ forloop.counter0 }}" class="form-check-input" {% if option == block.correct_answer %}checked{% endif %}>
-                        <input type="text" name="option_{{ forloop.counter0 }}[]" value="{{ option }}" class="form-control mb-2" placeholder="Option {{ forloop.counter }}">
-                    </div>
-                    {% endfor %}
-                </div>
-                <button type="button" class="btn btn-secondary mb-2" onclick="addOption('{{ forloop.counter0 }}')">Add Option</button>
-                
-
-cause this is how I deal with multiple choice in eidt lesson 
-
-is that possible? 
 
 def extract_subcourses_lessons_from_docx(docx_file, course):
     doc = Document(docx_file)
