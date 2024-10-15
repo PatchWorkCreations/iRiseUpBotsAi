@@ -2196,9 +2196,9 @@ def save_email_collection(sender, instance, **kwargs):
 
 
 class CustomPasswordResetView(PasswordResetView):
-    template_name = 'myapp/forgot_password.html'
-    email_template_name = 'myapp/password_reset_email.html'
-    success_url = reverse_lazy('password_reset_done')
+    template_name = 'myapp/forgot_password.html'  # Template for the password reset form
+    email_template_name = 'myapp/password_reset_email.html'  # The HTML email template
+    success_url = reverse_lazy('password_reset_done')  # The success URL
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'myapp/password_reset_done.html'
