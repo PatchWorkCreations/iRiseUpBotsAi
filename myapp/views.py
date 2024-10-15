@@ -2195,10 +2195,160 @@ def save_email_collection(sender, instance, **kwargs):
     instance.email_collection.save()  # Use the related_name 'email_collection'
 
 
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
+
 class CustomPasswordResetView(PasswordResetView):
-    template_name = 'myapp/forgot_password.html'  # Template for the password reset form
+    template_name = 'myapp/forgot_password.html'  # The form template for password reset
     email_template_name = 'myapp/password_reset_email.html'  # The HTML email template
-    success_url = reverse_lazy('password_reset_done')  # The success URL
+    success_url = reverse_lazy('password_reset_done')  # Redirect after successful form submission
+
+    def form_valid(self, form):
+        """
+        This method is called when valid form data has been POSTed.
+        We send the password reset email here using your custom function.
+        """
+        user = form.get_users().first()  # Get the user who requested the reset
+        if user:
+            # Generate token and uid for the password reset link
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+            # Call your custom email function to send the reset email
+            send_resetpassword_email(user.email, token)  # Custom function you created
+        return super().form_valid(form)
+
+def send_resetpassword_email(user_email, token, uid):
+    """
+    Sends a password reset email with HTML design to users.
+    """
+    subject = 'Reset Your Password - iRiseUp Academy'
+    from_email = 'hello@iriseupacademy.com'
+    to_email = [user_email]
+
+    # Plain text content for fallback
+    text_content = (
+        f"Dear {user_email},\n\n"
+        "You're receiving this email because you requested a password reset.\n"
+        "Please click the link below to reset your password:\n"
+        f"https://www.iriseupacademy.com/reset/{uid}/{token}/\n\n"
+        "If you didn’t request this, please ignore this email.\n"
+        "Best regards,\n"
+        "The iRiseUp Academy Team"
+    )
+
+    # HTML content for the email
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Reset Your Password - iRiseUp Academy</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                color: #333;
+                line-height: 1.6;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }}
+            .container {{
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+            }}
+            .header {{
+                background-color: #5860F8;
+                color: #ffffff;
+                padding: 20px;
+                text-align: center;
+            }}
+            .header img {{
+                max-width: 120px;
+                margin-bottom: 10px;
+            }}
+            .header h1 {{
+                margin: 0;
+                font-size: 28px;
+                font-weight: bold;
+            }}
+            .content {{
+                padding: 30px 20px;
+                text-align: left;
+                background-color: #ffffff;
+            }}
+            .content p {{
+                font-size: 16px;
+                margin-bottom: 20px;
+            }}
+            .button {{
+                display: inline-block;
+                padding: 12px 25px;
+                color: #ffffff;
+                background-color: #5860F8;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 16px;
+                margin-top: 20px;
+            }}
+            .button:hover {{
+                background-color: #4752c4;
+            }}
+            .footer {{
+                text-align: center;
+                padding: 20px;
+                background-color: #f4f4f4;
+                color: #888;
+                font-size: 12px;
+            }}
+            .footer p {{
+                margin: 0;
+            }}
+            .footer a {{
+                color: #5860F8;
+                text-decoration: none;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!-- Email Header -->
+            <div class="header">
+                <img src="https://www.iriseupacademy.com/static/myapp/images/resource/author-6.png" alt="iRiseUp Academy Logo">
+                <h1>Reset Your Password</h1>
+            </div>
+
+            <!-- Email Content -->
+            <div class="content">
+                <p>Hello {user_email},</p>
+                <p>You requested a password reset for your account. Click the button below to reset it:</p>
+                <a href="https://www.iriseupacademy.com/reset/{uid}/{token}/" class="button">Reset Password</a>
+                <p>If you didn’t request this, please ignore this email.</p>
+                <p>Best regards,<br><strong>The iRiseUp Academy Team</strong></p>
+            </div>
+
+            <!-- Email Footer -->
+            <div class="footer">
+                <p>iRiseUp Academy, Columbus, Ohio, USA | <a href="https://iriseupacademy.com/unsubscribe">Unsubscribe</a></p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    # Create the email message with plain text and HTML alternatives
+    email = EmailMultiAlternatives(subject, text_content, from_email, to_email)
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'myapp/password_reset_done.html'
