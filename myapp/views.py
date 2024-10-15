@@ -1287,6 +1287,136 @@ def grant_course_access(user, selected_plan):
 
     return True
 
+from django.core.mail import EmailMultiAlternatives
+
+def send_welcomepassword_email(user_email, random_password):
+    """
+    Sends a personalized welcome email with HTML design to new users.
+    """
+    subject = 'Welcome to iRiseUp Academy – Your Account is Ready!'
+    from_email = 'hello@iriseupacademy.com'
+    to_email = [user_email]
+
+    # Plain text content for fallback
+    text_content = (
+        f"Dear {user_email},\n\n"
+        "Welcome to iRiseUp Academy! Your account has been successfully created.\n"
+        f"Here is your temporary password: {random_password}\n\n"
+        "Please log in to update your password and start your learning journey.\n\n"
+        "Best regards,\n"
+        "The iRiseUp Academy Team"
+    )
+
+    # HTML content (you can use your email design)
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Welcome to iRiseUp Academy</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                color: #333;
+                line-height: 1.6;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }}
+            .container {{
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+            }}
+            .header {{
+                background-color: #5860F8;
+                color: #ffffff;
+                padding: 20px;
+                text-align: center;
+            }}
+            .header img {{
+                max-width: 120px;
+                margin-bottom: 10px;
+            }}
+            .header h1 {{
+                margin: 0;
+                font-size: 28px;
+                font-weight: bold;
+            }}
+            .content {{
+                padding: 30px 20px;
+                text-align: left;
+                background-color: #ffffff;
+            }}
+            .content p {{
+                font-size: 16px;
+                margin-bottom: 20px;
+            }}
+            .button {{
+                display: inline-block;
+                padding: 12px 25px;
+                color: #ffffff;
+                background-color: #5860F8;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 16px;
+                margin-top: 20px;
+            }}
+            .button:hover {{
+                background-color: #4752c4;
+            }}
+            .footer {{
+                text-align: center;
+                padding: 20px;
+                background-color: #f4f4f4;
+                color: #888;
+                font-size: 12px;
+            }}
+            .footer p {{
+                margin: 0;
+            }}
+            .footer a {{
+                color: #5860F8;
+                text-decoration: none;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!-- Email Header -->
+            <div class="header">
+                <img src="https://www.iriseupacademy.com/static/myapp/images/resource/author-6.png" alt="iRiseUp Academy Logo">
+                <h1>Welcome to iRiseUp Academy, {user_email}!</h1>
+            </div>
+
+            <!-- Email Content -->
+            <div class="content">
+                <p>Hello {user_email},</p>
+                <p>Your account has been successfully created. Below is your temporary password:</p>
+                <p><strong>Temporary Password:</strong> {random_password}</p>
+                <p>Please log in and update your password for security.</p>
+                <a href="https://iriseupacademy.com/sign_in" class="button">Log In Now</a>
+                <p>Best regards,<br><strong>The iRiseUp Academy Team</strong></p>
+            </div>
+
+            <!-- Email Footer -->
+            <div class="footer">
+                <p>iRiseUp Academy, Columbus, Ohio, USA | <a href="https://iriseupacademy.com/unsubscribe">Unsubscribe</a></p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    # Create the email message with plain text and HTML alternatives
+    email = EmailMultiAlternatives(subject, text_content, from_email, to_email)
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+
 
 # Get an instance of a logger
 logger = logging.getLogger('myapp')
@@ -1413,6 +1543,7 @@ def process_payment(request):
 
             card_id = card_result.body['card']['id']
 
+            
             # Step 4: Create or retrieve the user in the Django application
             user, created = User.objects.get_or_create(
                 username=user_email,
@@ -1424,14 +1555,8 @@ def process_payment(request):
                 user.set_password(random_password)
                 user.save()
 
-                # Send a welcome email with the temporary password
-                subject = 'Your Account Has Been Created'
-                message = (
-                    f'Your account has been created. Your temporary password is: {random_password}\n'
-                    'Please log in and change your password.\n'
-                    'You now have access to the course menu based on your selected plan.'
-                )
-                send_mail(subject, message, 'hello@iriseupacademy.com', [user_email])
+                # Send the welcome email
+                send_welcomepassword_email(user_email, random_password)
 
             logger.info(f"User {user_email} processed for payment.")
 
