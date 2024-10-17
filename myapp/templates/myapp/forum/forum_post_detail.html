@@ -228,7 +228,8 @@
 
 <div class="post-container">
     <h2 class="post-title">{{ post.title }}</h2>
-    <p class="post-content">{{ post.content }}</p>
+    <p class="post-content">{{ post.content|linebreaks }}</p>
+
     <p class="post-meta">
         Posted by 
         {% if post.author %}
@@ -268,7 +269,7 @@
                         Anonymous
                     {% endif %}
                 </p>
-                <p class="comment-content">{{ comment.content }}</p>
+                <p class="comment-content">{{ comment.content|linebreaks }}</p>
                 <p class="comment-meta">Posted on {{ comment.created_at|date:"F j, Y, g:i a" }}</p>
 
                 <span class="reply-button" onclick="toggleReplyForm('{{ comment.id }}')">Reply</span>
@@ -291,7 +292,7 @@
                                         Anonymous
                                     {% endif %}
                                 </p>
-                                <p class="comment-content">{{ reply.content }}</p>
+                                <p class="comment-content">{{ reply.content|linebreaks }}</p>
                                 <p class="comment-meta">Posted on {{ reply.created_at|date:"F j, Y, g:i a" }}</p>
                             </li>
                         {% endfor %}
