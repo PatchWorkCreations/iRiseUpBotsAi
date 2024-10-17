@@ -89,7 +89,7 @@ def extract_subcourses_lessons_from_docx(docx_file, course):
         # Handle multiple-choice questions
         if is_question_block:
             # Start a new question
-            if text.startswith(('What', 'Which', 'How', 'Why', 'Who', 'Where', 'When', 'If', 'Do', 'For')):
+            if text.startswith(('What', 'Which', 'How', 'Why', 'Who', 'Where', 'When', 'If', 'Do', 'For', 'At')):
                 save_current_question()  # Save the previous question before starting a new one
                 current_question = text
                 continue
