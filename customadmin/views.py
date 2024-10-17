@@ -36,156 +36,136 @@ def course_detail(request, course_id):
     sub_courses = course.sub_courses.all()
     return render(request, 'myapp/course_detail.html', {'course': course, 'sub_courses': sub_courses})
 
-from docx import Document
-import json
-from myapp.models import SubCourse, Lesson
-
 def extract_subcourses_lessons_from_docx(docx_file, course):
     doc = Document(docx_file)
 
     current_subcourse = None
     current_lesson = None
-    lesson_blocks = []  # To hold all the blocks (headers, paragraphs, questions) for a lesson
+    lesson_blocks = []  # To hold all the blocks (headers, paragraphs) for a lesson
     block_content = ""  # To accumulate paragraph content
     subcourse_order = SubCourse.objects.filter(parent_course=course).count()  # Set initial order based on existing subcourses
-    is_question_block = False  # Track if we are in a question block (e.g., multiple choice)
-    current_question = None
-    multiple_choices = []
-    correct_answer = None  # To track the correct answer for multiple choice questions
 
-    # Function to save the multiple-choice question block
-    def save_current_question():
-        nonlocal current_question, multiple_choices, lesson_blocks, correct_answer
-        if current_question and multiple_choices:
-            lesson_blocks.append({
-                'type': 'multiple_choice',
-                'question': current_question,
-                'options': multiple_choices,
-                'correct_answer': correct_answer
-            })
-            current_question = None
-            multiple_choices = []
-            correct_answer = None
-
-    # Function to detect reflection questions (starting with a number)
-    def is_reflection_question(text):
-        return text and text[0].isdigit()
+    # Keep track of whether we're inside a lesson to handle nested structures
+    inside_lesson = False
 
     for para in doc.paragraphs:
         text = para.text.strip()
         if not text:
             continue
 
-        # Check for multiple-choice or short-answer question types
+        # Check if the paragraph contains bold text (header block) or if the text is 30 characters or less
         is_bold = any(run.bold for run in para.runs if run.bold)
-        is_italic = any(run.italic for run in para.runs if run.italic)  # Check for italic text (for answer and questions)
-        is_short_header = len(text) <= 50 and "\n" not in text
-        starts_with_bullet = text.startswith('•') or text.startswith('-')  # Bullet points or dashes
+        is_short_header = len(text) <= 50 and "\n" not in text  # Check if text is 30 chars or less and is a single line
+        starts_with_bullet = text.startswith('•')  # Check if line starts with a bullet
 
-        # Detect Multiple-Choice Questions block
-        if is_italic and not is_question_block:
-            is_question_block = True
-
-        # Handle multiple-choice questions
-        if is_question_block:
-            # Start a new question
-            if text.startswith(('What', 'Which', 'How', 'Why', 'Who')):
-                save_current_question()  # Save the previous question before starting a new one
-                current_question = text
-                continue
-
-            # Add options (A., B., C., etc.)
-            elif text.startswith(('A.', 'B.', 'C.', 'D.')):
-                multiple_choices.append(text)
-                continue
-
-            # Handle the correct answer separately (bold + italicized text)
-            elif text.startswith("Answer:") or is_italic:
-                correct_answer = text.split('Answer:')[-1].strip()  # Store the correct answer separately
-                save_current_question()  # Save the multiple-choice block
-                is_question_block = False  # Exit the multiple-choice block
-                continue
-
-        # Handle reflection questions starting with a number
-        if is_reflection_question(text):
-            lesson_blocks.append({
-                'type': 'question',
-                'content': text  # Save as a question block
-            })
-            continue
-
-        # Indent and format bullet points
+        # Indent bullet points and entire paragraph
         if starts_with_bullet:
-            block_content = f"<div style='margin-left: 20px;'>{text}</div>"
+            block_content = f"<div style='margin-left: 20px;'>{text}</div>"  # Indent bullet and content using inline style
+            
+            # Add the entire indented block to the lesson blocks
             lesson_blocks.append({'type': 'paragraph', 'content': block_content})
-            block_content = ""
-            continue
+            block_content = ""  # Reset block content after appending it
 
-        # Handle Subcourses
+            continue  # Allows processing to continue for other paragraphs
+
+        # Check for Reflection section
+        if "Reflection" in text:
+            if current_lesson:
+                # Replace the subcourse number with the lesson name
+                reflection_content = text.replace("End of Sub course", f"End of {current_lesson.title}")
+                lesson_blocks.append({'type': 'reflection', 'content': reflection_content})
+            continue  # Skip further processing for this section
+
+        # Check for Course Wrap-Up or Congratulations
+        if "Course Wrap-Up" in text or "Congratulations" in text:
+            # Combine handling for both sections
+            wrap_up_content = f"<h2>{text}</h2>"  # Use a header format for styling
+            lesson_blocks.append({'type': 'course_wrap_up', 'content': wrap_up_content})
+            continue  # Skip further processing for this section
+
+        # Identify subcourse (e.g., "Sub course 1: Introduction to Podcasting")
         if "Sub course" in text and ':' in text:
-            # Save the previous lesson's content
+            subcourse_title = text.split(':', 1)[1].strip()  # Extract title after "Sub course X:"
+            
+            # Save the previous lesson's content (if any)
             if current_lesson and lesson_blocks:
                 current_lesson.content = json.dumps(lesson_blocks)
                 current_lesson.save()
-                lesson_blocks = []
+                lesson_blocks = []  # Reset for the next subcourse
 
-            # Create or get subcourse
-            subcourse_title = text.split(':', 1)[1].strip()
+            # Create subcourse if it does not exist
             current_subcourse, created = SubCourse.objects.get_or_create(
-                title=subcourse_title, parent_course=course,
-                defaults={'order': subcourse_order + 1, 'units': 1, 'hours': 1}
+                title=subcourse_title,
+                parent_course=course,
+                defaults={'order': subcourse_order + 1, 'units': 1, 'hours': 1}  # Set order, units, and hours
             )
-            subcourse_order += created
 
-            # Reset lesson order
+            if created:
+                subcourse_order += 1  # Increment subcourse order only if a new subcourse was created
+
+            # Reset lesson order for the new subcourse
             lesson_order = Lesson.objects.filter(parent_sub_course=current_subcourse).count()
-            current_lesson = None
+            current_lesson = None  # Reset current lesson since we've started a new subcourse
+            inside_lesson = False  # Ensure we start fresh for a new subcourse
 
-        # Handle Lessons
+        # Identify lessons under each subcourse (e.g., "Lesson 1: What is Podcasting?")
         elif "Lesson" in text and ':' in text and current_subcourse:
-            # Save the previous lesson's content
+            lesson_title = text.split(':', 1)[1].strip()  # Extract title after "Lesson X:"
+
+            # Save the previous lesson's content (if any)
             if current_lesson and lesson_blocks:
                 current_lesson.content = json.dumps(lesson_blocks)
                 current_lesson.save()
 
-            # Create or get lesson
-            lesson_title = text.split(':', 1)[1].strip()
+            # Create new lesson under current subcourse
             current_lesson, created = Lesson.objects.get_or_create(
-                title=lesson_title, parent_sub_course=current_subcourse,
-                defaults={'order': lesson_order + 1}
+                title=lesson_title,
+                parent_sub_course=current_subcourse,
+                defaults={'order': lesson_order + 1}  # Assign the lesson order
             )
-            lesson_order += created
+
+            if created:
+                lesson_order += 1  # Increment lesson order if a new lesson was created
+
+            # Reset lesson blocks for the new lesson
             lesson_blocks = []
-            inside_lesson = True
+            block_content = ""
+            inside_lesson = True  # Mark that we're now inside a lesson
 
-        # Handle Headers (e.g., "Key Points", "Exercises")
+        # Handle nested headers within lessons (e.g., "Key Points," "Exercises")
         elif (is_bold or is_short_header) and current_lesson and inside_lesson:
-            lesson_blocks.append({'type': 'header', 'content': text})
-
-        # Handle Paragraphs
-        elif current_lesson and inside_lesson:
-            block_content += text + " "
             if block_content:
                 lesson_blocks.append({'type': 'paragraph', 'content': block_content.strip()})
                 block_content = ""
 
-    # Save the last lesson's content after the loop ends
+            lesson_blocks.append({'type': 'header', 'content': text})
+
+        # Handle paragraphs and general content blocks
+        elif current_lesson and inside_lesson:
+            sentences = text.split('. ')
+            for i in range(0, len(sentences), 3):
+                block = ". ".join(sentences[i:i+3]).strip()  # Join 3 sentences together
+                if block:
+                    block_content += f"{block}. "  # Add the sentences to the current block
+
+            if block_content:
+                lesson_blocks.append({'type': 'paragraph', 'content': block_content.strip()})
+                block_content = ""
+
+    # Save the last lesson's content after looping
     if current_lesson and lesson_blocks:
         current_lesson.content = json.dumps(lesson_blocks)
         current_lesson.save()
 
-    # Update course units and hours
-    course.units = subcourse_order
-    course.hours = subcourse_order  # Assuming 1 hour per subcourse
+    # Once subcourses are added, update the course with correct units and hours
+    course.units = subcourse_order  # Update based on the number of subcourses
+    course.hours = subcourse_order  # 1 hour per subcourse
     course.save()
 
 
 
 
 
-
-from django.shortcuts import get_object_or_404, redirect, render
-import json
 
 def edit_lesson(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
@@ -199,8 +179,11 @@ def edit_lesson(request, lesson_id):
 
             content_blocks = []
             for idx in range(int(request.POST.get('block_count', '0'))):
-                block_type = request.POST.get(f'block_type_{idx}')
+                block_type = request.POST.get(f'block_type_{idx}', None)  # Set default to None
                 block_order = request.POST.get(f'block_order_{idx}', idx)  # Ensure order is retrieved
+
+                if block_type is None:  # Skip processing if block_type is None
+                    continue
 
                 if block_type == 'paragraph':
                     content = request.POST.get(f'content_{idx}', '')
@@ -230,6 +213,11 @@ def edit_lesson(request, lesson_id):
                         'correct_answer': correct_answer,
                         'order': block_order
                     })
+
+                # Handle Reflection blocks
+                elif "Reflection" in block_type:  # Ensure this check is only performed if block_type is valid
+                    reflection_content = request.POST.get(f'content_{idx}', '')
+                    content_blocks.append({'type': 'reflection', 'content': reflection_content, 'order': block_order})
 
             lesson.content = json.dumps(content_blocks)
             lesson.save()
