@@ -79,10 +79,6 @@ class TagAdmin(admin.ModelAdmin):
 from django.contrib import admin
 from .models import ForumPost, ForumComment
 
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-
 # Admin for Forum-related models
 class ForumPostAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'category', 'created_at', 'updated_at')
