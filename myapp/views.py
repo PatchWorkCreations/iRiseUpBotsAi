@@ -217,16 +217,6 @@ def sub_course_detail(request, sub_course_id):
     lessons = sub_course.lesson_set.all()
     return render(request, 'myapp/course_list/sub_course_detail.html', {'sub_course': sub_course, 'lessons': lessons})
 
-
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
-from myapp.models import Lesson, UserLessonProgress
-from myapp.tasks import complete_lesson_task  # Import the Celery task
-import json
-import logging
-
-logger = logging.getLogger(__name__)
-
 def lesson_detail(request, lesson_id):
     # Fetch the lesson object
     lesson = get_object_or_404(Lesson, id=lesson_id)
@@ -243,18 +233,22 @@ def lesson_detail(request, lesson_id):
                 complete_lesson_task.delay(request.user.id, lesson.id)
             except Exception as e:
                 logger.error(f"Failed to trigger complete_lesson_task: {str(e)}")
-                # Optionally: Add a message to notify the user of the error
         return redirect(course_detail_url)
 
     # Try to load content blocks from the lesson's content field (assuming it's JSON)
     content_blocks = []
     try:
         content_blocks = json.loads(lesson.content) if lesson.content else []
-        
+
         # Ensure content is split properly for multiple_questions
         for block in content_blocks:
             if block['type'] == 'multiple_questions' and isinstance(block['content'], str):
                 block['content'] = block['content'].split(',')
+
+            # Ensure multiple_choice blocks have the correct structure
+            if block['type'] == 'multiple_choice':
+                block['options'] = block.get('options', [])
+                block['correct_answer'] = block.get('correct_answer', '')
 
         # Sort content blocks by 'order' if present, defaulting to 0 if not found
         content_blocks = sorted(content_blocks, key=lambda x: int(x.get('order', 0)))
@@ -270,7 +264,7 @@ def lesson_detail(request, lesson_id):
     context = {
         'lesson': lesson,
         'content_blocks': content_blocks,
-        'is_lesson_completed': is_lesson_completed,  # Pass lesson completion status
+        'is_lesson_completed': is_lesson_completed,
         'course_detail_url': course_detail_url,
     }
 
