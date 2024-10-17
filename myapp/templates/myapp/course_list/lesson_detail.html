@@ -280,7 +280,8 @@
             <div class="question-block">
                 <h3>Question:</h3>
                 <p>{{ block.content }}</p>
-                <input type="text" class="form-control" placeholder="Your answer">
+                <input type="text" class="form-control" placeholder="Your answer" 
+                       oninput="checkWordCount(this)">
             </div>
 
             {% elif block.type == 'multiple_questions' %}
@@ -315,46 +316,6 @@
                 <p id="feedback_{{ block.question|slugify }}" class="feedback-message"></p>
             </div>
             
-
-
-            
-            
-            
-
-
-            {% elif block.type == 'video' %}
-            <div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;">
-                <div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;">
-                    <iframe src="{{ block.content }}" 
-                            allow="autoplay; fullscreen" 
-                            allowfullscreen 
-                            frameborder="0" 
-                            scrolling="no" 
-                            class="wistia_embed" 
-                            name="wistia_embed" 
-                            style="height:100%;width:100%"></iframe>
-                </div>
-            </div>
-            <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
-
-            {% elif block.type == 'reflection' %}
-            <div class="reflection-block">
-                <h3>Reflection:</h3>
-                <p>{{ block.content|safe }}</p>
-            </div>
-
-            {% elif block.type == 'course_wrap_up' %}
-            <div class="course-wrap-up-block">
-                <h3>Course Wrap-Up:</h3>
-                <p>{{ block.content|safe }}</p>
-            </div>
-
-            {% elif block.type == 'congratulations' %}
-            <div class="congratulations-block">
-                <h3>Congratulations:</h3>
-                <p>{{ block.content|safe }}</p>
-            </div>
-
             {% endif %}
 
         </div>
@@ -373,122 +334,113 @@
 </div>
 
 <script>
-        function showLoader() {
-        const loader = document.getElementById('full-page-loader');
-        loader.style.display = 'flex';
-    }
-
-
     let currentBlock = 0;
-const contentBlocks = document.querySelectorAll('.content-block');
-const continueBtn = document.getElementById('continue-btn');
-const progressBar = document.getElementById('progress-bar');
-const courseDetailUrl = '{{ course_detail_url }}';
-const csrftoken = '{{ csrf_token }}';
-const lessonId = '{{ lesson.id }}';
-const fullPageLoader = document.getElementById('full-page-loader');
+    const contentBlocks = document.querySelectorAll('.content-block');
+    const continueBtn = document.getElementById('continue-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const courseDetailUrl = '{{ course_detail_url }}';
+    const csrftoken = '{{ csrf_token }}';
+    const lessonId = '{{ lesson.id }}';
+    const fullPageLoader = document.getElementById('full-page-loader');
 
-// Initially disable the continue button if starting on a question block
-if (contentBlocks[currentBlock].querySelector('.question-block, .multiple-choice-block')) {
-    continueBtn.disabled = true;
-}
-
-function showNextContentBlock() {
-    if (currentBlock < contentBlocks.length - 1) {
-        currentBlock++;
-        contentBlocks[currentBlock].classList.add('active');
-        
-        const progress = ((currentBlock + 1) / contentBlocks.length) * 100;
-        progressBar.style.width = progress + '%';
-        
-        contentBlocks[currentBlock].scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        // Check if the new block is a question block, and disable continue button if it is
-        if (contentBlocks[currentBlock].querySelector('.question-block, .multiple-choice-block')) {
-            continueBtn.disabled = true;
-        } else {
-            continueBtn.disabled = false;
-        }
-    } else {
-        continueBtn.textContent = 'Finish Learning';
-
-        // Disable the button immediately when clicked to prevent multiple submissions
+    // Initially disable the continue button if starting on a question block
+    if (contentBlocks[currentBlock].querySelector('.question-block, .multiple-choice-block')) {
         continueBtn.disabled = true;
+    }
 
-        // Show the full-page loader
-        fullPageLoader.style.display = 'flex';
+    function showNextContentBlock() {
+        if (currentBlock < contentBlocks.length - 1) {
+            currentBlock++;
+            contentBlocks[currentBlock].classList.add('active');
+            
+            const progress = ((currentBlock + 1) / contentBlocks.length) * 100;
+            progressBar.style.width = progress + '%';
+            
+            contentBlocks[currentBlock].scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-        const url = `/lessons/${lessonId}/complete/`;  
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({})
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Redirect to the course detail page
-                window.location.href = courseDetailUrl;
+            // Check if the new block is a question block, and disable continue button if it is
+            if (contentBlocks[currentBlock].querySelector('.question-block, .multiple-choice-block')) {
+                continueBtn.disabled = true;
             } else {
-                alert('Error completing the lesson.');
-                continueBtn.disabled = false;  // Re-enable the button if there's an error
-                fullPageLoader.style.display = 'none';  // Hide the loader if there's an error
+                continueBtn.disabled = false;
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            continueBtn.disabled = false;  // Re-enable the button in case of error
-            fullPageLoader.style.display = 'none';  // Hide the loader in case of error
-        });
+        } else {
+            continueBtn.textContent = 'Finish Learning';
+
+            // Disable the button immediately when clicked to prevent multiple submissions
+            continueBtn.disabled = true;
+
+            // Show the full-page loader
+            fullPageLoader.style.display = 'flex';
+
+            const url = `/lessons/${lessonId}/complete/`;  
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect to the course detail page
+                    window.location.href = courseDetailUrl;
+                } else {
+                    alert('Error completing the lesson.');
+                    continueBtn.disabled = false;  // Re-enable the button if there's an error
+                    fullPageLoader.style.display = 'none';  // Hide the loader if there's an error
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                continueBtn.disabled = false;  // Re-enable the button in case of error
+                fullPageLoader.style.display = 'none';  // Hide the loader in case of error
+            });
+        }
     }
-}
 
-function handleAnswer(questionId, correctAnswer) {
-    // Get the selected radio button
-    let selectedOption = document.querySelector(`input[name="question_${questionId}"]:checked`);
-    let feedbackElement = document.getElementById(`feedback_${questionId}`);
-
-    if (!selectedOption) {
-        feedbackElement.innerHTML = "Please select an answer.";
-        feedbackElement.style.color = "red";
-        return;
+    // This function checks if the user has typed at least 5 words into the input field
+    function checkWordCount(input) {
+        const wordCount = input.value.trim().split(/\s+/).length;
+        if (wordCount >= 2) {
+            continueBtn.disabled = false; // Enable continue button if 5 or more words are typed
+        } else {
+            continueBtn.disabled = true; // Disable button if less than 5 words
+        }
     }
 
-    // Extract the first letter of the selected option and the correct answer
-    let selectedLetter = selectedOption.value.trim().charAt(0).toUpperCase();
-    let correctLetter = correctAnswer.trim().charAt(0).toUpperCase();
+    function handleAnswer(questionId, correctAnswer) {
+        // Get the selected radio button
+        let selectedOption = document.querySelector(`input[name="question_${questionId}"]:checked`);
+        let feedbackElement = document.getElementById(`feedback_${questionId}`);
 
-    console.log("Selected Letter:", selectedLetter);  // Debugging
-    console.log("Correct Letter:", correctLetter);    // Debugging
+        if (!selectedOption) {
+            feedbackElement.innerHTML = "Please select an answer.";
+            feedbackElement.style.color = "red";
+            return;
+        }
 
-    // Compare the selected letter with the correct answer's letter
-    if (selectedLetter === correctLetter) {
-        feedbackElement.innerHTML = "Correct!";
-        feedbackElement.style.color = "green";
-    } else {
-        feedbackElement.innerHTML = `Incorrect. The correct answer is: ${correctAnswer}`;
-        feedbackElement.style.color = "red";
+        // Extract the first letter of the selected option and the correct answer
+        let selectedLetter = selectedOption.value.trim().charAt(0).toUpperCase();
+        let correctLetter = correctAnswer.trim().charAt(0).toUpperCase();
+
+        console.log("Selected Letter:", selectedLetter);  // Debugging
+        console.log("Correct Letter:", correctLetter);    // Debugging
+
+        // Compare the selected letter with the correct answer's letter
+        if (selectedLetter === correctLetter) {
+            feedbackElement.innerHTML = "Correct!";
+            feedbackElement.style.color = "green";
+        } else {
+            feedbackElement.innerHTML = `Incorrect. The correct answer is: ${correctAnswer}`;
+            feedbackElement.style.color = "red";
+        }
+
+        // Enable the continue button after the answer is selected and feedback is shown
+        continueBtn.disabled = false;
     }
-
-    // Enable the continue button after the answer is selected and feedback is shown
-    continueBtn.disabled = false;
-}
-
-
-
 </script>
 
 {% endblock %}
-
-
-<!--
-    {% if block.type == 'video' %}
-    <div class="video-wrapper">
-        <iframe width="560" height="315" src="{{ block.content }}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    </div>
-{% endif %}
-
--->
