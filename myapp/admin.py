@@ -76,3 +76,28 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
+from django.contrib import admin
+from .models import ForumPost, ForumComment
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+# Admin for Forum-related models
+class ForumPostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'category', 'created_at', 'updated_at')
+    search_fields = ('title', 'content', 'author__username')
+    list_filter = ('category', 'created_at', 'updated_at')
+    actions = ['delete_selected_posts']
+
+    def delete_selected_posts(self, request, queryset):
+        queryset.delete()
+        self.message_user(request, "Selected posts have been deleted.")
+    delete_selected_posts.short_description = "Delete selected forum posts"
+
+class ForumCommentAdmin(admin.ModelAdmin):
+    list_display = ('post', 'author', 'created_at')
+    search_fields = ('content', 'author__username')
+
+admin.site.register(ForumPost, ForumPostAdmin)
+admin.site.register(ForumComment, ForumCommentAdmin)
