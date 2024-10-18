@@ -1437,6 +1437,7 @@ client = Client(
     environment='production',  # Change to 'production' when you're ready
 )
 
+
 @csrf_exempt
 def process_payment(request):
     if request.method == "POST":
@@ -1497,17 +1498,26 @@ def process_payment(request):
             logger.info("Square API Payment Response: %s", payment_result)
 
             if payment_result.is_error():
-                error_messages = [error['detail'] for error in payment_result.errors]
-                logger.error("Payment Error: %s", error_messages)
-                Transaction.objects.create(
-                    user=user,
-                    amount=amount,
-                    subscription_type=selected_plan,
-                    status='error',
-                    error_logs=str(error_messages),
-                    recurring=False
-                )
-                return JsonResponse({"error": error_messages}, status=400)
+                error_codes = [error['code'] for error in payment_result.errors]
+                logger.error("Payment Error: %s", error_codes)
+
+                # Handling different types of errors
+                if 'CARD_DECLINED' in error_codes:
+                    return JsonResponse({"error": "Your card was declined. Please try another payment method."}, status=400)
+                elif 'INSUFFICIENT_FUNDS' in error_codes:
+                    return JsonResponse({"error": "Insufficient funds. Please check your account balance."}, status=400)
+                elif 'INVALID_CARD' in error_codes:
+                    return JsonResponse({"error": "Invalid card details. Please check and try again."}, status=400)
+                elif 'EXPIRED_CARD' in error_codes:
+                    return JsonResponse({"error": "Your card has expired. Please use another card."}, status=400)
+                elif 'NETWORK_ERROR' in error_codes:
+                    return JsonResponse({"error": "Network issue encountered. Please try again later."}, status=500)
+                elif 'FRAUD_REJECTED' in error_codes:
+                    return JsonResponse({"error": "Payment rejected due to suspected fraud. Please contact your bank."}, status=400)
+                elif 'AUTHENTICATION_REQUIRED' in error_codes:
+                    return JsonResponse({"error": "Additional authentication required. Please complete the verification."}, status=400)
+                else:
+                    return JsonResponse({"error": "Payment failed. Please try again."}, status=400)
 
             payment_id = payment_result.body['payment']['id']
 
@@ -1537,7 +1547,6 @@ def process_payment(request):
 
             card_id = card_result.body['card']['id']
 
-            
             # Step 4: Create or retrieve the user in the Django application
             user, created = User.objects.get_or_create(
                 username=user_email,
@@ -1564,7 +1573,6 @@ def process_payment(request):
             )
 
             # Step 7: Compute expiration date and next billing date
-            # Compute expiration date and next billing date
             expiration_date = None
             next_billing_date = None
             if selected_plan == '1-week':
@@ -1588,8 +1596,6 @@ def process_payment(request):
                     'selected_plan': selected_plan
                 }
             )
-
-
 
             # Step 9: Create a transaction with a success status and recurring info
             Transaction.objects.create(

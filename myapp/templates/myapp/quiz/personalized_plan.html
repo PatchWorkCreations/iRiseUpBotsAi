@@ -366,21 +366,40 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
 
                     const jsonResult = await response.json();
-                    if (jsonResult.success) {
-                        window.location.href = '/success/';
-                    } else {
-                        alert('Payment failed: ' + JSON.stringify(jsonResult.error));
-                    }
+
+                if (jsonResult.success) {
+                    window.location.href = '/success/';
                 } else {
-                    alert('Tokenization failed: ' + result.errors[0].message);
+                    handlePaymentError(jsonResult.error);  // Handle errors in a friendly way
                 }
-            } catch (e) {
-                console.error(e.message);
-                alert('Payment failed: ' + e.message);
+            } else {
+                alert('Tokenization failed: ' + result.errors[0].message);
             }
-        });
-        squareInitialized = true; // Set flag to prevent re-initialization
+        } catch (e) {
+            console.error(e.message);
+            alert('Payment failed: ' + e.message);
+        }
+    });
+    squareInitialized = true; // Set flag to prevent re-initialization
+}
+
+function handlePaymentError(error) {
+    let userMessage = 'An error occurred during payment.';
+    
+    if (error.includes('CARD_DECLINED')) {
+        userMessage = 'Your card was declined. Please try another payment method.';
+    } else if (error.includes('INSUFFICIENT_FUNDS')) {
+        userMessage = 'Insufficient funds. Please check your balance or use a different card.';
+    } else if (error.includes('EXPIRED_CARD')) {
+        userMessage = 'Your card has expired. Please use a different card.';
+    } else if (error.includes('NETWORK_ERROR')) {
+        userMessage = 'There was a network issue. Please try again later.';
+    } else if (error.includes('FRAUD_REJECTED')) {
+        userMessage = 'Your payment was rejected due to suspected fraud. Please contact your bank.';
     }
+
+    alert(userMessage);  // Display user-friendly error message
+}
 
     // Function to determine the amount based on the selected plan
     function determineAmountBasedOnPlan(plan) {
