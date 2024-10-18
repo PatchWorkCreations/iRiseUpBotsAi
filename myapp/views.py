@@ -1629,6 +1629,7 @@ def process_payment(request):
 # Initialize the logger
 logger = logging.getLogger(__name__)
 
+'''        
 # Initialize PayPal client
 paypal_client = PayPalClient(
     client_id=settings.PAYPAL_CLIENT_ID,
@@ -2008,6 +2009,7 @@ def paypal_webhook(request):
     # If the request method is not POST
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
+    '''
 
 def payment_page(request):
     return render(request, 'myapp/quiz/process_payment.html')

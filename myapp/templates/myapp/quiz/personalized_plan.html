@@ -231,7 +231,7 @@
         
         <div id="payment-selection">
             <button id="card-button" class="payment-selection-btn">Pay with Card</button>
-            <button id="paypal-button" class="payment-selection-btn">Pay with PayPal</button>
+         <!--       <button id="paypal-button" class="payment-selection-btn">Pay with PayPal</button> --> 
         </div>
         
         <div id="card-payment" class="payment-option" style="display:none;">
@@ -250,36 +250,36 @@
                 <form id="payment-form">
                     <div class="form-group">
                         <label for="givenName">First Name</label>
-                        <input type="text" id="givenName" name="givenName" class="form-control" required>
+                        <input type="text" id="givenName" name="givenName" placeholder="e.g. John" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="familyName">Last Name</label>
-                        <input type="text" id="familyName" name="familyName" class="form-control" required>
+                        <input type="text" id="familyName" name="familyName" placeholder="e.g. Doe" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="addressLine1">Address Line 1</label>
-                        <input type="text" id="addressLine1" name="addressLine1" class="form-control" required>
+                        <input type="text" id="addressLine1" name="addressLine1" placeholder="e.g. 1234 Elm Street" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="city">City</label>
-                        <input type="text" id="city" name="city" class="form-control" required>
+                        <input type="text" id="city" name="city" placeholder="e.g. New York" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="state">State</label>
-                        <input type="text" id="state" name="state" class="form-control" required>
-                    </div>
+                        <input type="text" id="state" name="state" placeholder="e.g. NY" class="form-control" required>
+                    </div>                    
                     <div class="form-group">
                         <label for="countryCode">Country Code</label>
-                        <input type="text" id="countryCode" name="countryCode" class="form-control" required>
+                        <input type="text" id="countryCode" name="countryCode" placeholder="ex. US" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
-                        <input type="text" id="phone" name="phone" class="form-control" required>
+                        <input type="text" id="phone" name="phone" placeholder="e.g. +1 234 567 8900 (US)" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" required>
-                    </div>
+                        <input type="email" id="email" name="email" placeholder="e.g. yourname@example.com" class="form-control" required>
+                    </div>                    
                     <div id="card-container" class="form-group"></div>
                     <button type="submit" class="btn-submit">Pay Now</button>
                 </form>
@@ -1039,11 +1039,9 @@ document.addEventListener('DOMContentLoaded', function () {
 .modal-body h2 .highlight {
     color: #5860F8; /* Purple color */
 }
-
-/* Button styles */
 #payment-selection {
     display: flex;
-    justify-content: space-between; /* Ensures the buttons have space between them */
+    justify-content: center; /* Centers the button */
 }
 
 .payment-selection-btn {
@@ -1051,29 +1049,21 @@ document.addEventListener('DOMContentLoaded', function () {
     border: 2px solid #ddd;
     padding: 10px;
     border-radius: 8px;
-    width: 48%; /* Make sure the buttons fit side by side */
+    width: 100%; /* Adjusts the button width */
+    max-width: 300px; /* Optional: limit the button width */
     margin-bottom: 15px;
     cursor: pointer;
     font-size: 1rem;
     font-weight: bold;
     text-align: center;
-    box-sizing: border-box; /* Ensures padding and border are included in width calculation */
-}
-
-.payment-selection-btn:first-child {
-    margin-right: 4%; /* Add a small gap between the two buttons */
-}
-
-
-
-.payment-selection-btn:hover {
-    background-color: #e0e0e0;
+    box-sizing: border-box;
 }
 
 #card-button {
     background-color: #5860F8;
     color: white;
 }
+
 
 #paypal-button {
     background-color: #ffc439;

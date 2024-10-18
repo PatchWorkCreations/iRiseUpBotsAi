@@ -1,3 +1,5 @@
+'''
+
 import requests
 import logging
 
@@ -23,7 +25,7 @@ class PayPalClient:
         try:
             logging.info("Requesting PayPal access token...")
             response = requests.post(url, headers=headers, data=data, auth=(self.client_id, self.client_secret))
-            response.raise_for_status()  # Raise an error for bad responses (4xx, 5xx)
+            response.raise_for_status()  
             access_token = response.json().get("access_token")
             if not access_token:
                 logging.error("Failed to retrieve access token from PayPal response.")
@@ -39,3 +41,4 @@ class PayPalClient:
         except Exception as err:
             logging.error(f"An error occurred: {err}")
             raise
+'''

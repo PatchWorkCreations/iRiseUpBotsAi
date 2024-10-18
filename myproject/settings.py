@@ -171,9 +171,11 @@ env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Access your variables
+'''
 PAYPAL_MODE = 'live' 
 PAYPAL_CLIENT_ID = env('PAYPAL_CLIENT_ID')
 PAYPAL_CLIENT_SECRET = env('PAYPAL_CLIENT_SECRET')
+'''
 SQUARE_ACCESS_TOKEN = env('SQUARE_ACCESS_TOKEN')
 
 

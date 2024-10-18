@@ -1,5 +1,5 @@
 # myapp/paypal_utils.py
-
+'''          
 import requests  # For making HTTP requests
 import uuid  # For generating unique request IDs
 from django.conf import settings  # To access Django settings
@@ -125,3 +125,4 @@ def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interv
     print(f"Created Plan ID for {plan_name}: {plan_id}")
     return plan_id
 
+ '''

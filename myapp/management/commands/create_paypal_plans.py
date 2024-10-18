@@ -1,3 +1,4 @@
+'''         
 from django.core.management.base import BaseCommand
 from myapp.paypal_utils import create_paypal_product, create_paypal_subscription_plan
 
@@ -31,3 +32,4 @@ class Command(BaseCommand):
             print(f"Created Plan ID for Lifetime Access: {lifetime_plan_id}")
         else:
             print("Failed to create PayPal product.")
+'''
