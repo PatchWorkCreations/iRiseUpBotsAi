@@ -6516,8 +6516,9 @@
   font-weight: 500;
   border-radius: 8px;
   padding: 18px 25px;
+  border: 1px solid black;
   color: var(--color-five);
-  background-color: var(--color-eight);
+  background-color: var(--color-two);
 }
 
 .service-list li a span {
@@ -6527,7 +6528,7 @@
 
 .service-list li a:hover {
   color: var(--color-five);
-  background-color: var(--main-color);
+  background-color: var(--color-seven);
 }
 
 .service-list li:last-child {
