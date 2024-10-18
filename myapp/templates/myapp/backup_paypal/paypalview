@@ -35,14 +35,14 @@ def create_paypal_order(request):
                     }
                 }],
                 "application_context": {
-                    "return_url": "https://iriseupai-production.up.railway.app/complete-paypal-payment/",
-                    "cancel_url": "https://iriseupai-production.up.railway.app/payment/"
+                    "return_url": "https://www.iriseupacademy.com/complete-paypal-payment/",
+                    "cancel_url": "https://www.iriseupacademy.com/payment/"
                 }
             }
 
             # Make the request to PayPal API
             response = requests.post(
-                f"https://api-m.sandbox.paypal.com/v2/checkout/orders",
+                f"https://api-m.paypal.com/v2/checkout/orders",
                 headers={
                     "Content-Type": "application/json",
                     "Authorization": f"Bearer {paypal_client.access_token}"

@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 # Initialize Square client
 client = Client(
     access_token=settings.SQUARE_ACCESS_TOKEN,
-    environment='sandbox',  # Change to 'production' when you're ready
+    environment='live',  # Change to 'production' when you're ready
 )
 
 @shared_task

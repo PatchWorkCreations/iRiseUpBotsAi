@@ -14,9 +14,11 @@ paypal_client = PayPalClient(
 )
 
 
+
+
 def create_paypal_product():
     # Define the API endpoint and headers
-    url = "https://api-m.sandbox.paypal.com/v1/catalogs/products"
+    url = "https://api-m.paypal.com/v1/catalogs/products"
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {paypal_client.access_token}",
@@ -29,7 +31,7 @@ def create_paypal_product():
         "description": "An AI-driven program designed to help you master AI tools, boost your income, and gain new digital skills.",  # A brief description of your product
         "type": "SERVICE",  # Since you're offering a subscription-based service
         "category": "SOFTWARE",  # Replace with a valid PayPal category
-        "home_url": "https://iriseupai-production.up.railway.app/"  # Link to your main homepage or landing page
+        "home_url": "https://www.iriseupacademy.com/"  # Link to your main homepage or landing page
     }
 
     # Make the request to PayPal API
@@ -56,7 +58,7 @@ def create_paypal_product():
         return None
     
 def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interval_count, amount, return_url, cancel_url):
-    url = "https://api-m.sandbox.paypal.com/v1/billing/plans"
+    url = "https://api-m.paypal.com/v1/billing/plans"
 
     headers = {
         "Content-Type": "application/json",
@@ -101,8 +103,8 @@ def create_paypal_subscription_plan(product_id, plan_name, interval_unit, interv
             "inclusive": False
         },
         "application_context": {
-            "return_url": "https://iriseupai-production.up.railway.app/complete-paypal-payment/",
-            "cancel_url": "https://iriseupai-production.up.railway.app/payment/"
+            "return_url": "https://www.iriseupacademy.com/complete-paypal-payment/",
+            "cancel_url": "https://www.iriseupacademy.com/payment/"
         }
     }
 

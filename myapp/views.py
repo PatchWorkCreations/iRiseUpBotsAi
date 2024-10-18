@@ -1221,7 +1221,7 @@ def personalized_plan(request):
 # Initialize the Square Client
 square_client = Client(
     access_token=settings.SQUARE_ACCESS_TOKEN,
-    environment='sandbox',
+    environment='live',
 )
 
 def setSelectedPlanInSession(request):
@@ -1434,7 +1434,7 @@ logger = logging.getLogger(__name__)
 # Initialize Square client
 client = Client(
     access_token=settings.SQUARE_ACCESS_TOKEN,
-    environment='sandbox',  # Change to 'production' when you're ready
+    environment='live',  # Change to 'production' when you're ready
 )
 
 @csrf_exempt
