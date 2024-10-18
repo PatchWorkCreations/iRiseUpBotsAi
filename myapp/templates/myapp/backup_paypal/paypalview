@@ -42,7 +42,7 @@ def create_paypal_order(request):
 
             # Make the request to PayPal API
             response = requests.post(
-                f"https://api-m.sandbox.paypal.com/v2/checkout/orders",
+                f"https://api-m.paypal.com/v2/checkout/orders",
                 headers={
                     "Content-Type": "application/json",
                     "Authorization": f"Bearer {paypal_client.access_token}"

@@ -1434,7 +1434,7 @@ logger = logging.getLogger(__name__)
 # Initialize Square client
 client = Client(
     access_token=settings.SQUARE_ACCESS_TOKEN,
-    environment='live',  # Change to 'production' when you're ready
+    environment='production',  # Change to 'production' when you're ready
 )
 
 @csrf_exempt

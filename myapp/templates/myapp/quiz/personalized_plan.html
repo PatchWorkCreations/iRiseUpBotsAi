@@ -3,7 +3,7 @@
 {% block title %}Your Personalized AI-Driven Plan{% endblock %}
 {% block content %}
 <head>
-    <script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+    <script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
     <script src="https://www.paypal.com/sdk/js?client-id=AX8s0c8qV3I8_8EORobzhGaQ7sg5m_9_vVfLUmXLqmJaEM2lYURoArIL9wjJDVxZ2EIHRKI8qWoZrKGK_&vault=true&intent=subscription"></script>
 
 </head>
@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Square payment setup function
     async function setupSquarePayments() {
         if (squareInitialized) return; // Prevent re-initialization
-        const payments = Square.payments('sandbox-sq0idb-kSzUaVGK_5ZA5rUkPyNk4A', 'LJEEWPCAXNTFS');
+        const payments = Square.payments('sq0idp-jpJ9YFYpLwuh5nFx4B-qXg', 'EAAAl2cX_BlxkeIjsmGCiBlN8Xl4D4E-FseAln86ji11iLeqoYAackUBt9ZTAedg');
         const card = await payments.card();
         await card.attach('#card-container');
 

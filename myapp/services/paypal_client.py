@@ -14,7 +14,7 @@ class PayPalClient:
         self.get_access_token()
 
     def get_access_token(self):
-        url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
+        url = "https://api-m.paypal.com/v1/oauth2/token"
         headers = {
             "Accept": "application/json",
             "Accept-Language": "en_US"
@@ -43,14 +43,14 @@ class PayPalClient:
         }
 
     def get_order(self, order_id):
-        url = f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{order_id}"
+        url = f"https://api-m.paypal.com/v2/checkout/orders/{order_id}"
         headers = self.get_headers()
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         return response.json()
 
     def capture_order(self, order_id):
-        url = f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{order_id}/capture"
+        url = f"https://api-m.paypal.com/v2/checkout/orders/{order_id}/capture"
         headers = self.get_headers()
         response = requests.post(url, headers=headers)
         response.raise_for_status()
