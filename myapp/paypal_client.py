@@ -5,11 +5,13 @@ class PayPalClient:
     def __init__(self, client_id, client_secret):
         self.client_id = client_id
         self.client_secret = client_secret
+        logging.info(f"PayPal Client ID: {self.client_id}")
+        logging.info(f"PayPal Client Secret: {self.client_secret[:4]}****")  # Hide most of the secret for safety
         self.access_token = self.get_access_token()
 
 
     def get_access_token(self):
-        url = "https://api-m.paypal.com/v1/oauth2/token"
+        url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
         headers = {
             "Accept": "application/json",
             "Accept-Language": "en_US",

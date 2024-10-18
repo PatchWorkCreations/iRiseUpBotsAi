@@ -21,7 +21,8 @@ class Command(BaseCommand):
             twelve_week_plan_id = create_paypal_subscription_plan(product_id, "12-week", "WEEK", 12, 9700, return_url, cancel_url)
             
             # Create a one-time payment plan for lifetime access
-            lifetime_plan_id = create_paypal_subscription_plan(product_id, "lifetime", "YEAR", 100, 29700, return_url, cancel_url)
+            lifetime_plan_id = create_paypal_subscription_plan(product_id, "lifetime", "YEAR", 1, 29700, return_url, cancel_url)
+
             
             # Print the created plan IDs
             print(f"Created Plan ID for 1-week: {one_week_plan_id}")
