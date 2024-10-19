@@ -6040,6 +6040,8 @@
   transition: transform 0.4s ease, -webkit-transform 0.4s ease;
 }
 
+
+
 .service-detail_play span {
   position: absolute;
   width: 96px;
@@ -10835,7 +10837,7 @@ body {
 }
 
 .single_blog h2 a {
-  color: #004E75;
+  color: #021620;
   font-weight: 700; /* Slightly reduced font weight */
   margin-bottom: 30px;
   display: block;
@@ -10859,7 +10861,7 @@ body {
 }
 
 .single_blog span a {
-  color: #014B03;
+  color: #011502;
   font-weight: 700;
   transition: color 0.3s ease; /* Added smooth transition */
 }
