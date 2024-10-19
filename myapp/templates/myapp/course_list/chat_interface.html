@@ -144,7 +144,7 @@
 
 <body>
     <div class="chat-container">
-        <div class="chat-header">Ari, Your Personal Assistant</div>
+        <div class="chat-header">Koda, Your Personal Assistant</div>
         <div id="chatbox">
             <!-- Chat messages will appear here -->
         </div>
@@ -218,8 +218,8 @@
 
         // Function to initiate the chat with the bot's greeting message
         function initiateBotMessage() {
-            const botGreeting = "Hey there! I’m Ari, your personal assistant. I’m here to help make things easier. How’s your day going so far?";
-            addMessage('Ari', botGreeting);
+            const botGreeting = "Hey there! I’m Koda, your personal assistant. I’m here to help make things easier. How’s your day going so far?";
+            addMessage('Koda', botGreeting);
         }
 
         // Trigger the bot's initial message when the page loads
@@ -250,8 +250,8 @@
             .then(response => response.json())
             .then(data => {
                 hideTypingIndicator();
-                removeSeenStatus();  // Remove 'Seen' status after Ari responds
-                addMessage('Ari', data.response, 'bot');
+                removeSeenStatus();  // Remove 'Seen' status after Koda responds
+                addMessage('Koda', data.response, 'bot');
                 document.getElementById('message').value = '';  // Clear input field
             })
             .catch(error => {

@@ -3127,7 +3127,7 @@ def get_response(request):
             response = openai_client.chat.completions.create(  # Use openai_client instead of client
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are Ari, a kind, respectful, and emotionally intelligent assistant for iRiseup.ai. "
+                    {"role": "system", "content": "You are Koda, a kind, respectful, and emotionally intelligent assistant for iRiseup.ai. "
                      "When users express feelings like sadness, grief, or other emotions, respond with deep empathy. "
                      "Ask clarifying questions when something is ambiguous, and only provide technical or product-based help when the user specifically asks for it or when it feels appropriate. "
                      "Your goal is to assist users with any requests they may have, while also specializing in content creation, e-commerce, social media management, and digital products. "
@@ -3139,7 +3139,7 @@ def get_response(request):
             # Extract the response from the API
             message = response.choices[0].message.content
 
-            # Append Ari's response to the conversation history
+            # Append Koda's response to the conversation history
             conversation_history.append({"role": "assistant", "content": message})
 
             # Update the session with the new conversation history
