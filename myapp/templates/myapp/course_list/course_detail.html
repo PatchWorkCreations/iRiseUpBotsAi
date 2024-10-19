@@ -374,7 +374,7 @@ h2 {
                 <!-- Display Continue button if unlocked, otherwise show Locked -->
                 <div class="lesson-actions">
                     {% if lessons_unlock_status|get_item:lesson.id|default:False %}
-                    <span class="lesson-unlock-icon">🔓</span>
+                    <span class="lesson-unlock-icon"></span>
                     <a href="{% url 'lesson_detail' lesson.id %}" class="continue-btn">Continue Lesson</a>
                     {% else %}
                     <span class="locked-lesson">🔒 Locked</span>
