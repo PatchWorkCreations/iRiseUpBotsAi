@@ -18,6 +18,7 @@ html_template = """
 	<!-- Cursor End -->
  	
 	<!-- Preloader -->
+	  <!--       
 	<div class="loader-wrap">
 		<div class="preloader">
 			<div class="preloader-close">x</div>
@@ -36,6 +37,7 @@ html_template = """
 			</div>
 		</div>
 	</div>
+	-->
 	<!-- Preloader End -->
 	
 	<!-- Main Header -->
