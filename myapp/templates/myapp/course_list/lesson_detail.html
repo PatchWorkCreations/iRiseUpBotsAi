@@ -84,28 +84,29 @@
         transition: width 0.3s ease;
     }
 
-    /* Continue button */
-    .lesson-container .continue-btn {
-        background-color: #00796b;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        text-align: center;
-        display: inline-block;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1000;
-        font-size: 0.9rem;
-    }
+/* Continue button */
+.lesson-container .continue-btn {
+    background-color: #00796b;
+    color: #fff;
+    border: none;
+    padding: 10px 40px;  /* Increased padding for width */
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    font-size: 0.9rem;
+}
 
-    .lesson-container .continue-btn:hover {
-        background-color: #00695c;
-    }
+.lesson-container .continue-btn:hover {
+    background-color: #00695c;
+}
+
 
     /* Image styles */
     .lesson-container img {

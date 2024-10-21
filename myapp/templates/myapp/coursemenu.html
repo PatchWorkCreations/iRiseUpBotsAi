@@ -4,7 +4,7 @@
 {% load static %}
 {% block content %}
 <style>
-    body {
+body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f6f9;
     margin: 0;
@@ -111,10 +111,10 @@ h1 {
 }
 
 .course-card.inactive {
-        background-color: #f0f0f0; /* Gray background for inactive courses */
-        filter: grayscale(100%); /* Optional: make the image grayscale */
-        cursor: not-allowed; /* Show not-allowed cursor for inactive cards */
-    }
+    background-color: #f0f0f0; /* Gray background for inactive courses */
+    filter: grayscale(100%); /* Optional: make the image grayscale */
+    cursor: not-allowed; /* Show not-allowed cursor for inactive cards */
+}
 
 /* Ensure full image visibility */
 .course-image img {
@@ -126,15 +126,15 @@ h1 {
 }
 
 .coming-soon {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        padding: 5px 10px;
-        background-color: #6c757d;
-        color: #fff;
-        font-size: 12px;
-        border-radius: 5px;
-    }
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    background-color: #6c757d;
+    color: #fff;
+    font-size: 12px;
+    border-radius: 5px;
+}
 
 h3 {
     font-size: 18px;
@@ -164,9 +164,9 @@ h3 {
 }
 
 .disabled-btn {
-        background-color: #6c757d;
-        pointer-events: none;
-    }
+    background-color: #6c757d;
+    pointer-events: none;
+}
 
 /* Course grid */
 .course-grid {
@@ -176,92 +176,124 @@ h3 {
     justify-content: space-between;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-    .course-card {
-        width: calc(33.333% - 20px); /* 3 cards per row on smaller screens */
-    }
+.mobile-nav {
+    display: none; /* Hidden by default */
 }
 
+/* Style for mobile navigation bar for the tabs */
 @media (max-width: 768px) {
-    .course-card {
-        width: calc(50% - 20px); /* 2 cards per row on tablets */
+    .tabs {
+        display: none; /* Hide the tabs */
     }
-}
 
-@media (max-width: 480px) {
-    .course-card {
-        width: calc(100% - 20px); /* 1 card per row on mobile */
-    }
-}
-
-
-    #full-page-loader {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.9);
-        z-index: 10000;
-        display: none; /* Initially hidden */
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
+    /* Dropdown menu for mobile navigation */
+    .mobile-nav {
+        display: block;
         text-align: center;
+        margin-bottom: 20px;
     }
 
-    /* Bouncing balls animation */
-    .bouncing-balls {
-        display: flex;
-        justify-content: center;
-        font-size: 3rem;
+    .mobile-nav select {
+        padding: 10px;
+        border-radius: 25px;
+        font-weight: bold;
+        width: 100%;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        font-size: 1rem;
+        cursor: pointer;
     }
+}
 
-    .bouncing-balls span {
-        display: inline-block;
-        margin: 0 10px;
-        animation: bounce 0.6s infinite alternate;
+/* Modify course cards for mobile view */
+@media (max-width: 768px) {
+    .course-grid {
+        flex-direction: column;
+        align-items: center;
     }
-
-    .bouncing-balls span:nth-child(2) {
-        animation-delay: 0.1s;
+    
+    .course-card {
+        width: 100%; /* Full width course cards on mobile */
+        max-width: 400px;
     }
+}
 
-    .bouncing-balls span:nth-child(3) {
-        animation-delay: 0.2s;
-    }
 
-    @keyframes bounce {
-        to {
-            transform: translateY(-20px);
-        }
-    }
+/* Full page loader */
+#full-page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 10000;
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
 
-    .pagination {
+/* Bouncing balls animation */
+.bouncing-balls {
     display: flex;
     justify-content: center;
+    font-size: 3rem;
+}
+
+.bouncing-balls span {
+    display: inline-block;
+    margin: 0 10px;
+    animation: bounce 0.6s infinite alternate;
+}
+
+.bouncing-balls span:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.bouncing-balls span:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+@keyframes bounce {
+    to {
+        transform: translateY(-20px);
+    }
+}
+
+/* Pagination */
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 20px;
+    gap: 5px; /* Reduced space between buttons */
 }
 
 .step-links a, .step-links .current {
-    margin: 0 5px;
-    padding: 8px 16px;
-    border-radius: 50px;
-    background-color: #42a5f5;
+    padding: 6px 10px; /* Smaller padding for a cleaner look */
+    border-radius: 25px; /* Still keep the rounded style */
+    background-color: #007bff; /* Main button color */
     color: white;
     text-decoration: none;
     font-weight: bold;
     transition: background-color 0.3s ease;
+    text-align: center;
+    min-width: 40px; /* Small width to accommodate arrows */
+    white-space: nowrap;
 }
 
 .step-links a:hover {
-    background-color: #1e88e5;
+    background-color: #0056b3;
 }
 
 .step-links .current {
-    background-color: #1e88e5;
-    pointer-events: none; /* Prevent clicking on the current page */
+    background-color: #0056b3;
+    pointer-events: none;
 }
 
 .step-links a.disabled {
@@ -271,13 +303,68 @@ h3 {
 }
 
 .step-links a:first-child, .step-links a:last-child {
-    background-color: #f44336; /* Red for first/last page buttons */
+    background-color: #f44336; /* First/last in red */
     color: white;
 }
 
 .step-links a:first-child:hover, .step-links a:last-child:hover {
     background-color: #d32f2f;
 }
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+    .pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .step-links {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto; /* Allows scrolling if there are many page numbers */
+    }
+
+    .step-links a, .step-links .current {
+        margin: 0 5px;
+        padding: 0;
+        font-size: 1rem; /* Font size similar to the design */
+        border: none;
+        background: none;
+        color: #e57373; /* Light red color for inactive numbers */
+        text-decoration: none;
+    }
+
+    .step-links .current {
+        font-weight: bold;
+        color: #e64a19; /* Darker red for active page */
+        border-bottom: 2px solid #e64a19; /* Underline active page */
+    }
+
+    .step-links a:hover {
+        color: #d32f2f;
+    }
+
+    .step-links a.disabled {
+        color: #ddd;
+    }
+
+    .step-links .next-btn {
+        color: #e64a19; /* Red color for next button */
+        font-weight: bold;
+        text-decoration: none;
+        margin-left: 15px;
+    }
+
+    .step-links .next-btn:hover {
+        color: #d32f2f; /* Darker red on hover */
+    }
+}
+
+
+
+
 
 </style>
 <div id="full-page-loader">
@@ -290,14 +377,26 @@ h3 {
 
 <div class="mobile-container">
     <div class="coursemenu_container">
-        <h1>My Courses</h1>
-
+        {% if user.is_authenticated %}
+        <h1>Hi {{ user.username }}, Let's Continue Learning!</h1>
+        {% else %}
+        <p>Hi! Take your quiz today. <a href="{% url 'start_quiz' %}">Click Here!</a></p>
+        {% endif %}
         <!-- Tabs for Ongoing, Completed, Saved, Favorite -->
         <div class="tabs">
             <div class="tab active" data-tab="ongoing">Ongoing ({{ ongoing_courses|length }})</div>
             <div class="tab" data-tab="completed">Completed ({{ completed_courses|length }})</div>
             <div class="tab" data-tab="saved">Saved ({{ saved_courses|length }})</div>
             <div class="tab" data-tab="favorite">Favorite ({{ favorite_courses|length }})</div>
+        </div>
+
+        <div class="mobile-nav">
+            <select id="course-section-selector">
+                <option value="ongoing" selected>Ongoing ({{ ongoing_courses|length }})</option>
+                <option value="completed">Completed ({{ completed_courses|length }})</option>
+                <option value="saved">Saved ({{ saved_courses|length }})</option>
+                <option value="favorite">Favorite ({{ favorite_courses|length }})</option>
+            </select>
         </div>
 
         <!-- Ongoing Courses Section -->
@@ -421,27 +520,23 @@ h3 {
             <!-- Pagination controls -->
             <div class="pagination">
                 <span class="step-links">
-                    {% if recommended_courses_page.has_previous %}
-                        <a href="?page=1" onclick="showLoader()">&laquo; first</a>
-                        <a href="?page={{ recommended_courses_page.previous_page_number }}" onclick="showLoader()">previous</a>
-                    {% else %}
-                        <a class="disabled">&laquo; first</a>
-                        <a class="disabled">previous</a>
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ recommended_courses_page.number }} of {{ recommended_courses_page.paginator.num_pages }}
-                    </span>
-
+                    {% for num in recommended_courses_page.paginator.page_range %}
+                        {% if num == recommended_courses_page.number %}
+                            <span class="current">{{ num }}</span>
+                        {% else %}
+                            <a href="?page={{ num }}" onclick="showLoader()">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    
                     {% if recommended_courses_page.has_next %}
-                        <a href="?page={{ recommended_courses_page.next_page_number }}" onclick="showLoader()">next</a>
-                        <a href="?page={{ recommended_courses_page.paginator.num_pages }}" onclick="showLoader()">last &raquo;</a>
+                        <a href="?page={{ recommended_courses_page.next_page_number }}" class="next-btn" onclick="showLoader()">NEXT</a>
                     {% else %}
-                        <a class="disabled">next</a>
-                        <a class="disabled">last &raquo;</a>
+                        <a class="disabled">NEXT</a>
                     {% endif %}
                 </span>
             </div>
+            
+                       
         </div>
         
     </div>
