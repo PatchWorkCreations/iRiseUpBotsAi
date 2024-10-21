@@ -2,10 +2,10 @@ from PIL import Image
 import os
 
 # Define the folder containing your images
-image_folder = '/Users/Julia/Downloads/braine-package/myapp/static/myapp/images/'
+image_folder = '/Users/Julia/Downloads/braine-package/myapp/static/myapp/images/iriseup'
 
 # Create an output folder for compressed images
-compressed_folder = '/Users/Julia/Downloads/braine-package/myapp/static/myapp/compressed_images/'
+compressed_folder = '/Users/Julia/Downloads/braine-package/myapp/static/myapp/images/compressed_images/iriseup'
 
 # Ensure the compressed folder exists
 if not os.path.exists(compressed_folder):
