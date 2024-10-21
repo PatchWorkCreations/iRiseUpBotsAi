@@ -168,7 +168,7 @@
             <div class="row">                                
                 <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
                     <div class="ab_img">
-                        <img src="{% static 'myapp/images/compressed_images/iriseup/Happy_friends.jpg' %}" class="img-fluid" alt="Learn New Skills at iRiseUp Academy">
+                        <img src="{% static 'myapp/images/compressed_images/iriseup/Happy_friends.jpg' %}" class="img-fluid" alt="Learn New Skills at iRiseUp Academy" loading="lazy">
                     </div>
                 </div><!--- END COL -->                    
                 <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
@@ -291,9 +291,9 @@
             </div>
             <div class="col-lg-6 col-sm-12 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" data-wow-offset="0">
                 <div class="cp_img">
-                    <img src="{% static 'myapp/images/compressed_images/compressed_images/iriseup/2.png' %}" class="img-fluid" alt="Learn New Skills Online with iRiseUp Academy">
+                    <img src="{% static 'myapp/images/compressed_images/iriseup/2.png' %}" class="img-fluid" alt="Learn New Skills Online with iRiseUp Academy" loading="lazy">
                 </div>
-            </div>
+            </div>            
         </div>
     </div>
 </section>
@@ -328,113 +328,6 @@
         {% endfor %}
     </ul>
     {% endif %}
-
-	
-	<!-- 
-	<section class="topic_content_area section-padding">
-	   <div class="container">
-			<div class="section-title">
-				<h2>Start Learning</h2>
-				<p>Popular <span><em>Topics To Learn</em></span> From Today.</p>
-			</div>
-			<div class="row">									
-				<div class="col-lg-4 col-sm-6 col-xs-12">
-					<div class="single_tca">
-						<img src="{% static 'myapp/images/icon/ct1.svg' %}" alt="UI/UX Design Icon">
-						<h2><a href="{% url 'start_quiz' %}">UI/UX Design</a></h2>
-						<span>71 Courses</span>
-					</div>					
-				</div>
-				
-				<div class="col-lg-4 col-sm-6 col-xs-12">
-					<div class="single_tca">
-						<img src="{% static 'myapp/images/icon/ct2.svg' %}" alt="Digital Program Icon">
-						<h2><a href="{% url 'start_quiz' %}">Digital Program</a></h2>
-						<span>59 Courses</span>
-					</div>					
-				</div>
-				<div class="col-lg-4 col-sm-6 col-xs-12">
-					<div class="single_tca">
-						<img src="{% static 'myapp/images/icon/ct3.svg' %}" alt="Finance Icon">
-						<h2><a href="{% url 'start_quiz' %}">Finance</a></h2>
-						<span>68 Courses</span>
-					</div>					
-				</div>
-				
-			</div>
-		</div>
-	</section>
-	
-	
-	{% load static %}
-
-<section class="our-event section-padding">
-	<div class="container">
-		<div class="section-title">
-			<h2>Upcoming Events</h2>
-			<p>Join With Us <span><em>Our Events</em></span></p>
-		</div>				
-		<div class="row">				
-			<div class="col-lg-4 col-sm-6 col-xs-12">
-				<div class="event-slide">
-					<div class="event-slide es">
-						<div class="ed_mb">
-							<span class="date">26</span>
-							<span class="month">Oct</span>
-						</div>							
-						<div class="event-content ec_pd">
-							<h3><a href="{% url 'start_quiz' %}">Chiter Astana Event</a></h3>
-							<span><i class="fa fa-clock-o"></i>10.00AM - 12.00PM</span>
-							<span><i class="fa fa-table"></i><strong>At iRiseUp School</strong></span>
-							<p>Lorem ipsum dolor sit amet magna consectetur adipisicing elit.</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4 col-sm-6 col-xs-12">
-				<div class="event-slide es">
-					<div class="ed_mb">
-						<span class="date">26</span>
-						<span class="month">Oct</span>
-					</div>							
-					<div class="event-content ec_pd">
-						<h3><a href="{% url 'start_quiz' %}">Chiter Astana Event</a></h3>
-						<span><i class="fa fa-clock-o"></i>10.00AM - 12.00PM</span>
-						<span><i class="fa fa-table"></i><strong>At iRiseUp School</strong></span>
-						<p>Lorem ipsum dolor sit amet magna consectetur adipisicing elit.</p>
-					</div>
-				</div> 
-			</div> 
-			<div class="col-lg-4 col-sm-6 col-xs-12">
-				<div class="event-slide es">
-					<div class="ed_mb">
-						<span class="date">26</span>
-						<span class="month">Oct</span>
-					</div>							
-					<div class="event-content ec_pd">
-						<h3><a href="{% url 'start_quiz' %}">Chiter Astana Event</a></h3>
-						<span><i class="fa fa-clock-o"></i>10.00AM - 12.00PM</span>
-						<span><i class="fa fa-table"></i><strong>At iRiseUp School</strong></span>
-						<p>Lorem ipsum dolor sit amet magna consectetur adipisicing elit.</p>
-					</div>
-				</div> 
-				<div class="event-slide es">
-					<div class="ed_mb">
-						<span class="date">29</span>
-						<span class="month">Oct</span>
-					</div>	
-					<div class="event-content ec_pd">						
-						<h3><a href="{% url 'start_quiz' %}">Dasel Bhai Program</a></h3>
-						<span><i class="fa fa-clock-o"></i>10.00AM - 12.00PM</span>
-						<span><i class="fa fa-table"></i><strong>At iRiseUp School</strong></span>
-						<p>Lorem ipsum dolor sit amet magna consectetur adipisicing elit.</p>							
-					</div>
-				</div> 	
-			</div> 
-		</div> 
-	</div>			
-</section>
-END ROW -->
 	 	
 	
 	<!-- START TESTIMONIALS-->
@@ -462,7 +355,7 @@ END ROW -->
                             </div>
                             <div class="testi_pic_title tpt_one">
                                 <div class="pic">
-                                    <img src="{% static 'myapp/images/iriseup/male1.webp' %}" alt="James Clayton - Digital Marketing Specialist">
+                                    <img src="{% static 'myapp/images/iriseup/male1.webp' %}" alt="James Clayton - Digital Marketing Specialist" loading="lazy">
                                 </div> 
                                 <h4>James Clayton</h4>
                                 <small class="post">- Digital Marketing Specialist</small>
@@ -481,7 +374,7 @@ END ROW -->
                             </div>
                             <div class="testi_pic_title tpt_two">
                                 <div class="pic">
-                                    <img src="{% static 'myapp/images/iriseup/male2.webp' %}" alt="Laura Green - Permaculture Enthusiast">
+                                    <img src="{% static 'myapp/images/iriseup/male2.webp' %}" alt="Laura Green - Permaculture Enthusiast" loading="lazy">
                                 </div>
                                 <h4>Laura Green</h4>
                                 <small class="post">- Permaculture Enthusiast</small>
@@ -500,7 +393,7 @@ END ROW -->
                             </div>
                             <div class="testi_pic_title tpt_three">
                                 <div class="pic">
-                                    <img src="{% static 'myapp/images/compressed_images/iriseup/male3.jpg' %}" alt="Alex Feroundo - Social Media Manager">
+                                    <img src="{% static 'myapp/images/compressed_images/iriseup/male3.jpg' %}" alt="Alex Feroundo - Social Media Manager" loading="lazy">
                                 </div>
                                 <h4>Alex Feroundo</h4>
                                 <small class="post">- Social Media Manager</small>
@@ -528,9 +421,9 @@ END ROW -->
                 <div class="col-lg-4 col-sm-4 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.{{ forloop.counter }}s" data-wow-offset="0">
                     <div class="single_blog">
                         {% if blog.image %}
-                        <img src="{{ blog.image.url }}" class="img-fluid" alt="{{ blog.title }}">
+                        <img src="{{ blog.image.url }}" class="img-fluid" alt="{{ blog.title }}" loading="lazy">
                         {% else %}
-                        <img src="{% static 'myapp/images/blog/placeholder.png' %}" class="img-fluid" alt="Placeholder image">
+                        <img src="{% static 'myapp/images/blog/placeholder.png' %}" class="img-fluid" alt="Placeholder image" loading="lazy">
                         {% endif %}
                         <div class="content_box">
                             <span>{{ blog.publish_date|date:"F d, Y" }} | 
