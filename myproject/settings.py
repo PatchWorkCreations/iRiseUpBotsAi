@@ -3,22 +3,23 @@ from pathlib import Path
 import environ
 from dotenv import load_dotenv
 
-# Load environment variables
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))  # Optional .env file
-
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables
+env = environ.Env()
+load_dotenv(os.path.join(BASE_DIR, '.env'))  # Load .env if available
+environ.Env.read_env()  # Optional if you're using django-environ only
 
 # Secret key
 SECRET_KEY = env('DJANGO_SECRET_KEY', default="pqu__%t3x2e$+%lk9d#vg-7d=s7$m+b1&u91tfk8#gt*di$xkn")
 
 # Debug mode
-DEBUG = env.bool('DEBUG', default=True)
+DEBUG = env.bool('DEBUG', default=False)
 
 # Allowed hosts and trusted origins
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['iriseupbotsai-production.up.railway.app', 'localhost', '127.0.0.1', '0.0.0.0'])
-CSRF_TRUSTED_ORIGINS = [f"http://iriseupbotsai-production.up.railway.app" for host in ALLOWED_HOSTS]
+CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host != 'localhost']
 
 # Installed apps
 INSTALLED_APPS = [
