@@ -90,11 +90,7 @@ SESSION_COOKIE_AGE = 1209600  # Sessions last 2 weeks
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-# Localization
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_TZ = True
+
 
 # Static and media files
 STATIC_URL = '/static/'
@@ -102,8 +98,7 @@ STATICFILES_DIRS = [BASE_DIR / 'myapp' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Authentication redirects
 LOGIN_URL = 'custom_login'
