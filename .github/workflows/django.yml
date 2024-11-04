@@ -18,24 +18,37 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.x"
+          python-version: "3.9"
 
-      # Step 3: Install dependencies
+      # Step 3: Cache dependencies
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # Step 4: Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Step 4: Set environment variables and run the application
-      - name: Run Django Application
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }} # Access the OpenAI key from GitHub Secrets
-        run: |
-          echo "Running Django with OpenAI key: $OPENAI_API_KEY"
-          python manage.py migrate  # Apply migrations before starting the server
-          python manage.py runserver 0.0.0.0:8000  # Run the Django app on the GitHub Actions runner
-
-      - name: Print OpenAI Key (For Debugging Only - REMOVE before Production)
-        run: echo $OPENAI_API_KEY
+      # Step 5: Set environment variables for secrets
+      - name: Set environment variables
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: echo "Environment variables set for Django"
+
+      # Step 6: Run database migrations
+      - name: Run migrations
+        run: python manage.py migrate
+
+      # Step 7: Collect static files (optional)
+      - name: Collect static files
+        run: python manage.py collectstatic --noinput
+
+      # Step 8: Run tests
+      - name: Run Django tests
+        run: python manage.py test

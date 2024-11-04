@@ -7,7 +7,11 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
+import os
+
+# Fetch the secret key from environment variables with a fallback to a default
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "pqu__%t3x2e$+%lk9d#vg-7d=s7$m+b1&u91tfk8#gt*di$xkn")
+
 DEBUG = True
 
 site_domain = os.getenv('RAILWAY_PUBLIC_DOMAIN', default='')
