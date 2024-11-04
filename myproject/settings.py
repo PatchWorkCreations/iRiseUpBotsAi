@@ -1,7 +1,5 @@
 import os
 from pathlib import Path
-from celery import Celery
-from celery.schedules import crontab
 import environ
 import os
 
@@ -18,20 +16,14 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '0.0.0.0',
-    site_domain,
-    'www.iriseupacademy.com'
-    # Add any other domains or IPs as needed
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    f'https://{site_domain}',
     'http://localhost:8000', 
-     'https://wwww.iriseupacademy.com' # Add other domains as needed
 ]
 
 # Application definition
 INSTALLED_APPS = [
-    'customadmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,8 +31,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp.apps.MyAppConfig',
-    'django_celery_beat',
-    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -142,25 +132,13 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
-            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
-        'django': {
+        'django.template': {
             'handlers': ['console'],
             'level': 'DEBUG',
-            'propagate': True,
-        },
-        # You can add your custom logger here
-        'myapp': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'celery': {
-            'handlers': ['console'],
-            'level': 'INFO',
         },
     },
 }

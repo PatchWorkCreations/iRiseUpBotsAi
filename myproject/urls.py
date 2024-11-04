@@ -7,7 +7,6 @@ from myapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('customadmin/', include('customadmin.urls')),
     path('', include('myapp.urls')),
     
 ]

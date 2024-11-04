@@ -1,4 +1,2 @@
 web: gunicorn myproject.wsgi:application --log-file -
-worker: celery -A myproject worker --loglevel=info
-beat: celery -A myproject beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
-flower: celery -A myproject flower --port=5555
+
