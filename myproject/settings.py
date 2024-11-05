@@ -47,6 +47,9 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'myproject.urls'
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+
 # Template settings
 TEMPLATES = [
     {
@@ -64,17 +67,12 @@ TEMPLATES = [
     },
 ]
 
-# Database configuration
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME', default='railway'),
-        'USER': env('DB_USER', default='postgres'),
-        'PASSWORD': env('DB_PASSWORD', default='UDZTGhtZVqFmQGeESnFXRkNtJSAkLCIC'),
-        'HOST': env('DB_HOST', default='postgres.railway.internal'),
-        'PORT': env('DB_PORT', default='5432'),
-    }
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
