@@ -295,7 +295,49 @@ def grant_course_access(user, selected_plan):
 
     return True
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from myapp.tasks import send_welcome_email  # Ensure this import is correct
+from .models import EmailCollection  # Assuming you have an EmailCollection model
+
+def email_collection(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        receive_offers = request.POST.get('receive_offers') == 'on'
+
+        if not email:
+            messages.error(request, "Email cannot be empty.")
+            return render(request, 'myapp/quiz/email_collection.html', {
+                'receive_offers': receive_offers,
+            })
+
+        # Check if the email already exists
+        email_collection, created = EmailCollection.objects.get_or_create(
+            email=email,
+            defaults={'receive_offers': receive_offers}
+        )
+
+        if not created:
+            messages.error(request, "This email is already registered. Please use a different email or log in.")
+            return render(request, 'myapp/quiz/email_collection.html', {
+                'email': email,
+                'receive_offers': receive_offers,
+            })
+
+        # Send the welcome email asynchronously
+        send_welcome_email.delay(email)
+
+        # Store the email in the session for later use during payment
+        request.session['email'] = email
+
+        return redirect('personalized_plan')
+
+    return render(request, 'myapp/quiz/email_collection.html')
+
+
 from django.core.mail import EmailMultiAlternatives
+
+
 
 def send_welcomepassword_email(user_email, random_password):
     """
@@ -577,8 +619,6 @@ def process_payment(request):
 
             logger.info(f"User {user_email} processed for payment.")
 
-            # Step 5: Save the quiz response to the database linked with the user
-            save_quiz_response(request, user)
 
             # Step 6: Store the customer_id and card_id in the database
             SquareCustomer.objects.update_or_create(
