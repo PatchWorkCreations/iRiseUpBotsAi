@@ -294,10 +294,11 @@ def grant_course_access(user, selected_plan):
         UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
 
     return True
-
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from myapp.tasks import send_welcome_email  # Ensure this import is correct
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from .models import EmailCollection  # Assuming you have an EmailCollection model
 
 def email_collection(request):
@@ -324,8 +325,12 @@ def email_collection(request):
                 'receive_offers': receive_offers,
             })
 
-        # Send the welcome email asynchronously
-        send_welcome_email.delay(email)
+        # Send the welcome email synchronously
+        subject = 'Welcome to iRiseUp Academy!'
+        html_message = render_to_string('welcome_email.html', {'email': email})
+        plain_message = strip_tags(html_message)
+        from_email = 'hello@iriseupacademy.com'  # Replace with your actual sender email
+        send_mail(subject, plain_message, from_email, [email], html_message=html_message)
 
         # Store the email in the session for later use during payment
         request.session['email'] = email
