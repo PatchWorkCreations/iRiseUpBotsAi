@@ -24,4 +24,4 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 # Collect static files, apply migrations, and start the server
 CMD python manage.py migrate && \
-    gunicorn myproject.wsgi:application 
+    gunicorn myproject.wsgi:application --log-file -
