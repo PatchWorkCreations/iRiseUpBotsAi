@@ -42,6 +42,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'myapp.middleware.MissingStaticFileMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
