@@ -50,7 +50,7 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 # settings.py
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-
+manifest_strict = False
 
 # Template settings
 TEMPLATES = [
