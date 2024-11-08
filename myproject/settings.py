@@ -75,7 +75,6 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Check if the environment variable 'USE_SQLITE' is set to use SQLite for local development
 USE_SQLITE = os.getenv('USE_SQLITE', 'true').lower() == 'true'
 
 if USE_SQLITE:
@@ -89,7 +88,6 @@ else:
     DATABASES = {
         'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
     }
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
