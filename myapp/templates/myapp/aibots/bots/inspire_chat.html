@@ -1,4 +1,4 @@
-{% extends "myapp/aibots/base.html" %}
+{% extends "myapp/aibots/bots/bot_base.html" %}
 {% block title %}Inspire - Creative Assistant{% endblock %}
 {% load static %}
 {% block content %}
@@ -32,11 +32,33 @@
     }
 
     .chat-header {
-        background-color: #007bff;
+        background-color: #1F3A93; /* Primary color */
         color: white;
         padding: 10px;
-        text-align: center;
         font-size: 18px;
+        display: flex;
+        align-items: center;
+    }
+
+    .back-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        margin-right: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .back-button:hover {
+        color: #d1d1d1;
+    }
+
+    .header-title {
+        flex-grow: 1;
+        text-align: center;
+        font-weight: bold;
     }
 
     #chatbox {
@@ -57,7 +79,7 @@
     }
 
     .message.user {
-        background-color: #007bff;
+        background-color: #2446b6;
         color: white;
         margin-left: auto;
         text-align: left;
@@ -117,7 +139,7 @@
     }
 
     #send {
-        background-color: #007bff;
+        background-color: #2141aa;
         color: white;
         border: none;
         padding: 10px 20px;
@@ -137,7 +159,12 @@
 </style>
 
 <div class="chat-container">
-    <div class="chat-header">Inspire - Creative Assistance AI 🎨</div>
+    <div class="chat-header">
+        <button class="back-button" onclick="window.history.back()">
+            ← <!-- Unicode arrow for simplicity -->
+        </button>
+        <div class="header-title">Inspire - Creative Assistance AI 🎨</div>
+    </div>
     <div id="chatbox">
         <!-- Chat messages will appear here -->
     </div>
@@ -199,7 +226,7 @@
 
     // Function to initiate the chat with the bot's greeting message
     function initiateBotMessage() {
-        const botGreeting = "Welcome to Inspire! Let’s spark your creativity together.";
+        const botGreeting = "Hi, I’m Inspire! 🎨 Ready to spark some creativity with you. What are we creating today?";
         addMessage('Inspire', botGreeting);
     }
 

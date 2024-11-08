@@ -1,16 +1,45 @@
-{% extends "myapp/aibots/base.html" %}
-{% load custom_filters %}
+{% extends "myapp/aibots/bots/bot_base.html" %}
 {% block title %}AI Bots Menu{% endblock %}
 {% load static %}
 {% block content %}
+
 <style>
-    .ai-boxes-container {
+    /* General container styling */
+    .container {
         max-width: 1200px;
         margin: auto;
         padding: 2rem;
-        text-align: center;
     }
 
+    /* Header and greeting section */
+    .ai-bots-header {
+        text-align: center;
+        background-color: #1F3A93; /* Primary Navy Blue */
+        color: #ffffff;
+        padding: 2rem 1rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+    }
+
+    .ai-bots-header h2 {
+        font-size: 2.4rem;
+        font-weight: bold;
+        margin: 0.5rem 0;
+        color: whitesmoke;
+    }
+
+    .ai-bots-header h3 {
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin: 0.5rem 0;
+        color: whitesmoke;
+    }
+
+    .ai-bots-header p {
+        color: whitesmoke;
+    }
+
+    /* AI box styling */
     .ai-boxes {
         display: flex;
         flex-wrap: wrap;
@@ -19,75 +48,120 @@
     }
 
     .ai-box {
-        width: 250px;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #f7f7f7; /* Light, neutral background */
+        border: 1px solid #e0e0e0; /* Subtle border */
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        width: 350px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         transition: transform 0.3s ease;
-        overflow: hidden;
     }
 
     .ai-box:hover {
         transform: translateY(-5px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .ai-box a {
-        text-decoration: none;
-        color: inherit;
-        display: block;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     }
 
     .ai-box-content {
-        padding: 1.5rem;
+        flex: 1;
+        padding-right: 1rem;
     }
 
     .ai-box h3 {
-        font-size: 1.4rem;
-        margin: 0.5rem 0;
-        color: #333;
+        font-size: 1.5rem;
+        color: #1F3A93; /* Navy for heading text */
+        margin: 0;
+        font-weight: 700;
     }
 
     .ai-box p {
         font-size: 1rem;
-        color: #666;
+        color: #555; /* Neutral dark gray */
+        margin-top: 0.5rem;
+    }
+
+    /* Button styling */
+    .upgrades-btn {
+        background-color: #1F3A93; /* Consistent Navy Blue for buttons */
+        color: #ffffff;
+        font-size: 1.1rem;
+        padding: 0.6rem 1.4rem;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .upgrades-btn:hover {
+        background-color: #142856; /* Slightly darker navy for hover */
+    }
+
+    /* Start chat button styling for footer */
+    .ai-bots-footer {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .start-chat-btn {
+        background-color: #1F3A93;
+        color: #ffffff;
+        font-size: 1.3rem;
+        padding: 0.8rem 2.5rem;
+        border-radius: 10px;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .start-chat-btn:hover {
+        background-color: #142856;
     }
 </style>
 
-<div class="ai-boxes-container">
-    <h1>Select Your AI Assistant</h1>
+<div class="container">
+    <!-- Header Section -->
+    <div class="ai-bots-header">
+        <h2>Hello, Jessica <span class="wave">👋</span></h2>
+        <h3>Explore Your AI-Driven Success Journey with iRiseUp.AI!</h3>
+        <p>Start a conversation with one of our expert AI bots and take your business to new heights today!</p>
+    </div>
+    
+
+    <!-- AI Bots Selection Section -->
     <div class="ai-boxes">
         <!-- Inspire Box -->
         <div class="ai-box">
-            <a href="{% url 'inspire_chat' %}"> <!-- Link to the Inspire chat page -->
-                <div class="ai-box-content">
-                    <h3>Inspire - Creative Assistance AI 🎨</h3>
-                    <p>An endless source of ideas and innovation, here to fuel creativity and artistic expression.</p>
-                </div>
-            </a>
+            <div class="ai-box-content">
+                <h3>Inspire - Creative AI 🎨</h3>
+                <p>Fuel your creativity with fresh ideas and inspiration.</p>
+            </div>
+            <button class="upgrades-btn" onclick="location.href='{% url 'inspire_chat' %}'">Start Chat</button>
         </div>
-
+    
         <!-- Pulse Box -->
         <div class="ai-box">
-            <a href="{% url 'pulse_chat' %}"> <!-- Link to the Pulse chat page -->
-                <div class="ai-box-content">
-                    <h3>Pulse - Healthcare AI 🩺</h3>
-                    <p>Steady and reliable, like a heartbeat, focused on keeping you healthy and in tune with your wellness.</p>
-                </div>
-            </a>
+            <div class="ai-box-content">
+                <h3>Pulse - Healthcare AI 🩺</h3>
+                <p>Stay on top of your health with steady support and guidance.</p>
+            </div>
+            <button class="upgrades-btn" onclick="location.href='{% url 'pulse_chat' %}'">Start Chat</button>
         </div>
-
+    
         <!-- SoulSpark Box -->
         <div class="ai-box">
-            <a href="{% url 'soulspark_chat' %}"> <!-- Link to the SoulSpark chat page -->
-                <div class="ai-box-content">
-                    <h3>SoulSpark - Mental Health and Wellness AI 🧘</h3>
-                    <p>Gentle and uplifting, there for those moments when you need a spark of calm and clarity.</p>
-                </div>
-            </a>
+            <div class="ai-box-content">
+                <h3>SoulSpark - Wellness AI 🧘</h3>
+                <p>Find calm and clarity whenever you need it.</p>
+            </div>
+            <button class="upgrades-btn" onclick="location.href='{% url 'soulspark_chat' %}'">Start Chat</button>
         </div>
     </div>
+    
 </div>
 
-{% include 'myapp/course_list/footer_course.html' %}
 {% endblock %}

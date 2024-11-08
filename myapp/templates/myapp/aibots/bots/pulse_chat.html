@@ -1,4 +1,4 @@
-{% extends "myapp/aibots/base.html" %}
+{% extends "myapp/aibots/bots/bot_base.html" %}
 {% block title %}Pulse - Healthcare Assistant{% endblock %}
 {% load static %}
 {% block content %}
@@ -32,11 +32,33 @@
     }
 
     .chat-header {
-        background-color: #007bff;
+        background-color: #1F3A93; /* Primary color */
         color: white;
         padding: 10px;
-        text-align: center;
         font-size: 18px;
+        display: flex;
+        align-items: center;
+    }
+
+    .back-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        margin-right: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .back-button:hover {
+        color: #d1d1d1;
+    }
+
+    .header-title {
+        flex-grow: 1;
+        text-align: center;
+        font-weight: bold;
     }
 
     #chatbox {
@@ -57,7 +79,7 @@
     }
 
     .message.user {
-        background-color: #007bff;
+        background-color: #2446b6;
         color: white;
         margin-left: auto;
         text-align: left;
@@ -117,7 +139,7 @@
     }
 
     #send {
-        background-color: #007bff;
+        background-color: #2141aa;
         color: white;
         border: none;
         padding: 10px 20px;
@@ -137,13 +159,21 @@
 </style>
 
 <div class="chat-container">
-    <div class="chat-header">Pulse - Healthcare AI 🩺</div>
+    <div class="chat-header">
+        <button class="back-button" onclick="window.history.back()">
+            ← <!-- Back arrow -->
+        </button>
+        <div class="header-title">Pulse - Healthcare AI 🩺</div>
+    </div>
+
     <div id="chatbox">
         <!-- Chat messages will appear here -->
     </div>
+
     <div class="typing-indicator" id="typing-indicator">
         <span></span><span></span><span></span>
     </div>
+
     <div class="chat-footer">
         <input type="text" id="message" placeholder="Ask anything about wellness..." autocomplete="off">
         <button id="send">Send</button>
@@ -157,35 +187,14 @@
     // Function to display messages in the chatbox
     function addMessage(sender, text, type = 'bot') {
         const messageClass = sender === 'You' ? 'user' : 'bot';
-        const formattedText = formatResponse(text);
         const messageHTML = `
             <div class="message ${messageClass}">
-                ${formattedText}
+                ${text}
                 <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
             </div>
         `;
         chatbox.innerHTML += messageHTML;
         chatbox.scrollTop = chatbox.scrollHeight;
-    }
-
-    // Function to show 'Seen' status
-    function showSeenStatus() {
-        const seenStatus = '<div id="seenStatus" class="seen">Seen ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) + '</div>';
-        chatbox.innerHTML += seenStatus;
-    }
-
-    // Remove 'Seen' status
-    function removeSeenStatus() {
-        const seenElement = document.getElementById('seenStatus');
-        if (seenElement) {
-            seenElement.remove();
-        }
-    }
-
-    // Format function to handle different types of response formatting
-    function formatResponse(text) {
-        text = text.replace(/\n/g, '<br>');
-        return text;
     }
 
     // Show and hide typing indicator
@@ -197,24 +206,20 @@
         typingIndicator.style.display = 'none';
     }
 
-    // Function to initiate the chat with the bot's greeting message
-    function initiateBotMessage() {
-        const botGreeting = "Welcome to Pulse! How can I support your wellness today?";
-        addMessage('Pulse', botGreeting);
-    }
-
+    // Initial bot greeting message
     document.addEventListener('DOMContentLoaded', () => {
-        initiateBotMessage();
+        addMessage('Pulse', "Hello, I'm Pulse. 🩺 Here to support your wellness journey. How can I assist you today?", 'bot');
     });
 
-    // Send message on 'Send' button click
+    // Sending messages
     document.getElementById('send').addEventListener('click', function() {
-        const message = document.getElementById('message').value;
-        if (message.trim() === '') return;
+        const messageInput = document.getElementById('message');
+        const message = messageInput.value.trim();
+        if (message === '') return;
 
         addMessage('You', message, 'user');
+        messageInput.value = '';
 
-        showSeenStatus();
         showTypingIndicator();
 
         fetch('/api/chat/pulse/', {
@@ -223,16 +228,12 @@
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRFToken': '{{ csrf_token }}'
             },
-            body: new URLSearchParams({
-                'message': message
-            })
+            body: new URLSearchParams({ 'message': message })
         })
         .then(response => response.json())
         .then(data => {
             hideTypingIndicator();
-            removeSeenStatus();
             addMessage('Pulse', data.response, 'bot');
-            document.getElementById('message').value = '';
         })
         .catch(error => {
             hideTypingIndicator();
@@ -240,4 +241,5 @@
         });
     });
 </script>
+
 {% endblock %}
