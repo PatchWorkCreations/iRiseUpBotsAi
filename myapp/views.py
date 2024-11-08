@@ -94,78 +94,7 @@ from django.core.paginator import Paginator
 from django.db.models import Prefetch
 
 def coursemenu(request):
-    if request.user.is_authenticated:
-        # Get the current page number from the request
-        page_number = request.GET.get('page', 1)
-
-        # Prefetch sub-courses and lessons for performance
-        all_courses = Course.objects.prefetch_related(
-            Prefetch('sub_courses__lessons', to_attr='prefetched_lessons')
-        )
-
-        ongoing_courses = []
-        completed_courses = []
-        course_progress = {}
-
-        # Bulk fetch all UserLessonProgress for the user
-        all_progress = UserLessonProgress.objects.filter(
-            user=request.user,
-            lesson__in=[lesson.id for course in all_courses for sub_course in course.sub_courses.all() for lesson in sub_course.prefetched_lessons]
-        ).values('lesson_id', 'completed')
-
-        # Create a dictionary for fast lookup
-        progress_by_lesson = {progress['lesson_id']: progress['completed'] for progress in all_progress}
-
-        # Loop through courses and sub-courses to calculate progress
-        for course in all_courses:
-            sub_course_progress = {}
-            total_course_lessons = 0
-            total_completed_lessons = 0
-            course_started = False
-
-            for sub_course in course.sub_courses.all():
-                lessons = sub_course.prefetched_lessons  # Use the prefetched lessons
-                total_lessons = len(lessons)
-
-                # Calculate completed lessons based on the pre-fetched user progress
-                completed_lessons = sum([1 for lesson in lessons if progress_by_lesson.get(lesson.id, False)])
-
-                if completed_lessons > 0:
-                    course_started = True
-
-                total_course_lessons += total_lessons
-                total_completed_lessons += completed_lessons
-
-                sub_course_progress[sub_course.id] = {
-                    'completed_lessons': completed_lessons,
-                    'total_lessons': total_lessons,
-                    'progress': (completed_lessons / total_lessons) * 100 if total_lessons > 0 else 0
-                }
-
-            course_progress[course.id] = sub_course_progress
-
-            if course_started and total_completed_lessons < total_course_lessons:
-                ongoing_courses.append(course)
-            elif total_completed_lessons == total_course_lessons and total_course_lessons > 0:
-                completed_courses.append(course)
-
-        saved_courses = UserCourseAccess.objects.filter(user=request.user, is_saved=True)
-        favorite_courses = UserCourseAccess.objects.filter(user=request.user, is_favorite=True)
-
-        # Pagination for recommended courses (always fetch fresh data)
-        paginator = Paginator(all_courses, 8)  # 8 courses per page
-        recommended_courses_page = paginator.get_page(page_number)
-
-        context = {
-            'course_progress': course_progress,
-            'ongoing_courses': ongoing_courses,
-            'completed_courses': completed_courses,
-            'saved_courses': saved_courses,
-            'favorite_courses': favorite_courses,
-            'recommended_courses_page': recommended_courses_page,  # Include paginated page
-        }
-
-        return render(request, 'myapp/aibots/coursemenu.html', context)
+   
 
     return render(request, 'myapp/aibots/coursemenu.html')
 
