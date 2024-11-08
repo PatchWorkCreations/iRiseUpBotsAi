@@ -75,8 +75,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-USE_SQLITE = os.getenv('USE_SQLITE', 'true').lower() == 'true'
-
+USE_SQLITE = env.bool('USE_SQLITE', default=False)  # Default is False to prioritize PostgreSQL
 if USE_SQLITE:
     DATABASES = {
         'default': {
@@ -86,7 +85,7 @@ if USE_SQLITE:
     }
 else:
     DATABASES = {
-        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+        'default': dj_database_url.config(default=env('DATABASE_URL'))
     }
 
 # Password validation

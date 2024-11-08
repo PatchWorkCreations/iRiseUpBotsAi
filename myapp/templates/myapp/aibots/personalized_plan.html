@@ -534,17 +534,18 @@ function handlePaymentError(error) {
     // Function to determine the amount based on the selected plan
     function determineAmountBasedOnPlan(plan) {
     if (plan === '1-week') {
-        return 1287;  // $12.87 in cents
+        return 100;  // $1.00 in cents
     } else if (plan === '4-week') {
-        return 3795;  // $37.95 in cents
+        return 5690;  // $18.97 x 4 with a small discount for a 4-week plan ($56.90 in cents)
     } else if (plan === '12-week') {
-        return 9700;  // $97.00 in cents
+        return 16900;  // $18.97 x 12 with a larger discount for a 12-week plan ($169.00 in cents)
     } else if (plan === 'lifetime') {
-        return 29700;  // $297.00 in cents
+        return 24900;  // Discounted lifetime plan at $249.00 in cents
     } else {
         return 0;  // Default to 0 for unrecognized plans
     }
 }
+
 
 
 
