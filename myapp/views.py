@@ -1778,6 +1778,59 @@ from django.shortcuts import render
 def chat_interface(request):
     return render(request, 'myapp/course_list/chat_interface.html')
 
+def get_bot_response(request, system_prompt):
+    if request.method == 'POST':
+        user_message = request.POST.get('message')
+
+        if not user_message or user_message.strip() == "":
+            return JsonResponse({'response': 'Error: Message cannot be empty.'})
+
+        conversation_history = request.session.get('conversation_history', [])
+
+        conversation_history.append({"role": "user", "content": user_message})
+
+        try:
+            response = openai_client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "system", "content": system_prompt}] + conversation_history
+            )
+
+            message = response.choices[0].message.content
+            conversation_history.append({"role": "assistant", "content": message})
+            request.session['conversation_history'] = conversation_history
+
+        except Exception as e:
+            logger.error(f"OpenAI API Error: {e}")
+            return JsonResponse({'response': f'Error: Unable to get a response from ChatGPT. {str(e)}'})
+
+        return JsonResponse({'response': message})
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+
+from django.http import JsonResponse
+
+def get_inspire_response(request):
+    return get_bot_response(request, "You are Inspire, a creative assistant here to fuel artistic expression and innovation. Share imaginative ideas and innovative solutions.")
+
+def get_pulse_response(request):
+    return get_bot_response(request, "You are Pulse, a reliable healthcare assistant focused on wellness. Offer steady, reassuring advice related to health and wellness topics.")
+
+def get_soulspark_response(request):
+    return get_bot_response(request, "You are SoulSpark, a gentle mental health assistant focused on calm and clarity. Provide empathetic support and mindfulness tips.")
+
+
+from django.shortcuts import render
+
+def inspire_chat(request):
+    return render(request, 'myapp/aibots/bots/inspire_chat.html')
+
+def pulse_chat(request):
+    return render(request, 'myapp/aibots/bots/pulse_chat.html')
+
+def soulspark_chat(request):
+    return render(request, 'myapp/aibots/bots/soulspark_chat.html')
+
 # views.py
 from django.shortcuts import render, redirect
 from django.contrib import messages

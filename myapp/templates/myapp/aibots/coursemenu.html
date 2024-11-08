@@ -1,8 +1,93 @@
 {% extends "myapp/aibots/base.html" %}
 {% load custom_filters %}
-{% block title %}Course Menu{% endblock %}
+{% block title %}AI Bots Menu{% endblock %}
 {% load static %}
 {% block content %}
+<style>
+    .ai-boxes-container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .ai-boxes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+    }
+
+    .ai-box {
+        width: 250px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        overflow: hidden;
+    }
+
+    .ai-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .ai-box a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .ai-box-content {
+        padding: 1.5rem;
+    }
+
+    .ai-box h3 {
+        font-size: 1.4rem;
+        margin: 0.5rem 0;
+        color: #333;
+    }
+
+    .ai-box p {
+        font-size: 1rem;
+        color: #666;
+    }
+</style>
+
+<div class="ai-boxes-container">
+    <h1>Select Your AI Assistant</h1>
+    <div class="ai-boxes">
+        <!-- Inspire Box -->
+        <div class="ai-box">
+            <a href="{% url 'inspire_chat' %}"> <!-- Link to the Inspire chat page -->
+                <div class="ai-box-content">
+                    <h3>Inspire - Creative Assistance AI 🎨</h3>
+                    <p>An endless source of ideas and innovation, here to fuel creativity and artistic expression.</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Pulse Box -->
+        <div class="ai-box">
+            <a href="{% url 'pulse_chat' %}"> <!-- Link to the Pulse chat page -->
+                <div class="ai-box-content">
+                    <h3>Pulse - Healthcare AI 🩺</h3>
+                    <p>Steady and reliable, like a heartbeat, focused on keeping you healthy and in tune with your wellness.</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- SoulSpark Box -->
+        <div class="ai-box">
+            <a href="{% url 'soulspark_chat' %}"> <!-- Link to the SoulSpark chat page -->
+                <div class="ai-box-content">
+                    <h3>SoulSpark - Mental Health and Wellness AI 🧘</h3>
+                    <p>Gentle and uplifting, there for those moments when you need a spark of calm and clarity.</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
 
 {% include 'myapp/course_list/footer_course.html' %}
 {% endblock %}

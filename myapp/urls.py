@@ -100,5 +100,12 @@ urlpatterns = [
     path('subscribe/', views.subscribe_newsletter, name='subscribe_newsletter'),
     path('index', views.index, name='index'),
     path('index2', views.index2, name='index2'),
+    
+    path('api/chat/inspire/', views.get_inspire_response, name='get_inspire_response'),
+    path('api/chat/pulse/', views.get_pulse_response, name='get_pulse_response'),
+    path('api/chat/soulspark/', views.get_soulspark_response, name='get_soulspark_response'),
 
+    path('chat/inspire/', views.inspire_chat, name='inspire_chat'),
+    path('chat/pulse/', views.pulse_chat, name='pulse_chat'),
+    path('chat/soulspark/', views.soulspark_chat, name='soulspark_chat'),
 ] 
