@@ -336,7 +336,7 @@ class KnowledgeBaseArticle(models.Model):
 
 
 class EmailCollection(models.Model):
-    email = models.EmailField(unique=False, null=False, blank=False)  # Enforcing non-null, non-blank values
+    email = models.EmailField(unique=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='email_collection')
     receive_offers = models.BooleanField(default=False)
     payment_status = models.CharField(max_length=20, choices=[('Paid', 'Paid'), ('Delayed', 'Delayed')], default='Delayed')

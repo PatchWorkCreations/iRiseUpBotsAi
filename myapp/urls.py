@@ -98,4 +98,7 @@ urlpatterns = [
     path('api/chat/', views.get_response, name='get_response'),
 
     path('subscribe/', views.subscribe_newsletter, name='subscribe_newsletter'),
-]
+    path('index', views.index, name='index'),
+    path('index2', views.index2, name='index2'),
+
+] 

@@ -45,6 +45,15 @@ from django.urls import reverse
 def about(request):
     return render(request, 'myapp/about.html')
 
+def index(request):
+    return render(request, 'myapp/index.html')
+
+def index2(request):
+    return render(request, 'myapp/index2.html')
+
+def index3(request):
+    return render(request, 'myapp/index3.html')
+
 def blogclassic(request):
     return render(request, 'myapp/blog-classic.html')
 
@@ -156,9 +165,9 @@ def coursemenu(request):
             'recommended_courses_page': recommended_courses_page,  # Include paginated page
         }
 
-        return render(request, 'myapp/coursemenu.html', context)
+        return render(request, 'myapp/aibots/coursemenu.html', context)
 
-    return render(request, 'myapp/coursemenu.html')
+    return render(request, 'myapp/aibots/coursemenu.html')
 
 
 
@@ -229,7 +238,7 @@ def personalized_plan(request):
         'main_goal' : main_goal,
     }
 
-    return render(request, 'myapp/quiz/personalized_plan.html', context)
+    return render(request, 'myapp/aibots/personalized_plan.html', context)
 
 
 # Initialize the Square Client
@@ -253,15 +262,16 @@ def setSelectedPlanInSession(request):
 
 def determine_amount_based_on_plan(selected_plan):
     if selected_plan == '1-week':
-        return 1287  # $12.87 in cents
+        return 100  # $1.00 in cents
     elif selected_plan == '4-week':
-        return 3795  # $37.95 in cents
+        return 5690  # $56.90 in cents for a 4-week plan (18.97 x 4 with discount)
     elif selected_plan == '12-week':
-        return 9700  # $97.00 in cents
+        return 16900  # $169.00 in cents for a 12-week plan (18.97 x 12 with discount)
     elif selected_plan == 'lifetime':
-        return 29700  # $297.00 in cents
+        return 24900  # $249.00 in cents for the lifetime plan
     else:
         return 0  # Default to 0 for unrecognized plans
+
 
 
 def grant_course_access(user, selected_plan):
@@ -509,7 +519,7 @@ def process_payment(request):
             verification_token = data.get('verification_token')
 
             # Ensure the correct email is being used from the user's current session
-            user_email = request.session.get('email')
+            user_email = data.get('email')
             if not user_email:
                 logger.error("Email is missing from session. Cannot proceed with payment.")
                 return JsonResponse({"error": "Email is missing from session."}, status=400)
@@ -558,26 +568,25 @@ def process_payment(request):
             )
             logger.info("Square API Payment Response: %s", payment_result)
 
+            # Error handling for specific payment errors
             if payment_result.is_error():
                 error_codes = [error['code'] for error in payment_result.errors]
                 logger.error("Payment Error: %s", error_codes)
 
-                # Handling different types of errors
-                if 'CARD_DECLINED' in error_codes:
+                if 'INSUFFICIENT_FUNDS' in error_codes:
+                    return JsonResponse({"error": "Payment failed due to insufficient funds. Please ensure adequate balance and try again."}, status=400)
+                elif 'CARD_DECLINED' in error_codes:
                     return JsonResponse({"error": "Your card was declined. Please try another payment method."}, status=400)
-                elif 'INSUFFICIENT_FUNDS' in error_codes:
-                    return JsonResponse({"error": "Insufficient funds. Please check your account balance."}, status=400)
                 elif 'INVALID_CARD' in error_codes:
                     return JsonResponse({"error": "Invalid card details. Please check and try again."}, status=400)
                 elif 'EXPIRED_CARD' in error_codes:
                     return JsonResponse({"error": "Your card has expired. Please use another card."}, status=400)
-                elif 'NETWORK_ERROR' in error_codes:
-                    return JsonResponse({"error": "Network issue encountered. Please try again later."}, status=500)
                 elif 'FRAUD_REJECTED' in error_codes:
                     return JsonResponse({"error": "Payment rejected due to suspected fraud. Please contact your bank."}, status=400)
                 elif 'AUTHENTICATION_REQUIRED' in error_codes:
                     return JsonResponse({"error": "Additional authentication required. Please complete the verification."}, status=400)
                 else:
+                    # General error for other cases
                     return JsonResponse({"error": "Payment failed. Please try again."}, status=400)
 
             payment_id = payment_result.body['payment']['id']

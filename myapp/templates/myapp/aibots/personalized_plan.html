@@ -1,4 +1,4 @@
-{% extends "myapp/quiz/quiz_base.html" %}
+{% extends "myapp/aibots/base.html" %}
 {% load static %}
 {% block title %}Your Personalized AI-Driven Plan{% endblock %}
 {% block content %}
@@ -8,8 +8,260 @@
 
 </head>
 
-<div class="mobile-container">
+<div id="home" class="home-intro">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="content">
+                    <h2><span class="color-highlight">Supercharge</span> Your</h2>
+                    <h2>Business <span class="color-highlight">with iRiseUp.AI</span></h2>
+                    <p>Imagine having 13 expert AIs—each a specialist in its field—working tirelessly to streamline, support, and scale every corner of your business. Welcome to the future of automation and efficiency.</p>
+                    <ul>
+                        <li><a href="#" class="button">Get Started</a></li>
+                        <li><a href="#" class="button button-secondary">Free Trial</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="content-image">
+                    <img src="{% static 'myapp/images/header-img.png' %}" alt="Header Image">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- End Home Intro -->
+
+<div id="about" class="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-xs-12">
+                <div class="content-image">
+                    <img src="#" alt="About Image">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-xs-12">
+                <div class="content">
+                    <h3>Why Choose iRiseUp.AI?</h3>
+                    <p>Imagine a world where your team is tireless, always focused, and loaded with expertise—exactly when and where you need it. That’s iRiseUp.AI.</p>
+                    <p>Our 13 specialized AI assistants cover everything from personal support to environmental impact. Whatever the task, there’s an AI expert for it, ready to work alongside you. It’s not just assistance; it’s empowerment.</p>
+                    <ul>
+                        <li><span class="circle-list"></span>Expertise tailored for your needs</li>
+                        <li><span class="circle-list"></span>Seamless integration with daily tasks</li>
+                        <li><span class="circle-list"></span>Always on—no breaks needed!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="services" class="services section-bottom-only">
+    <div class="section-title">
+        <h5 class="title-top">Our Promise To You</h5>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <div class="content" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <div class="serv-icon">
+                        <i class="icon ion-ios-ribbon"></i>
+
+                    </div>
+                    <h5>14-Day Money-Back Guarantee</h5>
+                    <p>No questions asked—if you’re not satisfied, we’ve got you covered with a risk-free guarantee.</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="content" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <div class="serv-icon">
+                        <i class="icon ion-ios-headset"></i>
+                    </div>
+                    <h5>24/7 Customer Support</h5>
+                    <p>Our support team is always here, praised for being both friendly and helpful—just a message away.</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="content" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <div class="serv-icon">
+                        <i class="icon ion-ios-timer"></i>
+                    </div>
+                    <h5>Instant Delivery</h5>
+                    <p>Your bots are ready to start within 3 minutes of your purchase—instant access to your AI workforce.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="portfolio" class="portfolio section-bottom-only">
+    <div class="container">
+        <div class="section-title">
+            <h5 class="title-top">Meet Your New AI-Powered Workforce</h5>
+            <h3>From virtual assistants to social media gurus, our diverse AI squad has you covered:</h3>
+        </div>
+        <div class="portfolio-filter-menu">
+            <ul>
+                <li data-filter="all" class="active">
+                    <span>All</span>
+                </li>
+                <li data-filter="1">
+                    <span>Web Design</span>
+                </li>
+                <li data-filter="2">
+                    <span>Marketing</span>
+                </li>
+                <li data-filter="3">
+                    <span>Branding</span>
+                </li>
+            </ul>
+        </div>
+        <div class="row no-gutters filter-container">
+            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="3">
+                <div class="content-image">
+                    <a href="{% static 'myapp/images/portfolio1.jpg' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/portfolio1.jpg' %}" alt="portfolio-image">
+                        <div class="image-overlay"></div>
+                        <div class="image-caption">
+                            <h4>Color Wall</h4>
+                            <span>Branding</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="1">
+                <div class="content-image">
+                    <a href="{% static 'myapp/images/portfolio2.jpg' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/portfolio2.jpg' %}" alt="portfolio-image">
+                        <div class="image-overlay"></div>
+                        <div class="image-caption">
+                            <h4>Smooth Flower</h4>
+                            <span>Branding</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="2">
+                <div class="content-image">
+                    <a href="{% static 'myapp/images/portfolio3.jpg' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/portfolio3.jpg' %}" alt="portfolio-image">
+                        <div class="image-overlay"></div>
+                        <div class="image-caption">
+                            <h4>Vintage Building</h4>
+                            <span>Branding</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="3">
+                <div class="content-image">
+                    <a href="{% static 'myapp/images/portfolio4.jpg' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/portfolio4.jpg' %}" alt="portfolio-image">
+                        <div class="image-overlay"></div>
+                        <div class="image-caption">
+                            <h4>Theo Digital</h4>
+                            <span>Branding</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="2">
+                <div class="content-image">
+                    <a href="{% static 'myapp/images/portfolio5.jpg' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/portfolio5.jpg' %}" alt="portfolio-image">
+                        <div class="image-overlay"></div>
+                        <div class="image-caption">
+                            <h4>Painted Wall</h4>
+                            <span>Branding</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="1">
+                <div class="content-image">
+                    <a href="{% static 'myapp/images/portfolio6.jpg' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/portfolio6.jpg' %}" alt="portfolio-image">
+                        <div class="image-overlay"></div>
+                        <div class="image-caption">
+                            <h4>Blue Lolipop</h4>
+                            <span>Branding</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="services" class="services section-bottom-only">
+    <div class="section-title">
+        <h5 class="title-top">Are AI Workers Better Than Humans?</h5>
+        <h3>You Be The Judge:</h3>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <div class="content">
+                    <div class="serv-icon">
+                        <i class="icon ion-ios-school"></i>
+                    </div>
+                    <h5>Deep Specialization</h5>
+                    <p>Trained on over 10,000 business resources, our AI workers bring specialized knowledge that rivals industry veterans.</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="content">
+                    <div class="serv-icon">
+                        <i class="icon ion-ios-flash"></i>
+                    </div>
+                    <h5>Lightning-Fast Responses</h5>
+                    <p>Average response time under 10 milliseconds. Instant answers, no coffee breaks needed!</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="content">
+                    <div class="serv-icon">
+                        <i class="icon ion-ios-eye"></i>
+                    </div>
+                    <h5>Laser-Focused Accuracy</h5>
+                    <p>Tailored algorithms for each business function deliver precision that human experts can only dream of.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <div class="content">
+                    <div class="serv-icon">
+                        <i class="icon ion-ios-rocket"></i>
+                    </div>
+                    <h5>Cutting-Edge AI Technology</h5>
+                    <p>Powered by ChatGPT-4o, our AI stays ahead of the technological curve to bring you tomorrow’s solutions today.</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="content">
+                    <div class="serv-icon">
+                        <i class="icon ion-ios-infinite"></i>
+                    </div>
+                    <h5>Pay Once, Hire Forever</h5>
+                    <p>Lifetime access with no monthly fees or wages. One payment, unlimited expertise.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
             <div id="plan-selection-section" class="plan-selection-container">
+                <div class="header-banner">
+                    <h1>PICK YOUR AI BOTS BUNDLE! 🤖</h1>
+                    <p>Exclusive Limited-Time Offer – Get 80% OFF on Your Perfect AI Team Today!</p>
+                </div>
                 <div class="plan-option">
                     <input type="radio" id="1-week-plan" name="plan" value="1-week">
                     <label for="1-week-plan">
@@ -34,7 +286,7 @@
                             <span>4-WEEK PLAN</span>
                             <span>$37.95</span>
                         </div>
-                        <div class="plan-price">
+                        <div class="plan-price" style="padding-top: 10px;">
                             <span>$1.36</span>
                             <span>per day</span>
                         </div>
@@ -69,15 +321,8 @@
                     </label>
                 </div>
                 
-            </div>
-        </div>
-    </div>
-        
-                
-
                 <div class="plan-info">
                     <p>🎯 People using plan for 3 months achieve twice as many results as for 1 month</p>
-                    <p><small>*According to a research by iRiseUp Academy, 2023</small></p>
                 </div>
 
                 <div class="plan-button">
@@ -85,13 +330,16 @@
                 </div>
 
                 <div class="subscription-info">
-                    <p>Extended every 4-week at the price of $39.99 if you do not cancel 24 hours before the renewal date in your account settings. <a href="{% url 'subscription_terms' %}">Subscription Terms</a>.</p>
+                    <p style="color: #9b9999;">Extended every 4-week at the price of $39.99 if you do not cancel 24 hours before the renewal date in your account settings. <a href="{% url 'subscription_terms' %}">Subscription Terms</a>.</p>
                 </div>
+            
             </div>
-
         </div>
+    </div>
+        
+
         <div class="money-back-container">
-            <img src="#" alt="Money-Back Guarantee" class="money-back-icon">
+            <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Money-Back Guarantee" class="money-back-icon">
             <h2>Money-Back Guarantee</h2>
             <p>We are so confident in our service that we are ready to offer a full refund within 30 days of purchase if you do not achieve initial results and can demonstrate you have followed the plan.</p>
             <p>Learn more about all the conditions in our <a href="{% url 'subscription_terms' %}">Subscription Terms</a>.</p>
@@ -116,12 +364,14 @@
             <h3 style="text-align: center;">Pay with Card</h3>
             <!-- Inserting the six images here -->
             <div class="card-icons">
-                <img src="#" alt="Card Icon 1" />
-                <img src="#" alt="Card Icon 2" />
-                <img src="#" alt="Card Icon 3" />
-                <img src="#" alt="Card Icon 4" />
-                <img src="#" alt="Card Icon 5" />
-                <img src="#" alt="Card Icon 6" />
+        
+            <img src="{% static 'myapp/images/card_icons/1.svg' %}" alt="Card Icon 1" />
+            <img src="{% static 'myapp/images/card_icons/2.svg' %}" alt="Card Icon 2" />
+            <img src="{% static 'myapp/images/card_icons/3.svg' %}" alt="Card Icon 3" />
+            <img src="{% static 'myapp/images/card_icons/4.svg' %}" alt="Card Icon 4" />
+            <img src="{% static 'myapp/images/card_icons/5.svg' %}" alt="Card Icon 5" />
+            <img src="{% static 'myapp/images/card_icons/6.svg' %}" alt="Card Icon 6" />
+
             </div>
             <div class="form-container">
                 <h2>Fill Out Your Information</h2>
@@ -165,7 +415,7 @@
             
             
             <div class="pay-safe">
-                <img src="#" alt="Safe Icon" class="safe-icon" />
+                <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Safe Icon" class="safe-icon" />
                 <span>Pay safe & secure</span>
             </div>            
         </div>
@@ -224,6 +474,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Get selected plan and determine the amount
                     const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
                     const amount = determineAmountBasedOnPlan(selectedPlan);
+                    const email = document.getElementById('email').value;
 
                     // New: Verify the buyer using SCA with CHARGE_AND_STORE intent
                     const verificationToken = await verifyBuyer(payments, result.token, amount);
@@ -239,7 +490,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             source_id: result.token,
                             plan: selectedPlan,
                             amount: amount,
-                            verification_token: verificationToken  // New: Include verification token
+                            verification_token: verificationToken,
+                            email: email  
                         }),
                     });
 
@@ -1033,6 +1285,7 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 /* Money-back container styles */
+
 .money-back-container {
     background-color: #f3f8f1;
     border-radius: 10px;
@@ -1073,6 +1326,17 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 /* Plan option styles */
+/* Container for the entire plan section */
+.plan-selection-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Plan Option Styling */
 .plan-option {
     border: 2px solid #ddd; /* Default border color */
     border-radius: 10px;
@@ -1226,6 +1490,41 @@ document.addEventListener('DOMContentLoaded', function () {
     font-size: 1.5rem;
     font-weight: bold;
     color: #28a745;
+}
+
+.header-banner {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+.header-banner h1 { font-size: 36px; font-weight: bold; margin: 0; color: #ff9800; }
+.header-banner p { font-size: 18px; margin-top: 10px; color: #f7f7f7; }
+
+/* Button Styling */
+.card-button {
+    background-color: #4e73df;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    display: block;
+    width: 100%;
+    max-width: 300px; /* Set a maximum width */
+    text-align: center;
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
+}
+
+.card-button:hover {
+    background-color: #375a7f;
 }
 
 

@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cleo - Agency Landing Page Template{% endblock %}</title>
+    <link rel="icon" href="#">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'myapp/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}">
+</head>
+<body>
+
+    <!-- Include Header -->
+    {% include 'myapp/aibots/header.html' %}
+
+    <!-- Page Content -->
+    {% block content %}
+    <!-- Page-specific content will go here -->
+    {% endblock %}
+
+    <!-- Include Footer -->
+    {% include 'myapp/aibots/footer.html' %}
+
+    <!-- JavaScript Files -->
+    <script src="{% static 'myapp/js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'myapp/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'myapp/js/jquery.filterizr.min.js' %}"></script>
+    <script src="{% static 'myapp/js/imagesloaded.pkgd.min.js' %}"></script>
+    <script src="{% static 'myapp/js/magnific-popup.min.js' %}"></script>
+    <script src="{% static 'myapp/js/contact-form.js' %}"></script>
+    <script src="{% static 'myapp/js/main.js' %}"></script>
+
+</body>
+</html>
