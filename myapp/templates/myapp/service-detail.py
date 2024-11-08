@@ -1,7 +1,7 @@
 # service-detail.py
 
 html_template = """
-{{% extends "myapp/base.html" %}}
+{{% extends "myapp/aibots/base.html" %}}
 
 {{% block title %}}Service Details{{% endblock %}}
 

@@ -871,7 +871,7 @@ class CustomPasswordChangeView(PasswordChangeView):
 from django.contrib.auth.views import PasswordChangeDoneView
 
 class CustomPasswordChangeDoneView(PasswordChangeDoneView):
-    template_name = 'myapp/password_change_done.html'
+    template_name = 'myapp/aibots/password_change_done.html'
 
 
 @receiver(post_save, sender=User)
@@ -890,7 +890,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.models import User
 
 class CustomPasswordResetView(PasswordResetView):
-    template_name = 'myapp/forgot_password.html'  # The form template for password reset
+    template_name = 'myapp/aibots/forgot_password.html'  # The form template for password reset
     success_url = reverse_lazy('password_reset_done')  # Redirect after successful form submission
 
     def form_valid(self, form):
@@ -1043,7 +1043,7 @@ def send_resetpassword_email(user_email, token, uid):
 
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
-    template_name = 'myapp/password_reset_done.html'
+    template_name = 'myapp/aibots/password_reset_done.html'
 
 
 def custom_password_reset_confirm(request, uidb64=None, token=None):
@@ -1063,18 +1063,18 @@ def custom_password_reset_confirm(request, uidb64=None, token=None):
                 return redirect('password_reset_complete')
         else:
             form = CustomPasswordResetForm()
-        return render(request, 'myapp/password_reset_confirm.html', {'form': form})
+        return render(request, 'myapp/aibots/password_reset_confirm.html', {'form': form})
     else:
         # Invalid link
-        return render(request, 'myapp/password_reset_invalid.html')
+        return render(request, 'myapp/aibots/password_reset_invalid.html')
 
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
-    template_name = 'myapp/password_reset_complete.html'
+    template_name = 'myapp/aibots/password_reset_complete.html'
 
 
 class CustomPasswordChangeDoneView(TemplateView):
-    template_name = 'myapp/password_change_done.html'
+    template_name = 'myapp/aibots/password_change_done.html'
 
 def submit_request(request):
     if request.method == 'POST':
