@@ -109,6 +109,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'myapp' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+WHITENOISE_MANIFEST_STRICT = False
 
 
 
