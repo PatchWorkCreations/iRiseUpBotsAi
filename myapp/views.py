@@ -1835,7 +1835,7 @@ def get_bot_response(request, system_prompt):
             # Send conversation history for response
             response = openai_client.chat.completions.create(
                 model="gpt-4",
-                messages=conversation_history
+                messages=[{"role": "system", "content": system_prompt}] + conversation_history
             )
             message = response.choices[0].message.content
             conversation_history.append({"role": "assistant", "content": message})
@@ -1879,17 +1879,6 @@ def get_soulspark_response(request):
         "without mentioning professional help unless directly asked. Ask open-ended questions like 'What’s on your mind?' "
         "or 'Can I share a comforting thought with you?' Keep responses brief, gentle, and relatable."
     )
-
-
-
-
-
-
-
-
-
-
-
 
 
 from django.shortcuts import render
