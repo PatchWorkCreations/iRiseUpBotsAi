@@ -43,6 +43,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'myapp.middleware.MissingStaticFileMiddleware',
+    'myapp.middleware.ClearSessionMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'

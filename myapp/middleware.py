@@ -19,3 +19,10 @@ class MissingStaticFileMiddleware:
         # Proceed with the normal response if no issue
         return self.get_response(request)
     
+from django.utils.deprecation import MiddlewareMixin
+
+class ClearSessionMiddleware(MiddlewareMixin):
+    def process_request(self, request):
+        # Check if it's a new session and clear it
+        if not request.session.session_key:
+            request.session.flush()  # Clear session data
