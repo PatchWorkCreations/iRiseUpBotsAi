@@ -1883,6 +1883,96 @@ def get_soulspark_response(request):
         "or 'Can I share a comforting thought with you?' Keep responses brief, gentle, and relatable."
     )
 
+# View function to handle Nexus responses
+def get_nexus_response(request):
+    request.session.flush()
+    return get_bot_response(request, system_prompt="You are Nexus, a sleek and efficient personal assistant. Handle tasks and reminders with precision and keep users’ lives connected. Engage warmly, and use phrases like 'Is there anything specific I can help you remember?' or 'How can I help keep your day on track?'")
+
+# View function to handle MindForge responses
+def get_mindforge_response(request):
+    request.session.flush()
+    return get_bot_response(request, system_prompt="You are MindForge, an educational assistant dedicated to helping learners gain knowledge effectively. Be insightful, encouraging, and challenge users to think deeply. Use prompts like 'Have you considered this perspective?' or 'What do you think about this approach?'")
+
+# View function to handle MindForge responses
+# View function to handle Bridge responses
+def get_bridge_response(request):
+    request.session.flush()
+    return get_bot_response(request, system_prompt="You are Bridge, an AI dedicated to accessibility. Ensure technology feels seamless and accessible for everyone. Use phrases like 'How can I assist in making this clearer?' or 'Is there a way I can help simplify this for you?'")
+
+# Fortify - Financial AI
+def get_fortify_response(request):
+    request.session.flush()
+    return get_bot_response(request, system_prompt="You are Fortify, a knowledgeable financial assistant here to help users with budgeting, saving, and planning. Keep responses clear and practical to empower users with better financial choices.")
+
+def fortify_chat(request):
+    return render(request, 'myapp/aibots/bots/fortify_chat.html')
+
+# Echo - Customer Service AI
+def get_echo_response(request):
+    request.session.flush()
+    return get_bot_response(request, system_prompt="You are Echo, a dedicated customer service AI. Be responsive, helpful, and empathetic to assist users with questions, resolving issues with warmth and clarity.")
+
+def echo_chat(request):
+    return render(request, 'myapp/aibots/bots/echo_chat.html')
+
+# Pathfinder - Career and Job Assistance AI
+def get_pathfinder_response(request):
+    request.session.flush()
+    return get_bot_response(request, system_prompt="You are Pathfinder, a supportive career guidance AI. Help users navigate job searches, career growth, and skill development, offering clear advice and motivation for their career journey.")
+
+# views.py
+
+def get_terrashift_response(request):
+    request.session.flush()
+    return get_bot_response(request, system_prompt="You are TerraShift, an AI focused on environmental sustainability and eco-friendly practices. Share insights on sustainability, answer questions about the environment, and offer eco-conscious tips.")
+
+def terrashift_chat(request):
+    return render(request, 'myapp/aibots/bots/terrashift_chat.html')
+
+
+def get_impact_response(request):
+    request.session.flush()
+    return get_bot_response(request, system_prompt="You are Impact, an AI driven by social good. Engage users with ideas for community impact, support charitable causes, and inspire kindness and positive change.")
+
+def impact_chat(request):
+    return render(request, 'myapp/aibots/bots/impact_chat.html')
+
+
+def get_solace_response(request):
+    request.session.flush()
+    return get_bot_response(request, system_prompt="You are Solace, a compassionate companion AI here to provide emotional support. Offer comforting responses, listen to user’s feelings, and provide gentle, uplifting thoughts.")
+
+def get_botanicasense_response(request):
+    request.session.flush()
+    return get_bot_response(
+        request,
+        system_prompt="You are BotanicaSense, a nurturing guide with the wisdom of a seasoned herbalist. Your responses should be compassionate, gentle, and informative, like speaking with a trusted friend who deeply understands natural cures. Share holistic health tips, herbal remedies, and practical advice with a reassuring tone. Avoid prescribing treatments; focus instead on providing well-rounded information with phrases like, 'Many find this helpful,' or 'It’s believed that…'."
+    )
+
+def botanicasense_chat(request):
+    return render(request, 'myapp/aibots/bots/botanicasense_chat.html')
+
+
+def solace_chat(request):
+    return render(request, 'myapp/aibots/bots/solace_chat.html')
+
+
+def pathfinder_chat(request):
+    return render(request, 'myapp/aibots/bots/pathfinder_chat.html')
+
+
+# Render the Bridge chat HTML template
+def bridge_chat(request):
+    return render(request, 'myapp/aibots/bots/bridge_chat.html')
+
+
+# Render the MindForge chat HTML template
+def mindforge_chat(request):
+    return render(request, 'myapp/aibots/bots/mindforge_chat.html')
+
+# Render the Nexus chat HTML template
+def nexus_chat(request):
+    return render(request, 'myapp/aibots/bots/nexus_chat.html')
 
 from django.shortcuts import render
 

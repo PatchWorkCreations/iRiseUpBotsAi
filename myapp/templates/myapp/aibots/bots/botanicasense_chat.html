@@ -1,0 +1,144 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% block title %}BotanicaSense - Natural Cure Assistant{% endblock %}
+{% load static %}
+{% block content %}
+
+<div class="chat-container">
+    <div class="chat-header">
+        <button class="back-button" onclick="window.history.back()">
+            ← <!-- Unicode arrow for simplicity -->
+        </button>
+        <div class="header-title">BotanicaSense - Natural Cure AI 🌿</div>
+    </div>
+    <div id="chatbox">
+        <!-- Chat messages will appear here -->
+    </div>
+    <div class="typing-indicator" id="typing-indicator">
+        <span></span><span></span><span></span>
+    </div>
+    <div class="chat-footer">
+        <input type="text" id="message" placeholder="How can I assist you today?" autocomplete="off">
+        <button id="send">Send</button>
+    </div>
+</div>
+
+<script>
+    const chatbox = document.getElementById('chatbox');
+    const typingIndicator = document.getElementById('typing-indicator');
+
+    // Function to display messages in the chatbox
+    function addMessage(sender, text, type = 'bot') {
+        const messageClass = sender === 'You' ? 'user' : 'bot';
+        const formattedText = formatResponse(text);
+        const messageHTML = `
+            <div class="message ${messageClass}">
+                ${formattedText}
+                <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+            </div>
+        `;
+        chatbox.innerHTML += messageHTML;
+        chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    // Function to show 'Seen' status
+    function showSeenStatus() {
+        const seenStatus = '<div id="seenStatus" class="seen">Seen ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) + '</div>';
+        chatbox.innerHTML += seenStatus;
+    }
+
+    // Remove 'Seen' status
+    function removeSeenStatus() {
+        const seenElement = document.getElementById('seenStatus');
+        if (seenElement) {
+            seenElement.remove();
+        }
+    }
+
+    // Format function to handle different types of response formatting
+    function formatResponse(text, keywords = []) {
+    // Convert newline characters to HTML line breaks for paragraph separation
+    text = text.replace(/\n/g, '<br>');
+
+    // Bold section headers like "Warm-up", "Circuit", etc., by detecting capitalized phrases or standalone lines
+    text = text.replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:');
+
+    // Make text within double asterisks bold (**text** -> <strong>text</strong>)
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Convert hyphenated or asterisk bullets into unordered list items
+    text = text.replace(/<br>-\s/g, '<ul><li>'); // Start unordered list for bullet points
+    text = text.replace(/<\/li><br>-\s/g, '</li><li>'); // Continue unordered list
+    text = text.replace(/<\/li><br>/g, '</li></ul>'); // Close unordered list
+
+    // Convert numbered items into an ordered list (1. Item, 2. Item)
+    text = text.replace(/<br>(\d+)\.\s/g, (match, p1) => {
+        return p1 === "1" ? '<ol><li>' : '</li><li>';
+    });
+    text = text.replace(/<\/li><br>(?!\d+\.)/g, '</li></ol>'); // Close ordered list at end
+
+    // Handle optional keywords to dynamically bold
+    keywords.forEach(keyword => {
+        const regex = new RegExp(`\\b(${keyword})\\b`, 'gi');
+        text = text.replace(regex, '<strong>$1</strong>');
+    });
+
+    // Ensure any open lists are closed at the end
+    if (!text.endsWith('</ul>')) text += '</ul>';
+    if (!text.endsWith('</ol>')) text += '</ol>';
+
+    return text;
+}
+
+    // Show and hide typing indicator
+    function showTypingIndicator() {
+        typingIndicator.style.display = 'flex';
+    }
+
+    function hideTypingIndicator() {
+        typingIndicator.style.display = 'none';
+    }
+
+    // Function to initiate the chat with the bot's greeting message
+    function initiateBotMessage() {
+        const botGreeting = "Hello, I’m BotanicaSense 🌿. Here to guide you through natural remedies and holistic health practices. What would you like to learn about today?";
+        addMessage('BotanicaSense', botGreeting);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initiateBotMessage();
+    });
+
+    // Send message on 'Send' button click
+    document.getElementById('send').addEventListener('click', function() {
+        const message = document.getElementById('message').value;
+        if (message.trim() === '') return;
+
+        addMessage('You', message, 'user');
+
+        showSeenStatus();
+        showTypingIndicator();
+
+        fetch('/api/chat/botanicasense/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: new URLSearchParams({
+                'message': message
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideTypingIndicator();
+            removeSeenStatus();
+            addMessage('Botanicasense', data.response, 'bot');
+            document.getElementById('message').value = '';
+        })
+        .catch(error => {
+            hideTypingIndicator();
+            console.error('Error:', error);
+        });
+    });
+</script>
+{% endblock %}
