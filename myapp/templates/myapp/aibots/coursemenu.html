@@ -121,8 +121,14 @@
     .start-chat-btn:hover {
         background-color: #142856;
     }
-</style>
 
+    .content-wrapper {
+        padding-top: 100px; /* Adjust based on navbar height */
+        padding-bottom: 2rem; /* Optional padding for visual balance */
+    }
+</style>
+{% include 'myapp/aibots/header.html' %}
+<div class="content-wrapper">
 <div class="container">
     <!-- Header Section -->
     <div class="ai-bots-header">
@@ -163,5 +169,5 @@
     </div>
     
 </div>
-
+</div>
 {% endblock %}

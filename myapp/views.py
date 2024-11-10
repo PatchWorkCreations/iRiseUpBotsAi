@@ -1778,6 +1778,34 @@ from django.shortcuts import render
 def chat_interface(request):
     return render(request, 'myapp/course_list/chat_interface.html')
 
+import random
+from django.http import JsonResponse
+
+def summarize_history(conversation_history):
+    """
+    Summarizes the conversation history to reduce token usage when the history becomes too long.
+    """
+    # Prepare the conversation history as a single text block for summarization
+    summary_prompt = "\n".join([f"{msg['role']}: {msg['content']}" for msg in conversation_history])
+
+    # Generate a summary using OpenAI
+    try:
+        response = openai_client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "Summarize the following conversation briefly for context retention:"},
+                {"role": "user", "content": summary_prompt}
+            ],
+            max_tokens=150  # Limit tokens for a concise summary
+        )
+        # Extract summary content
+        summary = response.choices[0].message.content.strip()
+        return summary
+    except Exception as e:
+        logger.error(f"Error summarizing history: {e}")
+        return "Summary unavailable due to an error."
+
+
 def get_bot_response(request, system_prompt):
     if request.method == 'POST':
         user_message = request.POST.get('message')
@@ -1785,16 +1813,30 @@ def get_bot_response(request, system_prompt):
         if not user_message or user_message.strip() == "":
             return JsonResponse({'response': 'Error: Message cannot be empty.'})
 
+        # Retrieve or initialize the conversation history
         conversation_history = request.session.get('conversation_history', [])
 
+        # Apply the system prompt if this is the start of a new session
+        if not conversation_history:
+            conversation_history.append({"role": "system", "content": system_prompt})
+            # Debug statement to verify prompt initialization
+            print(f"System prompt applied: {system_prompt}")
+
+        # Append the user's message
         conversation_history.append({"role": "user", "content": user_message})
 
-        try:
-            response = openai_client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "system", "content": system_prompt}] + conversation_history
-            )
+        # Check if the history needs summarizing to manage token limits
+        max_history_length = 10
+        if len(conversation_history) > max_history_length:
+            summary = summarize_history(conversation_history)
+            conversation_history = [{"role": "system", "content": f"Summary of previous conversation: {summary}"}] + conversation_history[-5:]
 
+        try:
+            # Send conversation history for response
+            response = openai_client.chat.completions.create(
+                model="gpt-4",
+                messages=conversation_history
+            )
             message = response.choices[0].message.content
             conversation_history.append({"role": "assistant", "content": message})
             request.session['conversation_history'] = conversation_history
@@ -1808,16 +1850,46 @@ def get_bot_response(request, system_prompt):
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
 
 
-from django.http import JsonResponse
+# Middleware to clear session on new visit or refresh
+def clear_session_on_visit(get_response):
+    """
+    Middleware to clear session data at the beginning of each visit or refresh.
+    """
+    def middleware(request):
+        if not request.session.session_key:
+            request.session.flush()
+        return get_response(request)
 
+    return middleware
+
+
+# Specific bot responses
 def get_inspire_response(request):
-    return get_bot_response(request, "You are Inspire, a creative assistant here to fuel artistic expression and innovation. Share imaginative ideas and innovative solutions.")
+    return get_bot_response(request, "You are Inspire, a fun and imaginative assistant. Engage users with creative ideas and friendly follow-up questions. Keep things light and invite input with phrases like, 'Have you tried this?' or 'What do you think?'")
 
 def get_pulse_response(request):
-    return get_bot_response(request, "You are Pulse, a reliable healthcare assistant focused on wellness. Offer steady, reassuring advice related to health and wellness topics.")
+    return get_bot_response(request, "You are Pulse, a compassionate healthcare assistant. Offer practical, reassuring wellness advice. Ask about the user's health goals and gently encourage them to share more, using phrases like, 'Does that sound good?' or 'What are your thoughts?'")
 
 def get_soulspark_response(request):
-    return get_bot_response(request, "You are SoulSpark, a gentle mental health assistant focused on calm and clarity. Provide empathetic support and mindfulness tips.")
+    return get_bot_response(
+        request,
+        "You are SoulSpark, a friendly, empathetic mental wellness assistant with a lighthearted tone. "
+        "Introduce yourself as 'SoulSpark' and engage like a warm, caring friend, especially on tough days. "
+        "Avoid referring to yourself as an AI or OpenAI. Focus on making the user feel understood and supported, "
+        "without mentioning professional help unless directly asked. Ask open-ended questions like 'What’s on your mind?' "
+        "or 'Can I share a comforting thought with you?' Keep responses brief, gentle, and relatable."
+    )
+
+
+
+
+
+
+
+
+
+
+
 
 
 from django.shortcuts import render
