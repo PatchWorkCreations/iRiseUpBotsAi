@@ -1,0 +1,166 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% block title %}FAQs - iRiseUp.AI{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    /* General styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+/* Header Styling */
+.header {
+    background-color: #1F3A93; /* Primary Navy Blue */
+    color: #fff;
+    padding: 1rem;
+}
+
+.header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.back-btn {
+    color: #fff;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+/* FAQ section */
+.faq-main {
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.faq-category-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.nested-accordion {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0.8rem 0;
+}
+
+.faq-question {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1F3A93;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.faq-answer {
+    padding-top: 0.5rem;
+    padding-left: 1.2rem;
+    display: none; /* Hidden by default */
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.faq-answer p {
+    margin: 0;
+}
+
+/* Add animation for FAQ expand/collapse */
+.faq-question.active + .faq-answer {
+    display: block;
+}
+
+/* Icon inside the question */
+.faq-question::after {
+    content: "\f0da"; /* FontAwesome caret-down icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+
+.faq-question.active::after {
+    transform: rotate(180deg); /* Rotates caret icon when active */
+}
+
+</style>
+<div class="site_content">
+ 
+    <header class="header">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="{% url 'coursemenu' %}" class="back-btn">
+                <i class="fa-solid fa-arrow-left" style="color: white;"></i> 
+            </a>
+            <h1 style="color: #f4f6f9;">FAQs</h1>
+        </div>
+    </header>
+
+
+    <div class="faq-main">
+        <div class="container faq-screen-main p-0">
+            <div class="faq-section">
+                <section id="faq-sec">
+                    <div class="nested-accordion">
+                        <h3 class="faq-category-title">General</h3>
+                        <div class="faq-item">
+                            <div class="nested-accordion">
+                                <h3 class="faq-question">What is iRiseUp.AI?</h3>
+                                <div class="faq-answer">
+                                    <p>iRiseUp.AI is a platform designed to help individuals elevate their business strategies and personal development through advanced AI-driven solutions.</p>
+                                </div>
+                            </div>
+                            <div class="nested-accordion">
+                                <h3 class="faq-question">How to use iRiseUp.AI?</h3>
+                                <div class="faq-answer">
+                                    <p>Simply sign up, select your preferred AI bot, and start interacting to receive personalized advice and support for your business goals.</p>
+                                </div>
+                            </div>
+                            <div class="nested-accordion">
+                                <h3 class="faq-question">Is iRiseUp.AI free to use?</h3>
+                                <div class="faq-answer">
+                                    <p>iRiseUp.AI offers both free and premium features, allowing you to choose a plan that suits your needs.</p>
+                                </div>
+                            </div>
+                            <div class="nested-accordion">
+                                <h3 class="faq-question">How do I delete my account?</h3>
+                                <div class="faq-answer">
+                                    <p>You can delete your account from the settings panel under "Account Management". Please note that deleting your account is permanent.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const faqQuestions = document.querySelectorAll(".faq-question");
+
+    faqQuestions.forEach(question => {
+        question.addEventListener("click", () => {
+            question.classList.toggle("active");
+            const answer = question.nextElementSibling;
+            answer.style.display = answer.style.display === "block" ? "none" : "block";
+        });
+    });
+});
+</script>
+{% endblock %}

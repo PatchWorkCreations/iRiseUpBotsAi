@@ -9,11 +9,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#about">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#portfolio">Portfolio</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#services">Services</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#news">News</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#plan-selection-section">Access</a></li>
                 {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'coursemenu' %}">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'sign_out' %}">Logout</a></li>
@@ -54,3 +54,4 @@
         padding-bottom: 2rem; /* Optional padding for visual balance */
     }
 </style>
+

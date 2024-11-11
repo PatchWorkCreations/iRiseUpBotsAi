@@ -1,0 +1,138 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% block title %}Data & Privacy Policy - iRiseUp.AI{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    /* General styling */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f6f9;
+        color: #333;
+    }
+
+    /* Header Styling */
+    .header {
+        background-color: #1F3A93; /* Primary Navy Blue */
+        color: #fff;
+        padding: 1rem;
+    }
+
+    .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .back-btn {
+        color: #fff;
+        font-size: 1.2rem;
+        text-decoration: none;
+    }
+
+    /* Policy section */
+    .policy-main {
+        padding: 2rem;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 2rem auto;
+        line-height: 1.6;
+    }
+
+    .policy-section-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .policy-section p {
+        font-size: 0.95rem;
+        color: #555;
+        margin: 0.5rem 0;
+    }
+
+    .policy-section ul {
+        margin: 0.5rem 0 1rem 1.5rem;
+    }
+
+    .policy-section ul li {
+        list-style-type: disc;
+        font-size: 0.95rem;
+        color: #555;
+    }
+</style>
+
+<div class="site_content">
+    <header class="header">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="{% url 'coursemenu' %}" class="back-btn">
+                <i class="fa-solid fa-arrow-left" style="color: white;"></i>
+            </a>
+            <h1 style="color: #f4f6f9;">Data & Privacy Policy</h1>
+        </div>
+    </header>
+
+    <div class="policy-main">
+        <section class="policy-section">
+            <p class="policy-section-title">Last Updated: [Date]</p>
+            <p>Welcome to iRiseUp.AI! Your privacy is essential to us. This Data and Privacy Policy outlines how we collect, use, disclose, and protect your information when you use our platform. By using iRiseUp.AI, you agree to the practices described in this policy.</p>
+
+            <div class="policy-section">
+                <h2 class="policy-section-title">1. Information We Collect</h2>
+                <p><strong>1.1 Personal Information:</strong> When you register on iRiseUp.AI, we may collect personal information such as your name, email address, contact details, and other information you provide to personalize your experience.</p>
+                <p><strong>1.2 Usage Data:</strong> We may collect information about how you use the platform, including but not limited to the pages you visit, the time spent on each page, and other interactions with our services. This helps us improve user experience and understand how our platform is utilized.</p>
+                <p><strong>1.3 Device Information:</strong> We may collect data from the device you use to access iRiseUp.AI, including device type, operating system, browser type, and IP address.</p>
+                <p><strong>1.4 Cookies and Tracking Technologies:</strong> Our platform uses cookies and similar tracking technologies to enhance functionality and analyze usage patterns. You can control the use of cookies through your browser settings.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2 class="policy-section-title">2. How We Use Your Information</h2>
+                <p><strong>2.1 To Provide and Improve Our Services:</strong> We use your information to deliver and personalize the features of iRiseUp.AI. This includes responding to your requests, offering customer support, and continuously enhancing the platform's functionality.</p>
+                <p><strong>2.2 Marketing and Communications:</strong> With your consent, we may use your information to send you promotional materials, updates about our services, or other communications that may interest you. You may opt out of these communications at any time.</p>
+                <p><strong>2.3 Analytics and Research:</strong> We analyze user behavior and engagement to improve our platform.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2 class="policy-section-title">3. Sharing Your Information</h2>
+                <p>We may share your information with trusted third parties for the purposes of providing and improving our services. This includes:</p>
+                <ul>
+                    <li>Service providers who assist with platform functionality, such as hosting, analytics, and customer support.</li>
+                    <li>Marketing partners for promotional purposes, only with your consent.</li>
+                    <li>Legal or regulatory authorities if required by law or to protect iRiseUp.AI's rights.</li>
+                </ul>
+            </div>
+
+            <div class="policy-section">
+                <h2 class="policy-section-title">4. Data Security</h2>
+                <p>We implement robust security measures to protect your personal information. However, no method of transmission over the Internet or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your information, we cannot guarantee its absolute security.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2 class="policy-section-title">5. Your Rights</h2>
+                <p>You have the right to access, correct, delete, or limit the use of your personal information. You may also withdraw your consent to our processing of your data. To exercise these rights, please contact us at support@iRiseUp.ai.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2 class="policy-section-title">6. Changes to This Policy</h2>
+                <p>We may update this policy periodically to reflect changes in our practices. We encourage you to review this page regularly for any updates. Your continued use of iRiseUp.AI following the posting of changes constitutes your acceptance of those changes.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2 class="policy-section-title">7. Contact Us</h2>
+                <p>If you have any questions or concerns about this policy, please contact us at:</p>
+                <p>Email: support@iRiseUp.ai</p>
+                <p>Address: iRiseUp.AI Headquarters, [Address Line]</p>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

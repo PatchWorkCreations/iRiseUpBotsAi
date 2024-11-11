@@ -1,0 +1,133 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% block title %}About iRiseUp.AI{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    /* General styling */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f6f9;
+        color: #333;
+    }
+
+    /* Header Styling */
+    .header {
+        background-color: #1F3A93; /* Primary Navy Blue */
+        color: #fff;
+        padding: 1rem;
+    }
+
+    .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .back-btn {
+        color: #fff;
+        font-size: 1.2rem;
+        text-decoration: none;
+    }
+
+    /* About section styling */
+    .about-main {
+        padding: 2rem;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 2rem auto;
+    }
+
+    .about-text-content p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+
+    .follow-us-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: #1F3A93; /* Primary Navy Blue */
+    }
+
+    .social-media-icons {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .social-media-icon {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #333;
+        font-size: 0.9rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    .social-media-icon:hover {
+        background-color: #1F3A93; /* Primary Navy Blue on hover */
+        color: #fff;
+    }
+
+    .social-media-icon i {
+        margin-right: 0.5rem;
+    }
+</style>
+
+<div class="site_content">
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="{% url 'coursemenu' %}" class="back-btn">
+                <i class="fa-solid fa-arrow-left" style="color: white;"></i> 
+            </a>
+            <h1 style="color: #f4f6f9;">About iRiseUp.AI</h1>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <div class="about-main">
+        <div class="about-text-content">
+            <p>iRiseUp.AI is dedicated to empowering individuals and businesses to reach their highest potential. Our platform leverages advanced AI technology to provide personalized guidance and innovative solutions, whether you're aiming to enhance your business strategies or embark on a journey of personal growth.</p>
+            <p>With iRiseUp.AI, you can connect with tailored AI-driven tools that help you tackle everyday challenges, make informed decisions, and drive meaningful impact. Our mission is to make advanced artificial intelligence accessible to all, fostering growth, resilience, and empowerment in every interaction.</p>
+            <p>Explore our array of AI bots, designed to assist with everything from strategic planning to mental wellness, and become part of a community that rises together.</p>
+        </div>
+
+        <!-- Follow Us Section -->
+        <h2 class="follow-us-title">Follow Us</h2>
+        <div class="social-media-icons">
+            <a href="https://www.facebook.com" class="social-media-icon">
+                <i class="fa-brands fa-facebook"></i> Facebook
+            </a>
+            <a href="https://www.instagram.com" class="social-media-icon">
+                <i class="fa-brands fa-instagram"></i> Instagram
+            </a>
+            <a href="https://twitter.com" class="social-media-icon">
+                <i class="fa-brands fa-twitter"></i> Twitter
+            </a>
+            <a href="https://www.youtube.com" class="social-media-icon">
+                <i class="fa-brands fa-youtube"></i> YouTube
+            </a>
+            <a href="https://www.linkedin.com" class="social-media-icon">
+                <i class="fa-brands fa-linkedin"></i> LinkedIn
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

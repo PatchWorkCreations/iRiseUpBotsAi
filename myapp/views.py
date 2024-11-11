@@ -452,6 +452,9 @@ def process_payment(request):
             if not user_email:
                 logger.error("Email is missing from session. Cannot proceed with payment.")
                 return JsonResponse({"error": "Email is missing from session."}, status=400)
+            
+            first_name = data.get('givenName')
+            last_name = data.get('familyName')
 
             # Ensure the amount is valid based on the selected plan
             amount = determine_amount_based_on_plan(selected_plan)
@@ -461,8 +464,8 @@ def process_payment(request):
             # Step 1: Create a new customer or retrieve the existing one
             customer_result = square_client.customers.create_customer(
                 body={
-                    "given_name": data.get('givenName'),
-                    "family_name": data.get('familyName'),
+                    "given_name": first_name,
+                    "family_name": last_name,
                     "email_address": user_email,
                 }
             )
@@ -547,10 +550,24 @@ def process_payment(request):
             card_id = card_result.body['card']['id']
 
             # Step 4: Create or retrieve the user in the Django application
+            # Update or create the user with username set to email, adding first and last name support
             user, created = User.objects.get_or_create(
                 username=user_email,
-                defaults={'email': user_email}
+                defaults={
+                    'email': user_email,
+                    'first_name': first_name,
+                    'last_name': last_name
+                }
             )
+
+            # If the user already exists (not created), update their first and last names if they’re missing
+            if not created:
+                if not user.first_name:
+                    user.first_name = first_name
+                if not user.last_name:
+                    user.last_name = last_name
+                user.save()
+
 
             if created:
                 random_password = get_random_string(8)
@@ -2098,3 +2115,100 @@ def sidebar_data():
 def side_bar(request, blog_id):
     blog = get_object_or_404(BlogPost, id=blog_id)
     return render(request, 'myapp/side_bar.html', {'blog': blog})
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import StandardPasswordChangeForm
+from django.db import IntegrityError
+
+@login_required
+def personal_info_update(request):
+    user = request.user
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+
+        try:
+            user.username = username
+            user.email = email
+            user.save()
+
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('coursemenu')
+        except IntegrityError:
+            messages.error(request, 'This email is already associated with another account.')
+            return redirect('personal_info_update')
+    else:
+        # Use the standard password change form
+        password_form = StandardPasswordChangeForm(user=request.user)
+
+    return render(request, 'myapp/aibots/settings/personal_info_update.html', {
+        'password_form': password_form,
+    })
+
+def cancel_subscription(request):
+    return render(request, 'myapp/aibots/settings/cancel_subscription.html')
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import StandardPasswordChangeForm
+from django.db import IntegrityError
+
+@login_required
+def personal_information(request):
+    user = request.user
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+
+        try:
+            user.username = username
+            user.email = email
+            user.save()
+
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('coursemenu')
+        except IntegrityError:
+            messages.error(request, 'This email is already associated with another account.')
+            return redirect('personal_information')
+    else:
+        # Use the standard password change form
+        password_form = StandardPasswordChangeForm(user=request.user)
+
+    return render(request, 'myapp/aibots/settings/personal_information.html', {
+        'password_form': password_form,
+    })
+
+def security(request):
+    return render(request, 'myapp/aibots/settings/security.html')
+
+def marketing_preferences(request):
+    return render(request, 'myapp/aibots/settings/marketing_preferences.html')
+
+def notification_setting(request):
+    return render(request, 'myapp/aibots/settings/notification_setting.html')
+
+def faq(request):
+    return render(request, 'myapp/aibots/settings/faq.html')
+
+def data_privacy(request):
+    return render(request, 'myapp/aibots/settings/data_privacy.html')
+
+def about_amigo(request):
+    return render(request, 'myapp/aibots/settings/about_iriseup.html')
+
+def feedback(request):
+    return render(request, 'myapp/aibots/settings/feedback.html')
+
+def contact_us(request):
+    return render(request, 'myapp/aibots/settings/contact_us.html')
+
+def delete_deactivate(request):
+    return render(request, 'myapp/aibots/settings/delete_deactivate.html')
+

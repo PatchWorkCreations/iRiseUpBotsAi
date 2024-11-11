@@ -2,6 +2,7 @@
 {% block title %}AI Bots Menu{% endblock %}
 {% load static %}
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <style>
     /* General container styling */
@@ -13,13 +14,17 @@
 
     /* Header and greeting section */
     .ai-bots-header {
-        text-align: center;
-        background-color: #1F3A93; /* Primary Navy Blue */
-        color: #ffffff;
-        padding: 2rem 1rem;
-        border-radius: 15px;
-        margin-bottom: 2rem;
-    }
+    margin-top: 0; /* Remove any potential top margin */
+    padding-top: 1rem; /* Adjust as needed for spacing within the header */
+    background-color: #1F3A93; /* Primary Navy Blue */
+    color: #ffffff;
+    padding: 2rem 1rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+
 
     .ai-bots-header h2 {
         font-size: 2.4rem;
@@ -123,11 +128,247 @@
     }
 
     .content-wrapper {
-        padding-top: 100px; /* Adjust based on navbar height */
-        padding-bottom: 2rem; /* Optional padding for visual balance */
-    }
+    padding-top: 0; /* Adjust if padding was added */
+    margin-top: 0; /* Ensure there's no top margin */
+}
+
+    /* Style for the gear icon button */
+    .settings-toggle {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px; /* Position to align vertically within header */
+    right: 20px; /* Aligns the gear icon to the right edge */
+    color: #ffffff; /* White color for visibility */
+}
+
+
+  /* Settings Panel Styling */
+.bot-settings-panel {
+    position: fixed;
+    top: 0;
+    right: -300px; /* Hidden by default */
+    width: 300px;
+    height: 100%;
+    background-color: #ffffff; /* White background for contrast */
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    padding: 1rem;
+    z-index: 1000;
+    overflow-y: auto; /* Allows scrolling if content is too long */
+    font-family: Arial, sans-serif;
+}
+
+.bot-settings-panel.show {
+    right: 0; /* Slide into view */
+}
+
+.settings-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-main a {
+    text-decoration: none;
+    color: inherit; /* Keeps the text color consistent */
+}
+
+/* Profile Section */
+.settings-main-sub {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    background-color: #f5f5f5; /* Light gray background for each item */
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 0.5rem;
+}
+
+.settings-main-sub:hover {
+    background-color: #e0e0e0; /* Darker gray on hover */
+}
+
+.settings-main-sub img.menu-girl-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.smith {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+    color: #333; /* Dark gray for strong readability */
+}
+
+.smith-email {
+    font-size: 0.85rem;
+    color: #666; /* Softer gray for email text */
+}
+
+/* Individual Setting Options */
+.setting-opestion-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1rem; /* Increased top and bottom padding */
+    border-bottom: 1px solid #c0c0c0 !important; /* Black border line with !important */
+    font-size: 1.1rem; /* Larger font size for better readability */
+    transition: background-color 0.2s;
+}
+
+.setting-opestion-main:last-child {
+    border-bottom: none; /* Remove bottom border for the last item */
+}
+
+.setting-opestion-main:hover {
+    background-color: #f8f8f8; /* Lighter hover effect */
+}
+
+.setting-opestion-main-sub {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem; /* Space between icon and text */
+}
+
+.option-icon {
+    font-size: 1.25rem; /* Adjust icon size */
+    color: #1F3A93; /* Consistent color with brand */
+}
+
+.smith {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.new-chat {
+    font-size: 1rem;
+    color: #1F3A93; /* Consistent with brand color */
+    font-weight: 600;
+}
+
+.setting-opestion-main h2,
+.setting-opestion-main .smith {
+    font-size: 1.1rem; /* Larger font size for the text */
+    color: #615f5f; /* Ensure text color is clear */
+    font-weight: 600;
+    margin: 0;
+}
+
+
+.setting-opestion-main {
+    font-size: 1.1rem; /* Larger font size for the text */
+    color: #1F3A93; /* Ensure text color is clear */
+    font-weight: 600;
+    margin: 0;
+}
+
+
+/* Additional styling for the angle-right icon */
+.setting-opestion-main i.fa-angle-right {
+    font-size: 1.2rem; /* Adjusted size for the right arrow icon */
+    color: #1F3A93;
+}
+
+.setting-opestion-main:hover {
+    background-color: #f8f8f8; /* Slightly lighter background on hover */
+}
+
+.version {
+    font-size: 0.85rem;
+    color: #999;
+    margin-top: 0.3rem;
+    font-weight: 400;
+}
+
+/* Close Button */
+.close-settings-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #333; /* Icon color */
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-settings-btn:hover {
+    color: #ff484d; /* Changes color on hover */
+}
+
+/* Optional: Icon color adjustment for specific items */
+.setting-opestion-main .fa-sign-out-alt {
+    color: #ff484d; /* Red for logout icon */
+}
+
+    @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .ai-bots-header {
+            border-radius: 0; /* Remove rounded corners */
+            margin: 0; /* Remove outer margin to make it full width */
+            padding: 1.5rem 1rem; /* Adjust padding for mobile, if necessary */
+        }
+
+            .ai-bots-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .ai-bots-header h3 {
+                font-size: 1rem;
+            }
+
+            .ai-bots-header p {
+                font-size: 0.9rem;
+            }
+
+            .settings-toggle {
+                font-size: 20px;
+                top: 15px;
+                right: 15px;
+            }
+
+            /* Make AI Boxes Full-Width */
+            .ai-box {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .upgrades-btn {
+                font-size: 1rem;
+                padding: 0.5rem 1rem;
+            }
+
+            /* Adjust settings panel for mobile */
+            .bot-settings-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .bot-settings-panel.show {
+                right: 0;
+            }
+
+            .close-settings-btn {
+                font-size: 1.2rem;
+                top: 10px;
+                right: 10px;
+            }
+        }
 </style>
-{% include 'myapp/aibots/header.html' %}
+
 <div class="content-wrapper">
     <div class="container">
         <!-- Header Section -->
@@ -135,8 +376,129 @@
             <h2>Hello, Jessica <span class="wave">👋</span></h2>
             <h3>Explore Your AI-Driven Success Journey with iRiseUp.AI!</h3>
             <p>Start a conversation with one of our expert AI bots and take your business to new heights today!</p>
+            
+            <!-- Gear Icon Button -->
+            <button class="settings-toggle" onclick="toggleSettings()">
+                <i class="fas fa-cog"></i> <!-- FontAwesome gear icon -->
+            </button>
         </div>
         
+        <!-- Settings Panel: Initially hidden -->
+        <div id="bot_settings" class="bot-settings-panel">
+            <button class="close-settings-btn" onclick="toggleSettings()">
+                <i class="fas fa-times"></i> <!-- Close icon -->
+            </button>
+        
+            <div class="settings-main">
+                <!-- Profile Section -->
+                <div>
+                    <a href="{% url 'personal_info_update' %}">
+                        <div class="settings-main-sub">
+                            <img class="menu-girl-img" src="#" alt="girl">
+                            <div>
+                                <h2 class="smith">Jessica Smith</h2>
+                                <p class="smith-email">jessica_smith@mail.com</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+        
+                <!-- Menu Options -->
+                <a href="{% url 'cancel_subscription' %}">
+                    <div class="setting-opestion-main setting-opestion-space">
+                        <div class="setting-opestion-main-sub">
+                            <i class="fa-solid fa-file-invoice-dollar"></i> <!-- Subscription icon -->
+                            <h2 class="smith new-chat p-0">Subscriptions</h2>
+                        </div>
+                        <i class="fa-solid fa-angle-right"></i>
+                    </div>
+                </a>
+        
+                <a href="{% url 'personal_information' %}">
+                    <div class="setting-opestion-main setting-opestion-space">
+                        <div class="setting-opestion-main-sub">
+                            <i class="fa-solid fa-user"></i> <!-- Personal Info icon -->
+                            <h2 class="smith new-chat">Personal Info</h2>
+                        </div>
+                        <i class="fa-solid fa-angle-right"></i>
+                    </div>
+                </a>
+
+        
+        
+                <a href="{% url 'faq' %}">
+                    <div class="setting-opestion-main setting-opestion-space">
+                        <div class="setting-opestion-main-sub">
+                            <i class="fa-solid fa-question-circle"></i> <!-- FAQ icon -->
+                            <h2 class="smith new-chat">FAQs</h2>
+                        </div>
+                        <i class="fa-solid fa-angle-right"></i>
+                    </div>
+                </a>
+        
+                <a href="{% url 'data_privacy' %}">
+                    <div class="setting-opestion-main setting-opestion-space">
+                        <div class="setting-opestion-main-sub">
+                            <i class="fa-solid fa-shield-alt"></i> <!-- Data & Privacy icon -->
+                            <h2 class="smith new-chat">Data & Privacy Policy</h2>
+                        </div>
+                        <i class="fa-solid fa-angle-right"></i>
+                    </div>
+                </a>
+        
+                <a href="{% url 'about_amigo' %}">
+                    <div class="setting-opestion-main setting-opestion-space">
+                        <div class="setting-opestion-main-sub">
+                            <i class="fa-solid fa-info-circle"></i> <!-- About icon -->
+                            <h2 class="smith new-chat">About iRiseUp.Ai</h2>
+                        </div>
+                        <p class="version">v1.0.0</p>
+                        <i class="fa-solid fa-angle-right"></i>
+                    </div>
+                </a>
+        
+                <a href="{% url 'feedback' %}">
+                    <div class="setting-opestion-main setting-opestion-space">
+                        <div class="setting-opestion-main-sub">
+                            <i class="fa-solid fa-comment-dots"></i> <!-- Feedback icon -->
+                            <h2 class="smith new-chat">Send Feedback</h2>
+                        </div>
+                        <i class="fa-solid fa-angle-right"></i>
+                    </div>
+                </a>
+        
+                <a href="{% url 'contact_us' %}">
+                    <div class="setting-opestion-main setting-opestion-space">
+                        <div class="setting-opestion-main-sub">
+                            <i class="fa-solid fa-envelope"></i> <!-- Contact Us icon -->
+                            <h2 class="smith new-chat">Contact Us</h2>
+                        </div>
+                        <i class="fa-solid fa-angle-right"></i>
+                    </div>
+                </a>
+        
+                <a href="{% url 'delete_deactivate' %}">
+                    <div class="setting-opestion-main setting-opestion-space">
+                        <div class="setting-opestion-main-sub">
+                            <i class="fa-solid fa-user-slash" style="color: #FF4848;"></i> <!-- Delete Account icon -->
+                            <h2 class="smith new-chat">Delete or Deactivate Account</h2>
+                        </div>
+                        <i class="fa-solid fa-angle-right"></i>
+                    </div>
+                </a>
+        
+                <a href="{% url 'sign_out' %}">
+                    <div class="setting-opestion-main setting-opestion-space border-bottom-0">
+                        <div class="setting-opestion-main-sub">
+                            <i class="fa-solid fa-sign-out-alt" style="color: #FF4848;"></i> <!-- Logout icon in red -->
+                            <h2 class="smith new-chat">Logout</h2>
+                        </div>
+                        <i class="fa-solid fa-angle-right"></i>
+                    </div>
+                </a>                    
+            </div>
+        </div>
+          
 
         <!-- AI Bots Selection Section -->
         <div class="ai-boxes">
@@ -258,4 +620,17 @@
             
     </div>
 </div>
+
+<script>
+    function toggleSettings() {
+        const settingsPanel = document.getElementById('bot_settings');
+        settingsPanel.classList.toggle('show');
+    }
+
+    function toggleSettings() {
+    const settingsPanel = document.getElementById('bot_settings');
+    settingsPanel.classList.toggle('show');
+    }
+
+</script>
 {% endblock %}

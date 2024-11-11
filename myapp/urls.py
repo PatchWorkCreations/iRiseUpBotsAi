@@ -139,4 +139,16 @@ urlpatterns = [
     path('api/chat/botanicasense/', views.get_botanicasense_response, name='get_botanicasense_response'),
     path('chat/botanicasense/', views.botanicasense_chat, name='botanicasense_chat'),
 
+     path('personal_info_update/', views.personal_info_update, name='personal_info_update'),
+    path('cancel_subscription/', views.cancel_subscription, name='cancel_subscription'),
+    path('personal_information/', views.personal_information, name='personal_information'),
+    path('security/', views.security, name='security'),
+    path('marketing_preferences/', views.marketing_preferences, name='marketing_preferences'),
+    path('notification_setting/', views.notification_setting, name='notification_setting'),
+    path('faq/', views.faq, name='faq'),
+    path('data_privacy/', views.data_privacy, name='data_privacy'),
+    path('about_amigo/', views.about_amigo, name='about_amigo'),
+    path('feedback/', views.feedback, name='feedback'),
+    path('contact_us/', views.contact_us, name='contact_us'),
+    path('delete_deactivate/', views.delete_deactivate, name='delete_deactivate'),
 ] 

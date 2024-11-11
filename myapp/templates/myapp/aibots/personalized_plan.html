@@ -13,12 +13,12 @@
         <div class="row">
             <div class="col-md-6 col-sm-12 col-xs-12">
                 <div class="content">
-                    <h2><span class="color-highlight">Supercharge</span> Your</h2>
-                    <h2>Business <span class="color-highlight">with iRiseUp.AI</span></h2>
-                    <p>Imagine having 13 expert AIs—each a specialist in its field—working tirelessly to streamline, support, and scale every corner of your business. Welcome to the future of automation and efficiency.</p>
+                    <h2>Unlock the Power of 13 Expert AI Assistants to Transform Your Business!</h2>
+                    <p>Imagine a dedicated team of 13 skilled assistants at your fingertips, ready to streamline tasks, boost productivity, and help you reach your goals faster than ever.</p>
+
+
                     <ul>
-                        <li><a href="#" class="button">Get Started</a></li>
-                        <li><a href="#" class="button button-secondary">Free Trial</a></li>
+                        <li><a href="#plan-selection-section" class="button">Get Started</a></li>
                     </ul>
                 </div>
             </div>
@@ -259,8 +259,8 @@
 
             <div id="plan-selection-section" class="plan-selection-container">
                 <div class="header-banner">
-                    <h1>PICK YOUR AI BOTS BUNDLE! 🤖</h1>
-                    <p>Exclusive Limited-Time Offer – Get 80% OFF on Your Perfect AI Team Today!</p>
+                    <h1>CHOOSE YOUR PERSONALIZED ASSISTANTS! 🌟</h1>
+                    <p>Exclusive Limited-Time Sale – Get 80% OFF on Your Perfect AI Team Today!</p>
                 </div>
                 <div class="plan-option">
                     <input type="radio" id="1-week-plan" name="plan" value="1-week">
@@ -444,8 +444,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const paypalBtn = document.getElementById('paypal-button');
     const cardPaymentSection = document.getElementById('card-payment');
     const paypalPaymentSection = document.getElementById('paypal-payment');
+    const closeModalButton = document.querySelector('.modal .close');
     let squareInitialized = false;
     let paypalInitialized = false;
+
+    closeModalButton.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+
 
     // Initialize payment options visibility
     cardPaymentSection.style.display = 'none';
