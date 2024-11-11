@@ -1,4 +1,4 @@
-{% extends "myapp/quiz/quiz_base.html" %}
+{% extends "myapp/aibots/bots/bot_base.html" %}
 {% load static %}
 
 {% block title %}Request Submitted{% endblock %}
@@ -15,8 +15,8 @@
     <p><strong>Query Type:</strong> {{ query_type }}</p>
     <p><strong>Description:</strong> {{ description }}</p>
 
-    <a href="{% url 'support_center' %}" class="btn btn-primary mt-4">Return to Support Center</a>
-    <a href="{% url 'submit_request' %}" class="btn btn-secondary mt-4">Submit Another Request</a>
+    <a href="{% url 'coursemenu' %}" class="btn btn-primary mt-4">Dashboard</a>
+    <a href="{% url 'countact_us' %}" class="btn btn-secondary mt-4">Submit Another Request</a>
 </div>
 {% endblock %}
 

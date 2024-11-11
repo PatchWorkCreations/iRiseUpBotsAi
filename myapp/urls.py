@@ -151,4 +151,8 @@ urlpatterns = [
     path('feedback/', views.feedback, name='feedback'),
     path('contact_us/', views.contact_us, name='contact_us'),
     path('delete_deactivate/', views.delete_deactivate, name='delete_deactivate'),
+    path('deactivate_account/', views.deactivate_account, name='deactivate_account'),
+    path('delete_account/', views.delete_account, name='delete_account'),
+    path('account_deleted/', views.account_deleted, name='account_deleted'),
+    path('account_deactivated/', views.account_deactivated, name='account_deactivated'),
 ] 

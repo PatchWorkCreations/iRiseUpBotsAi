@@ -1,0 +1,119 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% load static %}
+{% block title %}Deactivate Account - iRiseUp.AI{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    /* Header styling */
+    .header {
+        background-color: #1F3A93; /* Primary Navy Blue */
+        color: #ffffff;
+        padding: 1rem;
+    }
+    .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .header h1 {
+        font-size: 1.5rem;
+        color: #f4f6f9;
+        margin: 0;
+    }
+    .back-btn {
+        color: #ffffff;
+        font-size: 1.2rem;
+        text-decoration: none;
+    }
+
+    /* Main content styling */
+    .deactivate-account-container {
+        padding: 2rem;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 700px;
+        margin: 2rem auto;
+    }
+
+    .deactivate-title, .deactivate-description {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .deactivate-list {
+        list-style: none;
+        padding: 0;
+        font-size: 0.95rem;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .deactivate-list li {
+        margin-bottom: 10px;
+        padding-left: 20px;
+        position: relative;
+    }
+
+    .deactivate-list li::before {
+        content: "\f058";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        color: #1F3A93;
+        position: absolute;
+        left: 0;
+    }
+
+    /* Deactivate button styling */
+    .deactivate-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        background-color: #ffc107; /* Yellow for deactivate */
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+    }
+    .deactivate-btn:hover {
+        background-color: #e0a800;
+    }
+</style>
+
+<!-- Header Section -->
+<header class="header">
+    <div class="container d-flex align-items-center justify-content-between">
+        <a href="javascript:history.go(-1)" class="back-btn">
+            <i class="fa-solid fa-arrow-left" style="color: white;"></i>
+        </a>
+        <h1>Deactivate</h1>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="deactivate-account-container">
+    <h2 class="deactivate-title">{{ user.first_name }} {{ user.last_name }}: Deactivate this account?</h2>
+    <p class="deactivate-description">If you deactivate your account:</p>
+    
+    <ul class="deactivate-list">
+        <li>No one will see your account and content.</li>
+        <li>Your account information remains accessible for recovery.</li>
+        <li>iRiseUp.AI will keep your data, so you can recover it when you reactivate your account.</li>
+        <li>You can reactivate your account anytime by using the same login details.</li>
+    </ul>
+
+    <form method="POST" action="{% url 'deactivate_account' %}">
+        {% csrf_token %}
+        <button type="submit" class="deactivate-btn">Deactivate Account</button>
+    </form>
+</div>
+
+{% endblock %}

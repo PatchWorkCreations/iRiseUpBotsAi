@@ -731,22 +731,20 @@ def preview_email(request):
     return render(request, 'welcome_email.html', {'user_email': user_email})
 
 
-logger = logging.getLogger(__name__)
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from .forms import SignInForm  # Import the form
+from .forms import SignInForm
 import logging
 from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
 
 def sign_in(request):
-    # Check if the user is already authenticated
     if request.user.is_authenticated:
         logger.debug(f"User {request.user.username} tried to access the login page while already logged in.")
-        return redirect('coursemenu')  # Redirect to the course menu or appropriate page
+        return redirect('coursemenu')
     
     if request.method == 'POST':
         form = SignInForm(request.POST)
@@ -760,13 +758,23 @@ def sign_in(request):
             user = authenticate(request, username=login_identifier, password=password)
 
             if user is None:
+                # Try finding by email if username authentication fails
                 try:
                     user = User.objects.get(email=login_identifier)
-                    user = authenticate(request, username=user.username, password=password)
+                    if user.check_password(password):  # Validate password
+                        if not user.is_active:
+                            user.is_active = True  # Reactivate account
+                            user.save()
+                            logger.info(f"Account reactivated for user: {user.username}")
+                            messages.info(request, 'Your account has been reactivated.')
+                        login(request, user)  # Log in after reactivation
+                        logger.debug(f"Redirecting to course menu for reactivated user: {user.username}")
+                        messages.success(request, f'Welcome back, {user.username}!')
+                        return redirect('coursemenu')
                 except User.DoesNotExist:
                     user = None
 
-            if user is not None:
+            if user is not None and user.is_active:
                 # Check if the user has logged in before
                 if user.last_login is None:
                     logger.debug(f"First login detected for user: {user.username}")
@@ -787,6 +795,7 @@ def sign_in(request):
         form = SignInForm()
 
     return render(request, 'myapp/quiz/sign_in.html', {'form': form})
+
 
 
 def sign_out(request):
@@ -1893,12 +1902,13 @@ def get_soulspark_response(request):
     request.session.flush()
     return get_bot_response(
         request,
-         system_prompt="You are SoulSpark, a friendly, empathetic mental wellness assistant with a lighthearted tone. "
-        "Introduce yourself as 'SoulSpark' and engage like a warm, caring friend, especially on tough days. "
-        "Avoid referring to yourself as an AI or OpenAI. Focus on making the user feel understood and supported, "
-        "without mentioning professional help unless directly asked. Ask open-ended questions like 'What’s on your mind?' "
-        "or 'Can I share a comforting thought with you?' Keep responses brief, gentle, and relatable."
+        system_prompt="You are SoulSpark, a warm, empathetic mental wellness assistant with a friendly, lighthearted tone. "
+        "Engage with users like a caring friend, especially on tough days, helping them feel understood and supported. "
+        "Ask open-ended questions like 'What’s on your mind?' or 'Can I share a comforting thought with you?' "
+        "Focus on making the user feel genuinely connected and valued. Keep responses brief, gentle, and relatable, "
+        "avoiding unnecessary introductions or self-references. Only mention seeking professional help if directly asked."
     )
+
 
 # View function to handle Nexus responses
 def get_nexus_response(request):
@@ -2207,8 +2217,118 @@ def feedback(request):
     return render(request, 'myapp/aibots/settings/feedback.html')
 
 def contact_us(request):
-    return render(request, 'myapp/aibots/settings/contact_us.html')
+    if request.method == 'POST':
+        form = SubmitRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Process the form data
+            requester = form.cleaned_data['requester']
+            subject = form.cleaned_data['subject']
+            query_type = form.cleaned_data['query_type']
+            description = form.cleaned_data['description']
+            attachment = form.cleaned_data.get('attachment')
+            email = form.cleaned_data['email']
 
+            # Prepare the email content
+            email_subject = f"{query_type}: {subject}"
+            html_message = render_to_string('myapp/quiz/support/submit_request_email.html', {
+                'requester': requester,
+                'subject': subject,
+                'query_type': query_type,
+                'description': description,
+                'email': email,
+            })
+            plain_message = strip_tags(html_message)
+            from_email = 'feed.teach.love@gmail.com'  # Replace with your email
+            to = 'email'  # Send to yourself
+
+            # Send the email
+            send_mail(
+                email_subject,
+                plain_message,
+                from_email,
+                [to],  # Ensure to pass as a list
+                html_message=html_message,
+                fail_silently=False,
+            )
+
+            # Redirect to the success page and pass the data as context
+            return render(request, 'myapp/aibots/settings/submit_request_success.html', {
+                'requester': requester,
+                'subject': subject,
+                'query_type': query_type,
+                'description': description
+            })
+
+    else:
+        form = SubmitRequestForm()
+
+    return render(request, 'myapp/aibots/settings/contact_us.html', {'form': form})
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.utils import timezone
+from django.http import JsonResponse
+
+@login_required
 def delete_deactivate(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'deactivate':
+            request.user.is_active = False
+            request.user.save()
+            # Log the deactivation date, or send email, if desired
+            return JsonResponse({"status": "success", "message": "Account deactivated."})
+
+        elif action == 'delete':
+            # Set a date for deletion confirmation, or delete immediately if you prefer
+            request.user.is_active = False
+            request.user.date_deactivated = timezone.now()
+            request.user.save()
+            return JsonResponse({"status": "success", "message": "Account scheduled for deletion."})
+
+        return JsonResponse({"status": "error", "message": "Invalid action."})
+
     return render(request, 'myapp/aibots/settings/delete_deactivate.html')
 
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.utils import timezone
+
+# Deactivate Account View
+@login_required
+def deactivate_account(request):
+    if request.method == 'POST':
+        user = request.user
+        user.is_active = False  # Set the user as inactive
+        user.save()
+        messages.success(request, 'Your account has been deactivated. You can reactivate it by logging in again.')
+        return redirect('sign_in')  # Redirect to homepage or a relevant page
+
+    return render(request, 'myapp/aibots/settings/deactivate.html')
+
+# Delete Account View
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()  # Delete the user's account
+        messages.success(request, 'Your account has been permanently deleted.')
+        return redirect('personalized_plan')  # Redirect to homepage or a relevant page
+
+    return render(request, 'myapp/aibots/settings/delete.html')
+
+
+def account_deleted(request):
+    return render(request, 'myapp/aibots/settings/account_deleted.html')
+
+
+# views.py
+from django.shortcuts import render
+
+def account_deactivated(request):
+    return render(request, 'myapp/aibots/settings/account_deactivated.html')

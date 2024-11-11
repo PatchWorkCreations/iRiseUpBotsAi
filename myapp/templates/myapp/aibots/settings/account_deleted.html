@@ -1,0 +1,29 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% block title %}Account Deleted - iRiseUp.AI{% endblock %}
+
+{% block content %}
+<div class="site_content">
+    <header class="header">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="{% url 'personalized_plan' %}" class="back-btn">
+                <i class="fa-solid fa-arrow-left" style="color: white;"></i>
+            </a>
+            <h1 style="color: #f4f6f9;">Account Deleted</h1>
+        </div>
+    </header>
+
+    <div class="verification-main">
+        <div class="container verify-screen-main p-0">
+            <div class="verify-section-main align-items-stretch">
+                <h2 class="privacy_manage">We're sorry to see you go!</h2>
+                <p class="leave-text">Your account has been successfully deleted. If you ever want to come back, we're always here for you at iRiseUp.AI.</p>
+                <div class="print-continue-btn-head">
+                    <div class="onboarding-next-btn-plus bottom-fix-btn">
+                        <a href="{% url 'personalized_plan' %}" class="btn btn-primary">Return to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

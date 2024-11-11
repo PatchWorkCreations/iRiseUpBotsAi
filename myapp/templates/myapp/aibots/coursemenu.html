@@ -373,7 +373,7 @@
     <div class="container">
         <!-- Header Section -->
         <div class="ai-bots-header">
-            <h2>Hello, Jessica <span class="wave">👋</span></h2>
+            <h2>Hello, {{ user.first_name }}<span class="wave">👋</span></h2>
             <h3>Explore Your AI-Driven Success Journey with iRiseUp.AI!</h3>
             <p>Start a conversation with one of our expert AI bots and take your business to new heights today!</p>
             
@@ -394,25 +394,15 @@
                 <div>
                     <a href="{% url 'personal_info_update' %}">
                         <div class="settings-main-sub">
-                            <img class="menu-girl-img" src="#" alt="girl">
+                            <img class="menu-girl-img" src="#" alt="Profile Image">
                             <div>
-                                <h2 class="smith">Jessica Smith</h2>
-                                <p class="smith-email">jessica_smith@mail.com</p>
+                                <h2 class="smith">{{ user.first_name }} {{ user.last_name }}</h2>
+                                <p class="smith-email">{{ user.email }}</p>
                             </div>
                         </div>
                     </a>
                 </div>
-        
-                <!-- Menu Options -->
-                <a href="{% url 'cancel_subscription' %}">
-                    <div class="setting-opestion-main setting-opestion-space">
-                        <div class="setting-opestion-main-sub">
-                            <i class="fa-solid fa-file-invoice-dollar"></i> <!-- Subscription icon -->
-                            <h2 class="smith new-chat p-0">Subscriptions</h2>
-                        </div>
-                        <i class="fa-solid fa-angle-right"></i>
-                    </div>
-                </a>
+                
         
                 <a href="{% url 'personal_information' %}">
                     <div class="setting-opestion-main setting-opestion-space">
