@@ -487,6 +487,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
                     const amount = determineAmountBasedOnPlan(selectedPlan);
                     const email = document.getElementById('email').value;
+                    const firstName = document.getElementById('givenName').value;
+                    const lastName = document.getElementById('familyName').value;
 
                     // New: Verify the buyer using SCA with CHARGE_AND_STORE intent
                     const verificationToken = await verifyBuyer(payments, result.token, amount);
@@ -503,7 +505,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             plan: selectedPlan,
                             amount: amount,
                             verification_token: verificationToken,
-                            email: email  
+                            email: email,
+                            firstName: firstName,  
+                            lastName: lastName    
                         }),
                     });
 

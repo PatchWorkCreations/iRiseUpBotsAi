@@ -453,8 +453,8 @@ def process_payment(request):
                 logger.error("Email is missing from session. Cannot proceed with payment.")
                 return JsonResponse({"error": "Email is missing from session."}, status=400)
             
-            first_name = data.get('givenName')
-            last_name = data.get('familyName')
+            first_name = data.get('firstName', '') or 'Unknown'  # Fallback if not provided
+            last_name = data.get('lastName', '') or 'User'
 
             # Ensure the amount is valid based on the selected plan
             amount = determine_amount_based_on_plan(selected_plan)
