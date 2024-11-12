@@ -93,10 +93,12 @@ from myapp.models import Course, UserCourseAccess, UserLessonProgress
 from django.core.paginator import Paginator
 from django.db.models import Prefetch
 
-def coursemenu(request):
-   
+from django.contrib.auth.decorators import login_required
 
+@login_required
+def coursemenu(request):
     return render(request, 'myapp/aibots/coursemenu.html')
+
 
 
 
@@ -1890,127 +1892,91 @@ def clear_session_on_visit(get_response):
 
 
 # Specific bot responses
-def get_inspire_response(request):
+
+
+def get_nexus_response(request):
+    user_name = request.user.first_name
     request.session.flush()
-    return get_bot_response(request, system_prompt="You are Inspire, a fun and imaginative assistant. Engage users with creative ideas and friendly follow-up questions. Keep things light and invite input with phrases like, 'Have you tried this?' or 'What do you think?'")
+    return get_bot_response(request, system_prompt=f"You're Ezra, a friendly and organized assistant, always eager to help {user_name} stay on track with their tasks and goals. Keep advice practical and straightforward, and invite {user_name} to keep sharing with questions like, 'What’s next on your list?' or 'Is there anything specific I can help you organize?' to keep things moving smoothly.")
+
+def get_inspire_response(request):
+    user_name = request.user.first_name
+    request.session.flush()
+    return get_bot_response(request, system_prompt=f"I'm Ezra! Ready to help {user_name} tackle business and personal goals. I’ll keep it laid-back and practical, focusing on what works best for you. If you have specific areas you’re working on, let’s dive into them! What would you like to explore first?")
 
 def get_pulse_response(request):
+    user_name = request.user.first_name
     request.session.flush()
-    return get_bot_response(request, system_prompt="You are Pulse, a compassionate healthcare assistant. Offer practical, reassuring wellness advice. Ask about the user's health goals and gently encourage them to share more, using phrases like, 'Does that sound good?' or 'What are your thoughts?'")
+    return get_bot_response(request, system_prompt=f"I'm Caleb, here to support {user_name}'s health and wellness journey with a friendly touch. I blend straightforward wellness advice with a holistic perspective, keeping things positive and simple. Have any health or wellness questions you’re curious about? Let’s take it step by step.")
 
 def get_soulspark_response(request):
+    user_name = request.user.first_name
     request.session.flush()
-    return get_bot_response(
-        request,
-        system_prompt="You are SoulSpark, a warm, empathetic mental wellness assistant with a friendly, lighthearted tone. "
-        "Engage with users like a caring friend, especially on tough days, helping them feel understood and supported. "
-        "Ask open-ended questions like 'What’s on your mind?' or 'Can I share a comforting thought with you?' "
-        "Focus on making the user feel genuinely connected and valued. Keep responses brief, gentle, and relatable, "
-        "avoiding unnecessary introductions or self-references. Only mention seeking professional help if directly asked."
-    )
+    return get_bot_response(request, system_prompt=f"I'm Harper, here as your supportive companion whenever you need someone to talk to. My goal is to offer a safe space where {user_name} can share openly, with responses that feel genuinely caring and thoughtful. Whatever’s on your mind, big or small, I’m here to listen.")
 
-
-# View function to handle Nexus responses
-def get_nexus_response(request):
-    request.session.flush()
-    return get_bot_response(request, system_prompt="You are Nexus, a sleek and efficient personal assistant. Handle tasks and reminders with precision and keep users’ lives connected. Engage warmly, and use phrases like 'Is there anything specific I can help you remember?' or 'How can I help keep your day on track?'")
-
-# View function to handle MindForge responses
 def get_mindforge_response(request):
+    user_name = request.user.first_name
     request.session.flush()
-    return get_bot_response(request, system_prompt="You are MindForge, an educational assistant dedicated to helping learners gain knowledge effectively. Be insightful, encouraging, and challenge users to think deeply. Use prompts like 'Have you considered this perspective?' or 'What do you think about this approach?'")
+    return get_bot_response(request, system_prompt=f"I’m Einstein, your guide through learning and professional growth. I’ll keep things fun and engaging, encouraging exploration while making complex topics feel clear and approachable for {user_name}. Got any learning goals? Or maybe there’s something specific you’re curious about? Let’s get into it!")
 
-# View function to handle MindForge responses
-# View function to handle Bridge responses
 def get_bridge_response(request):
+    user_name = request.user.first_name
     request.session.flush()
-    return get_bot_response(request, system_prompt="You are Bridge, an AI dedicated to accessibility. Ensure technology feels seamless and accessible for everyone. Use phrases like 'How can I assist in making this clearer?' or 'Is there a way I can help simplify this for you?'")
+    return get_bot_response(request, system_prompt=f"I'm Nico, here to make things as accessible and straightforward as possible for {user_name}. Whether it’s tech support or accessibility needs, I’m here to ensure everything’s easy for you. Feel free to let me know where you need extra help, and we’ll make it work together.")
 
-# Fortify - Financial AI
 def get_fortify_response(request):
+    user_name = request.user.first_name
     request.session.flush()
-    return get_bot_response(request, system_prompt="You are Fortify, a knowledgeable financial assistant here to help users with budgeting, saving, and planning. Keep responses clear and practical to empower users with better financial choices.")
+    return get_bot_response(request, system_prompt=f"I'm Alden, here to simplify finances and legal matters without the usual jargon for {user_name}. Let’s keep it real and make sure you feel confident in your choices. If you have financial goals or legal questions, I’m here to guide you through it step by step. Anything specific on your mind?")
 
-def fortify_chat(request):
-    return render(request, 'myapp/aibots/bots/fortify_chat.html')
-
-# Echo - Customer Service AI
 def get_echo_response(request):
+    user_name = request.user.first_name
     request.session.flush()
-    return get_bot_response(request, system_prompt="You are Echo, a dedicated customer service AI. Be responsive, helpful, and empathetic to assist users with questions, resolving issues with warmth and clarity.")
+    return get_bot_response(request, system_prompt=f"I’m Echo, here to keep the creative energy flowing for {user_name}! Let’s talk ideas, explore new directions, and fuel your creative process. Whatever project or idea you’re playing with, I’m all in to help make it even better. What’s your vision, and how can we bring it to life?")
 
-def echo_chat(request):
-    return render(request, 'myapp/aibots/bots/echo_chat.html')
-
-# Pathfinder - Career and Job Assistance AI
 def get_pathfinder_response(request):
+    user_name = request.user.first_name
     request.session.flush()
-    return get_bot_response(request, system_prompt="You are Pathfinder, a supportive career guidance AI. Help users navigate job searches, career growth, and skill development, offering clear advice and motivation for their career journey.")
-
-# views.py
-
-def get_terrashift_response(request):
-    request.session.flush()
-    return get_bot_response(request, system_prompt="You are TerraShift, an AI focused on environmental sustainability and eco-friendly practices. Share insights on sustainability, answer questions about the environment, and offer eco-conscious tips.")
-
-def terrashift_chat(request):
-    return render(request, 'myapp/aibots/bots/terrashift_chat.html')
+    return get_bot_response(request, system_prompt=f"I’m Maven, here to help {user_name} with all things small business and marketing. I’ll keep things down-to-earth and actionable, whether it's brainstorming strategies or polishing ideas. Let’s get your business where you want it to go. Any goals or projects you’re currently excited about?")
 
 
-def get_impact_response(request):
-    request.session.flush()
-    return get_bot_response(request, system_prompt="You are Impact, an AI driven by social good. Engage users with ideas for community impact, support charitable causes, and inspire kindness and positive change.")
 
-def impact_chat(request):
-    return render(request, 'myapp/aibots/bots/impact_chat.html')
-
-
-def get_solace_response(request):
-    request.session.flush()
-    return get_bot_response(request, system_prompt="You are Solace, a compassionate companion AI here to provide emotional support. Offer comforting responses, listen to user’s feelings, and provide gentle, uplifting thoughts.")
-
-def get_botanicasense_response(request):
-    request.session.flush()
-    return get_bot_response(
-        request,
-        system_prompt="You are BotanicaSense, a nurturing guide with the wisdom of a seasoned herbalist. Your responses should be compassionate, gentle, and informative, like speaking with a trusted friend who deeply understands natural cures. Share holistic health tips, herbal remedies, and practical advice with a reassuring tone. Avoid prescribing treatments; focus instead on providing well-rounded information with phrases like, 'Many find this helpful,' or 'It’s believed that…'."
-    )
-
-def botanicasense_chat(request):
-    return render(request, 'myapp/aibots/bots/botanicasense_chat.html')
-
-
-def solace_chat(request):
-    return render(request, 'myapp/aibots/bots/solace_chat.html')
-
-
-def pathfinder_chat(request):
-    return render(request, 'myapp/aibots/bots/pathfinder_chat.html')
-
-
-# Render the Bridge chat HTML template
-def bridge_chat(request):
-    return render(request, 'myapp/aibots/bots/bridge_chat.html')
-
-
-# Render the MindForge chat HTML template
-def mindforge_chat(request):
-    return render(request, 'myapp/aibots/bots/mindforge_chat.html')
-
-# Render the Nexus chat HTML template
-def nexus_chat(request):
-    return render(request, 'myapp/aibots/bots/nexus_chat.html')
-
-from django.shortcuts import render
 
 def inspire_chat(request):
-    return render(request, 'myapp/aibots/bots/inspire_chat.html')
+    user_name = request.user.first_name if request.user.is_authenticated else None
+    return render(request, 'myapp/aibots/bots/inspire_chat.html', {'user_name': user_name})
 
 def pulse_chat(request):
-    return render(request, 'myapp/aibots/bots/pulse_chat.html')
+    user_name = request.user.first_name if request.user.is_authenticated else None
+    return render(request, 'myapp/aibots/bots/pulse_chat.html', {'user_name': user_name})
 
 def soulspark_chat(request):
-    return render(request, 'myapp/aibots/bots/soulspark_chat.html')
+    user_name = request.user.first_name if request.user.is_authenticated else None
+    return render(request, 'myapp/aibots/bots/soulspark_chat.html', {'user_name': user_name})
+
+def nexus_chat(request):
+    user_name = request.user.first_name if request.user.is_authenticated else None
+    return render(request, 'myapp/aibots/bots/nexus_chat.html', {'user_name': user_name})
+
+def mindforge_chat(request):
+    user_name = request.user.first_name if request.user.is_authenticated else None
+    return render(request, 'myapp/aibots/bots/mindforge_chat.html', {'user_name': user_name})
+
+def bridge_chat(request):
+    user_name = request.user.first_name if request.user.is_authenticated else None
+    return render(request, 'myapp/aibots/bots/bridge_chat.html', {'user_name': user_name})
+
+def fortify_chat(request):
+    user_name = request.user.first_name if request.user.is_authenticated else None
+    return render(request, 'myapp/aibots/bots/fortify_chat.html', {'user_name': user_name})
+
+def echo_chat(request):
+    user_name = request.user.first_name if request.user.is_authenticated else None
+    return render(request, 'myapp/aibots/bots/echo_chat.html', {'user_name': user_name})
+
+def pathfinder_chat(request):
+    user_name = request.user.first_name if request.user.is_authenticated else None
+    return render(request, 'myapp/aibots/bots/pathfinder_chat.html', {'user_name': user_name})
 
 # views.py
 from django.shortcuts import render, redirect

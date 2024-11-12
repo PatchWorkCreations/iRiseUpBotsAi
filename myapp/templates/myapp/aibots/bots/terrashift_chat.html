@@ -23,6 +23,7 @@
 </div>
 
 <script>
+    const userName = "{{ user_name|default:'there' }}";
     const chatbox = document.getElementById('chatbox');
     const typingIndicator = document.getElementById('typing-indicator');
 
@@ -105,7 +106,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        initiateBotMessage();
+        initiateBotMessage(userName);  // Pass userName here
     });
 
     // Send message on 'Send' button click

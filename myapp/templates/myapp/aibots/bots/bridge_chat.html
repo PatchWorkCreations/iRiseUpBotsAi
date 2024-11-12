@@ -1,5 +1,5 @@
 {% extends "myapp/aibots/bots/bot_base.html" %}
-{% block title %}Bridge - Accessibility Assistant{% endblock %}
+{% block title %}Nico - Your Inclusive Support AI{% endblock %}
 {% load static %}
 {% block content %}
 
@@ -8,13 +8,13 @@
         <button class="back-button" onclick="window.history.back()">
             ← <!-- Unicode arrow for simplicity -->
         </button>
-        <div class="header-title">Bridge - Your Accessibility AI 🌐</div>
+        <div class="header-title">Nico - Your Inclusive Support AI 💬🌐</div>
     </div>
     <div id="chatbox">
         <!-- Chat messages will appear here -->
     </div>
     <div class="typing-indicator" id="typing-indicator">
-        <span></span><span></span><span></span>
+        Typing...<span></span><span></span><span></span>
     </div>
     <div class="chat-footer">
         <input type="text" id="message" placeholder="How can I assist in making tech accessible?" autocomplete="off">
@@ -23,6 +23,7 @@
 </div>
 
 <script>
+    const userName = "{{ user_name|default:'there' }}";
     const chatbox = document.getElementById('chatbox');
     const typingIndicator = document.getElementById('typing-indicator');
 
@@ -99,13 +100,13 @@
     }
 
     // Function to initiate the chat with the bot's greeting message
-    function initiateBotMessage() {
-        const botGreeting = "Hello, I’m Bridge! 🌐 Here to ensure tech is accessible for everyone. How can I support you today?";
-        addMessage('Bridge', botGreeting);
-    }
+    function initiateBotMessage(userName) {
+    const botGreeting = `Hi, ${userName}! I’m Nico! 💬 Need help or have questions? I'm here to make things simple and accessible. What's on your mind?`;
+    addMessage('Nico', botGreeting);
+}
 
     document.addEventListener('DOMContentLoaded', () => {
-        initiateBotMessage();
+        initiateBotMessage(userName);  // Pass userName here
     });
 
     // Send message on 'Send' button click

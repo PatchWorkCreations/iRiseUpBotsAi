@@ -101,45 +101,36 @@ urlpatterns = [
     path('index', views.index, name='index'),
     path('index2', views.index2, name='index2'),
     
-    path('api/chat/inspire/', views.get_inspire_response, name='get_inspire_response'),
-    path('api/chat/pulse/', views.get_pulse_response, name='get_pulse_response'),
-    path('api/chat/soulspark/', views.get_soulspark_response, name='get_soulspark_response'),
+     path('api/chat/inspire/', views.get_inspire_response, name='get_inspire_response'),  # Ezra
+    path('api/chat/pulse/', views.get_pulse_response, name='get_pulse_response'),        # Caleb
+    path('api/chat/soulspark/', views.get_soulspark_response, name='get_soulspark_response'),  # Harper
 
-    path('chat/inspire/', views.inspire_chat, name='inspire_chat'),
-    path('chat/pulse/', views.pulse_chat, name='pulse_chat'),
-    path('chat/soulspark/', views.soulspark_chat, name='soulspark_chat'),
+    # Chat Views
+    path('chat/inspire/', views.inspire_chat, name='inspire_chat'),   # Ezra Chat
+    path('chat/pulse/', views.pulse_chat, name='pulse_chat'),         # Caleb Chat
+    path('chat/soulspark/', views.soulspark_chat, name='soulspark_chat'), # Harper Chat
 
-    path('api/chat/nexus/', views.get_nexus_response, name='get_nexus_response'),
-    path('api/chat/mindforge/', views.get_mindforge_response, name='get_mindforge_response'),
-    path('api/chat/bridge/', views.get_bridge_response, name='get_bridge_response'),
+    # Additional API Endpoints for Renamed Bots
+    path('api/chat/nexus/', views.get_nexus_response, name='get_nexus_response'),      # Ezra
+    path('api/chat/mindforge/', views.get_mindforge_response, name='get_mindforge_response'),  # Einstein
+    path('api/chat/bridge/', views.get_bridge_response, name='get_bridge_response'),   # Nico
 
-    path('chat/nexus/', views.nexus_chat, name='nexus_chat'),
-    path('chat/mindforge/', views.mindforge_chat, name='mindforge_chat'),
-    path('chat/bridge/', views.bridge_chat, name='bridge_chat'),
+    # Additional Chat Views
+    path('chat/nexus/', views.nexus_chat, name='nexus_chat'),           # Ezra Chat
+    path('chat/mindforge/', views.mindforge_chat, name='mindforge_chat'),  # Einstein Chat
+    path('chat/bridge/', views.bridge_chat, name='bridge_chat'),         # Nico Chat
 
-    path('api/chat/fortify/', views.get_fortify_response, name='get_fortify_response'),
-    path('api/chat/echo/', views.get_echo_response, name='get_echo_response'),
-    path('api/chat/pathfinder/', views.get_pathfinder_response, name='get_pathfinder_response'),
+    # Echo and Maven Chat API Endpoints and Views
+    path('api/chat/echo/', views.get_echo_response, name='get_echo_response'),        # Echo
+    path('api/chat/pathfinder/', views.get_pathfinder_response, name='get_pathfinder_response'),  # Maven
+    path('chat/echo/', views.echo_chat, name='echo_chat'),              # Echo Chat
+    path('chat/pathfinder/', views.pathfinder_chat, name='pathfinder_chat'), # Maven Chat
 
     path('chat/fortify/', views.fortify_chat, name='fortify_chat'),
-    path('chat/echo/', views.echo_chat, name='echo_chat'),
-    path('chat/pathfinder/', views.pathfinder_chat, name='pathfinder_chat'),
+    path('api/chat/fortify/', views.get_fortify_response, name='get_fortify_response'),  
 
-    # urls.py
-
-    path('api/chat/terrashift/', views.get_terrashift_response, name='get_terrashift_response'),
-    path('chat/terrashift/', views.terrashift_chat, name='terrashift_chat'),
-
-    path('api/chat/impact/', views.get_impact_response, name='get_impact_response'),
-    path('chat/impact/', views.impact_chat, name='impact_chat'),
-
-    path('api/chat/solace/', views.get_solace_response, name='get_solace_response'),
-    path('chat/solace/', views.solace_chat, name='solace_chat'),
-
-    path('api/chat/botanicasense/', views.get_botanicasense_response, name='get_botanicasense_response'),
-    path('chat/botanicasense/', views.botanicasense_chat, name='botanicasense_chat'),
-
-     path('personal_info_update/', views.personal_info_update, name='personal_info_update'),
+    
+    path('personal_info_update/', views.personal_info_update, name='personal_info_update'),
     path('cancel_subscription/', views.cancel_subscription, name='cancel_subscription'),
     path('personal_information/', views.personal_information, name='personal_information'),
     path('security/', views.security, name='security'),

@@ -1,5 +1,5 @@
 {% extends "myapp/aibots/bots/bot_base.html" %}
-{% block title %}Fortify - Financial Advisor AI 💰{% endblock %}
+{% block title %}Alden - Your Financial & Legal Guide{% endblock %}
 {% load static %}
 {% block content %}
 
@@ -8,13 +8,13 @@
         <button class="back-button" onclick="window.history.back()">
             ← <!-- Unicode arrow for simplicity -->
         </button>
-        <div class="header-title">Fortify - Your Personal Assistant 🦾</div>
+        <div class="header-title">Alden - Your Financial & Legal Guide 💼⚖️</div>
     </div>
     <div id="chatbox">
         <!-- Chat messages will appear here -->
     </div>
     <div class="typing-indicator" id="typing-indicator">
-        <span></span><span></span><span></span>
+        Typing...<span></span><span></span><span></span>
     </div>
     <div class="chat-footer">
         <input type="text" id="message" placeholder="How can I assist you today?" autocomplete="off">
@@ -23,6 +23,7 @@
 </div>
 
 <script>
+    const userName = "{{ user_name|default:'there' }}";
     const chatbox = document.getElementById('chatbox');
     const typingIndicator = document.getElementById('typing-indicator');
 
@@ -99,13 +100,14 @@
     }
 
     // Function to initiate the chat with the bot's greeting message
-    function initiateBotMessage() {
-        const botGreeting = "Hello, I’m Fortify! 💰 Here to help you build a solid financial foundation. What would you like advice on today?";
-        addMessage('Nexus', botGreeting);
-    }
+    function initiateBotMessage(userName) {
+    const botGreeting = `Hello, ${userName}! I’m Alden! 💼 Let's work together to secure your financial and legal future. Any area you’d like to discuss?`;
+    addMessage('Alden', botGreeting);
+}
+
 
     document.addEventListener('DOMContentLoaded', () => {
-        initiateBotMessage();
+        initiateBotMessage(userName);  // Pass userName here
     });
 
     // Send message on 'Send' button click

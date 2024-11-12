@@ -18,7 +18,7 @@ SECRET_KEY = env('DJANGO_SECRET_KEY', default="pqu__%t3x2e$+%lk9d#vg-7d=s7$m+b1&
 DEBUG = env.bool('DEBUG', default=False)
 
 # Allowed hosts and trusted origins
-ALLOWED_HOSTS = ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['iriseupbotsai-production.up.railway.app', 'localhost', '127.0.0.1', '0.0.0.0'])
+ALLOWED_HOSTS = ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[' www.iriseup.ai', 'localhost', '127.0.0.1', '0.0.0.0'])
 CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host != 'localhost']
 
 # Installed apps

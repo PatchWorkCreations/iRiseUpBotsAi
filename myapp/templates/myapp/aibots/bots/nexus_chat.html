@@ -14,7 +14,7 @@
         <!-- Chat messages will appear here -->
     </div>
     <div class="typing-indicator" id="typing-indicator">
-        <span></span><span></span><span></span>
+        Typing...<span></span><span></span><span></span>
     </div>
     <div class="chat-footer">
         <input type="text" id="message" placeholder="How can I assist you today?" autocomplete="off">
@@ -23,6 +23,7 @@
 </div>
 
 <script>
+    const userName = "{{ user_name|default:'there' }}";
     const chatbox = document.getElementById('chatbox');
     const typingIndicator = document.getElementById('typing-indicator');
 
@@ -105,7 +106,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        initiateBotMessage();
+        initiateBotMessage(userName);  // Pass userName here
     });
 
     // Send message on 'Send' button click

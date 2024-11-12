@@ -48,6 +48,7 @@
 </div>
 
 <script>
+    const userName = "{{ user_name|default:'there' }}";
     const payments = Square.payments('your-application-id', 'your-location-id');
 
     async function initializeCard(payments) {

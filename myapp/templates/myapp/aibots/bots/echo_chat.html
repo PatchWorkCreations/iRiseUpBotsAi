@@ -1,5 +1,5 @@
 {% extends "myapp/aibots/bots/bot_base.html" %}
-{% block title %}Echo - Customer Service Assistant{% endblock %}
+{% block title %}Echo - Your Creative Inspiration{% endblock %}
 {% load static %}
 {% block content %}
 
@@ -8,13 +8,13 @@
         <button class="back-button" onclick="window.history.back()">
             ← <!-- Unicode arrow for simplicity -->
         </button>
-        <div class="header-title">Echo - Customer Service AI 💬</div>
+        <div class="header-title">Echo - Your Creative Inspiration 🎨</div>
     </div>
     <div id="chatbox">
         <!-- Chat messages will appear here -->
     </div>
     <div class="typing-indicator" id="typing-indicator">
-        <span></span><span></span><span></span>
+        Typing...<span></span><span></span><span></span>
     </div>
     <div class="chat-footer">
         <input type="text" id="message" placeholder="How can I assist you today?" autocomplete="off">
@@ -23,6 +23,7 @@
 </div>
 
 <script>
+    const userName = "{{ user_name|default:'there' }}";
     const chatbox = document.getElementById('chatbox');
     const typingIndicator = document.getElementById('typing-indicator');
 
@@ -99,13 +100,13 @@
     }
 
     // Function to initiate the chat with the bot's greeting message
-    function initiateBotMessage() {
-        const botGreeting = "Hello, I’m Echo! 💬 Here to assist you with any questions or issues. How can I help you today?";
-        addMessage('Echo', botGreeting);
-    }
+    function initiateBotMessage(userName) {
+    const botGreeting = `Hey, ${userName}! I’m Echo! 🎨 Ready to brainstorm and inspire creativity. Got any projects in mind?`;
+    addMessage('Echo', botGreeting);
+}
 
     document.addEventListener('DOMContentLoaded', () => {
-        initiateBotMessage();
+        initiateBotMessage(userName);  // Pass userName here
     });
 
     // Send message on 'Send' button click

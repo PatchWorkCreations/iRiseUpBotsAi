@@ -1,5 +1,5 @@
 {% extends "myapp/aibots/bots/bot_base.html" %}
-{% block title %}MindForge - Educational Assistant{% endblock %}
+{% block title %}Einstein - Your Guide to Learning & Careers{% endblock %}
 {% load static %}
 {% block content %}
 
@@ -8,13 +8,13 @@
         <button class="back-button" onclick="window.history.back()">
             ← <!-- Unicode arrow for simplicity -->
         </button>
-        <div class="header-title">MindForge - Your Educational Assistant 📚</div>
+        <div class="header-title">Einstein - Your Guide to Learning & Careers 📚</div>
     </div>
     <div id="chatbox">
         <!-- Chat messages will appear here -->
     </div>
     <div class="typing-indicator" id="typing-indicator">
-        <span></span><span></span><span></span>
+        Typing...<span></span><span></span><span></span>
     </div>
     <div class="chat-footer">
         <input type="text" id="message" placeholder="Ready to dive into some learning?" autocomplete="off">
@@ -23,6 +23,8 @@
 </div>
 
 <script>
+    const userName = "{{ user_name|default:'there' }}";
+    const userName = "{{ user_name|default:'there' }}";
     const chatbox = document.getElementById('chatbox');
     const typingIndicator = document.getElementById('typing-indicator');
 
@@ -99,13 +101,14 @@
     }
 
     // Function to initiate the chat with the bot's greeting message
-    function initiateBotMessage() {
-        const botGreeting = "Hello, I’m MindForge! 📚 Ready to help you sharpen your skills and expand your knowledge. What topic are you exploring today?";
-        addMessage('MindForge', botGreeting);
+    function initiateBotMessage(userName) {
+    const botGreeting = `Hello, ${userName}! I’m Einstein! 📚 Here to support your educational and career goals. What can we explore today?`;
+    addMessage('Einstein', botGreeting);
     }
 
+
     document.addEventListener('DOMContentLoaded', () => {
-        initiateBotMessage();
+        initiateBotMessage(userName);  // Pass userName here
     });
 
     // Send message on 'Send' button click

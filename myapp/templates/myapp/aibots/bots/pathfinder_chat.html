@@ -1,5 +1,5 @@
 {% extends "myapp/aibots/bots/bot_base.html" %}
-{% block title %}Pathfinder - Career and Job Assistance{% endblock %}
+{% block title %}Maven - Your Business Growth Guide{% endblock %}
 {% load static %}
 {% block content %}
 
@@ -8,13 +8,13 @@
         <button class="back-button" onclick="window.history.back()">
             ← <!-- Unicode arrow for simplicity -->
         </button>
-        <div class="header-title">Pathfinder - Career and Job Assistance AI 🚀</div>
+        <div class="header-title">Maven - Your Business Growth Guide 🚀</div>
     </div>
     <div id="chatbox">
         <!-- Chat messages will appear here -->
     </div>
     <div class="typing-indicator" id="typing-indicator">
-        <span></span><span></span><span></span>
+        Typing...<span></span><span></span><span></span>
     </div>
     <div class="chat-footer">
         <input type="text" id="message" placeholder="How can I assist you today?" autocomplete="off">
@@ -23,6 +23,7 @@
 </div>
 
 <script>
+    const userName = "{{ user_name|default:'there' }}";
     const chatbox = document.getElementById('chatbox');
     const typingIndicator = document.getElementById('typing-indicator');
 
@@ -99,13 +100,14 @@
     }
 
     // Function to initiate the chat with the bot's greeting message
-    function initiateBotMessage() {
-        const botGreeting = "Hello, I’m Pathfinder! 🚀 Here to guide you through your career journey. How can I help you today?";
-        addMessage('Pathfinder', botGreeting);
-    }
+    function initiateBotMessage(userName) {
+    const botGreeting = `Hello, ${userName}! I’m Maven! 🚀 Here to support your business growth. Any specific challenges you're facing?`;
+    addMessage('Maven', botGreeting);
+}
+
 
     document.addEventListener('DOMContentLoaded', () => {
-        initiateBotMessage();
+        initiateBotMessage(userName);  // Pass userName here
     });
 
     // Send message on 'Send' button click
