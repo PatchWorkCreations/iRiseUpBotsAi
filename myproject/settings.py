@@ -115,10 +115,10 @@ WHITENOISE_MANIFEST_STRICT = False
 
 
 # Authentication redirects
-LOGIN_URL = 'custom_login'
-LOGOUT_URL = 'custom_logout'
-LOGIN_REDIRECT_URL = 'dashboard'
-LOGOUT_REDIRECT_URL = 'custom_login'
+LOGIN_URL = 'sign_in'
+LOGOUT_URL = 'sign_in'
+LOGIN_REDIRECT_URL = 'sign_in'
+LOGOUT_REDIRECT_URL = 'sign_in'
 
 # Logging configuration
 LOGGING = {

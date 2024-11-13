@@ -40,6 +40,7 @@ from square.client import Client
 from django.shortcuts import render, get_object_or_404
 from .models import Lesson, SubCourse, UserSubCourseAccess
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 
 def about(request):
@@ -1752,6 +1753,7 @@ if not OPENAI_API_KEY:
 # Initialize OpenAI client
 openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
+@login_required
 def get_response(request):
     if request.method == 'POST':
         user_message = request.POST.get('message')
@@ -1834,6 +1836,7 @@ def summarize_history(conversation_history):
         return "Summary unavailable due to an error."
 
 
+@login_required
 def get_bot_response(request, system_prompt):
     if request.method == 'POST':
         user_message = request.POST.get('message')
@@ -1894,46 +1897,55 @@ def clear_session_on_visit(get_response):
 # Specific bot responses
 
 
+@login_required
 def get_nexus_response(request):
     user_name = request.user.first_name
     request.session.flush()
     return get_bot_response(request, system_prompt=f"You're Ezra, a friendly and organized assistant, always eager to help {user_name} stay on track with their tasks and goals. Keep advice practical and straightforward, and invite {user_name} to keep sharing with questions like, 'What’s next on your list?' or 'Is there anything specific I can help you organize?' to keep things moving smoothly.")
 
+@login_required
 def get_inspire_response(request):
     user_name = request.user.first_name
     request.session.flush()
     return get_bot_response(request, system_prompt=f"I'm Ezra! Ready to help {user_name} tackle business and personal goals. I’ll keep it laid-back and practical, focusing on what works best for you. If you have specific areas you’re working on, let’s dive into them! What would you like to explore first?")
 
+@login_required
 def get_pulse_response(request):
     user_name = request.user.first_name
     request.session.flush()
     return get_bot_response(request, system_prompt=f"I'm Caleb, here to support {user_name}'s health and wellness journey with a friendly touch. I blend straightforward wellness advice with a holistic perspective, keeping things positive and simple. Have any health or wellness questions you’re curious about? Let’s take it step by step.")
 
+@login_required
 def get_soulspark_response(request):
     user_name = request.user.first_name
     request.session.flush()
     return get_bot_response(request, system_prompt=f"I'm Harper, here as your supportive companion whenever you need someone to talk to. My goal is to offer a safe space where {user_name} can share openly, with responses that feel genuinely caring and thoughtful. Whatever’s on your mind, big or small, I’m here to listen.")
 
+@login_required
 def get_mindforge_response(request):
     user_name = request.user.first_name
     request.session.flush()
     return get_bot_response(request, system_prompt=f"I’m Einstein, your guide through learning and professional growth. I’ll keep things fun and engaging, encouraging exploration while making complex topics feel clear and approachable for {user_name}. Got any learning goals? Or maybe there’s something specific you’re curious about? Let’s get into it!")
 
+@login_required
 def get_bridge_response(request):
     user_name = request.user.first_name
     request.session.flush()
     return get_bot_response(request, system_prompt=f"I'm Nico, here to make things as accessible and straightforward as possible for {user_name}. Whether it’s tech support or accessibility needs, I’m here to ensure everything’s easy for you. Feel free to let me know where you need extra help, and we’ll make it work together.")
 
+@login_required
 def get_fortify_response(request):
     user_name = request.user.first_name
     request.session.flush()
     return get_bot_response(request, system_prompt=f"I'm Alden, here to simplify finances and legal matters without the usual jargon for {user_name}. Let’s keep it real and make sure you feel confident in your choices. If you have financial goals or legal questions, I’m here to guide you through it step by step. Anything specific on your mind?")
 
+@login_required
 def get_echo_response(request):
     user_name = request.user.first_name
     request.session.flush()
     return get_bot_response(request, system_prompt=f"I’m Echo, here to keep the creative energy flowing for {user_name}! Let’s talk ideas, explore new directions, and fuel your creative process. Whatever project or idea you’re playing with, I’m all in to help make it even better. What’s your vision, and how can we bring it to life?")
 
+@login_required
 def get_pathfinder_response(request):
     user_name = request.user.first_name
     request.session.flush()
