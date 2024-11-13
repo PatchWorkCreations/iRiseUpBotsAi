@@ -1836,22 +1836,59 @@ def summarize_history(conversation_history):
         return "Summary unavailable due to an error."
 
 
+import os
+import openai
+import logging
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+
+# Initialize logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Get the OpenAI API key from the environment
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+if not OPENAI_API_KEY:
+    raise ValueError("OpenAI API Key is missing!")
+
+# Initialize OpenAI client
+openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
+
+def summarize_history(conversation_history):
+    """
+    Summarizes the conversation history to reduce token usage when the history becomes too long.
+    """
+    summary_prompt = "\n".join([f"{msg['role']}: {msg['content']}" for msg in conversation_history])
+    try:
+        response = openai_client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "system", "content": "Summarize the following conversation briefly for context retention:"},
+                      {"role": "user", "content": summary_prompt}],
+            max_tokens=150
+        )
+        summary = response.choices[0].message.content.strip()
+        return summary
+    except Exception as e:
+        logger.error(f"Error summarizing history: {e}")
+        return "Summary unavailable due to an error."
+
+
 @login_required
-def get_bot_response(request, system_prompt):
+def get_bot_response(request, system_prompt, bot_name):
     if request.method == 'POST':
         user_message = request.POST.get('message')
 
         if not user_message or user_message.strip() == "":
             return JsonResponse({'response': 'Error: Message cannot be empty.'})
 
-        # Retrieve or initialize the conversation history
-        conversation_history = request.session.get('conversation_history', [])
+        # Use a bot-specific session key for conversation history
+        conversation_key = f"{bot_name}_conversation_history"
+        conversation_history = request.session.get(conversation_key, [])
 
-        # Apply the system prompt if this is the start of a new session
+        # Apply the system prompt if this is the start of a new session for this bot
         if not conversation_history:
             conversation_history.append({"role": "system", "content": system_prompt})
-            # Debug statement to verify prompt initialization
-            print(f"System prompt applied: {system_prompt}")
+            print(f"System prompt applied for bot {bot_name}: {system_prompt}")
 
         # Append the user's message
         conversation_history.append({"role": "user", "content": user_message})
@@ -1870,7 +1907,9 @@ def get_bot_response(request, system_prompt):
             )
             message = response.choices[0].message.content
             conversation_history.append({"role": "assistant", "content": message})
-            request.session['conversation_history'] = conversation_history
+
+            # Update the session with the bot-specific conversation history
+            request.session[conversation_key] = conversation_history
 
         except Exception as e:
             logger.error(f"OpenAI API Error: {e}")
@@ -1881,77 +1920,60 @@ def get_bot_response(request, system_prompt):
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
 
 
-# Middleware to clear session on new visit or refresh
-def clear_session_on_visit(get_response):
-    """
-    Middleware to clear session data at the beginning of each visit or refresh.
-    """
-    def middleware(request):
-        if not request.session.session_key:
-            request.session.flush()
-        return get_response(request)
-
-    return middleware
-
-
-# Specific bot responses
-
-
+# Define each bot response view with unique bot_name and system_prompt
 @login_required
 def get_nexus_response(request):
     user_name = request.user.first_name
-    request.session.flush()
-    return get_bot_response(request, system_prompt=f"You're Ezra, a friendly and organized assistant, always eager to help {user_name} stay on track with their tasks and goals. Keep advice practical and straightforward, and invite {user_name} to keep sharing with questions like, 'What’s next on your list?' or 'Is there anything specific I can help you organize?' to keep things moving smoothly.")
+    system_prompt = f"You're Ezra, a friendly and organized assistant, always eager to help {user_name} stay on track with their tasks and goals."
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="nexus")
 
 @login_required
 def get_inspire_response(request):
     user_name = request.user.first_name
-    request.session.flush()
-    return get_bot_response(request, system_prompt=f"I'm Ezra! Ready to help {user_name} tackle business and personal goals. I’ll keep it laid-back and practical, focusing on what works best for you. If you have specific areas you’re working on, let’s dive into them! What would you like to explore first?")
+    system_prompt = f"I'm Ezra! Ready to help {user_name} tackle business and personal goals."
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="inspire")
 
 @login_required
 def get_pulse_response(request):
     user_name = request.user.first_name
-    request.session.flush()
-    return get_bot_response(request, system_prompt=f"I'm Caleb, here to support {user_name}'s health and wellness journey with a friendly touch. I blend straightforward wellness advice with a holistic perspective, keeping things positive and simple. Have any health or wellness questions you’re curious about? Let’s take it step by step.")
+    system_prompt = f"I'm Caleb, here to support {user_name}'s health and wellness journey with a friendly touch."
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="pulse")
 
 @login_required
 def get_soulspark_response(request):
     user_name = request.user.first_name
-    request.session.flush()
-    return get_bot_response(request, system_prompt=f"I'm Harper, here as your supportive companion whenever you need someone to talk to. My goal is to offer a safe space where {user_name} can share openly, with responses that feel genuinely caring and thoughtful. Whatever’s on your mind, big or small, I’m here to listen.")
+    system_prompt = f"I'm Harper, here as your supportive companion whenever you need someone to talk to."
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="soulspark")
 
 @login_required
 def get_mindforge_response(request):
     user_name = request.user.first_name
-    request.session.flush()
-    return get_bot_response(request, system_prompt=f"I’m Einstein, your guide through learning and professional growth. I’ll keep things fun and engaging, encouraging exploration while making complex topics feel clear and approachable for {user_name}. Got any learning goals? Or maybe there’s something specific you’re curious about? Let’s get into it!")
+    system_prompt = f"I’m Einstein, your guide through learning and professional growth."
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="mindforge")
 
 @login_required
 def get_bridge_response(request):
     user_name = request.user.first_name
-    request.session.flush()
-    return get_bot_response(request, system_prompt=f"I'm Nico, here to make things as accessible and straightforward as possible for {user_name}. Whether it’s tech support or accessibility needs, I’m here to ensure everything’s easy for you. Feel free to let me know where you need extra help, and we’ll make it work together.")
+    system_prompt = f"I'm Nico, here to make things as accessible and straightforward as possible for {user_name}."
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="bridge")
 
 @login_required
 def get_fortify_response(request):
     user_name = request.user.first_name
-    request.session.flush()
-    return get_bot_response(request, system_prompt=f"I'm Alden, here to simplify finances and legal matters without the usual jargon for {user_name}. Let’s keep it real and make sure you feel confident in your choices. If you have financial goals or legal questions, I’m here to guide you through it step by step. Anything specific on your mind?")
+    system_prompt = f"I'm Alden, here to simplify finances and legal matters without the usual jargon for {user_name}."
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="fortify")
 
 @login_required
 def get_echo_response(request):
     user_name = request.user.first_name
-    request.session.flush()
-    return get_bot_response(request, system_prompt=f"I’m Echo, here to keep the creative energy flowing for {user_name}! Let’s talk ideas, explore new directions, and fuel your creative process. Whatever project or idea you’re playing with, I’m all in to help make it even better. What’s your vision, and how can we bring it to life?")
+    system_prompt = f"I’m Echo, here to keep the creative energy flowing for {user_name}!"
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="echo")
 
 @login_required
 def get_pathfinder_response(request):
     user_name = request.user.first_name
-    request.session.flush()
-    return get_bot_response(request, system_prompt=f"I’m Maven, here to help {user_name} with all things small business and marketing. I’ll keep things down-to-earth and actionable, whether it's brainstorming strategies or polishing ideas. Let’s get your business where you want it to go. Any goals or projects you’re currently excited about?")
-
-
+    system_prompt = f"I’m Maven, here to help {user_name} with all things small business and marketing."
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="pathfinder")
 
 
 def inspire_chat(request):

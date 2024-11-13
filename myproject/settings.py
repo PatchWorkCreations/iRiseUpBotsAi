@@ -98,10 +98,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Session settings
+# Session Configuration
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 1209600  # Sessions last 2 weeks
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# Session Cookie Configuration
+SESSION_COOKIE_SECURE = False          # Set to True if using HTTPS
+SESSION_COOKIE_HTTPONLY = True         # Helps to prevent JavaScript access to the session cookie
+SESSION_COOKIE_SAMESITE = 'Lax'        # Limits cross-site request forgery; use 'None' only if cross-site requests are needed
+SESSION_COOKIE_NAME = 'sessionid'      # Default name for the Django session cookie; you can customize if necessary
+
 
 
 
