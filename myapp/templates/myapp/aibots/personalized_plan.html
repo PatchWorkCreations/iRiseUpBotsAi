@@ -8,13 +8,195 @@
 
 </head>
 
+<style>
+/* Grid Container */
+.ai-showcase {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three columns */
+    grid-auto-rows: 200px; /* Baseline row height */
+    gap: 30px; /* Space between cards */
+    padding: 40px;
+    background-color: #f4f6fa; /* Soft neutral background */
+}
+
+/* Base Card Styles */
+.ai-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    background: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Large Card Styles */
+.ai-card.large {
+    grid-column: span 2; /* Takes 2 columns */
+    grid-row: span 2; /* Takes 2 rows */
+    max-height: 350px; /* Height cap */
+    max-width: 500px; /* Optional width cap */
+}
+
+/* Medium Card Styles */
+.ai-card.medium {
+    grid-column: span 1; /* Normal width */
+    grid-row: span 2; /* Taller cards */
+    max-height: 300px; /* Height cap */
+}
+
+/* Small Card Styles */
+.ai-card.small {
+    grid-column: span 1; /* Standard width */
+    grid-row: span 1; /* Standard height */
+    max-height: 200px; /* Height cap */
+}
+
+/* Hover Effect */
+.ai-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Background Decoration */
+.ai-card .ai-bg {
+    position: absolute;
+    top: -20%;
+    left: -20%;
+    width: 150%;
+    height: 150%;
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.2));
+    z-index: -1;
+    border-radius: 50%;
+    transform: rotate(15deg);
+}
+
+/* Image Styling */
+.ai-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Title Styling */
+.ai-card h3 {
+    font-size: 1.4rem;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Description Styling */
+.ai-card p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .ai-showcase {
+        grid-template-columns: repeat(2, 1fr); /* Two columns on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .ai-showcase {
+        grid-template-columns: 1fr; /* Single-column layout for small screens */
+    }
+
+    .ai-card {
+        grid-column: span 1; /* All cards take full width */
+        grid-row: auto; /* Standardize row height */
+    }
+}
+
+/* About Section: Header Layout */
+.about-header-layout {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.about-header-layout .content-image {
+    position: relative;
+    width: 100%; /* Full width */
+    height: 700px; /* Adjustable height for the header image */
+    overflow: hidden;
+    border-radius: 15px; /* Optional rounded corners for style */
+    margin-bottom: 20px;
+}
+
+.about-header-layout .content-image img {
+    width: 100%; /* Ensures the image scales responsively */
+    height: 100%; /* Ensures image covers the space */
+    object-fit: cover; /* Makes the image look good in any aspect ratio */
+}
+
+.about-header-layout .content {
+    padding: 20px;
+    background: #fff; /* White background for readability */
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for separation */
+}
+
+.about-header-layout .content h3 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #333; /* Dark text for contrast */
+    font-family: 'Roboto', sans-serif;
+}
+
+.about-header-layout .content p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 15px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.about-header-layout .content ul {
+    list-style-type: none; /* Removes default bullet points */
+    padding: 0;
+    margin: 0;
+}
+
+.about-header-layout .content ul li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #555;
+}
+
+.about-header-layout .content ul li .circle-list {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #007bff; /* Custom color for bullets */
+    border-radius: 50%; /* Makes bullets circular */
+    margin-right: 10px;
+}
+
+</style>
+
 <div id="home" class="home-intro">
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-sm-12 col-xs-12">
                 <div class="content">
-                    <h2>Unlock the Power of 13 Expert AI Assistants to Transform Your Business!</h2>
-                    <p>Imagine a dedicated team of 13 skilled assistants at your fingertips, ready to streamline tasks, boost productivity, and help you reach your goals faster than ever.</p>
+                    <h2>Unlock the Power of 8 Expert AI Assistants to Transform Your Business!</h2>
+                    <p>Imagine a dedicated team of 8 skilled assistants at your fingertips, ready to streamline tasks, boost productivity, and help you reach your goals faster than ever.</p>
 
 
                     <ul>
@@ -33,29 +215,25 @@
 
 <!-- End Home Intro -->
 
-<div id="about" class="about">
+<div id="about" class="about-header-layout">
     <div class="container">
-        <div class="row">
-            <div class="col-sm-12 col-md-6 col-xs-12">
-                <div class="content-image">
-                    <img src="#" alt="About Image">
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-6 col-xs-12">
-                <div class="content">
-                    <h3>Why Choose iRiseUp.AI?</h3>
-                    <p>Imagine a world where your team is tireless, always focused, and loaded with expertise—exactly when and where you need it. That’s iRiseUp.AI.</p>
-                    <p>Our 13 specialized AI assistants cover everything from personal support to environmental impact. Whatever the task, there’s an AI expert for it, ready to work alongside you. It’s not just assistance; it’s empowerment.</p>
-                    <ul>
-                        <li><span class="circle-list"></span>Expertise tailored for your needs</li>
-                        <li><span class="circle-list"></span>Seamless integration with daily tasks</li>
-                        <li><span class="circle-list"></span>Always on—no breaks needed!</li>
-                    </ul>
-                </div>
-            </div>
+        <div class="content-image">
+            <img src="{% static 'myapp/images/aiimages/Expert.png' %}" alt="About Image">
+        </div>
+        <div class="content">
+            <h3>Why Choose iRiseUp.AI?</h3>
+            <p>Imagine a world where your team is tireless, always focused, and loaded with expertise—exactly when and where you need it. That’s iRiseUp.AI.</p>
+            <p>Our 8 specialized AI assistants cover everything from personal support to environmental impact. Whatever the task, there’s an AI expert for it, ready to work alongside you. It’s not just assistance; it’s empowerment.</p>
+            <ul>
+                <li><span class="circle-list"></span>Expertise tailored for your needs</li>
+                <li><span class="circle-list"></span>Seamless integration with daily tasks</li>
+                <li><span class="circle-list"></span>Always on—no breaks needed!</li>
+            </ul>
         </div>
     </div>
 </div>
+
+
 
 <div id="services" class="services section-bottom-only">
     <div class="section-title">
@@ -97,7 +275,6 @@
 
 
 
-
 <div id="portfolio" class="portfolio section-bottom-only">
     <div class="container">
         <div class="section-title">
@@ -110,85 +287,124 @@
                     <span>All</span>
                 </li>
                 <li data-filter="1">
-                    <span>Web Design</span>
+                    <span>Virtual Assistance</span>
                 </li>
                 <li data-filter="2">
                     <span>Marketing</span>
                 </li>
                 <li data-filter="3">
-                    <span>Branding</span>
+                    <span>Creative</span>
                 </li>
             </ul>
         </div>
         <div class="row no-gutters filter-container">
-            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="3">
-                <div class="content-image">
-                    <a href="{% static 'myapp/images/portfolio1.jpg' %}" class="portfolio-popup">
-                        <img src="{% static 'myapp/images/portfolio1.jpg' %}" alt="portfolio-image">
-                        <div class="image-overlay"></div>
-                        <div class="image-caption">
-                            <h4>Color Wall</h4>
-                            <span>Branding</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
+            <!-- Ezra -->
             <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="1">
                 <div class="content-image">
-                    <a href="{% static 'myapp/images/portfolio2.jpg' %}" class="portfolio-popup">
-                        <img src="{% static 'myapp/images/portfolio2.jpg' %}" alt="portfolio-image">
+                    <a href="{% static 'myapp/images/aiimages/ezra.png' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/aiimages/ezra.png' %}" alt="Ezra">
                         <div class="image-overlay"></div>
                         <div class="image-caption">
-                            <h4>Smooth Flower</h4>
-                            <span>Branding</span>
+                            <h4>Ezra</h4>
+                            <span>Your trusted guide for professional and personal success.</span>
                         </div>
                     </a>
                 </div>
             </div>
+
+            <!-- Caleb -->
             <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="2">
                 <div class="content-image">
-                    <a href="{% static 'myapp/images/portfolio3.jpg' %}" class="portfolio-popup">
-                        <img src="{% static 'myapp/images/portfolio3.jpg' %}" alt="portfolio-image">
+                    <a href="{% static 'myapp/images/aiimages/caleb.png' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/aiimages/caleb.png' %}" alt="Caleb">
                         <div class="image-overlay"></div>
                         <div class="image-caption">
-                            <h4>Vintage Building</h4>
-                            <span>Branding</span>
+                            <h4>Caleb</h4>
+                            <span>Focused on your health and well-being, creating a healthier, happier you.</span>
                         </div>
                     </a>
                 </div>
             </div>
+
+            <!-- Harper -->
             <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="3">
                 <div class="content-image">
-                    <a href="{% static 'myapp/images/portfolio4.jpg' %}" class="portfolio-popup">
-                        <img src="{% static 'myapp/images/portfolio4.jpg' %}" alt="portfolio-image">
+                    <a href="{% static 'myapp/images/aiimages/harper.png' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/aiimages/harper.png' %}" alt="Harper">
                         <div class="image-overlay"></div>
                         <div class="image-caption">
-                            <h4>Theo Digital</h4>
-                            <span>Branding</span>
+                            <h4>Harper</h4>
+                            <span>Here to offer emotional support and companionship whenever you need it.</span>
                         </div>
                     </a>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="2">
-                <div class="content-image">
-                    <a href="{% static 'myapp/images/portfolio5.jpg' %}" class="portfolio-popup">
-                        <img src="{% static 'myapp/images/portfolio5.jpg' %}" alt="portfolio-image">
-                        <div class="image-overlay"></div>
-                        <div class="image-caption">
-                            <h4>Painted Wall</h4>
-                            <span>Branding</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
+
+            <!-- Einstein -->
             <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="1">
                 <div class="content-image">
-                    <a href="{% static 'myapp/images/portfolio6.jpg' %}" class="portfolio-popup">
-                        <img src="{% static 'myapp/images/portfolio6.jpg' %}" alt="portfolio-image">
+                    <a href="{% static 'myapp/images/aiimages/einstein.png' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/aiimages/einstein.png' %}" alt="Einstein">
                         <div class="image-overlay"></div>
                         <div class="image-caption">
-                            <h4>Blue Lolipop</h4>
-                            <span>Branding</span>
+                            <h4>Einstein</h4>
+                            <span>Your guide to unlocking potential in education and career development.</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Nico -->
+            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="2">
+                <div class="content-image">
+                    <a href="{% static 'myapp/images/aiimages/nico.png' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/aiimages/nico.png' %}" alt="Nico">
+                        <div class="image-overlay"></div>
+                        <div class="image-caption">
+                            <h4>Nico</h4>
+                            <span>Ensuring seamless and inclusive customer experiences every step of the way.</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Alden -->
+            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="3">
+                <div class="content-image">
+                    <a href="{% static 'myapp/images/aiimages/alden.png' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/aiimages/alden.png' %}" alt="Alden">
+                        <div class="image-overlay"></div>
+                        <div class="image-caption">
+                            <h4>Alden</h4>
+                            <span>Helping you build secure financial and legal foundations for the future.</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Echo -->
+            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="2">
+                <div class="content-image">
+                    <a href="{% static 'myapp/images/aiimages/echo.png' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/aiimages/echo.png' %}" alt="Echo">
+                        <div class="image-overlay"></div>
+                        <div class="image-caption">
+                            <h4>Echo</h4>
+                            <span>Bringing your creative ideas to life with innovative solutions and inspiration.</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Maven -->
+            <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="1">
+                <div class="content-image">
+                    <a href="{% static 'myapp/images/aiimages/maven.png' %}" class="portfolio-popup">
+                        <img src="{% static 'myapp/images/aiimages/maven.png' %}" alt="Maven">
+                        <div class="image-overlay"></div>
+                        <div class="image-caption">
+                            <h4>Maven</h4>
+                            <span>Empowering small businesses with insights to thrive and grow sustainably.</span>
                         </div>
                     </a>
                 </div>
@@ -196,6 +412,7 @@
         </div>
     </div>
 </div>
+
 
 
 <div id="services" class="services section-bottom-only">
@@ -332,18 +549,19 @@
                 <div class="subscription-info">
                     <p style="color: #9b9999;">Extended every 4-week at the price of $39.99 if you do not cancel 24 hours before the renewal date in your account settings. <a href="{% url 'subscription_terms' %}">Subscription Terms</a>.</p>
                 </div>
+
+                <div class="money-back-container">
+                    <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Money-Back Guarantee" class="money-back-icon">
+                    <h2>Money-Back Guarantee</h2>
+                    <p>We are so confident in our service that we are ready to offer a full refund within 30 days of purchase if you do not achieve initial results and can demonstrate you have followed the plan.</p>
+                    <p>Learn more about all the conditions in our <a href="{% url 'subscription_terms' %}">Subscription Terms</a>.</p>
+                </div>
             
             </div>
+            
         </div>
     </div>
         
-
-        <div class="money-back-container">
-            <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Money-Back Guarantee" class="money-back-icon">
-            <h2>Money-Back Guarantee</h2>
-            <p>We are so confident in our service that we are ready to offer a full refund within 30 days of purchase if you do not achieve initial results and can demonstrate you have followed the plan.</p>
-            <p>Learn more about all the conditions in our <a href="{% url 'subscription_terms' %}">Subscription Terms</a>.</p>
-        </div>
     </div>
 </div>
 
@@ -398,7 +616,21 @@
                     </div>                    
                     <div class="form-group">
                         <label for="countryCode">Country Code</label>
-                        <input type="text" id="countryCode" name="countryCode" placeholder="ex. US" class="form-control" required>
+                        <select id="countryCode" name="countryCode" class="form-control select2" required>
+                            <option value="" disabled selected>Select a country code</option>
+                            <option value="US">United States (+1)</option>
+                            <option value="CA">Canada (+1)</option>
+                            <option value="GB">United Kingdom (+44)</option>
+                            <option value="AU">Australia (+61)</option>
+                            <option value="IN">India (+91)</option>
+                            <option value="DE">Germany (+49)</option>
+                            <option value="FR">France (+33)</option>
+                            <option value="PH">Philippines (+63)</option>
+                            <option value="JP">Japan (+81)</option>
+                            <option value="CN">China (+86)</option>
+                            <!-- Add more countries as needed -->
+                        </select>
+                    
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
@@ -435,6 +667,9 @@
     </div>
 </div>
 </div>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('checkout-modal');
@@ -458,6 +693,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    $(document).ready(function() {
+        $('#countryCode').select2({
+            placeholder: "Select a country code",
+            allowClear: true
+        });
+    });
 
     // Initialize payment options visibility
     cardPaymentSection.style.display = 'none';
@@ -1510,7 +1751,7 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 .header-banner {
-    background-color: #333;
+    background-color: #fdfdfd;
     color: #fff;
     text-align: center;
     padding: 20px;
@@ -1519,7 +1760,7 @@ document.addEventListener('DOMContentLoaded', function () {
     margin: 20px 0;
 }
 .header-banner h1 { font-size: 36px; font-weight: bold; margin: 0; color: #ff9800; }
-.header-banner p { font-size: 18px; margin-top: 10px; color: #f7f7f7; }
+.header-banner p { font-size: 18px; margin-top: 10px; color: #000000; }
 
 /* Button Styling */
 .card-button {

@@ -1,46 +1,116 @@
 {% load static %}
-<footer>
+<style>
+    /* Footer Styling */
+.custom-footer {
+    background-color: #f8f9fa; /* Light gray for a clean look */
+    color: #333; /* Dark text for contrast */
+    padding: 2rem 0;
+    font-family: 'Open Sans', sans-serif;
+    margin-top: 10px;
+}
+
+.custom-footer .brand .footer-logo {
+    height: 50px; /* Logo height */
+    margin-bottom: 1rem; /* Space below the logo */
+}
+
+.custom-footer .content {
+    margin-bottom: 1.5rem;
+}
+
+.custom-footer h5 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #0f3966 !important; /* Primary color for headers */
+}
+
+.custom-footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.custom-footer ul li {
+    margin-bottom: 0.5rem;
+}
+
+.custom-footer ul li a {
+    color: #333; /* Default link color */
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.custom-footer ul li a:hover {
+    color: #007bff; /* Highlighted link color */
+}
+
+.custom-footer .social li a {
+    display: flex;
+    align-items: center;
+}
+
+.custom-footer .social li i {
+    margin-right: 0.5rem; /* Space between icon and text */
+}
+
+/* Footer Bottom Styling */
+.footer-bottom {
+    background-color: #e9ecef; /* Slightly darker background for bottom bar */
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+</style>
+<footer class="custom-footer">
     <div class="container">
         <div class="row">
+            <!-- Logo and About Section -->
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="content">
-                    <div class="brand"><img src="{% static 'myapp/images/logo.png' %}" alt="Logo"></div>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, accusamus.</p>
+                    <div class="brand">
+                        <img src="{% static 'myapp/images/aiimages/logo.png' %}" alt="Logo" class="footer-logo">
+                    </div>
+                    <p>Empowering innovation in Columbus, Ohio, iRiseUp.AI is your gateway to a smarter tomorrow.</p>
                 </div>
             </div>
+            <!-- About Section Links -->
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="content">
                     <h5>About</h5>
                     <ul>
-                        <li><a href=""><i class="icon ion-ios-contact"></i> About us</a></li>
-                        <li><a href=""><i class="icon ion-ios-chatboxes"></i> Contact</a></li>
-                        <li><a href=""><i class="icon ion-ios-list"></i> Portfolio</a></li>
+                        <li><a href="{% url 'personalized_plan' %}#about"><i class="icon ion-ios-contact"></i> About us</a></li>
+                        <li><a href="{% url 'personalized_plan' %}#contact"><i class="icon ion-ios-chatboxes"></i> Contact</a></li>
+                        <li><a href="{% url 'personalized_plan' %}#portfolio"><i class="icon ion-ios-list"></i> Portfolio</a></li>
                     </ul>
                 </div>
             </div>
+            <!-- Support Section -->
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="content">
                     <h5>Support</h5>
                     <ul>
-                        <li><a href=""><i class="icon ion-ios-headset"></i> support@example.com</a></li>
-                        <li><a href=""><i class="icon ion-ios-call"></i> +61 3 8376 6284</a></li>
-                        <li><a href=""><i class="icon ion-ios-settings"></i> Services</a></li>
+                        <li><a href="mailto:hello@iriseup.ai"><i class="icon ion-ios-headset"></i> hello@iriseup.ai</a></li>
+                        <li><a href="{% url 'personalized_plan' %}#services"><i class="icon ion-ios-settings"></i> Services</a></li>
                     </ul>
                 </div>
             </div>
+            <!-- Social Links -->
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="content">
                     <h5>Follow us</h5>
                     <ul class="social">
-                        <li><a href=""><i class="icon ion-logo-facebook"></i> Facebook</a></li>
-                        <li><a href=""><i class="icon ion-logo-twitter"></i> Twitter</a></li>
-                        <li><a href=""><i class="icon ion-logo-instagram"></i> Instagram</a></li>
+                        <li><a href="https://facebook.com" target="_blank"><i class="icon ion-logo-facebook"></i> Facebook</a></li>
+                        <li><a href="https://twitter.com" target="_blank"><i class="icon ion-logo-twitter"></i> Twitter</a></li>
+                        <li><a href="https://instagram.com" target="_blank"><i class="icon ion-logo-instagram"></i> Instagram</a></li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
+    <div class="footer-bottom">
+        <span>&copy; 2024 iRiseUp.AI. All Rights Reserved.</span>
+    </div>
 </footer>
-<div class="footer-bottom">
-    <span>Copyright © All Right Reserved</span>
-</div>
