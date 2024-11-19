@@ -7,86 +7,138 @@
 <style>
     /* General container styling */
     .container {
-        max-width: 1200px;
-        margin: auto;
-        padding: 2rem;
-    }
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem;
+}
 
-    /* Header and greeting section */
-    .ai-bots-header {
-    margin-top: 0; /* Remove any potential top margin */
-    padding-top: 1rem; /* Adjust as needed for spacing within the header */
-    background-color: #1F3A93; /* Primary Navy Blue */
+/* Header Section */
+.ai-bots-header {
+    margin-top: 0;
+    padding-top: 1rem;
+    background-color: #1F3A93; /* Navy Blue */
     color: #ffffff;
     padding: 2rem 1rem;
     border-radius: 15px;
     margin-bottom: 2rem;
     position: relative;
+    text-align: center;
+}
+
+.ai-bots-header h2 {
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+    color: whitesmoke;
+}
+
+.ai-bots-header h3 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 0.5rem 0;
+    color: whitesmoke;
+}
+
+.ai-bots-header p {
+    color: whitesmoke;
+    margin: 0.5rem 0;
+}
+
+/* AI Bot Boxes */
+.ai-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.ai-box {
+    background-color: #f7f7f7;
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    width: 350px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ai-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ai-box img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ai-box h3 {
+    font-size: 1.5rem;
+    color: #1F3A93;
+    margin: 0.5rem 0;
+    font-weight: 700;
+}
+
+.ai-box p {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 0.5rem;
+    line-height: 1.4;
+}
+
+/* Button Styling */
+.upgrades-btn {
+    background-color: #1F3A93;
+    color: #ffffff;
+    font-size: 1.1rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+}
+
+.upgrades-btn:hover {
+    background-color: #142856;
 }
 
 
 
+/* Responsive Adjustments */
+@media (max-width: 768px) {
     .ai-bots-header h2 {
-        font-size: 2.4rem;
-        font-weight: bold;
-        margin: 0.5rem 0;
-        color: whitesmoke;
+        font-size: 1.8rem;
     }
 
     .ai-bots-header h3 {
-        font-size: 1.3rem;
-        font-weight: 500;
-        margin: 0.5rem 0;
-        color: whitesmoke;
-    }
-
-    .ai-bots-header p {
-        color: whitesmoke;
-    }
-
-    /* AI box styling */
-    .ai-boxes {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-        justify-content: center;
+        font-size: 1rem;
     }
 
     .ai-box {
-        background-color: #f7f7f7; /* Light, neutral background */
-        border: 1px solid #e0e0e0; /* Subtle border */
-        border-radius: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        width: 350px;
-        padding: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        transition: transform 0.3s ease;
+        width: 100%; /* Full width on mobile */
+        padding: 1rem;
     }
 
-    .ai-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    .ai-box img {
+        width: 100px;
+        height: 100px;
     }
 
-    .ai-box-content {
-        flex: 1;
-        padding-right: 1rem;
-    }
-
-    .ai-box h3 {
-        font-size: 1.5rem;
-        color: #1F3A93; /* Navy for heading text */
-        margin: 0;
-        font-weight: 700;
-    }
-
-    .ai-box p {
+    .upgrades-btn {
         font-size: 1rem;
-        color: #555; /* Neutral dark gray */
-        margin-top: 0.5rem;
+        padding: 0.5rem 1rem;
     }
+}
 
     /* Button styling */
     .upgrades-btn {
@@ -491,79 +543,88 @@
           
 
         <!-- AI Bots Selection Section -->
+        <!-- AI Bots Section -->
         <div class="ai-boxes">
-            <!-- Ezra Box (Previously Inspire) -->
+            <!-- Ezra -->
             <div class="ai-box">
                 <div class="ai-box-content">
-                    <h3>Ezra - Business & Personal Assistant AI 🌟</h3>
-                    <p>Your trusted guide for professional and personal success.</p>
+                    <h3>Hi, I'm Ezra! 🌟</h3>
+                    <p>Let's work together on your personal and professional goals!</p>
                 </div>
+                <img src="{% static 'myapp/images/aiimages/ezra.png' %}" alt="Ezra">
                 <button class="upgrades-btn" onclick="location.href='{% url 'inspire_chat' %}'">Start Chat</button>
             </div>
-        
-            <!-- Caleb Box (Previously Pulse) -->
+
+            <!-- Caleb -->
             <div class="ai-box">
                 <div class="ai-box-content">
-                    <h3>Caleb - Healthcare and Wellness AI 🩺</h3>
-                    <p>Focused on holistic health and well-being.</p>
+                    <h3>Hi, I'm Caleb! 🩺</h3>
+                    <p>Let's focus on your health and well-being together!</p>
                 </div>
+                <img src="{% static 'myapp/images/aiimages/caleb.png' %}" alt="Caleb">
                 <button class="upgrades-btn" onclick="location.href='{% url 'pulse_chat' %}'">Start Chat</button>
             </div>
-        
-            <!-- Harper Box (Previously SoulSpark) -->
+
+            <!-- Harper -->
             <div class="ai-box">
                 <div class="ai-box-content">
-                    <h3>Harper - Companion and Supportive AI 🤗</h3>
-                    <p>Offering emotional support and companionship whenever needed.</p>
+                    <h3>Hi, I'm Harper! 🤗</h3>
+                    <p>I'm here to provide support and companionship whenever you need it!</p>
                 </div>
+                <img src="{% static 'myapp/images/aiimages/harper.png' %}" alt="Harper">
                 <button class="upgrades-btn" onclick="location.href='{% url 'soulspark_chat' %}'">Start Chat</button>
             </div>
-    
-        
-            <!-- Einstein Box (Previously MindForge) -->
+
+            <!-- Einstein -->
             <div class="ai-box">
                 <div class="ai-box-content">
-                    <h3>Einstein - Educational & Career Guidance AI 📚</h3>
-                    <p>Guiding you on your educational and career journey.</p>
+                    <h3>Hi, I'm Einstein! 📚</h3>
+                    <p>Let me guide you on your educational and career journey!</p>
                 </div>
+                <img src="{% static 'myapp/images/aiimages/einstein.png' %}" alt="Einstein">
                 <button class="upgrades-btn" onclick="location.href='{% url 'mindforge_chat' %}'">Start Chat</button>
             </div>
-        
-            <!-- Nico Box (Previously Bridge) -->
+
+            <!-- Nico -->
             <div class="ai-box">
                 <div class="ai-box-content">
-                    <h3>Nico - Customer & Accessibility Support AI 💬🌐</h3>
-                    <p>Ensuring seamless and inclusive experiences for all.</p>
+                    <h3>Hi, I'm Nico! 💬🌐</h3>
+                    <p>I'm here to ensure seamless customer and accessibility support for you!</p>
                 </div>
+                <img src="{% static 'myapp/images/aiimages/nico.png' %}" alt="Nico">
                 <button class="upgrades-btn" onclick="location.href='{% url 'bridge_chat' %}'">Start Chat</button>
             </div>
-        
-            <!-- Alden Box (Previously Fortify) -->
+
+            <!-- Alden -->
             <div class="ai-box">
                 <div class="ai-box-content">
-                    <h3>Alden - Financial and Legal Advisor AI 💼⚖️</h3>
-                    <p>Building a secure financial and legal foundation.</p>
+                    <h3>Hi, I'm Alden! 💼⚖️</h3>
+                    <p>Let’s build a secure financial and legal foundation together!</p>
                 </div>
+                <img src="{% static 'myapp/images/aiimages/alden.png' %}" alt="Alden">
                 <button class="upgrades-btn" onclick="location.href='{% url 'fortify_chat' %}'">Start Chat</button>
             </div>
-        
-            <!-- Echo Box (Previously Echo) -->
+
+            <!-- Echo -->
             <div class="ai-box">
                 <div class="ai-box-content">
-                    <h3>Echo - Creative Assistance AI 🎨</h3>
-                    <p>Sparking creativity and innovation for artists and creators.</p>
+                    <h3>Hi, I'm Echo! 🎨</h3>
+                    <p>Let's spark creativity and bring your ideas to life!</p>
                 </div>
+                <img src="{% static 'myapp/images/aiimages/echo.png' %}" alt="Echo">
                 <button class="upgrades-btn" onclick="location.href='{% url 'echo_chat' %}'">Start Chat</button>
             </div>
-        
-            <!-- Maven Box (Previously Pathfinder) -->
+
+            <!-- Maven -->
             <div class="ai-box">
                 <div class="ai-box-content">
-                    <h3>Maven - Small Business Growth AI 🚀</h3>
-                    <p>Empowering small business owners with essential insights.</p>
+                    <h3>Hi, I'm Maven! 🚀</h3>
+                    <p>Let's grow your small business with powerful insights!</p>
                 </div>
+                <img src="{% static 'myapp/images/aiimages/maven.png' %}" alt="Maven">
                 <button class="upgrades-btn" onclick="location.href='{% url 'pathfinder_chat' %}'">Start Chat</button>
             </div>
+        </div>
 </div>
 
 <script>

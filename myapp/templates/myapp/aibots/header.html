@@ -25,33 +25,104 @@
     </div>
 </nav>
 
+<!-- Black Friday Banner -->
+<div class="black-friday-banner">
+    <div class="container text-center">
+        <strong>Black Friday Special!</strong> Get <span class="highlight">50% OFF</span> on all services until midnight! 
+        <a href="{% url 'personalized_plan' %}#plan-selection-section">Shop Now</a>
+    </div>
+</div>
+
 <style>
-    /* Navbar styling */
-    .custom-navbar {
-        background-color: white; /* White background for clarity */
-        padding: 1rem 0; /* Moderate padding for header */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Light shadow for subtle separation */
-        border-bottom: 1px solid #e0e0e0;
+/* Navbar styling */
+.custom-navbar {
+    background-color: white;
+    padding: 1rem 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #e0e0e0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1050; /* Ensure navbar is above most content */
+}
+
+.navbar-brand .logo {
+    height: 50px;
+}
+
+.navbar-nav .nav-link {
+    color: #333 !important;
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #666 !important;
+}
+
+/* Black Friday Banner Styling */
+.black-friday-banner {
+    background-color: #d32f2f;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    z-index: 1040; /* Ensure banner is below navbar but above content */
+    position: fixed; /* Stick the banner at the top of the page */
+    top: 70px; /* Push the banner below the navbar */
+    width: 100%; /* Full-width banner */
+}
+
+.black-friday-banner strong {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.black-friday-banner .highlight {
+    background-color: #fff;
+    color: #d32f2f;
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block;
+    margin: 0 0.5rem;
+}
+
+.black-friday-banner a {
+    color: #fff;
+    text-decoration: underline;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.black-friday-banner a:hover {
+    color: #ffd600;
+}
+
+/* Padding to prevent overlap with content */
+.content-wrapper {
+    padding-top: 150px; /* Adjusted for both navbar and banner height */
+    padding-bottom: 2rem;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .black-friday-banner {
+        font-size: 1rem;
+        padding: 0.8rem;
+        top: 60px; /* Adjust for smaller navbar height on mobile */
     }
 
-    .navbar-brand .logo {
-        height: 50px; /* Adjust logo height if needed */
+    .black-friday-banner strong {
+        font-size: 1.2rem;
     }
 
-    .navbar-nav .nav-link {
-        color: #333 !important; /* Dark gray for readability */
-        font-size: 1.1rem;
-        padding: 0.5rem 1rem;
+    .black-friday-banner .highlight {
+        font-size: 1rem;
+        padding: 0.2rem 0.4rem;
     }
-
-    .navbar-nav .nav-link:hover {
-        color: #666 !important;
-    }
-
-    /* Padding to prevent overlap with content */
-    .content-wrapper {
-        padding-top: 100px; /* Adjust based on navbar height */
-        padding-bottom: 2rem; /* Optional padding for visual balance */
-    }
+}
 </style>
-
