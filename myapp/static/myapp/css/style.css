@@ -229,9 +229,7 @@ ul li {
 }
 
 /* home intro */
-.home-intro {
-    padding: 175px 0;
-}
+
 
 .home-intro .content h2 {
     font-size: 64px;
@@ -574,50 +572,6 @@ form textarea {
 }
 
 /* footer bottom */
-.footer-bottom {
-    background: #020312;
-    text-align: center;
-    padding: 35px 0 35px;
-    border-top: 1px solid #23375b;
-}
-
-/* footer */
-footer {
-    background: #020312;
-    padding: 90px 0 80px;
-}
-
-footer .brand {
-    font-size: 30px;
-    color: #fff;
-    font-weight: 700;
-    margin-bottom: 15px;
-}
-
-footer .brand img {
-    width: 55px;
-}
-
-footer h5 {
-    color: #fff !important;
-    margin-bottom: 15px;
-}
-
-footer ul li {
-    margin-bottom: 8px;
-}
-
-footer ul li a {
-    color: #717e96;
-}
-
-footer ul li a i {
-    margin-right: 10px;
-}
-
-footer ul.social li a i {
-    width: 20px;
-}
 
 /* responsive */
 @media (max-width:980px) {

@@ -1,95 +1,99 @@
-{% include 'myapp/quiz/header.html' %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subscription Terms | iRiseUp Academy</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: auto;
-        }
-        h1, h2 {
-            color: #2c3e50;
-        }
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-        h2 {
-            font-size: 1.5rem;
-            margin-top: 20px;
-        }
-        p {
-            margin-bottom: 15px;
-        }
-        a {
-            color: #3498db;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .contact-info {
-            margin-top: 40px;
-            font-size: 0.9rem;
-        }
-        .contact-info p {
-            margin-bottom: 5px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Subscription Terms</h1>
-        <p>Please read these Subscription Terms thoroughly and carefully. The purpose of these Subscription Terms is to establish the terms and conditions under which you obtain access to our learning materials and other services. Should you have any questions, don’t hesitate to contact us through the <a href="#">Support Center</a>.</p>
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% block title %}Subscription Terms{% endblock %}
+{% block content %}
 
-        <p>These Subscription Terms are incorporated by reference into the Terms and Conditions of iRiseUp Academy (“iRiseUp Academy“, or “we“), and form part of the agreement between you, as a user of the website <a href="https://www.iriseupacademy.com">www.iriseupacademy.com</a> (“Website”), and iRiseUp Academy.</p>
+<style>
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+        line-height: 1.8;
+        color: #333333;
+    }
 
-        <h2>Subscription</h2>
-        <p>The subscription renews automatically at the end of each period (monthly, quarterly, or as otherwise selected by you at the time of purchase) until you cancel.</p>
+    h1, h2, h3 {
+        color: #1F3A93;
+    }
 
-        <h2>Payment Method</h2>
-        <p>Payment will be charged to the payment method you provided at the time of purchase upon confirmation of purchase. You authorize us to store your payment data as necessary to provide our services and to automatically charge the applicable fees to the payment method you submit.</p>
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        text-align: center;
+    }
 
-        <h2>Cancellation</h2>
-        <p>Canceling your subscription means that the automatic renewal will be disabled, but you will still have access to all your subscription features for the remaining time of the then-current period. Please note that deleting the app or closing the website does not cancel your subscription.</p>
+    h2 {
+        font-size: 1.5rem;
+        margin-top: 20px;
+    }
 
-        <h2>Changes</h2>
-        <p>To the maximum extent permitted by applicable laws, we may change subscription fees at any time. We will give you reasonable notice of any such pricing changes by posting the new prices on the Website and/or by sending you an email notification, or another prominent method. If you do not wish to pay the new fees, you can cancel the applicable subscription before the change takes effect.</p>
+    h3 {
+        font-size: 1.3rem;
+        margin-top: 15px;
+    }
 
-        <h2>Refunds</h2>
-        <p>These refund rights and conditions apply in addition to any refund rights available to you under applicable laws. If you are uncertain whether you are eligible for a refund, please contact our support team at the email address below, and we will work together to find the best solution.</p>
+    p {
+        margin-bottom: 15px;
+        font-size: 1rem;
+    }
 
-        <h3>Important Statement</h3>
-        <p>Please note that only fulfillment of all the above requirements allows you to receive a complete voluntary refund under the Money-back guarantee.</p>
+    a {
+        color: #1F3A93;
+        text-decoration: none;
+    }
 
-        <h3>Note for EU Residents</h3>
-        <p>If you are an EU resident, you have the right to withdraw from the agreement for the purchase of digital content without charge and without giving any reason within fourteen (14) days from the date of such agreement.</p>
+    a:hover {
+        text-decoration: underline;
+    }
 
-        <p class="contact-info">
-            LAST UPDATED: AUGUST 13, 2024<br>
-            <br>
-            Contact us:<br>
-            iRiseUp Academy<br>
-            Columbus, Ohio, United States<br>
-            Email: <a href="mailto:hello@iriseupacademy.com">hello@iriseupacademy.com</a><br>
-            <br>
-            &copy; iRiseUp Academy 2024 All rights reserved.
-        </p>
-    </div>
-</body>
-</html>
+    .contact-info {
+        font-size: 0.9rem;
+        color: #666666;
+        margin-top: 30px;
+        text-align: center;
+    }
+</style>
+
+<div class="container">
+    <h1>Subscription Terms</h1>
+    <p>Please read these Subscription Terms thoroughly and carefully. The purpose of these Subscription Terms is to establish the terms and conditions under which you obtain access to our learning materials and other services. Should you have any questions, don’t hesitate to contact us through the <a href="#">Support Center</a>.</p>
+
+    <p>These Subscription Terms are incorporated by reference into the Terms and Conditions of iRiseUp.AI (“iRiseUp.AI“, or “we“), and form part of the agreement between you, as a user of the website <a href="https://www.iriseup.ai">www.iRiseUp.ai</a> (“Website”), and iRiseUp.AI.</p>
+
+    <h2>Subscription</h2>
+    <p>The subscription renews automatically at the end of each period (monthly, quarterly, or as otherwise selected by you at the time of purchase) until you cancel.</p>
+
+    <h2>Payment Method</h2>
+    <p>Payment will be charged to the payment method you provided at the time of purchase upon confirmation of purchase. You authorize us to store your payment data as necessary to provide our services and to automatically charge the applicable fees to the payment method you submit.</p>
+
+    <h2>Cancellation</h2>
+    <p>Canceling your subscription means that the automatic renewal will be disabled, but you will still have access to all your subscription features for the remaining time of the then-current period. Please note that deleting the app or closing the website does not cancel your subscription.</p>
+
+    <h2>Changes</h2>
+    <p>To the maximum extent permitted by applicable laws, we may change subscription fees at any time. We will give you reasonable notice of any such pricing changes by posting the new prices on the Website and/or by sending you an email notification, or another prominent method. If you do not wish to pay the new fees, you can cancel the applicable subscription before the change takes effect.</p>
+
+    <h2>Refunds</h2>
+    <p>These refund rights and conditions apply in addition to any refund rights available to you under applicable laws. If you are uncertain whether you are eligible for a refund, please contact our support team at the email address below, and we will work together to find the best solution.</p>
+
+    <h3>Important Statement</h3>
+    <p>Please note that only fulfillment of all the above requirements allows you to receive a complete voluntary refund under the Money-back guarantee.</p>
+
+    <h3>Note for EU Residents</h3>
+    <p>If you are an EU resident, you have the right to withdraw from the agreement for the purchase of digital content without charge and without giving any reason within fourteen (14) days from the date of such agreement.</p>
+
+    <p class="contact-info">
+        LAST UPDATED: November 22, 2024<br>
+        <br>
+        Contact us:<br>
+        iRiseUp.AI<br>
+        Columbus, Ohio, United States<br>
+        Email: <a href="mailto:support@iriseup.ai">support@iriseup.ai</a><br>
+        <br>
+        &copy; iRiseUp.AI 2024 All rights reserved.
+    </p>
+</div>
+
+{% endblock %}

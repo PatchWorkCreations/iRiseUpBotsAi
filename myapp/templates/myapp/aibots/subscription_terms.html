@@ -1,0 +1,271 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% load static %}
+{% block title %}Subscription Terms{% endblock %}
+{% block content %}
+
+<style>
+   
+    /* General Container Styling */
+    .container {
+    margin-top: 70px; /* Adjust to align content below navbar */
+    max-width: 800px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    line-height: 1.8;
+    color: #333333;
+}
+
+
+    /* Headings Styling */
+    h1, h2, h3 {
+        color: #1F3A93;
+        font-weight: bold;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+
+    h2 {
+        font-size: 1.7rem;
+        margin-top: 25px;
+    }
+
+    h3 {
+        font-size: 1.4rem;
+        margin-top: 20px;
+    }
+
+    /* Paragraph Styling */
+    p {
+        margin-bottom: 20px;
+        font-size: 1rem;
+        text-align: justify;
+        line-height: 1.8;
+    }
+
+    /* Link Styling */
+    a {
+        color: #1F3A93;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    a:hover {
+        text-decoration: underline;
+        color: #0F265C; /* Slightly darker color on hover */
+    }
+
+    /* Contact Information Section */
+    .contact-info {
+        font-size: 0.9rem;
+        color: #666666;
+        margin-top: 40px;
+        text-align: center;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0; /* Separator line */
+    }
+
+    /* Navbar Styling */
+    .custom-navbar {
+    background-color: white;
+    padding: 0.5rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #e0e0e0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1050;
+}
+
+/* Navbar Styling */
+.custom-navbar {
+    background-color: white;
+    padding: 0.5rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #e0e0e0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1050;
+}
+
+/* Unique container for the navbar */
+.navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Navbar brand adjustments */
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+}
+
+.navbar-brand:hover {
+    text-decoration: none;
+}
+
+/* Logo styling */
+.navbar-brand .logo {
+    height: 40px;
+    max-height: 100%;
+    margin-right: 10px; /* Space between logo and "Home" */
+}
+
+/* Navbar links styling */
+.navbar-nav .nav-link {
+    color: #333 !important;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #1F3A93 !important;
+}
+
+/* Home link styling */
+.navbar-brand .home-link {
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.navbar-brand .home-link:hover {
+    color: #1F3A93;
+}
+
+/* Navbar toggler adjustments */
+.navbar-toggler {
+    border: none;
+}
+
+.navbar-toggler .icon {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* Ensure a clean appearance for mobile */
+@media (max-width: 768px) {
+    .navbar-container {
+        justify-content: space-between;
+    }
+
+    .navbar-brand .logo {
+        height: 30px;
+    }
+
+    .navbar-brand .home-link {
+        font-size: 1rem;
+    }
+}
+
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+
+
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-md navbar-light fixed-top custom-navbar">
+    <div class="navbar-container">
+        <a href="{% url 'personalized_plan' %}" class="navbar-brand d-flex align-items-center">
+            <img src="{% static 'myapp/images/aiimages/logo.png' %}" alt="Logo" class="logo mr-2">
+            <span class="home-link">Home</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="icon ion-ios-menu"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#portfolio">Portfolio</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#services">Services</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#plan-selection-section">Access</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'coursemenu' %}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'sign_out' %}">Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'sign_in' %}">Sign in</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Content -->
+<div class="container">
+    <h1>Subscription Terms</h1>
+    <p>Please read these Subscription Terms thoroughly and carefully. The purpose of these Subscription Terms is to establish the terms and conditions under which you obtain access to our learning materials and other services. Should you have any questions, don’t hesitate to contact us through the <a href="#">Support Center</a>.</p>
+
+    <p>These Subscription Terms are incorporated by reference into the Terms and Conditions of iRiseUp.AI (“iRiseUp.AI“, or “we“), and form part of the agreement between you, as a user of the website <a href="https://www.iriseup.ai">www.iRiseUp.ai</a> (“Website”), and iRiseUp.AI.</p>
+
+    <h2>Subscription</h2>
+    <p>The subscription renews automatically at the end of each period (monthly, quarterly, or as otherwise selected by you at the time of purchase) until you cancel.</p>
+
+    <h2>Payment Method</h2>
+    <p>Payment will be charged to the payment method you provided at the time of purchase upon confirmation of purchase. You authorize us to store your payment data as necessary to provide our services and to automatically charge the applicable fees to the payment method you submit.</p>
+
+    <h2>Cancellation</h2>
+    <p>Canceling your subscription means that the automatic renewal will be disabled, but you will still have access to all your subscription features for the remaining time of the then-current period. Please note that deleting the app or closing the website does not cancel your subscription.</p>
+
+    <h2>Changes</h2>
+    <p>To the maximum extent permitted by applicable laws, we may change subscription fees at any time. We will give you reasonable notice of any such pricing changes by posting the new prices on the Website and/or by sending you an email notification, or another prominent method. If you do not wish to pay the new fees, you can cancel the applicable subscription before the change takes effect.</p>
+
+    <h2>Refunds</h2>
+    <p>These refund rights and conditions apply in addition to any refund rights available to you under applicable laws. If you are uncertain whether you are eligible for a refund, please contact our support team at the email address below, and we will work together to find the best solution.</p>
+
+    <h3>Important Statement</h3>
+    <p>Please note that only fulfillment of all the above requirements allows you to receive a complete voluntary refund under the Money-back guarantee.</p>
+
+    <h3>Note for EU Residents</h3>
+    <p>If you are an EU resident, you have the right to withdraw from the agreement for the purchase of digital content without charge and without giving any reason within fourteen (14) days from the date of such agreement.</p>
+
+    <p class="contact-info">
+        LAST UPDATED: November 22, 2024<br>
+        <br>
+        Contact us:<br>
+        iRiseUp.AI<br>
+        Columbus, Ohio, United States<br>
+        Email: <a href="mailto:support@iriseup.ai">support@iriseup.ai</a><br>
+        <br>
+        &copy; iRiseUp.AI 2024 All rights reserved.
+    </p>
+</div>
+
+{% endblock %}

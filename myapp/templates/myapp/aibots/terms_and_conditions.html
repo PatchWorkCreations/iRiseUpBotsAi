@@ -1,0 +1,89 @@
+{% extends "myapp/aibots/bot_base.html" %}
+{% block title %}Terms and Conditions{% endblock %}
+{% block content %}
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+        line-height: 1.8;
+        color: #333333;
+    }
+
+    h1, h2 {
+        color: #1F3A93;
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        margin-top: 20px;
+    }
+
+    p {
+        margin-bottom: 15px;
+        font-size: 1rem;
+    }
+
+    a {
+        color: #1F3A93;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .contact-info {
+        font-size: 0.9rem;
+        color: #666666;
+        margin-top: 30px;
+        text-align: center;
+    }
+</style>
+
+<div class="container">
+    <h1>Terms and Conditions</h1>
+    <p>Welcome to iRiseUp.AI! Please carefully review these terms and conditions. By using our website, you agree to abide by the following terms. If you have any questions, feel free to contact us.</p>
+
+    <h2>General Use</h2>
+    <p>All users must use our services in accordance with applicable laws and these terms. Unauthorized use or access to our services is strictly prohibited.</p>
+
+    <h2>Subscription and Payment</h2>
+    <p>Subscriptions are billed in advance. By subscribing, you authorize iRiseUp.AI to charge your provided payment method. Cancellation is effective at the end of the current billing period.</p>
+
+    <h2>Account Security</h2>
+    <p>You are responsible for maintaining the security of your account and password. Any activities that occur under your account are your responsibility.</p>
+
+    <h2>Privacy</h2>
+    <p>We value your privacy. Please refer to our <a href="{% url 'data_privacy' %}">Privacy Policy</a> for more information about how we handle your personal data.</p>
+
+    <h2>Changes to Terms</h2>
+    <p>We reserve the right to update these terms at any time. Changes will be communicated via email or posted on our website. Continued use of our services indicates acceptance of updated terms.</p>
+
+    <h2>Contact Us</h2>
+    <p>If you have any questions or concerns about these terms, please contact us at <a href="mailto:support@iriseup.ai">support@iriseup.ai</a>.</p>
+
+    <p class="contact-info">
+        LAST UPDATED: November 22, 2024<br>
+        <br>
+        Contact us:<br>
+        iRiseUp.AI<br>
+        Columbus, Ohio, United States<br>
+        Email: <a href="mailto:support@iriseup.ai">support@iriseup.ai</a><br>
+        <br>
+        &copy; 2024 iRiseUp.AI. All rights reserved.
+    </p>
+</div>
+
+{% endblock %}

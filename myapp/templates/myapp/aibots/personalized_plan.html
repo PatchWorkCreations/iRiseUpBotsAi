@@ -9,6 +9,10 @@
 </head>
 
 <style>
+    .home-intro {
+    padding: 175px 0 50px 0; /* Top padding: 175px, Bottom padding: 50px */
+}
+
 /* Grid Container */
 .ai-showcase {
     display: grid;
@@ -122,39 +126,40 @@
     }
 }
 
-/* About Section: Header Layout */
-.about-header-layout {
-    text-align: center;
-    margin-top: 10px;
+/* About Section: Header Layout */.about-header-layout {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+    flex-wrap: wrap; /* Enable wrapping for smaller screens */
 }
 
 .about-header-layout .content-image {
-    position: relative;
-    width: 100%; /* Full width */
-    height: 700px; /* Adjustable height for the header image */
-    overflow: hidden;
-    border-radius: 15px; /* Optional rounded corners for style */
-    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px; /* Maximum size for large screens */
+    margin: 0 auto 20px auto; /* Center the image and add bottom margin */
+    text-align: center;
 }
 
 .about-header-layout .content-image img {
-    width: 100%; /* Ensures the image scales responsively */
-    height: 100%; /* Ensures image covers the space */
-    object-fit: cover; /* Makes the image look good in any aspect ratio */
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 15px; /* Optional rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted look */
+    object-fit: cover; /* Ensure it scales well within its container */
+    transition: transform 0.3s ease; /* Smooth hover effect */
 }
 
 .about-header-layout .content {
-    padding: 20px;
-    background: #fff; /* White background for readability */
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for separation */
+    flex: 1 1 50%; /* Content takes half the width */
+    font-family: 'Roboto', sans-serif;
 }
 
 .about-header-layout .content h3 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
     margin-bottom: 15px;
-    color: #333; /* Dark text for contrast */
-    font-family: 'Roboto', sans-serif;
 }
 
 .about-header-layout .content p {
@@ -162,11 +167,10 @@
     line-height: 1.6;
     color: #555;
     margin-bottom: 15px;
-    font-family: 'Open Sans', sans-serif;
 }
 
 .about-header-layout .content ul {
-    list-style-type: none; /* Removes default bullet points */
+    list-style: none;
     padding: 0;
     margin: 0;
 }
@@ -183,17 +187,203 @@
     display: inline-block;
     width: 10px;
     height: 10px;
-    background: #007bff; /* Custom color for bullets */
-    border-radius: 50%; /* Makes bullets circular */
+    background: #007bff; /* Customize bullet color */
+    border-radius: 50%;
     margin-right: 10px;
 }
+
+.about-header-layout .content-image img:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+    .about-header-layout .content-image {
+        max-width: 100%; /* Allow the image to fill smaller screens */
+        margin-bottom: 15px; /* Reduce the bottom margin */
+    }
+
+    .about-header-layout .content-image img {
+        border-radius: 10px; /* Slightly smaller rounded corners */
+    }
+
+    .about-header-layout {
+        flex-direction: column; /* Stack image and content vertically */
+        text-align: center; /* Center-align text on smaller screens */
+    }
+
+    .about-header-layout .content h3 {
+        font-size: 1.5rem; /* Adjust heading size for mobile */
+    }
+
+    .about-header-layout .content p {
+        font-size: 0.95rem; /* Adjust paragraph size for mobile */
+    }
+
+    .about-header-layout .content ul li {
+        font-size: 0.95rem; /* Adjust list font size */
+    }
+}
+
+/****** General Styling ******/
+.modern-layout {
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: 'Roboto', sans-serif;
+}
+
+.modern-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.modern-description {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.8;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/****** Features Grid ******/
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.feature-item i {
+    font-size: 1.5rem;
+    color: #5860F8;
+    margin-right: 15px;
+}
+
+.feature-item span {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+/****** Icons Placeholder (Can use FontAwesome or any icon library) ******/
+.icon-expertise::before {
+    content: "🎯";
+}
+
+.icon-integration::before {
+    content: "🔗";
+}
+
+.icon-always-on::before {
+    content: "⏰";
+}
+
+/****** Mobile Responsiveness ******/
+@media (max-width: 768px) {
+    .modern-title {
+        font-size: 1.6rem;
+    }
+    .modern-description {
+        font-size: 0.9rem;
+    }
+    .feature-item span {
+        font-size: 0.9rem;
+    }
+}
+
+/* AI Overview Section */
+/* AI Overview Section */
+.ai-overview {
+    background-color: #fff; /* White background for a clean look */
+    color: #000; /* Black text for contrast */
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.ai-header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #000; /* Black for the heading */
+}
+
+.ai-header .highlight {
+    color: #000; /* Same color for simplicity */
+    font-weight: 700; /* Slightly bolder for emphasis */
+}
+
+.ai-header p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    color: #333; /* Dark grey for secondary text */
+}
+
+/* Center the content properly */
+/* AI Content - Default (Side by Side for Larger Screens) */
+.ai-content {
+    display: flex;
+    justify-content: space-around; /* Spread images evenly */
+    align-items: center;
+    width: 100%; /* Ensure it uses the full width of the container */
+    padding: 20px;
+    gap: 40px; /* Add space between images */
+    
+}
+
+/* Image Styles */
+.ai-image img {
+    width: 100%; /* Allow images to share space side by side */
+    max-width: 700px; /* Set a reasonable maximum width */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Ensure the images are block-level for proper alignment */
+}
+
+/* Responsive Design - For Smaller Screens */
+@media (max-width: 1024px) {
+    .ai-content {
+        flex-wrap: wrap; /* Allow wrapping for smaller screens */
+        justify-content: center; /* Center images when stacked */
+        gap: 20px; /* Adjust spacing for smaller screens */
+    }
+
+    .ai-image img {
+        width: 100%; /* Use most of the screen width on smaller screens */
+        max-width: 600px; /* Set a reasonable limit */
+    }
+}
+
+
+
 
 </style>
 
 <div id="home" class="home-intro">
     <div class="container">
         <div class="row">
-            <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="col-md-6 col-sm-12 col-xs-12" style="padding-top: 8px;">
                 <div class="content">
                     <h2>Unlock the Power of 8 Expert AI Assistants to Transform Your Business!</h2>
                     <p>Imagine a dedicated team of 8 skilled assistants at your fingertips, ready to streamline tasks, boost productivity, and help you reach your goals faster than ever.</p>
@@ -220,19 +410,53 @@
         <div class="content-image">
             <img src="{% static 'myapp/images/aiimages/Expert.png' %}" alt="About Image">
         </div>
-        <div class="content">
-            <h3>Why Choose iRiseUp.AI?</h3>
-            <p>Imagine a world where your team is tireless, always focused, and loaded with expertise—exactly when and where you need it. That’s iRiseUp.AI.</p>
-            <p>Our 8 specialized AI assistants cover everything from personal support to environmental impact. Whatever the task, there’s an AI expert for it, ready to work alongside you. It’s not just assistance; it’s empowerment.</p>
-            <ul>
-                <li><span class="circle-list"></span>Expertise tailored for your needs</li>
-                <li><span class="circle-list"></span>Seamless integration with daily tasks</li>
-                <li><span class="circle-list"></span>Always on—no breaks needed!</li>
-            </ul>
-        </div>
+        <div class="content modern-layout">
+            <h3 class="modern-title">Why Choose iRiseUp.AI?</h3>
+            <p class="modern-description">
+                Imagine a world where your team is tireless, always focused, and loaded with expertise—exactly when and where you need it. That’s iRiseUp.AI.
+            </p>
+            <p class="modern-description">
+                Our 8 specialized AI assistants cover everything from personal support to environmental impact. Whatever the task, there’s an AI expert for it, ready to work alongside you. It’s not just assistance; it’s empowerment.
+            </p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="icon icon-expertise"></i>
+                    <span>Expertise tailored for your needs</span>
+                </div>
+                <div class="feature-item">
+                    <i class="icon icon-integration"></i>
+                    <span>Seamless integration with daily tasks</span>
+                </div>
+                <div class="feature-item">
+                    <i class="icon icon-always-on"></i>
+                    <span>Always on—no breaks needed!</span>
+                </div>
+            </div>
+        </div>        
     </div>
 </div>
 
+<div id="ai-overview" class="ai-overview">
+    <div class="container">
+        <div class="ai-header">
+            <h1>Your wish, <span class="highlight">Our command</span></h1>
+            <p>Tireless, always on, no complaints.</p>
+            <p>With your team of 8 expert AIs, every business function is covered. From brainstorming to execution, they’ve got you supported.</p>
+        </div>
+        <div class="ai-content">
+            <!-- Left Image -->
+            <div class="ai-image">
+                <img src="{% static 'myapp/images/aiimages/aisolo.png' %}" alt="Solo AI Bot Image">
+            </div>
+        
+            <!-- Right Image -->
+            <div class="ai-image">
+                <img src="{% static 'myapp/images/aiimages/aigroup.png' %}" alt="Group AI Bots Image">
+            </div>
+        </div>
+        
+    </div>
+</div>
 
 
 <div id="services" class="services section-bottom-only">
@@ -547,14 +771,14 @@
                 </div>
 
                 <div class="subscription-info">
-                    <p style="color: #9b9999;">Extended every 4-week at the price of $39.99 if you do not cancel 24 hours before the renewal date in your account settings. <a href="{% url 'subscription_terms' %}">Subscription Terms</a>.</p>
+                    <p style="color: #9b9999;">Extended every 4-week at the price of $39.99 if you do not cancel 24 hours before the renewal date in your account settings. <a href="{% url 'account_subscription_terms' %}">Subscription Terms</a>.</p>
                 </div>
 
                 <div class="money-back-container">
                     <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Money-Back Guarantee" class="money-back-icon">
                     <h2>Money-Back Guarantee</h2>
                     <p>We are so confident in our service that we are ready to offer a full refund within 30 days of purchase if you do not achieve initial results and can demonstrate you have followed the plan.</p>
-                    <p>Learn more about all the conditions in our <a href="{% url 'subscription_terms' %}">Subscription Terms</a>.</p>
+                    <p>Learn more about all the conditions in our <a href="{% url 'account_subscription_terms' %}">Subscription Terms</a> .</p>
                 </div>
             
             </div>
@@ -661,7 +885,7 @@
 
         <!-- Add the subscription terms language below the payment options -->
         <div class="subscription-terms mt-4">
-            <p style="text-align: center; font-size: 12px;">You agree that <strong id="selected-plan-price">$39.99</strong> will be as an intro offer, then <strong id="selected-plan-renewal-price">$39.99</strong> will be automatically billed every 4-weeks until you cancel in settings. <a href="{% url 'subscription_terms' %}">Subscription Terms</a>.</p>
+            <p style="text-align: center; font-size: 12px;">You agree that <strong id="selected-plan-price">$39.99</strong> will be as an intro offer, then <strong id="selected-plan-renewal-price">$39.99</strong> will be automatically billed every 4-weeks until you cancel in settings. <a href="{% url 'account_subscription_terms' %}">Subscription Terms</a>.</p>
         </div>
         
     </div>
@@ -1258,61 +1482,6 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 
-.ai-title {
-        font-size: 2.5rem; /* Large and bold heading */
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 30px;
-    }
-
-    .ai-content {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .ai-image {
-        max-width: 180px; /* Size of the AI image */
-        margin-right: 5px;
-    }
-
-    .ai-days {
-        text-align: left;
-    }
-
-    .ai-day {
-        font-size: 0.875rem;
-        font-weight: bold;
-        background-color: #fff;
-        padding: 10px 15px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-    }
-
-    .ai-day-desc {
-        font-size: 0.875rem;
-        color: #666;
-        margin-left: 10px;
-    }
-
-    .ai-benefits li {
-        font-size: 1.2rem;
-        font-weight: 500;
-        color: #555;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-    }
-
-    .ai-benefits li::before {
-        content: attr(data-icon);
-        font-size: 1.5rem; /* Larger emoji size */
-        margin-right: 10px;
-    }
 
 .pay-safe {
     text-align: center;

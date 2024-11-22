@@ -29,8 +29,8 @@ urlpatterns = [
     path('quiz-results/', views.quiz_results, name='quiz_results'),
     path('no-quiz-results/', views.no_quiz_results, name='no_quiz_results'),
 
-    path('subscription-terms/', views.subscription_terms, name='subscription_terms'),
-    path('terms-conditions/', views.terms_conditions, name='terms_conditions'),
+    
+    
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
 
     path('support-center/', views.support_center, name='support_center'),
@@ -146,4 +146,8 @@ urlpatterns = [
     path('delete_account/', views.delete_account, name='delete_account'),
     path('account_deleted/', views.account_deleted, name='account_deleted'),
     path('account_deactivated/', views.account_deactivated, name='account_deactivated'),
+
+    path('account/subscription-terms/', views.subscription_terms_new, name='account_subscription_terms'),
+    path('terms-and-conditions/', views.terms_and_conditions, name='terms_and_conditions'),
+    path('data-privacy/', views.data_privacy, name='data_privacy'),
 ] 

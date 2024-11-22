@@ -100,8 +100,14 @@ from django.contrib.auth.decorators import login_required
 def coursemenu(request):
     return render(request, 'myapp/aibots/coursemenu.html')
 
+def subscription_terms_new(request):
+    return render(request, 'myapp/aibots/subscription_terms.html')
 
+def terms_and_conditions(request):
+    return render(request, 'myapp/aibots/terms_and_conditions.html')
 
+def data_privacy(request):
+    return render(request, 'myapp/aibots/data_privacy.html')
 
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
