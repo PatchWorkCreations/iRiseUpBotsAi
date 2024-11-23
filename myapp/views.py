@@ -274,7 +274,7 @@ def email_collection(request):
             })
 
         # Send the welcome email synchronously
-        subject = 'Welcome to iRiseUp Academy!'
+        subject = 'Welcome to iRiseUp.ai!'
         html_message = render_to_string('welcome_email.html', {'email': email})
         plain_message = strip_tags(html_message)
         from_email = 'hello@iriseupacademy.com'  # Replace with your actual sender email
@@ -297,7 +297,7 @@ def send_welcomepassword_email(user_email, random_password):
     Sends a personalized welcome email with HTML design to new users.
     """
     subject = 'Welcome to iRiseUp.AI – Your Intelligent Assistant is Ready!'
-    from_email = 'support@iriseup.ai'
+    from_email = 'hello@iriseupacademy.com'
     to_email = [user_email]
 
     # Plain text content for fallback
@@ -880,7 +880,7 @@ def send_resetpassword_email(user_email, token, uid):
     """
     Sends a password reset email with HTML design to users.
     """
-    subject = 'Reset Your Password - iRiseUp Academy'
+    subject = 'Reset Your Password - iRiseUp.ai'
     from_email = 'hello@iriseupacademy.com'
     to_email = [user_email]
 
@@ -889,10 +889,10 @@ def send_resetpassword_email(user_email, token, uid):
         f"Dear {user_email},\n\n"
         "You're receiving this email because you requested a password reset.\n"
         "Please click the link below to reset your password:\n"
-        f"https://www.iriseupacademy.com/reset/{uid}/{token}/\n\n"
+        f"https://www.iriseup.ai/reset/{uid}/{token}/\n\n"
         "If you didn’t request this, please ignore this email.\n"
         "Best regards,\n"
-        "The iRiseUp Academy Team"
+        "The iRiseUp.ai Team"
     )
 
     # HTML content for the email
@@ -901,7 +901,7 @@ def send_resetpassword_email(user_email, token, uid):
     <html>
     <head>
         <meta charset="UTF-8">
-        <title>Reset Your Password - iRiseUp Academy</title>
+        <title>Reset Your Password - iRiseUp.ai</title>
         <style>
             body {{
                 font-family: Arial, sans-serif;
@@ -977,7 +977,6 @@ def send_resetpassword_email(user_email, token, uid):
         <div class="container">
             <!-- Email Header -->
             <div class="header">
-                <img src="https://www.iriseupacademy.com/static/myapp/images/resource/author-6.png" alt="iRiseUp Academy Logo">
                 <h1>Reset Your Password</h1>
             </div>
 
@@ -985,14 +984,14 @@ def send_resetpassword_email(user_email, token, uid):
             <div class="content">
                 <p>Hello {user_email},</p>
                 <p>You requested a password reset for your account. Click the button below to reset it:</p>
-                <a href="https://www.iriseupacademy.com/reset/{uid}/{token}/" class="button">Reset Password</a>
+                <a href="https://www.iriseup.ai/reset/{uid}/{token}/" class="button">Reset Password</a>
                 <p>If you didn’t request this, please ignore this email.</p>
-                <p>Best regards,<br><strong>The iRiseUp Academy Team</strong></p>
+                <p>Best regards,<br><strong>The iRiseUp.ai Team</strong></p>
             </div>
 
             <!-- Email Footer -->
             <div class="footer">
-                <p>iRiseUp Academy, Columbus, Ohio, USA | <a href="https://iriseupacademy.com/unsubscribe">Unsubscribe</a></p>
+                <p>iRiseUp.ai, Columbus, Ohio, USA | <a href="https://iriseup.ai/unsubscribe">Unsubscribe</a></p>
             </div>
         </div>
     </body>
