@@ -13,6 +13,29 @@
     padding: 175px 0 50px 0; /* Top padding: 175px, Bottom padding: 50px */
 }
 
+@media (max-width:767px) {
+    .home-intro .content h2 {
+        font-size: 40px;
+        padding-top: 70px;
+    }
+
+    .process-work .col-md-6 .content {
+        margin-bottom: 30px;
+    }
+
+    .process-work .col-md-6:nth-last-child(-1n+2) .content {
+        margin-bottom: 0;
+    }
+
+    .news .content h4 {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+}
+
 /* Grid Container */
 .ai-showcase {
     display: grid;
@@ -556,28 +579,41 @@
 
 </style>
 
-<div id="home" class="home-intro">
+<div id="home" class="home-intro" style="background-color: #f8f9fa; padding: 40px 0; margin-top: 70px;">
     <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-sm-12 col-xs-12" style="padding-top: 8px;">
+        <div class="row align-items-center">
+            <!-- Text Content -->
+            <div class="col-md-6 col-sm-12" style="padding-top: 8px;">
                 <div class="content">
-                    <h2>Unlock the Power of 8 Expert AI Assistants to Transform Your Business!</h2>
-                    <p>Imagine a dedicated team of 8 skilled assistants at your fingertips, ready to streamline tasks, boost productivity, and help you reach your goals faster than ever.</p>
-
-
-                    <ul>
-                        <li><a href="#plan-selection-section" class="button">Get Started</a></li>
+                    <h2 style="font-size: 2.5em; font-weight: bold; color: #333;">
+                        Revolutionize Your Life and Business with 8 Expert AI Assistants!
+                    </h2>
+                    <p style="font-size: 1.2em; line-height: 1.6; color: #555; margin-top: 20px;">
+                        Imagine having 8 AI-powered experts working tirelessly for you—streamlining your tasks, supercharging your productivity, and helping you achieve your biggest goals faster and smarter. 🚀
+                    </p>
+                    <ul style="margin-top: 30px;">
+                        <li>
+                            <a href="#plan-selection-section" class="button" 
+                               style="background-color: #007bff; color: #fff; padding: 12px 24px; font-size: 1.1em; border-radius: 5px; text-decoration: none;">
+                                Get Started Now
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
-            <div class="col-md-6 col-sm-12 col-xs-12">
-                <div class="content-image">
-                    <img src="{% static 'myapp/images/header-img.png' %}" alt="Header Image">
+
+            <!-- Image Content -->
+            <div class="col-md-6 col-sm-12">
+                <div class="content-image text-center">
+                    <img src="{% static 'myapp/images/header-img.png' %}" 
+                         alt="AI Assistants Illustration" 
+                         style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- End Home Intro -->
 

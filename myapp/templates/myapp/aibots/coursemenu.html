@@ -419,6 +419,13 @@
                 right: 10px;
             }
         }
+
+        .menu-girl-img {
+    width: 50px;
+    height: 50px;
+    fill: #1F3A93; /* Adjust color */
+}
+
 </style>
 
 <div class="content-wrapper">
@@ -446,7 +453,10 @@
                 <div>
                     <a href="{% url 'personal_info_update' %}">
                         <div class="settings-main-sub">
-                            <img class="menu-girl-img" src="#" alt="Profile Image">
+                            <svg class="menu-girl-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1F3A93" width="50px" height="50px">
+                                <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
+                            </svg>
+                            
                             <div>
                                 <h2 class="smith">{{ user.first_name }} {{ user.last_name }}</h2>
                                 <p class="smith-email">{{ user.email }}</p>
