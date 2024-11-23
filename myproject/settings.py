@@ -146,15 +146,14 @@ LOGGING = {
 }
 
 # Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# Get environment variables with fallback values
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')  # Replace with your default email host
-EMAIL_PORT = os.getenv('EMAIL_PORT', 587)  # Default email port
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 'yes')  # Boolean handling
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')  # No fallback for sensitive data
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')  # No fallback for sensitive data
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'feed.teach.love@gmail.com')  # Provide a fallback
+# Updated Email Configuration for Outlook
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Use SMTP backend
+EMAIL_HOST = 'smtp.office365.com'  # Default to Outlook SMTP
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))  # Ensure the port is an integer
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 'yes')  # Convert to boolean
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')  # Must be provided in the environment
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')  # Must be provided in the environment
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'hello@iriseupacademy.com')  # Provide a default sender email
 
 
 # Third-party API keys

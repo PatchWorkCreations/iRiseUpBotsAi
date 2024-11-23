@@ -2286,7 +2286,7 @@ def contact_us(request):
                 'email': email,
             })
             plain_message = strip_tags(html_message)
-            from_email = 'feed.teach.love@gmail.com'  # Replace with your email
+            from_email = 'hello@iriseupacademy.com'  # Replace with your email
             to = 'email'  # Send to yourself
 
             # Send the email
