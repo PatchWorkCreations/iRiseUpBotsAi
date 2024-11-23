@@ -296,27 +296,27 @@ def send_welcomepassword_email(user_email, random_password):
     """
     Sends a personalized welcome email with HTML design to new users.
     """
-    subject = 'Welcome to iRiseUp Academy – Your Account is Ready!'
-    from_email = 'hello@iriseupacademy.com'
+    subject = 'Welcome to iRiseUp.AI – Your Intelligent Assistant is Ready!'
+    from_email = 'support@iriseup.ai'
     to_email = [user_email]
 
     # Plain text content for fallback
     text_content = (
         f"Dear {user_email},\n\n"
-        "Welcome to iRiseUp Academy! Your account has been successfully created.\n"
+        "Welcome to iRiseUp.AI! Your account has been successfully created.\n"
         f"Here is your temporary password: {random_password}\n\n"
-        "Please log in to update your password and start your learning journey.\n\n"
+        "Please log in to update your password and explore our intelligent AI assistants.\n\n"
         "Best regards,\n"
-        "The iRiseUp Academy Team"
+        "The iRiseUp.AI Team"
     )
 
-    # HTML content (you can use your email design)
+    # HTML content
     html_content = f"""
     <!DOCTYPE html>
     <html>
     <head>
         <meta charset="UTF-8">
-        <title>Welcome to iRiseUp Academy</title>
+        <title>Welcome to iRiseUp.AI</title>
         <style>
             body {{
                 font-family: Arial, sans-serif;
@@ -336,13 +336,13 @@ def send_welcomepassword_email(user_email, random_password):
                 overflow: hidden;
             }}
             .header {{
-                background-color: #5860F8;
+                background-color: #00A8E8;
                 color: #ffffff;
                 padding: 20px;
                 text-align: center;
             }}
             .header img {{
-                max-width: 120px;
+                max-width: 100px;
                 margin-bottom: 10px;
             }}
             .header h1 {{
@@ -363,14 +363,14 @@ def send_welcomepassword_email(user_email, random_password):
                 display: inline-block;
                 padding: 12px 25px;
                 color: #ffffff;
-                background-color: #5860F8;
+                background-color: #00A8E8;
                 text-decoration: none;
                 border-radius: 5px;
                 font-size: 16px;
                 margin-top: 20px;
             }}
             .button:hover {{
-                background-color: #4752c4;
+                background-color: #007bb5;
             }}
             .footer {{
                 text-align: center;
@@ -383,7 +383,7 @@ def send_welcomepassword_email(user_email, random_password):
                 margin: 0;
             }}
             .footer a {{
-                color: #5860F8;
+                color: #00A8E8;
                 text-decoration: none;
             }}
         </style>
@@ -392,8 +392,7 @@ def send_welcomepassword_email(user_email, random_password):
         <div class="container">
             <!-- Email Header -->
             <div class="header">
-                <img src="https://www.iriseupacademy.com/static/myapp/images/resource/author-6.png" alt="iRiseUp Academy Logo">
-                <h1>Welcome to iRiseUp Academy, {user_email}!</h1>
+                <h1>Welcome to iRiseUp.AI, {user_email}!</h1>
             </div>
 
             <!-- Email Content -->
@@ -401,14 +400,14 @@ def send_welcomepassword_email(user_email, random_password):
                 <p>Hello {user_email},</p>
                 <p>Your account has been successfully created. Below is your temporary password:</p>
                 <p><strong>Temporary Password:</strong> {random_password}</p>
-                <p>Please log in and update your password for security.</p>
-                <a href="https://www.iriseupacademy.com/sign_in" class="button">Log In Now</a>
-                <p>Best regards,<br><strong>The iRiseUp Academy Team</strong></p>
+                <p>Please log in to update your password and unlock the full potential of iRiseUp.AI, where your team of AI assistants are ready to help streamline your work.</p>
+                <a href="https://www.iriseup.ai/sign_in" class="button">Log In Now</a>
+                <p>Best regards,<br><strong>The iRiseUp.AI Team</strong></p>
             </div>
 
             <!-- Email Footer -->
             <div class="footer">
-                <p>iRiseUp Academy, Columbus, Ohio, USA | <a href="https://iriseupacademy.com/unsubscribe">Unsubscribe</a></p>
+                <p>iRiseUp.AI, Columbus, Ohio, USA | <a href="https://www.iriseup.ai/unsubscribe">Unsubscribe</a></p>
             </div>
         </div>
     </body>
