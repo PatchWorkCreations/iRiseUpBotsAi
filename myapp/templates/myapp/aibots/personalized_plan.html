@@ -342,39 +342,171 @@
 }
 
 /* Center the content properly */
-/* AI Content - Default (Side by Side for Larger Screens) */
+
+/* Main AI Content Container */
 .ai-content {
     display: flex;
-    justify-content: space-around; /* Spread images evenly */
+    justify-content: space-between; /* Spread image and text */
     align-items: center;
-    width: 100%; /* Ensure it uses the full width of the container */
-    padding: 20px;
-    gap: 40px; /* Add space between images */
-    
+    width: 100%; /* Full-width container */
+    max-width: 1200px; /* Limit max width for better readability */
+    margin: 0 auto; /* Center content within the page */
+    padding: 20px; /* Add padding around the content */
+    box-sizing: border-box; /* Include padding in the width */
+    gap: 40px; /* Add space between image and text */
+    overflow: hidden; /* Prevent content from overflowing */
 }
 
-/* Image Styles */
-.ai-image img {
-    width: 100%; /* Allow images to share space side by side */
-    max-width: 700px; /* Set a reasonable maximum width */
+/* Left Section - Image */
+.ai-content-image {
+    flex: 1; /* Allow image section to take up space dynamically */
+    text-align: center; /* Center the image horizontally */
+}
+
+.ai-content-image img {
+    width: 100%; /* Allow image to scale */
+    max-width: 400px; /* Limit image size */
     height: auto; /* Maintain aspect ratio */
-    display: block; /* Ensure the images are block-level for proper alignment */
 }
 
-/* Responsive Design - For Smaller Screens */
+/* Right Section - Text */
+.ai-content-text {
+    flex: 2; /* Allow text section to take up more space */
+    color: #fff; /* Set text color */
+    font-family: 'Arial', sans-serif; /* Clean and modern font */
+    line-height: 1.6; /* Comfortable spacing */
+    word-wrap: break-word; /* Force long words to wrap */
+    word-break: break-word; /* Handle long, unbreakable words */
+    max-width: 100%; /* Prevent text from exceeding its container width */
+    box-sizing: border-box; /* Include padding in the width */
+}
+
+/* Headings and Paragraphs */
+.ai-content-text h1 {
+    font-size: 2.5rem; /* Large heading */
+    font-weight: bold; /* Bold text */
+    color: #fff; /* White text for emphasis */
+    margin-bottom: 20px;
+    overflow-wrap: break-word; /* Ensure heading text wraps */
+    word-break: break-word; /* Handle long heading words */
+}
+
+.ai-content-text p {
+    font-size: 1rem; /* Regular paragraph text */
+    margin-bottom: 20px; /* Add spacing below paragraphs */
+    overflow-wrap: break-word; /* Ensure paragraph text wraps */
+}
+
+/* List Styling */
+.ai-content-text ul {
+    list-style: none; /* Remove default bullets */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+    max-width: 100%; /* Keep list within container */
+}
+
+.ai-content-text ul li {
+    display: flex; /* Align icon and text in a row */
+    align-items: center; /* Vertically align items */
+    margin-bottom: 15px; /* Add space between items */
+    background: linear-gradient(90deg, #5a2d82, #7649da); /* Gradient background */
+    padding: 10px 20px; /* Add spacing inside each item */
+    border-radius: 8px; /* Rounded corners */
+    color: #fff; /* White text for contrast */
+    word-wrap: break-word; /* Ensure text wraps in list items */
+    box-sizing: border-box; /* Prevent padding overflow */
+}
+
+.ai-content-text ul li span {
+    font-weight: bold; /* Highlighted text */
+    margin-right: 10px; /* Add space after the label */
+}
+
+.ai-content-text ul li img {
+    margin-right: 15px; /* Add space between icon and text */
+    width: 40px; /* Icon size */
+    height: 40px;
+    border-radius: 50%; /* Optional: Circular icons */
+}
+
+/* Responsive Design */
 @media (max-width: 1024px) {
     .ai-content {
-        flex-wrap: wrap; /* Allow wrapping for smaller screens */
-        justify-content: center; /* Center images when stacked */
-        gap: 20px; /* Adjust spacing for smaller screens */
+        flex-wrap: wrap; /* Stack content vertically */
+        text-align: center; /* Center align text */
+        overflow: hidden; /* Prevent overflow */
     }
 
-    .ai-image img {
-        width: 100%; /* Use most of the screen width on smaller screens */
-        max-width: 600px; /* Set a reasonable limit */
+    .ai-content-image,
+    .ai-content-text {
+        flex: 1 1 100%; /* Allow full-width sections */
+    }
+
+    .ai-content-image img {
+        max-width: 300px; /* Reduce image size for medium screens */
+    }
+
+    .ai-content-text ul li {
+        font-size: 0.9rem; /* Slightly smaller font for compact screens */
     }
 }
 
+@media (max-width: 768px) {
+    .ai-content {
+        padding: 15px; /* Reduce padding for smaller devices */
+        overflow: hidden; /* Prevent content overflow */
+    }
+
+    .ai-content-image {
+        text-align: center; /* Ensure image stays centered */
+        margin-bottom: 20px; /* Add spacing below the image */
+    }
+
+    .ai-content-image img {
+        max-width: 250px; /* Limit image size for smaller devices */
+        width: 80%; /* Scale image appropriately */
+    }
+
+    .ai-content-text h1 {
+        font-size: 2rem; /* Adjust heading size */
+    }
+
+    .ai-content-text p,
+    .ai-content-text ul li {
+        font-size: 0.85rem; /* Smaller font for narrow screens */
+    }
+
+    .ai-content-text ul li {
+        padding: 10px; /* Compact list item padding */
+    }
+}
+
+@media (max-width: 480px) {
+    .ai-content {
+        flex-direction: column; /* Stack items vertically */
+        padding: 10px; /* Reduce padding for smaller screens */
+        overflow: hidden; /* Prevent content overflow */
+    }
+
+    .ai-content-image img {
+        max-width: 200px; /* Further reduce image size */
+        width: 100%; /* Use full width available */
+    }
+
+    .ai-content-text h1 {
+        font-size: 1.8rem; /* Further reduce heading size */
+    }
+
+    .ai-content-text p {
+        font-size: 0.8rem; /* Smaller text size for compact screens */
+    }
+
+    .ai-content-text ul li img {
+        width: 30px; /* Reduce icon size */
+        height: 30px; /* Maintain proportions */
+        margin-right: 10px; /* Adjust spacing */
+    }
+}
 
 
 
@@ -438,19 +570,17 @@
 
 <div id="ai-overview" class="ai-overview">
     <div class="container">
-        <div class="ai-header">
-            <h1>Your wish, <span class="highlight">Our command</span></h1>
-            <p>Tireless, always on, no complaints.</p>
-            <p>With your team of 8 expert AIs, every business function is covered. From brainstorming to execution, they’ve got you supported.</p>
-        </div>
         <div class="ai-content">
             <!-- Left Image -->
             <div class="ai-image">
+                <h1>Your wish, <span class="highlight">Our command</span></h1>
                 <img src="{% static 'myapp/images/aiimages/aisolo.png' %}" alt="Solo AI Bot Image">
             </div>
         
             <!-- Right Image -->
             <div class="ai-image">
+                <p>Tireless, always on, no complaints.</p>
+            <p>With your team of 8 expert AIs, every business function is covered. From brainstorming to execution, they’ve got you supported.</p>
                 <img src="{% static 'myapp/images/aiimages/aigroup.png' %}" alt="Group AI Bots Image">
             </div>
         </div>
