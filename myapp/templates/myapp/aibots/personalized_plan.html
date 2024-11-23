@@ -344,171 +344,215 @@
 /* Center the content properly */
 
 /* Main AI Content Container */
+/* Parent Wrapper for Entire Section */
+.ai-overview-wrapper {
+    background: #f9f9f9; /* Subtle light background */
+    border-radius: 15px; /* Subtle curved borders */
+    padding: 20px; /* Inner padding */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    overflow: hidden; /* Prevent content overflow */
+    margin: 20px auto; /* Center section */
+    max-width: 1200px; /* Keep the section width manageable */
+    box-sizing: border-box; /* Include padding in total width */
+}
+
+/* Main AI Content Container */
 .ai-content {
-    display: flex;
-    justify-content: space-between; /* Spread image and text */
-    align-items: center;
-    width: 100%; /* Full-width container */
-    max-width: 1200px; /* Limit max width for better readability */
-    margin: 0 auto; /* Center content within the page */
-    padding: 20px; /* Add padding around the content */
-    box-sizing: border-box; /* Include padding in the width */
-    gap: 40px; /* Add space between image and text */
-    overflow: hidden; /* Prevent content from overflowing */
+    display: flex; /* Flexbox for side-by-side layout */
+    justify-content: space-between; /* Space between items */
+    align-items: center; /* Vertically center items */
+    flex-wrap: nowrap; /* Prevent wrapping on larger screens */
+    gap: 20px; /* Add space between images and text */
 }
 
-/* Left Section - Image */
-.ai-content-image {
-    flex: 1; /* Allow image section to take up space dynamically */
-    text-align: center; /* Center the image horizontally */
+/* Left and Right Image Containers */
+.ai-image {
+    flex: 1; /* Equal space for both sections */
+    text-align: center; /* Center-align images and text */
+    box-sizing: border-box; /* Include padding in width */
+    padding: 10px; /* Add padding inside containers */
 }
 
-.ai-content-image img {
-    width: 100%; /* Allow image to scale */
-    max-width: 400px; /* Limit image size */
+.ai-image img {
+    width: 80%; /* Let images occupy more space */
+    max-width: 500px; /* Allow larger images */
     height: auto; /* Maintain aspect ratio */
-}
-
-/* Right Section - Text */
-.ai-content-text {
-    flex: 2; /* Allow text section to take up more space */
-    color: #fff; /* Set text color */
-    font-family: 'Arial', sans-serif; /* Clean and modern font */
-    line-height: 1.6; /* Comfortable spacing */
-    word-wrap: break-word; /* Force long words to wrap */
-    word-break: break-word; /* Handle long, unbreakable words */
-    max-width: 100%; /* Prevent text from exceeding its container width */
-    box-sizing: border-box; /* Include padding in the width */
+    margin: 0 auto; /* Center images */
+    display: block; /* Ensure no inline spacing issues */
+    border-radius: 10px; /* Optional: rounded corners */
 }
 
 /* Headings and Paragraphs */
-.ai-content-text h1 {
-    font-size: 2.5rem; /* Large heading */
-    font-weight: bold; /* Bold text */
-    color: #fff; /* White text for emphasis */
-    margin-bottom: 20px;
-    overflow-wrap: break-word; /* Ensure heading text wraps */
-    word-break: break-word; /* Handle long heading words */
+.ai-image h1 {
+    font-size: 2rem; /* Large and readable */
+    line-height: 1.4; /* Comfortable spacing */
+    margin-bottom: 15px; /* Space below heading */
+    color: #333; /* Darker text for contrast */
 }
 
-.ai-content-text p {
+.ai-image p {
     font-size: 1rem; /* Regular paragraph text */
-    margin-bottom: 20px; /* Add spacing below paragraphs */
-    overflow-wrap: break-word; /* Ensure paragraph text wraps */
-}
-
-/* List Styling */
-.ai-content-text ul {
-    list-style: none; /* Remove default bullets */
-    padding: 0; /* Remove padding */
-    margin: 0; /* Remove margin */
-    max-width: 100%; /* Keep list within container */
-}
-
-.ai-content-text ul li {
-    display: flex; /* Align icon and text in a row */
-    align-items: center; /* Vertically align items */
-    margin-bottom: 15px; /* Add space between items */
-    background: linear-gradient(90deg, #5a2d82, #7649da); /* Gradient background */
-    padding: 10px 20px; /* Add spacing inside each item */
-    border-radius: 8px; /* Rounded corners */
-    color: #fff; /* White text for contrast */
-    word-wrap: break-word; /* Ensure text wraps in list items */
-    box-sizing: border-box; /* Prevent padding overflow */
-}
-
-.ai-content-text ul li span {
-    font-weight: bold; /* Highlighted text */
-    margin-right: 10px; /* Add space after the label */
-}
-
-.ai-content-text ul li img {
-    margin-right: 15px; /* Add space between icon and text */
-    width: 40px; /* Icon size */
-    height: 40px;
-    border-radius: 50%; /* Optional: Circular icons */
+    line-height: 1.6; /* Spacing for readability */
+    color: #555; /* Subtle text color */
+    margin-bottom: 15px; /* Space below each paragraph */
 }
 
 /* Responsive Design */
+
+/* Medium Screens (Tablets) */
 @media (max-width: 1024px) {
     .ai-content {
-        flex-wrap: wrap; /* Stack content vertically */
-        text-align: center; /* Center align text */
-        overflow: hidden; /* Prevent overflow */
+        flex-wrap: wrap; /* Allow wrapping */
     }
 
-    .ai-content-image,
-    .ai-content-text {
-        flex: 1 1 100%; /* Allow full-width sections */
+    .ai-image {
+        flex: 1 1 50%; /* Each section takes half width */
     }
 
-    .ai-content-image img {
-        max-width: 300px; /* Reduce image size for medium screens */
-    }
-
-    .ai-content-text ul li {
-        font-size: 0.9rem; /* Slightly smaller font for compact screens */
+    .ai-image img {
+        width: 90%; /* Slightly larger images */
+        max-width: 400px; /* Adjust for medium screens */
     }
 }
 
+/* Small Screens (Phones) */
 @media (max-width: 768px) {
     .ai-content {
-        padding: 15px; /* Reduce padding for smaller devices */
-        overflow: hidden; /* Prevent content overflow */
+        flex-wrap: wrap; /* Stack content vertically */
     }
 
-    .ai-content-image {
-        text-align: center; /* Ensure image stays centered */
-        margin-bottom: 20px; /* Add spacing below the image */
+    .ai-image {
+        flex: 1 1 100%; /* Full width for each section */
     }
 
-    .ai-content-image img {
-        max-width: 250px; /* Limit image size for smaller devices */
-        width: 80%; /* Scale image appropriately */
+    .ai-image img {
+        width: 90%; /* Keep images prominent */
+        max-width: 350px; /* Resize for smaller screens */
     }
 
-    .ai-content-text h1 {
-        font-size: 2rem; /* Adjust heading size */
+    .ai-image h1 {
+        font-size: 1.8rem; /* Adjust heading size */
     }
 
-    .ai-content-text p,
-    .ai-content-text ul li {
-        font-size: 0.85rem; /* Smaller font for narrow screens */
-    }
-
-    .ai-content-text ul li {
-        padding: 10px; /* Compact list item padding */
+    .ai-image p {
+        font-size: 0.9rem; /* Slightly smaller text */
     }
 }
 
+/* Extra Small Screens */
 @media (max-width: 480px) {
     .ai-content {
         flex-direction: column; /* Stack items vertically */
-        padding: 10px; /* Reduce padding for smaller screens */
-        overflow: hidden; /* Prevent content overflow */
+        padding: 10px; /* Compact padding */
     }
 
-    .ai-content-image img {
-        max-width: 200px; /* Further reduce image size */
-        width: 100%; /* Use full width available */
+    .ai-image img {
+        width: 100%; /* Full width images */
+        max-width: 300px; /* Further size reduction for very small screens */
     }
 
-    .ai-content-text h1 {
-        font-size: 1.8rem; /* Further reduce heading size */
+    .ai-image h1 {
+        font-size: 1.6rem; /* Further reduce heading size */
     }
 
-    .ai-content-text p {
-        font-size: 0.8rem; /* Smaller text size for compact screens */
-    }
-
-    .ai-content-text ul li img {
-        width: 30px; /* Reduce icon size */
-        height: 30px; /* Maintain proportions */
-        margin-right: 10px; /* Adjust spacing */
+    .ai-image p {
+        font-size: 0.85rem; /* Adjust paragraph size */
     }
 }
 
 
+/* Unique Class for AI Section */
+.ai-section-container-custom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f4f4f4; /* Neutral background for contrast */
+}
+
+/* Unique Card Design */
+.ai-card-custom {
+    width: 280px; /* Consistent width */
+    height: 300px; /* Height to match aspect ratio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Image Styling */
+.ai-card-custom img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover Effects */
+.ai-card-custom:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.ai-card-custom:hover img {
+    transform: scale(1.1);
+}
+
+/* Background Colors Per Card (Inline Styles Used) */
+/* Intro Section Styling */
+.ai-section-intro {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.ai-section-intro h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.ai-section-intro p {
+    font-size: 1.2rem;
+    color: #666;
+    margin: 5px 0 20px;
+}
+
+/* Loader Styles */
+.loader {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #5860F8; /* Blue */
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    animation: spin 1s linear infinite;
+    margin: 10px auto;
+}
+
+/* Loader animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Processing Message Styles */
+.processing-message {
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+    margin-top: 10px;
+}
 
 </style>
 
@@ -568,25 +612,27 @@
     </div>
 </div>
 
-<div id="ai-overview" class="ai-overview">
-    <div class="container">
-        <div class="ai-content">
-            <!-- Left Image -->
-            <div class="ai-image">
-                <h1>Your wish, <span class="highlight">Our command</span></h1>
-                <img src="{% static 'myapp/images/aiimages/aisolo.png' %}" alt="Solo AI Bot Image">
-            </div>
-        
-            <!-- Right Image -->
-            <div class="ai-image">
-                <p>Tireless, always on, no complaints.</p>
-            <p>With your team of 8 expert AIs, every business function is covered. From brainstorming to execution, they’ve got you supported.</p>
-                <img src="{% static 'myapp/images/aiimages/aigroup.png' %}" alt="Group AI Bots Image">
+<div class="ai-overview-wrapper">
+    <div id="ai-overview" class="ai-overview">
+        <div class="container">
+            <div class="ai-content">
+                <!-- Left Image -->
+                <div class="ai-image">
+                    <h1>Your wish, <span class="highlight">Our command</span></h1>
+                    <img src="{% static 'myapp/images/aiimages/aisolo.png' %}" alt="Solo AI Bot Image">
+                </div>
+
+                <!-- Right Image -->
+                <div class="ai-image">
+                    <p>Tireless, always on, no complaints.</p>
+                    <p>With your team of 8 expert AIs, every business function is covered. From brainstorming to execution, they’ve got you supported.</p>
+                    <img src="{% static 'myapp/images/aiimages/aigroup.png' %}" alt="Group AI Bots Image">
+                </div>
             </div>
         </div>
-        
     </div>
 </div>
+
 
 
 <div id="services" class="services section-bottom-only">
@@ -627,6 +673,37 @@
     </div>
 </div>
 
+
+<div class="ai-section-container-custom">
+    <div class="ai-section-intro">
+        <h2>An employee fit for each task:</h2>
+        <p>For example...</p>
+    </div>
+    <div class="ai-card-custom" style="background-color: #f5f5f5;">
+        <img src="{% static 'myapp/images/employee/1.png' %}" alt="Ezra">
+    </div>
+    <div class="ai-card-custom" style="background-color: #f5f5f5;">
+        <img src="{% static 'myapp/images/employee/2.png' %}" alt="Caleb">
+    </div>
+    <div class="ai-card-custom" style="background-color: #f5f5f5;">
+        <img src="{% static 'myapp/images/employee/3.png' %}" alt="Einstein">
+    </div>
+    <div class="ai-card-custom" style="background-color: #f5f5f5;">
+        <img src="{% static 'myapp/images/employee/4.png' %}" alt="Nico">
+    </div>
+    <div class="ai-card-custom" style="background-color: #f5f5f5;">
+        <img src="{% static 'myapp/images/employee/5.png' %}" alt="Echo">
+    </div>
+    <div class="ai-card-custom" style="background-color: #f5f5f5;">
+        <img src="{% static 'myapp/images/employee/6.png' %}" alt="Alden">
+    </div>
+    <div class="ai-card-custom" style="background-color: #f5f5f5;">
+        <img src="{% static 'myapp/images/employee/7.png' %}" alt="Harper">
+    </div>
+    <div class="ai-card-custom" style="background-color: #f5f5f5;">
+        <img src="{% static 'myapp/images/employee/8.png' %}" alt="Maven">
+    </div>
+</div>
 
 
 <div id="portfolio" class="portfolio section-bottom-only">
@@ -995,7 +1072,9 @@
                         <input type="email" id="email" name="email" placeholder="e.g. yourname@example.com" class="form-control" required>
                     </div>                    
                     <div id="card-container" class="form-group"></div>
-                    <button type="submit" class="btn-submit">Pay Now</button>
+                    <button id="pay-now-btn" type="submit" class="btn-submit">Pay Now</button>
+                    <div id="loader" class="loader" style="display: none;"></div>
+                    <p id="processing-message" class="processing-message" style="display: none;">Processing your payment...</p>
                 </form>
             </div>
             
@@ -1067,51 +1146,63 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Square payment setup function
     async function setupSquarePayments() {
-        if (squareInitialized) return; // Prevent re-initialization
-        const payments = Square.payments('sq0idp-jpJ9YFYpLwuh5nFx4B-qXg', '45B8XGXSPP8E3');
-        const card = await payments.card();
-        await card.attach('#card-container');
+    if (squareInitialized) return; // Prevent re-initialization
+    const payments = Square.payments('sq0idp-jpJ9YFYpLwuh5nFx4B-qXg', '45B8XGXSPP8E3');
+    const card = await payments.card();
+    await card.attach('#card-container');
 
-        const payButton = document.getElementById('payment-form').querySelector('button[type="submit"]');
-        payButton.addEventListener('click', async function (event) {
-            event.preventDefault();
-            try {
-                const result = await card.tokenize();
-                if (result.status === 'OK') {
-                    // Get selected plan and determine the amount
-                    const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
-                    const amount = determineAmountBasedOnPlan(selectedPlan);
-                    const email = document.getElementById('email').value;
-                    const firstName = document.getElementById('givenName').value;
-                    const lastName = document.getElementById('familyName').value;
+    const payButton = document.getElementById('payment-form').querySelector('button[type="submit"]');
+    const loader = document.getElementById('loader'); // Loader element
+    const processingMessage = document.getElementById('processing-message'); // Message element
 
-                    // New: Verify the buyer using SCA with CHARGE_AND_STORE intent
-                    const verificationToken = await verifyBuyer(payments, result.token, amount);
+    payButton.addEventListener('click', async function (event) {
+        event.preventDefault();
 
-                    // Send the payment request with the verification token
-                    const response = await fetch('/process-payment/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}',
-                        },
-                        body: JSON.stringify({
-                            source_id: result.token,
-                            plan: selectedPlan,
-                            amount: amount,
-                            verification_token: verificationToken,
-                            email: email,
-                            firstName: firstName,  
-                            lastName: lastName    
-                        }),
-                    });
+        // Show the loader and processing message
+        loader.style.display = 'block';
+        processingMessage.style.display = 'block';
 
-                    const jsonResult = await response.json();
+        // Disable the button to prevent multiple clicks
+        payButton.disabled = true;
+
+        try {
+            const result = await card.tokenize();
+            if (result.status === 'OK') {
+                // Get selected plan and determine the amount
+                const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+                const amount = determineAmountBasedOnPlan(selectedPlan);
+                const email = document.getElementById('email').value;
+                const firstName = document.getElementById('givenName').value;
+                const lastName = document.getElementById('familyName').value;
+
+                // Verify the buyer using SCA with CHARGE_AND_STORE intent
+                const verificationToken = await verifyBuyer(payments, result.token, amount);
+
+                // Send the payment request with the verification token
+                const response = await fetch('/process-payment/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({
+                        source_id: result.token,
+                        plan: selectedPlan,
+                        amount: amount,
+                        verification_token: verificationToken,
+                        email: email,
+                        firstName: firstName,
+                        lastName: lastName,
+                    }),
+                });
+
+                const jsonResult = await response.json();
 
                 if (jsonResult.success) {
-                    window.location.href = '/success/';
+                    // Redirect to success page
+                    window.location.href = '/success/'; // Success page redirection
                 } else {
-                    handlePaymentError(jsonResult.error);  // Handle errors in a friendly way
+                    handlePaymentError(jsonResult.error); // Handle errors in a friendly way
                 }
             } else {
                 alert('Tokenization failed: ' + result.errors[0].message);
@@ -1119,10 +1210,19 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (e) {
             console.error(e.message);
             alert('Payment failed: ' + e.message);
+        } finally {
+            // Hide the loader and processing message only if payment fails
+            loader.style.display = 'none';
+            processingMessage.style.display = 'none';
+
+            // Re-enable the button only if payment fails
+            payButton.disabled = false;
         }
     });
+
     squareInitialized = true; // Set flag to prevent re-initialization
 }
+
 
 function handlePaymentError(error) {
     let userMessage = 'An error occurred during payment.';
@@ -1455,6 +1555,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+
+
 
 </script>
 
