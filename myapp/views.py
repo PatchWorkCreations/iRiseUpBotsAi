@@ -336,7 +336,7 @@ def send_welcomepassword_email(user_email, random_password):
                 overflow: hidden;
             }}
             .header {{
-                background-color: #00A8E8;
+                background-color: #05374f;
                 color: #ffffff;
                 padding: 20px;
                 text-align: center;
@@ -363,7 +363,7 @@ def send_welcomepassword_email(user_email, random_password):
                 display: inline-block;
                 padding: 12px 25px;
                 color: #ffffff;
-                background-color: #00A8E8;
+                background-color: #05374f;
                 text-decoration: none;
                 border-radius: 5px;
                 font-size: 16px;
@@ -383,7 +383,7 @@ def send_welcomepassword_email(user_email, random_password):
                 margin: 0;
             }}
             .footer a {{
-                color: #00A8E8;
+                color: #05374f;
                 text-decoration: none;
             }}
         </style>
