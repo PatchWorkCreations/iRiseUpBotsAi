@@ -142,6 +142,61 @@
     }
 }
 
+@media (max-width: 430px) {
+    .custom-footer .footer-description {
+        font-size: 0.85rem;
+        line-height: 1.4;
+        text-align: center;
+        white-space: normal; /* Allow normal text wrapping except for "Columbus, Ohio" */
+    }
+
+    /* Prevent "Columbus, Ohio" from breaking into two lines */
+    .custom-footer .footer-description {
+        text-align: center;
+    }
+
+    /* Ensure the footer sections remain within the container */
+    .custom-footer .container {
+        max-width: 100%;
+        padding: 0 15px; /* Adds spacing inside the container */
+        box-sizing: border-box;
+    }
+
+    /* Adjust footer sections */
+    .footer-section {
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .footer-section ul {
+        padding-left: 0;
+    }
+
+    /* Center logo and content properly */
+    .footer-logo {
+        height: 40px;
+        margin: 0 auto 0.5rem auto;
+        display: block;
+    }
+
+    /* Adjust social links */
+    .social li {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .social li:last-child {
+        margin-right: 0;
+    }
+
+    /* Footer bottom */
+    .footer-bottom {
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+
 </style>
 <footer class="custom-footer">
     <div class="container">
@@ -152,9 +207,10 @@
                     <img src="{% static 'myapp/images/aiimages/logo.png' %}" alt="Logo" class="footer-logo">
                 </div>
                 <p class="footer-description">
-                    Empowering innovation in Columbus, Ohio, iRiseUp.AI is your gateway to a smarter tomorrow.
+                    Empowering innovation in Columbus,&nbsp;Ohio, iRiseUp.AI is your gateway to a smarter tomorrow.
                 </p>
             </div>
+            
             <!-- About Section Links -->
             <div class="col-md-3 col-sm-6 col-xs-12 footer-section">
                 <h5 style="color: #0f3966 !important;">About</h5>
@@ -168,7 +224,7 @@
             <div class="col-md-3 col-sm-6 col-xs-12 footer-section">
                 <h5 style="color: #0f3966 !important;">Support</h5>
                 <ul>
-                    <li><a href="mailto:hello@iriseup.ai"><i class="icon ion-ios-headset"></i> hello@iriseup.ai</a></li>
+                    <li><a href="mailto:hello@iriseupacademy.com"><i class="icon ion-ios-headset"></i> hello@iriseupacademy.com</a></li>
                     <li><a href="{% url 'personalized_plan' %}#services"><i class="icon ion-ios-settings"></i> Services</a></li>
                 </ul>
             </div>
@@ -176,9 +232,7 @@
             <div class="col-md-3 col-sm-6 col-xs-12 footer-section">
                 <h5 style="color: #0f3966 !important;">Follow us</h5>
                 <ul class="social">
-                    <li><a href="https://facebook.com" target="_blank"><i class="icon ion-logo-facebook"></i> Facebook</a></li>
-                    <li><a href="https://twitter.com" target="_blank"><i class="icon ion-logo-twitter"></i> Twitter</a></li>
-                    <li><a href="https://instagram.com" target="_blank"><i class="icon ion-logo-instagram"></i> Instagram</a></li>
+                    <li><a href="https://www.facebook.com/iriseupfoundation" target="_blank"><i class="icon ion-logo-facebook"></i> Facebook</a></li>
                 </ul>
             </div>
         </div>

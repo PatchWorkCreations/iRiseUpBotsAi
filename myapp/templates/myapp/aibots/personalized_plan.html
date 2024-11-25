@@ -36,6 +36,22 @@
 
 }
 
+/* Specific fixes for iPhone 13 Pro Max (portrait mode width: 430px) */
+@media (max-width: 430px) {
+    .home-intro .content h2 {
+        font-size: 36px;
+        padding-top: 148px;
+    }
+
+    .process-work .col-md-6 .content {
+        margin-bottom: 20px;
+    }
+
+    .news .content h4 {
+        font-size: 16px;
+    }
+}
+
 /* Grid Container */
 .ai-showcase {
     display: grid;
@@ -1014,13 +1030,13 @@
                 </div>
 
                 <div class="subscription-info">
-                    <p style="color: #9b9999;">Extended every 4-week at the price of $39.99 if you do not cancel 24 hours before the renewal date in your account settings. <a href="{% url 'account_subscription_terms' %}">Subscription Terms</a>.</p>
+                    <p style="color: #9b9999;">Extended every 2-week at the price of $39.99 if you do not cancel 24 hours before the renewal date in your account settings. <a href="{% url 'account_subscription_terms' %}">Subscription Terms</a>.</p>
                 </div>
 
                 <div class="money-back-container">
                     <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Money-Back Guarantee" class="money-back-icon">
                     <h2>Money-Back Guarantee</h2>
-                    <p>We are so confident in our service that we are ready to offer a full refund within 30 days of purchase if you do not achieve initial results and can demonstrate you have followed the plan.</p>
+                    <p>We are so confident in our service that we are ready to offer a full refund within 14 days of purchase if you do not achieve initial results and can demonstrate you have followed the plan.</p>
                     <p>Learn more about all the conditions in our <a href="{% url 'account_subscription_terms' %}">Subscription Terms</a> .</p>
                 </div>
             
