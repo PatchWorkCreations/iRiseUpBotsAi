@@ -1,5 +1,5 @@
 {% extends "myapp/aibots/bots/bot_base.html" %}
-{% block title %}Caleb - Your Health & Wellness Guide{% endblock %}
+{% block title %}Rudy - Your Health & Wellness Guide{% endblock %}
 {% load static %}
 {% block content %}
 
@@ -9,7 +9,7 @@
         <button class="back-button" onclick="window.history.back()">
             ← <!-- Back arrow -->
         </button>
-        <div class="header-title">Caleb - Your Health & Wellness Guide 🩺</div>
+        <div class="header-title">Rudy - Your Health & Wellness Guide 🩺</div>
     </div>
 
     <div id="chatbox">
@@ -91,7 +91,7 @@
     // Initial bot greeting message
     document.addEventListener('DOMContentLoaded', () => {
     const userName = "{{ user_name|default:'there' }}"; // Retrieve user's name from Django template context, defaults to "there" if missing
-    addMessage('Caleb', `Hi, ${userName}! I’m Caleb! 🩺 Here to support you on your health journey. How can I assist you today?`, 'bot');
+    addMessage('Rudy', `Hi, ${userName}! I’m Rudy! 🩺 Here to support you on your health journey. How can I assist you today?`, 'bot');
 });
 
 

@@ -155,12 +155,13 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')  # Must be provided in the en
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')  # Must be provided in the environment
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'hello@iriseupacademy.com')  # Provide a default sender email
 
-EMAIL_CLIENT_ID = os.getenv('EMAIL_CLIENT_ID')
-EMAIL_CLIENT_SECRET = os.getenv('EMAIL_CLIENT_SECRET')
-EMAIL_TENANT_ID = os.getenv('EMAIL_TENANT_ID')
-EMAIL_ENDPOINT = os.getenv('EMAIL_ENDPOINT', 'https://graph.microsoft.com/v1.0/me/sendMail')
-DEFAULT_FROM_EMAIL = 'hello@iriseupacademy.com'  # Replace with your verified sender email
+import os
 
+EMAIL_CLIENT_ID = os.getenv("EMAIL_CLIENT_ID")
+EMAIL_CLIENT_SECRET = os.getenv("EMAIL_CLIENT_SECRET")
+EMAIL_TENANT_ID = os.getenv("EMAIL_TENANT_ID")
+EMAIL_ENDPOINT = os.getenv("EMAIL_ENDPOINT")
+DEFAULT_FROM_EMAIL = "hello@iriseupacademy.com"
 
 # Third-party API keys
 OPENAI_API_KEY = env('OPENAI_API_KEY')

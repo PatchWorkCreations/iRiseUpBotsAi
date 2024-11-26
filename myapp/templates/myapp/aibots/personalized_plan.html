@@ -735,13 +735,13 @@
         <img src="{% static 'myapp/images/employee/1.png' %}" alt="Ezra">
     </div>
     <div class="ai-card-custom" style="background-color: #f5f5f5;">
-        <img src="{% static 'myapp/images/employee/2.png' %}" alt="Caleb">
+        <img src="{% static 'myapp/images/employee/2.png' %}" alt="Rudy">
     </div>
     <div class="ai-card-custom" style="background-color: #f5f5f5;">
         <img src="{% static 'myapp/images/employee/3.png' %}" alt="Einstein">
     </div>
     <div class="ai-card-custom" style="background-color: #f5f5f5;">
-        <img src="{% static 'myapp/images/employee/4.png' %}" alt="Nico">
+        <img src="{% static 'myapp/images/employee/4.png' %}" alt="Kash">
     </div>
     <div class="ai-card-custom" style="background-color: #f5f5f5;">
         <img src="{% static 'myapp/images/employee/5.png' %}" alt="Echo">
@@ -750,10 +750,10 @@
         <img src="{% static 'myapp/images/employee/6.png' %}" alt="Alden">
     </div>
     <div class="ai-card-custom" style="background-color: #f5f5f5;">
-        <img src="{% static 'myapp/images/employee/7.png' %}" alt="Harper">
+        <img src="{% static 'myapp/images/employee/7.png' %}" alt="Aria">
     </div>
     <div class="ai-card-custom" style="background-color: #f5f5f5;">
-        <img src="{% static 'myapp/images/employee/8.png' %}" alt="Maven">
+        <img src="{% static 'myapp/images/employee/8.png' %}" alt="Gideon">
     </div>
 </div>
 
@@ -795,28 +795,28 @@
                 </div>
             </div>
 
-            <!-- Caleb -->
+            <!-- Rudy -->
             <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="2">
                 <div class="content-image">
                     <a href="{% static 'myapp/images/aiimages/caleb.png' %}" class="portfolio-popup">
                         <img src="{% static 'myapp/images/aiimages/caleb.png' %}" alt="Caleb">
                         <div class="image-overlay"></div>
                         <div class="image-caption">
-                            <h4>Caleb</h4>
+                            <h4>Rudy</h4>
                             <span>Focused on your health and well-being, creating a healthier, happier you.</span>
                         </div>
                     </a>
                 </div>
             </div>
 
-            <!-- Harper -->
+            <!-- Aria -->
             <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="3">
                 <div class="content-image">
                     <a href="{% static 'myapp/images/aiimages/harper.png' %}" class="portfolio-popup">
-                        <img src="{% static 'myapp/images/aiimages/harper.png' %}" alt="Harper">
+                        <img src="{% static 'myapp/images/aiimages/harper.png' %}" alt="Aria">
                         <div class="image-overlay"></div>
                         <div class="image-caption">
-                            <h4>Harper</h4>
+                            <h4>Aria</h4>
                             <span>Here to offer emotional support and companionship whenever you need it.</span>
                         </div>
                     </a>
@@ -837,14 +837,14 @@
                 </div>
             </div>
 
-            <!-- Nico -->
+            <!-- Kash -->
             <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="2">
                 <div class="content-image">
                     <a href="{% static 'myapp/images/aiimages/nico.png' %}" class="portfolio-popup">
-                        <img src="{% static 'myapp/images/aiimages/nico.png' %}" alt="Nico">
+                        <img src="{% static 'myapp/images/aiimages/nico.png' %}" alt="Kash">
                         <div class="image-overlay"></div>
                         <div class="image-caption">
-                            <h4>Nico</h4>
+                            <h4>Kash</h4>
                             <span>Ensuring seamless and inclusive customer experiences every step of the way.</span>
                         </div>
                     </a>
@@ -879,14 +879,14 @@
                 </div>
             </div>
 
-            <!-- Maven -->
+            <!-- Gideon -->
             <div class="col-md-4 col-sm-6 col-xs-12 filtr-item" data-category="1">
                 <div class="content-image">
                     <a href="{% static 'myapp/images/aiimages/maven.png' %}" class="portfolio-popup">
-                        <img src="{% static 'myapp/images/aiimages/maven.png' %}" alt="Maven">
+                        <img src="{% static 'myapp/images/aiimages/maven.png' %}" alt="Gideon">
                         <div class="image-overlay"></div>
                         <div class="image-caption">
-                            <h4>Maven</h4>
+                            <h4>Gideon</h4>
                             <span>Empowering small businesses with insights to thrive and grow sustainably.</span>
                         </div>
                     </a>
@@ -1809,8 +1809,14 @@ document.addEventListener('DOMContentLoaded', function () {
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-    z-index: 999999;
+    z-index: 1055;
 }
+
+.modal-backdrop {
+    z-index: 1049; /* Lower than modal's z-index */
+    background-color: rgba(0, 0, 0, 0.5); /* Add semi-transparent background */
+}
+
 
 .modal-content {
     background-color: #fff;

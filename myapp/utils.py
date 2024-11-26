@@ -42,12 +42,8 @@ def grant_course_access(user, selected_plan):
         UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
 
     return True
-
-
 import msal
-import os
 import requests
-import json
 import logging
 from django.conf import settings
 
@@ -55,98 +51,69 @@ logger = logging.getLogger(__name__)
 
 def get_graph_api_access_token():
     """
-    Fetches an access token for Microsoft Graph API using the client credentials flow.
+    Fetch an access token for Microsoft Graph API using the client credentials flow.
     """
     try:
-        client_id = os.getenv("EMAIL_CLIENT_ID")
-        client_secret = os.getenv("EMAIL_CLIENT_SECRET")
-        tenant_id = os.getenv("EMAIL_TENANT_ID")
-        authority = f"https://login.microsoftonline.com/{tenant_id}"
-        
-        # Initialize the MSAL ConfidentialClientApplication
-        app = msal.ConfidentialClientApplication(client_id, client_secret, authority=authority)
-        
-        # Acquire token for Graph API
+        authority = f"https://login.microsoftonline.com/{settings.EMAIL_TENANT_ID}"
+        app = msal.ConfidentialClientApplication(
+            client_id=settings.EMAIL_CLIENT_ID,
+            client_credential=settings.EMAIL_CLIENT_SECRET,
+            authority=authority
+        )
         token_response = app.acquire_token_for_client(scopes=["https://graph.microsoft.com/.default"])
-        
+
         if "access_token" in token_response:
             logger.info("Successfully acquired access token.")
             return token_response["access_token"]
         else:
-            error_desc = token_response.get('error_description', 'No error description provided')
+            error_desc = token_response.get("error_description", "No error description provided")
             raise Exception(f"Failed to acquire token: {error_desc}")
     except Exception as e:
-        logger.error(f"Exception occurred while fetching Graph API token: {e}", exc_info=True)
+        logger.error(f"Error fetching access token: {e}")
         raise
-
-import requests
-import logging
-from django.conf import settings
-
-logger = logging.getLogger(__name__)
-
-import requests
-from msal import ConfidentialClientApplication
-from django.conf import settings
-import logging
-
-logger = logging.getLogger(__name__)
 
 def send_email_with_graph_api(to_email, subject, body, is_html=False):
     """
     Sends an email using Microsoft Graph API with application-only authentication.
     """
-    # Get environment variables
-    client_id = settings.EMAIL_CLIENT_ID
-    client_secret = settings.EMAIL_CLIENT_SECRET
-    tenant_id = settings.EMAIL_TENANT_ID
-    endpoint = settings.EMAIL_ENDPOINT
-    sender_email = settings.DEFAULT_FROM_EMAIL  # Ensure this is defined in your settings
+    try:
+        # Acquire the access token
+        access_token = get_graph_api_access_token()
 
-    # Acquire a token using MSAL
-    app = ConfidentialClientApplication(
-        client_id=client_id,
-        client_credential=client_secret,
-        authority=f"https://login.microsoftonline.com/{tenant_id}",
-    )
-
-    token_response = app.acquire_token_for_client(scopes=["https://graph.microsoft.com/.default"])
-    if not token_response.get("access_token"):
-        raise Exception(f"Failed to acquire token: {token_response.get('error_description', 'No error description')}")
-
-    access_token = token_response["access_token"]
-
-    # Construct the email payload
-    email_message = {
-        "message": {
-            "subject": subject,
-            "body": {
-                "contentType": "HTML" if is_html else "Text",
-                "content": body,
+        # Construct the email payload
+        email_message = {
+            "message": {
+                "subject": subject,
+                "body": {
+                    "contentType": "HTML" if is_html else "Text",
+                    "content": body,
+                },
+                "toRecipients": [
+                    {"emailAddress": {"address": to_email}}
+                ],
+                "from": {"emailAddress": {"address": settings.DEFAULT_FROM_EMAIL}},
             },
-            "toRecipients": [
-                {"emailAddress": {"address": to_email}}
-            ],
-            "from": {"emailAddress": {"address": sender_email}},
+            "saveToSentItems": "true"
         }
-    }
 
-    # Send the email
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-        "Content-Type": "application/json",
-    }
+        # Send the email
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        }
+        response = requests.post(settings.EMAIL_ENDPOINT, headers=headers, json=email_message)
 
-    response = requests.post(endpoint, headers=headers, json=email_message)
+        if response.status_code == 202:  # HTTP 202 Accepted
+            logger.info(f"Email successfully sent to {to_email}.")
+            return {"success": True}
+        else:
+            logger.error(f"Failed to send email: {response.text}")
+            return {"success": False, "error": response.json()}
+    except Exception as e:
+        logger.error(f"Error sending email: {e}", exc_info=True)
+        return {"success": False, "error": str(e)}
 
-    # Log and return the response
-    if response.status_code == 202:  # HTTP 202 Accepted
-        logger.info(f"Email successfully sent to {to_email}.")
-        return {"success": True}
-    else:
-        error_data = response.json()
-        logger.error(f"Failed to send email to {to_email}: {error_data}")
-        return {"success": False, "error": error_data}
+
 
 
 import logging
