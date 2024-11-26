@@ -15,7 +15,7 @@ environ.Env.read_env()  # Optional if you're using django-environ only
 SECRET_KEY = env('DJANGO_SECRET_KEY', default="pqu__%t3x2e$+%lk9d#vg-7d=s7$m+b1&u91tfk8#gt*di$xkn")
 
 # Debug mode
-DEBUG = env.bool('DEBUG', default=False)
+DEBUG = env.bool('DEBUG', default=True)
 
 # Allowed hosts and trusted origins
 ALLOWED_HOSTS = ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[' www.iriseup.ai', 'localhost', '127.0.0.1', '0.0.0.0'])
@@ -146,14 +146,20 @@ LOGGING = {
 }
 
 # Email settings
-# Updated Email Configuration for Outlook
+   
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Use SMTP backend
 EMAIL_HOST = 'smtp.office365.com'  # Default to Outlook SMTP
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))  # Ensure the port is an integer
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587').strip().split()[0])  # Extract valid integer
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 'yes')  # Convert to boolean
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')  # Must be provided in the environment
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')  # Must be provided in the environment
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'hello@iriseupacademy.com')  # Provide a default sender email
+
+EMAIL_CLIENT_ID = os.getenv('EMAIL_CLIENT_ID')
+EMAIL_CLIENT_SECRET = os.getenv('EMAIL_CLIENT_SECRET')
+EMAIL_TENANT_ID = os.getenv('EMAIL_TENANT_ID')
+EMAIL_ENDPOINT = os.getenv('EMAIL_ENDPOINT', 'https://graph.microsoft.com/v1.0/me/sendMail')
+DEFAULT_FROM_EMAIL = 'hello@iriseupacademy.com'  # Replace with your verified sender email
 
 
 # Third-party API keys

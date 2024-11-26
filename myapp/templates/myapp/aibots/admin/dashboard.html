@@ -1,0 +1,51 @@
+{% extends 'myapp/aibots/admin/base_admin.html' %}
+
+{% block content %}
+<h1>Admin Dashboard</h1>
+
+<div style="margin-bottom: 30px;">
+    <h2>System Overview</h2>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+        <thead>
+            <tr>
+                <th style="text-align: left; padding: 10px; background-color: #f4f4f4; border: 1px solid #ddd;">Metric</th>
+                <th style="text-align: left; padding: 10px; background-color: #f4f4f4; border: 1px solid #ddd;">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Total Users</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ total_users }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Active Users</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ active_users }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Users Needing Renewal</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ users_needing_renewal }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Deactivated Users</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ deactivated_users }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<hr />
+
+<div style="margin-top: 20px;">
+    <h2>Quick Links</h2>
+    <ul style="list-style: none; padding: 0;">
+        <li style="margin-bottom: 10px;">
+            <a href="{% url 'custom_admin:renewals' %}" 
+            style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">
+                Manage Renewals
+            </a>
+
+        </li>
+        <!-- Add other links here if needed -->
+    </ul>
+</div>
+{% endblock %}

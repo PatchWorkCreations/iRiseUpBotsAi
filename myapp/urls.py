@@ -150,4 +150,6 @@ urlpatterns = [
     path('account/subscription-terms/', views.subscription_terms_new, name='account_subscription_terms'),
     path('terms-and-conditions/', views.terms_and_conditions, name='terms_and_conditions'),
     path('data-privacy/', views.data_privacy, name='data_privacy'),
+
+   
 ] 

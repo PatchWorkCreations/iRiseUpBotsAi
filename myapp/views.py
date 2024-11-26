@@ -420,6 +420,23 @@ def send_welcomepassword_email(user_email, random_password):
     email.send()
 
 
+from .utils import send_email_with_graph_api
+
+# Send a test email
+response = send_email_with_graph_api(
+    to_email="recipient@example.com",
+    subject="Test Email from Microsoft Graph",
+    body="<p>This is a test email sent using Microsoft Graph API.</p>",
+    is_html=True
+)
+
+if response["success"]:
+    print("Email sent successfully!")
+else:
+    print(f"Error sending email: {response['error']}")
+
+
+
 # Get an instance of a logger
 logger = logging.getLogger('myapp')
 
@@ -2380,3 +2397,160 @@ from django.shortcuts import render
 
 def account_deactivated(request):
     return render(request, 'myapp/aibots/settings/account_deactivated.html')
+
+
+# views.py
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render
+from django.utils.timezone import now
+from django.contrib.auth.models import User
+from .models import UserCourseAccess
+
+def is_admin_user(user):
+    """
+    Custom check to ensure the user is either a superuser or staff.
+    """
+    return user.is_superuser or user.is_staff
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.timezone import now
+from django.contrib.auth.models import User
+from .models import UserCourseAccess
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff, login_url='/admin/login/')
+def dashboard(request):
+    total_users = User.objects.count()
+    active_users = User.objects.filter(is_active=True).count()
+    users_needing_renewal = UserCourseAccess.objects.filter(expiration_date__lte=now()).count()
+    deactivated_users = User.objects.filter(is_active=False).count()
+
+    return render(request, 'myapp/aibots/admin/dashboard.html', {
+        'total_users': total_users,
+        'active_users': active_users,
+        'users_needing_renewal': users_needing_renewal,
+        'deactivated_users': deactivated_users,
+    })
+
+
+
+
+
+# views.py
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.timezone import now
+from .models import UserCourseAccess
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff, login_url='/admin/login/')
+def renewal_dashboard(request):
+    # Fetch users needing renewal
+    users_due_for_renewal = UserCourseAccess.objects.filter(expiration_date__lte=now())
+    return render(request, 'myapp/aibots/admin/renewal.html', {
+        'users_due_for_renewal': users_due_for_renewal,
+    })
+
+
+import uuid
+import logging
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.utils.timezone import timedelta
+from django.contrib.auth.decorators import user_passes_test
+from square.client import Client
+from .models import SquareCustomer, UserCourseAccess, Transaction
+from myapp.utils import send_renewal_email
+from django.conf import settings
+
+logger = logging.getLogger(__name__)
+
+# Initialize Square client
+square_client = Client(
+    access_token=settings.SQUARE_ACCESS_TOKEN,
+    environment='production'  # Change to 'sandbox' for testing
+)
+
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff, login_url='/admin/login/')
+def process_renewals(request):
+    if request.method == "POST":
+        user_ids = request.POST.getlist('user_ids')  # Get selected user IDs
+        results = []  # To store the results of the renewal process
+
+        for user_id in user_ids:
+            try:
+                # Fetch user and customer details
+                user_course_access = UserCourseAccess.objects.get(user_id=user_id)
+                square_customer = SquareCustomer.objects.get(user_id=user_id)
+
+                # Determine renewal amount
+                amount = determine_amount_based_on_plan(user_course_access.selected_plan)
+                if amount <= 0:
+                    results.append(f"Invalid plan or amount for {user_course_access.user.email}")
+                    continue
+
+                # Charge the stored card
+                payment_result = square_client.payments.create_payment(
+                    body={
+                        "source_id": square_customer.card_id,
+                        "idempotency_key": str(uuid.uuid4()),
+                        "amount_money": {
+                            "amount": amount,
+                            "currency": "USD"
+                        },
+                        "customer_id": square_customer.customer_id,
+                        "autocomplete": True
+                    }
+                )
+
+                if payment_result.is_success():
+                    # Update subscription expiration date
+                    if user_course_access.selected_plan == '1-week':
+                        user_course_access.expiration_date += timedelta(weeks=1)
+                    elif user_course_access.selected_plan == '4-week':
+                        user_course_access.expiration_date += timedelta(weeks=4)
+                    elif user_course_access.selected_plan == '12-week':
+                        user_course_access.expiration_date += timedelta(weeks=12)
+
+                    user_course_access.save()
+
+                    # Log successful transaction
+                    Transaction.objects.create(
+                        user=user_course_access.user,
+                        status='success',
+                        amount=amount,
+                        subscription_type=user_course_access.selected_plan,
+                        recurring=True,
+                        next_billing_date=user_course_access.expiration_date
+                    )
+
+                    # Send renewal confirmation email
+                    send_renewal_email(
+                        user_email=user_course_access.user.email,
+                        expiration_date=user_course_access.expiration_date,
+                        selected_plan=user_course_access.selected_plan
+                    )
+
+                    results.append(f"Successfully renewed {user_course_access.user.email}")
+                else:
+                    # Handle payment failure
+                    error_message = ", ".join(
+                        [error['detail'] for error in payment_result.errors]
+                    )
+                    results.append(f"Failed to renew {user_course_access.user.email}: {error_message}")
+
+            except UserCourseAccess.DoesNotExist:
+                results.append(f"UserCourseAccess not found for user ID {user_id}")
+            except SquareCustomer.DoesNotExist:
+                results.append(f"SquareCustomer not found for user ID {user_id}")
+            except Exception as e:
+                logger.error(f"Error renewing user ID {user_id}: {str(e)}", exc_info=True)
+                results.append(f"Error renewing user ID {user_id}: {str(e)}")
+
+        # Return results to the admin view
+        return JsonResponse({'results': results})
+
+    return redirect('custom_admin:renewals')
+
+

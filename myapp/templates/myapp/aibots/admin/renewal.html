@@ -1,0 +1,32 @@
+<!-- renewal.html -->
+{% extends 'myapp/aibots/admin/base_admin.html' %}
+
+{% block content %}
+<h1>Renewal Management</h1>
+<form method="POST" action="{% url 'custom_admin:process_renewals' %}">
+    {% csrf_token %}
+    <table>
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>User</th>
+                <th>Email</th>
+                <th>Plan</th>
+                <th>Expiration Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users_due_for_renewal %}
+            <tr>
+                <td><input type="checkbox" name="user_ids" value="{{ user.user.id }}"></td>
+                <td>{{ user.user.username }}</td>
+                <td>{{ user.user.email }}</td>
+                <td>{{ user.selected_plan }}</td>
+                <td>{{ user.expiration_date|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit">Renew Selected Users</button>
+</form>
+{% endblock %}
