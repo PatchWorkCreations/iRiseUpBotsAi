@@ -3,7 +3,9 @@
 {% block content %}
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
+<head>
+    <script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
+</head>
 <style>
    .contact-us-container {
         max-width: 800px;
@@ -161,7 +163,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
-        const payments = Square.payments('SQUARE_APPLICATION_ID', 'LOCATION_ID');
+        const payments = Square.payments('sq0idp-jpJ9YFYpLwuh5nFx4B-qXg', '45B8XGXSPP8E3');
         const card = await payments.card();
         await card.attach('#card-container');
 
