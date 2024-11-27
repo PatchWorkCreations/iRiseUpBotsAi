@@ -152,5 +152,8 @@ urlpatterns = [
     path('data-privacy/', views.data_privacy, name='data_privacy'),
     
     path('manage-payment-methods/', views.manage_payment_methods, name='manage_payment_methods'),
-     path('update-payment-method/', views.update_payment_method, name='update_payment_method'),
+    path('update-payment-method/', views.update_payment_method, name='update_payment_method'),
+
+    path('set-selected-plan/', views.set_selected_plan, name='set_selected_plan'),
+    path('change_plan/', views.change_plan, name='change_plan'),
 ] 

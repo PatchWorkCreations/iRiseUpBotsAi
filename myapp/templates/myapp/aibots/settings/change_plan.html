@@ -1,0 +1,89 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% block title %}Change Plan{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    .plan-container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .plan {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    .plan h4 {
+        margin: 0;
+    }
+    .btn-select {
+        background-color: #5860F8;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .btn-select:hover {
+        background-color: #3c4ab8;
+    }
+</style>
+
+<div class="plan-container">
+    <h2>Select Your Plan</h2>
+
+    <p>Your Current Plan: <strong>{{ current_plan }}</strong> (Expires: {{ expiration_date|date:"M d, Y" }})</p>
+
+    {% for plan, price in available_plans.items %}
+    <div class="plan">
+        <div>
+            <h4>{{ plan }}</h4>
+            <p>${{ price }}</p>
+        </div>
+        <button class="btn-select" data-plan="{{ plan }}">Select</button>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const buttons = document.querySelectorAll('.btn-select');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function () {
+                const selectedPlan = this.dataset.plan;
+
+                fetch("{% url 'set_selected_plan' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: JSON.stringify({ plan: selectedPlan }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        // Redirect to the returned URL
+                        window.location.href = data.redirect_url;
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+
+        });
+    });
+</script>
+
+{% endblock %}

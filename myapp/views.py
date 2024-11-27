@@ -2628,3 +2628,172 @@ from django.contrib.auth.decorators import login_required
 def manage_payment_methods(request):
     """Render the manage payment methods page."""
     return render(request, 'myapp/aibots/manage_payment_methods.html')
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def set_selected_plan(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            selected_plan = data.get('plan')
+
+            allowed_plans = ['1-week', '4-week', '12-week', 'lifetime']
+            if selected_plan not in allowed_plans:
+                return JsonResponse({'success': False, 'error': 'Invalid plan selected.'})
+
+            # Save the plan in the session
+            request.session['selected_plan'] = selected_plan
+
+            # Respond with a success message and the redirection URL
+            return JsonResponse({'success': True, 'redirect_url': '/coursemenu/'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
+
+
+
+from django.utils import timezone
+from datetime import timedelta
+from .models import UserCourseAccess, Transaction
+
+def process_plan_change(user, selected_plan):
+    """
+    Handles the plan change logic, including prorated adjustments and database updates.
+    """
+    try:
+        # Fetch user's current plan details
+        current_access = UserCourseAccess.objects.filter(user=user).first()
+
+        if not current_access:
+            raise ValueError("No active plan found for the user.")
+
+        current_plan = current_access.selected_plan
+        current_expiration_date = current_access.expiration_date
+
+        # Determine plan costs
+        plan_prices = {
+            '1-week': 100,
+            '4-week': 5690,
+            '12-week': 16900,
+            'lifetime': 24900,
+        }
+
+        # Prorated adjustment (if upgrading)
+        unused_days = max((current_expiration_date - timezone.now()).days, 0)
+        daily_rate = plan_prices[current_plan] / 7 if current_plan in ['1-week'] else plan_prices[current_plan] / 28
+        unused_value = unused_days * daily_rate
+
+        new_plan_cost = plan_prices[selected_plan]
+        adjustment_amount = max(new_plan_cost - unused_value, 0)
+
+        # Update UserCourseAccess
+        expiration_date = None
+        if selected_plan == '1-week':
+            expiration_date = timezone.now() + timedelta(weeks=1)
+        elif selected_plan == '4-week':
+            expiration_date = timezone.now() + timedelta(weeks=4)
+        elif selected_plan == '12-week':
+            expiration_date = timezone.now() + timedelta(weeks=12)
+
+        UserCourseAccess.objects.update_or_create(
+            user=user,
+            defaults={
+                'expiration_date': expiration_date,
+                'selected_plan': selected_plan,
+            }
+        )
+
+        # Log transaction
+        Transaction.objects.create(
+            user=user,
+            amount=adjustment_amount,
+            subscription_type=selected_plan,
+            status='success',
+        )
+
+        return {'success': True, 'new_plan': selected_plan, 'amount_charged': adjustment_amount}
+    except Exception as e:
+        return {'success': False, 'error': str(e)}
+
+
+def calculate_prorated_adjustment(current_plan, current_expiration_date, selected_plan):
+    plan_prices = {
+        '1-week': 100,
+        '4-week': 5690,
+        '12-week': 16900,
+        'lifetime': 24900,
+    }
+
+    # Calculate unused days
+    unused_days = max((current_expiration_date - timezone.now()).days, 0)
+    daily_rate = plan_prices[current_plan] / (7 if current_plan == '1-week' else 28)
+    unused_value = unused_days * daily_rate
+
+    # Calculate new plan cost
+    new_plan_cost = plan_prices[selected_plan]
+    adjustment_amount = max(new_plan_cost - unused_value, 0)
+
+    return adjustment_amount
+
+
+from django.shortcuts import render
+import logging
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import UserCourseAccess
+
+# Initialize logger
+logger = logging.getLogger(__name__)
+
+@login_required
+def change_plan(request):
+    """
+    Renders the change plan page with the current plan and available plans.
+    Handles plan change requests.
+    """
+    user = request.user
+
+    # Fetch the user's current plan and expiration date
+    current_access = UserCourseAccess.objects.filter(user=user).first()
+    current_plan = current_access.selected_plan if current_access else "No active plan"
+    expiration_date = (
+        current_access.expiration_date.strftime("%B %d, %Y") if current_access and current_access.expiration_date else "N/A"
+    )
+
+    # Define available plans and their prices
+    available_plans = {
+        '1-week': 1.00,
+        '4-week': 56.90,
+        '12-week': 169.00,
+        'lifetime': 249.00,
+    }
+
+    if request.method == "POST":
+        # Handle plan change
+        selected_plan = request.POST.get('plan')
+        if selected_plan in available_plans:
+            # Update user's course access
+            if current_access:
+                current_access.selected_plan = selected_plan
+                current_access.expiration_date = None if selected_plan == 'lifetime' else None  # Update expiration logic
+                current_access.save()
+
+                logger.info(f"User {user.username} changed their plan to {selected_plan}")
+                return redirect('coursemenu')  # Redirect to course menu after change
+            else:
+                logger.warning(f"User {user.username} has no current access, unable to change plan.")
+
+        else:
+            logger.error(f"Invalid plan selected by {user.username}: {selected_plan}")
+
+    context = {
+        'current_plan': current_plan,
+        'expiration_date': expiration_date,
+        'available_plans': available_plans,
+    }
+
+    return render(request, 'myapp/aibots/settings/change_plan.html', context)
