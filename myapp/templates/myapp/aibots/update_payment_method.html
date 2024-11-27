@@ -1,0 +1,207 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% block title %}Update Payment Method{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+   .contact-us-container {
+        max-width: 800px;
+        margin: 30px auto;
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-us-header {
+        background-color: #1F3A93;
+        color: #ffffff;
+        padding: 1rem;
+    }
+
+    .contact-us-header h1 {
+        font-size: 1.5rem;
+        margin: 0;
+        color: #f4f6f9;
+    }
+
+    .contact-us-back-btn {
+        color: #ffffff;
+        font-size: 1.2rem;
+        text-decoration: none;
+    }
+/* Add your styles here */
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-submit {
+    background-color: #5860F8;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+}
+.btn-submit:hover {
+    background-color: #3c4ab8;
+}
+
+/* Container for the saved card */
+.saved-card {
+    background: linear-gradient(135deg, #3c4ab8, #5860F8); /* Gradient background */
+    color: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+/* Card header with card brand and card number */
+.saved-card h4 {
+    font-size: 1.5rem;
+    margin: 0 0 10px 0;
+    font-weight: bold;
+}
+
+/* Card number display */
+.saved-card .card-number {
+    font-size: 1.25rem;
+    letter-spacing: 2px;
+    margin: 10px 0;
+    color: #e3e3e3;
+}
+
+/* Cardholder name and expiry */
+.saved-card .card-details {
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+/* Decorative chip or icon */
+.saved-card .chip {
+    background: #f9f9f9;
+    width: 40px;
+    height: 30px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Submit button styling */
+.btn-submit {
+    background-color: #5860F8;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background-color: #3c4ab8;
+}
+</style>
+
+
+
+<header class="contact-us-header">
+    <div class="contact-us-header-inner d-flex align-items-center justify-content-between">
+        <a href="{% url 'coursemenu' %}" class="contact-us-back-btn">
+            <i class="fa-solid fa-arrow-left" style="color: white;"></i>
+        </a>
+        <h1>Update Payment Method</h1>
+    </div>
+</header>
+
+<div class="form-container">
+    <h2>Update Payment Method</h2>
+
+    <!-- Display saved card details if available -->
+    {% if saved_card %}
+    <div class="saved-card">
+        <!-- Decorative chip -->
+        <div class="chip"></div>
+        <!-- Card brand and number -->
+        <h4>{{ saved_card.card_brand }}</h4>
+        <p class="card-number">**** **** **** {{ saved_card.last_four }}</p>
+        <!-- Cardholder name and expiry -->
+        <div class="card-details">
+            <span>Cardholder: {{ user.get_full_name }}</span>
+            <span>Exp: {{ saved_card.expiry_date|default:"N/A" }}</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Update form -->
+    <form id="payment-form">
+        <div id="card-container" class="form-group"></div>
+        <button type="submit" class="btn-submit">Update Card</button>
+        <div id="loader" style="display: none;">Updating...</div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const payments = Square.payments('SQUARE_APPLICATION_ID', 'LOCATION_ID');
+        const card = await payments.card();
+        await card.attach('#card-container');
+
+        const paymentForm = document.getElementById('payment-form');
+        const loader = document.getElementById('loader');
+
+        paymentForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            loader.style.display = 'block';
+
+            try {
+                const result = await card.tokenize();
+                if (result.status === 'OK') {
+                    const token = result.token;
+
+                    const response = await fetch("{% url 'update_payment_method' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify({ token: token }),
+                    });
+
+                    const responseData = await response.json();
+                    if (response.ok) {
+                        alert('Payment method updated successfully!');
+                        location.reload(); // Reload to reflect updated card details
+                    } else {
+                        alert('Error updating payment method: ' + responseData.error);
+                    }
+                } else {
+                    alert('Card tokenization failed: ' + result.errors[0].message);
+                }
+            } catch (error) {
+                alert('An error occurred: ' + error.message);
+            } finally {
+                loader.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

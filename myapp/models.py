@@ -7,13 +7,18 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.db import models
+from django.contrib.auth.models import User
+
 class SquareCustomer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Support multiple cards
     customer_id = models.CharField(max_length=255, unique=True)
     card_id = models.CharField(max_length=255, unique=True)
+    card_brand = models.CharField(max_length=50, blank=True, null=True)  # e.g., Visa, MasterCard
+    last_4 = models.CharField(max_length=4, blank=True, null=True)  # Last 4 digits of the card
 
     def __str__(self):
-        return f"{self.user.username} - {self.customer_id}"
+        return f"{self.user.username} - {self.card_id} ({self.card_brand} ****{self.last_4})"
 
 
 from django.db import models

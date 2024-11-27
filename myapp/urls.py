@@ -150,6 +150,7 @@ urlpatterns = [
     path('account/subscription-terms/', views.subscription_terms_new, name='account_subscription_terms'),
     path('terms-and-conditions/', views.terms_and_conditions, name='terms_and_conditions'),
     path('data-privacy/', views.data_privacy, name='data_privacy'),
-
-   
+    
+    path('manage-payment-methods/', views.manage_payment_methods, name='manage_payment_methods'),
+     path('update-payment-method/', views.update_payment_method, name='update_payment_method'),
 ] 

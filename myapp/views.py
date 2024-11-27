@@ -2553,3 +2553,78 @@ def process_renewals(request):
 
     return redirect('custom_admin:renewals')
 
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import SquareCustomer
+from square.client import Client
+import json
+import logging
+
+# Initialize Square client
+client = Client(
+    access_token=settings.SQUARE_ACCESS_TOKEN,
+    environment='production',  # Change to 'production' when you're ready
+)
+
+
+@login_required
+@csrf_exempt
+def update_payment_method(request):
+    """Handle displaying and updating the user's payment method."""
+    if request.method == "GET":
+        # Fetch the saved card details for display
+        customer = SquareCustomer.objects.filter(user=request.user).first()
+        saved_card = None
+        if customer:
+            saved_card = {
+                "last_four": customer.card_id[-4:],  # Use the last 4 digits
+                "card_brand": "Visa",  # Replace with actual card brand retrieval if available
+            }
+        return render(request, 'myapp/aibots/update_payment_method.html', {"saved_card": saved_card})
+
+    elif request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            token = data.get('token')
+
+            # Fetch the user's SquareCustomer record
+            customer = SquareCustomer.objects.filter(user=request.user).first()
+            if not customer:
+                return JsonResponse({"error": "Customer not found."}, status=404)
+
+            # Use Square API to create a new card
+            result = client.cards.create_card(
+                body={
+                    "customer_id": customer.customer_id,
+                    "source_id": token,
+                }
+            )
+
+            if result.is_error():
+                logging.error(f"Square API error: {result.errors}")
+                return JsonResponse({"error": "Failed to update payment method."}, status=400)
+
+            # Update the card ID in the database
+            customer.card_id = result.body['card']['id']
+            customer.save()
+
+            return JsonResponse({"success": True})
+
+        except Exception as e:
+            logging.error(f"Unexpected error: {str(e)}")
+            return JsonResponse({"error": "An unexpected error occurred."}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def manage_payment_methods(request):
+    """Render the manage payment methods page."""
+    return render(request, 'myapp/aibots/manage_payment_methods.html')

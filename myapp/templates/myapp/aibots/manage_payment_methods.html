@@ -1,0 +1,126 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% load static %}
+{% block title %}Update Payment Method{% endblock %}
+{% block content %}
+<head>
+    <script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
+</head>
+
+<style>
+/* Add your styles here */
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.btn-submit {
+    background-color: #5860F8;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+}
+.btn-submit:hover {
+    background-color: #3c4ab8;
+}
+
+#loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+    display: block;
+    margin: 10px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+</style>
+<div id="error-message" style="color: red; display: none;"></div>
+
+<div class="form-container">
+    <h2>Update Payment Method</h2>
+    <form id="payment-form">
+        <div id="card-container" class="form-group"></div>
+        <button type="submit" class="btn-submit">Update Card</button>
+        <div id="loader" style="display: none;">Updating...</div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+    const payments = Square.payments('SQUARE_APPLICATION_ID', 'LOCATION_ID');
+    const card = await payments.card();
+    await card.attach('#card-container');
+
+    const paymentForm = document.getElementById('payment-form');
+    const loader = document.getElementById('loader');
+
+    paymentForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        loader.style.display = 'block';
+
+        try {
+            const result = await card.tokenize();
+            if (result.status === 'OK') {
+                const token = result.token;
+
+                const response = await fetch("{% url 'update_payment_method' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({ token: token }),
+                });
+
+                const responseData = await response.json();
+                if (response.ok) {
+                    alert('Payment method updated successfully!');
+                } else {
+                    alert('Error updating payment method: ' + responseData.error);
+                }
+            } else {
+                alert('Card tokenization failed: ' + result.errors[0].message);
+            }
+        } catch (error) {
+            alert('An error occurred: ' + error.message);
+        } finally {
+            loader.style.display = 'none';
+        }
+    });
+});
+
+const errorMessage = document.getElementById('error-message');
+
+if (!response.ok) {
+    errorMessage.textContent = 'Error updating payment method: ' + responseData.error;
+    errorMessage.style.display = 'block';
+}
+
+</script>
+{% endblock %}
