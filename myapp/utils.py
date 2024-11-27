@@ -42,8 +42,12 @@ def grant_course_access(user, selected_plan):
         UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
 
     return True
+
+
 import msal
+import os
 import requests
+import json
 import logging
 from django.conf import settings
 
@@ -51,73 +55,87 @@ logger = logging.getLogger(__name__)
 
 def get_graph_api_access_token():
     """
-    Fetch an access token for Microsoft Graph API using the client credentials flow.
+    Fetches an access token for Microsoft Graph API using the client credentials flow.
     """
     try:
-        authority = f"https://login.microsoftonline.com/{settings.EMAIL_TENANT_ID}"
-        app = msal.ConfidentialClientApplication(
-            client_id=settings.EMAIL_CLIENT_ID,
-            client_credential=settings.EMAIL_CLIENT_SECRET,
-            authority=authority
-        )
+        client_id = os.getenv("EMAIL_CLIENT_ID")
+        #client_secret = os.getenv("EMAIL_CLIENT_SECRET")
+        client_secret = os.getenv("EMAIL_CLIENT_SECRET")  # Replace with your actual secret value
+        tenant_id = os.getenv("EMAIL_TENANT_ID")
+        authority = f"https://login.microsoftonline.com/{tenant_id}"
+        
+        # Initialize the MSAL ConfidentialClientApplication
+        app = msal.ConfidentialClientApplication(client_id, client_secret, authority=authority)
+        
+        # Acquire token for Graph API
         token_response = app.acquire_token_for_client(scopes=["https://graph.microsoft.com/.default"])
-
+        
         if "access_token" in token_response:
             logger.info("Successfully acquired access token.")
             return token_response["access_token"]
         else:
-            error_desc = token_response.get("error_description", "No error description provided")
+            error_desc = token_response.get('error_description', 'No error description provided')
             raise Exception(f"Failed to acquire token: {error_desc}")
     except Exception as e:
-        logger.error(f"Error fetching access token: {e}")
+        logger.error(f"Exception occurred while fetching Graph API token: {e}", exc_info=True)
         raise
+
+
+import os
+import requests
+import logging
+from myapp.utils import get_graph_api_access_token
+
+logger = logging.getLogger(__name__)
 
 def send_email_with_graph_api(to_email, subject, body, is_html=False):
     """
-    Sends an email using Microsoft Graph API with application-only authentication.
+    Sends an email using Microsoft Graph API.
     """
     try:
-        # Acquire the access token
+        # Fetch access token
         access_token = get_graph_api_access_token()
 
         # Construct the email payload
-        email_message = {
+        content_type = "HTML" if is_html else "Text"
+        email_payload = {
             "message": {
                 "subject": subject,
                 "body": {
-                    "contentType": "HTML" if is_html else "Text",
-                    "content": body,
+                    "contentType": content_type,
+                    "content": body
                 },
                 "toRecipients": [
                     {"emailAddress": {"address": to_email}}
-                ],
-                "from": {"emailAddress": {"address": settings.DEFAULT_FROM_EMAIL}},
-            },
-            "saveToSentItems": "true"
+                ]
+            }
         }
 
-        # Send the email
+        # Send email
         headers = {
             "Authorization": f"Bearer {access_token}",
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
         }
-        response = requests.post(settings.EMAIL_ENDPOINT, headers=headers, json=email_message)
+        response = requests.post(
+            os.getenv("EMAIL_ENDPOINT"),
+            json=email_payload,
+            headers=headers
+        )
 
-        if response.status_code == 202:  # HTTP 202 Accepted
-            logger.info(f"Email successfully sent to {to_email}.")
+        # Check the response
+        if response.status_code == 202:
+            logger.info(f"Email sent successfully to {to_email}.")
             return {"success": True}
         else:
-            logger.error(f"Failed to send email: {response.text}")
-            return {"success": False, "error": response.json()}
+            logger.error(f"Failed to send email to {to_email}: {response.text}")
+            return {"success": False, "error": response.text}
     except Exception as e:
-        logger.error(f"Error sending email: {e}", exc_info=True)
+        logger.error(f"Exception occurred while sending email to {to_email}: {e}", exc_info=True)
         return {"success": False, "error": str(e)}
 
 
-
-
+from myapp.utils import send_email_with_graph_api
 import logging
-from myapp.utils import send_email_with_graph_api  # Ensure this is correctly imported
 
 logger = logging.getLogger(__name__)
 
@@ -132,69 +150,23 @@ def send_renewal_email(user_email, expiration_date, selected_plan):
 
     subject = 'Your Subscription Has Been Renewed – Thank You for Staying with iRiseUp.AI!'
     
-    # Plain text content for fallback
-    text_content = (
-        f"Dear {user_email},\n\n"
-        "We’re excited to inform you that your subscription has been successfully renewed!\n"
-        f"Plan: {selected_plan.capitalize()}\n"
-        f"Next Expiration Date: {expiration_date.strftime('%B %d, %Y')}\n\n"
-        "Thank you for being part of iRiseUp.AI.\n\n"
-        "Best regards,\n"
-        "The iRiseUp.AI Team"
-    )
-
     # HTML content
     html_content = f"""
     <!DOCTYPE html>
     <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Renewal Confirmation</title>
-        <style>
-            body {{
-                font-family: Arial, sans-serif;
-                line-height: 1.6;
-                color: #333;
-                background-color: #f4f4f4;
-                padding: 20px;
-            }}
-            .container {{
-                max-width: 600px;
-                margin: 0 auto;
-                background-color: #ffffff;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            }}
-            h1 {{
-                font-size: 24px;
-                color: #05374f;
-            }}
-            p {{
-                margin: 0 0 10px;
-            }}
-            .footer {{
-                margin-top: 20px;
-                font-size: 12px;
-                color: #888;
-            }}
-        </style>
-    </head>
     <body>
-        <div class="container">
-            <h1>Subscription Renewal Confirmation</h1>
-            <p>Dear {user_email},</p>
-            <p>Your subscription has been successfully renewed!</p>
-            <p><strong>Plan:</strong> {selected_plan.capitalize()}</p>
-            <p><strong>Next Expiration Date:</strong> {expiration_date.strftime('%B %d, %Y')}</p>
-            <p>Thank you for choosing iRiseUp.AI, where our AI assistants are always ready to help you.</p>
-            <p>Best regards,<br><strong>The iRiseUp.AI Team</strong></p>
-        </div>
+        <h1>Subscription Renewal Confirmation</h1>
+        <p>Dear {user_email},</p>
+        <p>Your subscription has been successfully renewed!</p>
+        <p><strong>Plan:</strong> {selected_plan.capitalize()}</p>
+        <p><strong>Next Expiration Date:</strong> {expiration_date.strftime('%B %d, %Y')}</p>
+        <p>Thank you for choosing iRiseUp.AI, where our AI assistants are always ready to help you.</p>
+        <p>Best regards,<br>The iRiseUp.AI Team</p>
     </body>
     </html>
     """
 
-    # Use the tested Graph API email function
+    # Send email using the utility function
     try:
         logger.debug("Preparing to send renewal email via Graph API.")
         response = send_email_with_graph_api(
