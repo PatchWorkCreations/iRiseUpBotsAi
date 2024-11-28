@@ -200,13 +200,13 @@ def setSelectedPlanInSession(request):
 
 def determine_amount_based_on_plan(selected_plan):
     if selected_plan == '1-week':
-        return 200  # $1.00 in cents
+        return 1287  # $12.87 in cents
     elif selected_plan == '4-week':
-        return 5690  # $56.90 in cents for a 4-week plan (18.97 x 4 with discount)
+        return 3795  # $37.95 in cents
     elif selected_plan == '12-week':
-        return 16900  # $169.00 in cents for a 12-week plan (18.97 x 12 with discount)
+        return 9700  # $97.00 in cents
     elif selected_plan == 'lifetime':
-        return 24900  # $249.00 in cents for the lifetime plan
+        return 24700  # $247.00 in cents
     else:
         return 0  # Default to 0 for unrecognized plans
 
