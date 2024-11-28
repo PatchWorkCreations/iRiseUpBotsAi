@@ -200,7 +200,7 @@ def setSelectedPlanInSession(request):
 
 def determine_amount_based_on_plan(selected_plan):
     if selected_plan == '1-week':
-        return 100  # $1.00 in cents
+        return 200  # $1.00 in cents
     elif selected_plan == '4-week':
         return 5690  # $56.90 in cents for a 4-week plan (18.97 x 4 with discount)
     elif selected_plan == '12-week':
@@ -2460,7 +2460,7 @@ from django.utils.timezone import timedelta
 from django.contrib.auth.decorators import user_passes_test
 from square.client import Client
 from .models import SquareCustomer, UserCourseAccess, Transaction
-from myapp.utils import send_renewal_email
+from myapp.utils import send_renewal_email,  send_failure_email
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
@@ -2535,10 +2535,14 @@ def process_renewals(request):
                     results.append(f"Successfully renewed {user_course_access.user.email}")
                 else:
                     # Handle payment failure
-                    error_message = ", ".join(
-                        [error['detail'] for error in payment_result.errors]
-                    )
+                    error_message = ", ".join([error['detail'] for error in payment_result.errors])
                     results.append(f"Failed to renew {user_course_access.user.email}: {error_message}")
+
+                    # Send failure email to the user
+                    send_failure_email(
+                        user_email=user_course_access.user.email,
+                        error_message=error_message
+                    )
 
             except UserCourseAccess.DoesNotExist:
                 results.append(f"UserCourseAccess not found for user ID {user_id}")

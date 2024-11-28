@@ -149,19 +149,109 @@ def send_renewal_email(user_email, expiration_date, selected_plan):
         return False
 
     subject = 'Your Subscription Has Been Renewed – Thank You for Staying with iRiseUp.AI!'
-    
-    # HTML content
+
+    # HTML content with modern design improvements
     html_content = f"""
     <!DOCTYPE html>
     <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{subject}</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }}
+            .container {{
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }}
+            .header {{
+                background-color: #05374f;
+                color: #ffffff;
+                padding: 20px;
+                text-align: center;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+            }}
+            .header h1 {{
+                margin: 0;
+                font-size: 28px;
+                font-weight: bold;
+            }}
+            .content {{
+                padding: 30px 20px;
+                text-align: left;
+            }}
+            .content p {{
+                font-size: 16px;
+                color: #333;
+                line-height: 1.5;
+            }}
+            .content strong {{
+                font-weight: bold;
+                color: #05374f;
+            }}
+            .button {{
+                display: inline-block;
+                padding: 12px 25px;
+                background-color: #05374f;
+                color: #ffffff;
+                text-decoration: none;
+                font-size: 16px;
+                border-radius: 5px;
+                margin-top: 20px;
+            }}
+            .button:hover {{
+                background-color: #007bb5;
+            }}
+            .footer {{
+                text-align: center;
+                padding: 20px;
+                background-color: #f4f4f4;
+                color: #888;
+                font-size: 12px;
+                border-bottom-left-radius: 8px;
+                border-bottom-right-radius: 8px;
+            }}
+            .footer p {{
+                margin: 0;
+            }}
+            .footer a {{
+                color: #05374f;
+                text-decoration: none;
+            }}
+        </style>
+    </head>
     <body>
-        <h1>Subscription Renewal Confirmation</h1>
-        <p>Dear {user_email},</p>
-        <p>Your subscription has been successfully renewed!</p>
-        <p><strong>Plan:</strong> {selected_plan.capitalize()}</p>
-        <p><strong>Next Expiration Date:</strong> {expiration_date.strftime('%B %d, %Y')}</p>
-        <p>Thank you for choosing iRiseUp.AI, where our AI assistants are always ready to help you.</p>
-        <p>Best regards,<br>The iRiseUp.AI Team</p>
+        <div class="container">
+            <!-- Email Header -->
+            <div class="header">
+                <h1>Subscription Renewal Confirmation</h1>
+            </div>
+
+            <!-- Email Content -->
+            <div class="content">
+                <p>Dear {user_email},</p>
+                <p>Your subscription has been successfully renewed!</p>
+                <p><strong>Plan:</strong> {selected_plan.capitalize()}</p>
+                <p><strong>Next Expiration Date:</strong> {expiration_date.strftime('%B %d, %Y')}</p>
+                <p>Thank you for choosing iRiseUp.AI! Our AI assistants are always ready to help you.</p>
+                <a href="https://www.iriseup.ai/dashboard" class="button">Access Your Account</a>
+                <p>Best regards,<br><strong>The iRiseUp.AI Team</strong></p>
+            </div>
+
+            <!-- Email Footer -->
+            <div class="footer">
+                <p>iRiseUp.AI, Columbus, Ohio, USA | <a href="https://www.iriseup.ai/unsubscribe">Unsubscribe</a></p>
+            </div>
+        </div>
     </body>
     </html>
     """
@@ -185,3 +275,138 @@ def send_renewal_email(user_email, expiration_date, selected_plan):
     except Exception as e:
         logger.error(f"Exception occurred while sending renewal email to {user_email}: {e}", exc_info=True)
         return False
+
+
+from django.core.mail import EmailMultiAlternatives
+
+def send_failure_email(user_email, error_message):
+    """
+    Sends a failure notification email to the user when their renewal payment fails.
+    """
+    subject = 'Payment Renewal Failed – Action Required'
+    from_email = 'hello@iriseupacademy.com'
+    to_email = [user_email]
+
+    # Plain text content for fallback
+    text_content = (
+        f"Dear {user_email},\n\n"
+        "Unfortunately, we were unable to process your subscription renewal payment.\n"
+        f"Error: {error_message}\n\n"
+        "Please verify your payment information or contact support for assistance.\n\n"
+        "Best regards,\n"
+        "The iRiseUp.AI Team"
+    )
+
+    # HTML content
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Payment Renewal Failed</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                color: #333;
+                line-height: 1.6;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }}
+            .container {{
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+            }}
+            .header {{
+                background-color: #ff4d4d;
+                color: #ffffff;
+                padding: 20px;
+                text-align: center;
+            }}
+            .header img {{
+                max-width: 100px;
+                margin-bottom: 10px;
+            }}
+            .header h1 {{
+                margin: 0;
+                font-size: 28px;
+                font-weight: bold;
+            }}
+            .content {{
+                padding: 30px 20px;
+                text-align: left;
+                background-color: #ffffff;
+            }}
+            .content p {{
+                font-size: 16px;
+                margin-bottom: 20px;
+            }}
+            .error-message {{
+                font-size: 16px;
+                font-weight: bold;
+                color: #ff4d4d;
+            }}
+            .button {{
+                display: inline-block;
+                padding: 12px 25px;
+                color: #ffffff;
+                background-color: #05374f;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 16px;
+                margin-top: 20px;
+            }}
+            .button:hover {{
+                background-color: #007bb5;
+            }}
+            .footer {{
+                text-align: center;
+                padding: 20px;
+                background-color: #f4f4f4;
+                color: #888;
+                font-size: 12px;
+            }}
+            .footer p {{
+                margin: 0;
+            }}
+            .footer a {{
+                color: #05374f;
+                text-decoration: none;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!-- Email Header -->
+            <div class="header">
+                <h1>Payment Renewal Failed</h1>
+            </div>
+
+            <!-- Email Content -->
+            <div class="content">
+                <p>Dear {user_email},</p>
+                <p>Unfortunately, we encountered an issue while processing your subscription renewal payment.</p>
+                <p class="error-message">Error: {error_message}</p>
+                <p>Please verify your payment information or contact support for assistance.</p>
+                <a href="https://www.iriseup.ai/contact-support" class="button">Contact Support</a>
+                <p>Best regards,<br><strong>The iRiseUp.AI Team</strong></p>
+            </div>
+
+            <!-- Email Footer -->
+            <div class="footer">
+                <p>iRiseUp.AI, Columbus, Ohio, USA | <a href="https://www.iriseup.ai/unsubscribe">Unsubscribe</a></p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    # Create the email message with plain text and HTML alternatives
+    email = EmailMultiAlternatives(subject, text_content, from_email, to_email)
+    email.attach_alternative(html_content, "text/html")
+    email.send()
