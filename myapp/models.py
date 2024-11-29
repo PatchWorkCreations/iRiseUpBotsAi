@@ -197,46 +197,133 @@ class UserLessonProgress(models.Model):
         return False  # The first lesson is never locked
 
 
-from django.db import models
-from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
 
 class UserCourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
-    progress = models.FloatField(default=0.0)
-    expiration_date = models.DateTimeField(null=True, blank=True)
-    renewal_date = models.DateTimeField(null=True, blank=True)  # For scheduling renewal
-    renewal_task_id = models.CharField(max_length=255, null=True, blank=True)  # Task ID for the scheduled charge
-    selected_plan = models.CharField(max_length=20, null=True, blank=True)
-    is_saved = models.BooleanField(default=False, null=True, blank=True)  # Allow nullable values
-    is_favorite = models.BooleanField(default=False, null=True, blank=True)  # Allow nullable values
+    selected_plan = models.CharField(
+    max_length=20,
+    choices=[('1-week', '1-week'), ('4-week', '4-week'), ('12-week', '12-week'), ('lifetime', 'lifetime')],
+    default='1-week'  # Set a default value here
+)
 
+    expiration_date = models.DateTimeField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)  # Track if the user's course access is active
+    has_paid = models.BooleanField(default=False)  # Track if the user has paid for the plan
+
+    # Constants for the different plans
+    PLAN_DURATIONS = {
+        '1-week': 7,
+        '4-week': 28,
+        '12-week': 84,
+        'lifetime': 9999999,  # Lifetime plan has no expiration
+    }
+
+    PLAN_PRICES = {
+        '1-week': 100,
+        '4-week': 5690,
+        '12-week': 16900,
+        'lifetime': 24900,
+    }
+
+    # New field to indicate whether grace period is applicable
+    grace_period_enabled = models.BooleanField(default=False, blank=True, null=True)
+    
+    # New field for the user to revert downgrade within the grace period
+    original_plan = models.CharField(max_length=20, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.course.title if self.course else 'No course'}"
+        return f"{self.user.username} - {self.selected_plan}"
 
-    def has_expired(self):
-        return self.expiration_date is not None and timezone.now() > self.expiration_date
+    def check_expiration(self):
+        """Check if the user’s course access has expired"""
+        self.is_active = self.expiration_date > timezone.now()
+        self.save()
 
-    def update_progress(self):
-        """Calculate and update the progress of the entire course based on sub-course completion."""
-        total_sub_courses = self.course.sub_courses.count()
-        completed_sub_courses = UserSubCourseAccess.objects.filter(
-            user=self.user, sub_course__parent_course=self.course, progress=100.0
-        ).count()
-
-        if total_sub_courses > 0:
-            self.progress = (completed_sub_courses / total_sub_courses) * 100
+    def renew(self, plan_type):
+        """Renew the user's subscription based on plan type"""
+        if plan_type in self.PLAN_DURATIONS:
+            self.expiration_date = timezone.now() + timedelta(weeks=self.PLAN_DURATIONS[plan_type])
+            self.selected_plan = plan_type
+            self.is_active = True
+            self.has_paid = True  # Set to True once payment is confirmed
             self.save()
 
+    def change_plan(self, new_plan):
+        """
+        Handle the plan change. Adjust expiration date based on new plan.
+        """
+        # If the user is upgrading or changing to a new plan, adjust expiration
+        current_plan = self.selected_plan
+        current_expiration_date = self.expiration_date
+        current_price = self.PLAN_PRICES[current_plan]
+        new_price = self.PLAN_PRICES[new_plan]
 
-    def set_renewal_date(self, plan_duration):
-        """Sets the renewal date based on the plan duration in weeks."""
-        if plan_duration:
-            self.renewal_date = timezone.now() + timedelta(weeks=plan_duration)
+        # If the new plan is different, apply prorating or refund logic
+        if new_plan != current_plan:
+            unused_days = max((current_expiration_date - timezone.now()).days, 0)
+            plan_duration = self.PLAN_DURATIONS[current_plan]
+            daily_rate = current_price / plan_duration  # Calculate daily rate
+
+            # Calculate the unused value of the current plan
+            unused_value = unused_days * daily_rate
+
+            # Calculate the adjustment amount (new plan cost minus unused value)
+            adjustment_amount = max(new_price - unused_value, 0)
+
+            # Cap the prorated charge to ensure users aren’t overcharged
+            adjustment_amount = min(adjustment_amount, new_price * 0.75)
+
+            # Update expiration date based on the new plan
+            self.selected_plan = new_plan
+            if new_plan == 'lifetime':
+                self.expiration_date = timezone.now() + timedelta(days=365 * 100)  # Arbitrary long future date
+            else:
+                self.expiration_date = timezone.now() + timedelta(weeks=self.PLAN_DURATIONS[new_plan])
+
+            self.has_paid = True  # Mark as paid once the payment is confirmed
             self.save()
+
+            # Store the user's original plan before they change (only if it's not already set)
+            if not self.original_plan:
+                self.original_plan = current_plan
+                self.save()
+
+            return {
+                'success': True,
+                'new_plan': new_plan,
+                'amount_charged': adjustment_amount,
+                'message': f'Your unused portion from the previous plan has been credited, and your new plan will expire on {self.expiration_date.strftime("%Y-%m-%d")}.'
+            }
+
+        return {'success': False, 'error': 'No change in plan selected'}
+
+    def apply_grace_period_for_downgrade(self, grace_period_days=7):
+        """
+        Allow users to revert their downgrade within a grace period without incurring additional charges.
+        Only applies to new users or users with grace_period_enabled set to True.
+        """
+        if self.grace_period_enabled and self.selected_plan != 'lifetime' and self.expiration_date > timezone.now():
+            remaining_time = self.expiration_date - timezone.now()
+            if remaining_time.days <= grace_period_days:
+                # Revert the user to their original plan within the grace period.
+                self.selected_plan = self.original_plan
+                self.expiration_date = timezone.now() + timedelta(weeks=self.PLAN_DURATIONS[self.original_plan])
+                self.is_active = True  # Reactivate the user's previous plan
+                self.save()
+
+                return {
+                    'success': True,
+                    'message': f'Your downgrade has been reversed. You have {remaining_time.days} days left on your original plan.'
+                }
+            else:
+                return {
+                    'success': False,
+                    'message': 'The grace period for reverting your downgrade has passed.'
+                }
+        return {'success': False, 'message': 'No downgrade to revert.'}
+
 
 
 class UserSubCourseAccess(models.Model):
