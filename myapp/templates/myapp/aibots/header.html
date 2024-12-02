@@ -23,6 +23,8 @@
             </ul>
         </div>
     </div>
+
+    <!--       
     <div class="black-friday-banner">
         <div class="container text-center">
             <strong>Black Friday Special!</strong>
@@ -33,11 +35,92 @@
             <a href="{% url 'personalized_plan' %}#plan-selection-section">Shop Now</a>
         </div>
     </div>
-    
+    -->
+
+    <div class="cyber-monday-banner">
+        <div class="container text-center">
+            <strong>Cyber Monday Special!</strong>
+            <div class="banner-text">
+                Get <span class="highlight">50% OFF</span> on all services until MIDNIGHT!
+            </div>
+            <div id="countdown" class="timer"></div>
+            <a href="{% url 'personalized_plan' %}#plan-selection-section">Shop Now</a>
+        </div>
+    </div>
     
 </nav>
 
 <style>/* Navbar styling */
+
+/* Cyber Monday Banner Styling */
+.cyber-monday-banner {
+    background: linear-gradient(135deg, #004085, #0056b3); /* Cool blue gradient */
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    z-index: 1040; /* Below the navbar but above content */
+    position: fixed;
+    top: 70px; /* Place it directly under the navbar */
+    width: 100%;
+    overflow: hidden; /* To handle animated background shapes */
+}
+
+/* Highlight styling for "Cyber Monday" text */
+.cyber-monday-banner .highlight {
+    background-color: #004085; /* Cool blue background */
+    color: #fff;
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block;
+    margin: 0 0.5rem;
+    animation: pulse 1.5s infinite;
+}
+
+/* Adjust pulse animation for Cyber Monday */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        background-color: #004085;
+    }
+    50% {
+        transform: scale(1.1);
+        background-color: #0056b3;
+    }
+    100% {
+        transform: scale(1);
+        background-color: #004085;
+    }
+}
+
+/* Button styling for "Shop Now" or CTA links */
+.cyber-monday-banner a {
+    display: inline-block;
+    background-color: #004085; /* Cool blue */
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    text-decoration: none;
+}
+
+.cyber-monday-banner a:hover {
+    background-color: #0056b3; /* Slightly lighter blue for hover */
+    color: #fff;
+}
+
+/* Countdown Timer Styling */
+.timer {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    font-weight: bold;
+}
     .custom-navbar {
         background-color: white;
         padding: 1rem 0;

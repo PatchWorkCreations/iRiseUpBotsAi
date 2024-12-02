@@ -70,11 +70,16 @@ TEMPLATES = [
     },
 ]
 
+import environ
 import os
 import dj_database_url
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Initialize environ
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 USE_SQLITE = env.bool('USE_SQLITE', default=False)  # Default is False to prioritize PostgreSQL
 if USE_SQLITE:
@@ -88,6 +93,7 @@ else:
     DATABASES = {
         'default': dj_database_url.config(default=env('DATABASE_URL'))
     }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
