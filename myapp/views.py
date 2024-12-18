@@ -756,7 +756,7 @@ logger = logging.getLogger(__name__)
 def sign_in(request):
     if request.user.is_authenticated:
         logger.debug(f"User {request.user.username} tried to access the login page while already logged in.")
-        return redirect('dynamic_chat', ai_name=get_first_ai(request.user))
+        return redirect_to_user_ai(request.user)
 
     if request.method == 'POST':
         form = SignInForm(request.POST)
@@ -780,8 +780,7 @@ def sign_in(request):
                             logger.info(f"Account reactivated for user: {user.username}")
                             messages.info(request, 'Your account has been reactivated.')
                         login(request, user)  # Log in after reactivation
-                        logger.debug(f"Redirecting to course menu for reactivated user: {user.username}")
-                        messages.success(request, f'Welcome back, {user.username}!')
+                        logger.debug(f"Redirecting to user AI for reactivated user: {user.username}")
                         return redirect_to_user_ai(user)
                 except User.DoesNotExist:
                     user = None
@@ -795,7 +794,7 @@ def sign_in(request):
                     return redirect('password_change')
                 else:
                     login(request, user)
-                    logger.debug(f"Redirecting to course menu for user: {user.username}")
+                    logger.debug(f"Redirecting to user AI for user: {user.username}")
                     messages.success(request, f'Welcome back, {user.username}!')
                     return redirect_to_user_ai(user)
             else:
@@ -815,21 +814,37 @@ def redirect_to_user_ai(user):
     """
     access = UserCourseAccess.objects.filter(user=user, is_active=True).first()
     if access:
-        ai_name = settings.AI_PRODUCTS.get(access.product_id)
-        if ai_name:
-            return redirect('dynamic_chat', ai_name=ai_name)
-    # If no access or invalid AI, redirect to a fallback page
+        return redirect('dynamic_chat', product_id=access.product_id)
+    # If no access, redirect to a fallback page
     return redirect('coursemenu')
+
+
+def dynamic_chat(request, product_id):
+    """
+    Renders the chat page based on the product ID.
+    """
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    # Check if the user has access to the product ID
+    access = UserCourseAccess.objects.filter(user=request.user, product_id=product_id, is_active=True).first()
+    if access:
+        # Dynamically resolve the template name based on product ID
+        template_name = settings.AI_PRODUCTS.get(product_id)
+        if template_name:
+            return render(request, f'myapp/aibots/bots/{template_name}', {'user_name': request.user.first_name})
+    return JsonResponse({"status": "error", "message": "You do not have access to this AI."}, status=403)
 
 
 def get_first_ai(user):
     """
-    Returns the first AI chat name the user has access to, for redirecting authenticated users.
+    Returns the first product ID the user has access to.
     """
     access = UserCourseAccess.objects.filter(user=user, is_active=True).first()
     if access:
-        return settings.AI_PRODUCTS.get(access.product_id)
+        return access.product_id
     return None
+
 
 
 
@@ -2097,31 +2112,27 @@ import logging
 logger = logging.getLogger(__name__)
 
 @login_required
-def dynamic_chat(request, ai_name):
-    # Validate AI name and find product details
-    product_details = None
-    for pid, details in settings.AI_PRODUCTS.items():
-        if details["name"] == ai_name:
-            product_details = {"product_id": pid, "template": details["template"]}
-            break
-
-    if not product_details:
-        logger.error(f"Invalid AI name: {ai_name}")
-        return JsonResponse({"status": "error", "message": "Invalid AI name."}, status=404)
+def dynamic_chat(request, product_id):
+    # Validate product ID and get corresponding template
+    template = settings.AI_PRODUCTS.get(product_id)
+    if not template:
+        logger.error(f"Invalid product ID: {product_id}")
+        return JsonResponse({"status": "error", "message": "Invalid product ID."}, status=404)
 
     # Check if the user has access to the requested AI
     access = UserCourseAccess.objects.filter(
         user=request.user,
-        product_id=product_details["product_id"],
+        product_id=product_id,
         is_active=True
     ).first()
 
     if access:
-        # Render the correct template
-        return render(request, f'myapp/aibots/bots/{product_details["template"]}', {'user_name': request.user.first_name})
+        # Render the appropriate chat template
+        return render(request, f'myapp/aibots/bots/{template}', {'user_name': request.user.first_name})
     else:
-        logger.warning(f"Access denied for user {request.user.email} to AI {ai_name}")
-        return JsonResponse({"status": "error", "message": f"You do not have access to {ai_name.capitalize()} AI."}, status=403)
+        logger.warning(f"Access denied for user {request.user.email} to product ID {product_id}")
+        return JsonResponse({"status": "error", "message": "You do not have access to this AI."}, status=403)
+
 
 
 

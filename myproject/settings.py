@@ -187,9 +187,9 @@ SQUARE_ACCESS_TOKEN = env('SQUARE_ACCESS_TOKEN')
 
 
 AI_PRODUCTS = {
-    "414255": {"name": "ezra", "template": "inspire_chat.html"},
-    "414233": {"name": "rudy", "template": "pulse_chat.html"},
-    "414195": {"name": "aria", "template": "soulspark_chat.html"},
-    "414223": {"name": "echo", "template": "echo_chat.html"},
-    "414260": {"name": "gideon", "template": "gideon_chat.html"},
+    "414255": "inspire_chat.html",      # Ezra AI
+    "414233": "pulse_chat.html",      # Rudy AI
+    "414195": "soulspark_chat.html",      # Aria AI
+    "414223": "echo_chat.html",      # Echo AI
+    "414260": "gideon_chat.html",    # Gideon AI
 }
