@@ -2087,27 +2087,42 @@ def pathfinder_chat(request):
     user_name = request.user.first_name if request.user.is_authenticated else None
     return render(request, 'myapp/aibots/bots/pathfinder_chat.html', {'user_name': user_name})
 
-
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from .models import UserCourseAccess
+import logging
 
+logger = logging.getLogger(__name__)
+
+@login_required
 def dynamic_chat(request, ai_name):
-    if not request.user.is_authenticated:
-        return redirect('login')  # Redirect unauthenticated users to login
+    # Validate AI name and find product details
+    product_details = None
+    for pid, details in settings.AI_PRODUCTS.items():
+        if details["name"] == ai_name:
+            product_details = {"product_id": pid, "template": details["template"]}
+            break
 
-    # Find the product ID for the requested AI
-    product_id = [pid for pid, name in settings.AI_PRODUCTS.items() if name == ai_name]
-    if not product_id:
+    if not product_details:
+        logger.error(f"Invalid AI name: {ai_name}")
         return JsonResponse({"status": "error", "message": "Invalid AI name."}, status=404)
 
     # Check if the user has access to the requested AI
-    access = UserCourseAccess.objects.filter(user=request.user, product_id=product_id[0], is_active=True).first()
+    access = UserCourseAccess.objects.filter(
+        user=request.user,
+        product_id=product_details["product_id"],
+        is_active=True
+    ).first()
+
     if access:
-        return render(request, f'myapp/aibots/bots/{ai_name}_chat.html', {'user_name': request.user.first_name})
+        # Render the correct template
+        return render(request, f'myapp/aibots/bots/{product_details["template"]}', {'user_name': request.user.first_name})
     else:
+        logger.warning(f"Access denied for user {request.user.email} to AI {ai_name}")
         return JsonResponse({"status": "error", "message": f"You do not have access to {ai_name.capitalize()} AI."}, status=403)
+
 
 
 from django.shortcuts import render
@@ -2213,25 +2228,44 @@ from django.utils.crypto import get_random_string
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .utils import send_ezra_welcome_email  # Ensure this is correctly imported
-
-from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
-from django.shortcuts import render
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 
 def manual_account_activation(request):
     if request.method == "POST":
         email = request.POST.get('email')
+        product_id = request.POST.get('product_id', 'default_product_id')  # Retrieve product_id if passed
+
+        # Check if the user exists
         if not User.objects.filter(email=email).exists():
+            # Generate a random password
             temp_password = get_random_string(10)
+
+            # Create the user
             user = User.objects.create_user(username=email, email=email, password=temp_password)
-            # Send Email with temp password
-            send_ezra_welcome_email(user_email=email, random_password=temp_password)
-            return JsonResponse({"success": True, "message": f"Account activated! Check your email: {email}"})
+
+            # Associate the product ID (if applicable)
+            # Assuming you have a model for associating the user with the product
+            UserCourseAccess.objects.create(
+                user=user,
+                selected_plan="lifetime",
+                is_active=True,
+                has_paid=True,
+                product_id=product_id
+            )
+
+            # Send the welcome email
+            send_welcomepassword_email(user_email=email, random_password=temp_password)
+
+            return JsonResponse({"success": True, "message": "Account created and email sent!"})
+
         else:
             return JsonResponse({"success": False, "message": "Account already exists. Please log in."})
-    return JsonResponse({"success": False, "message": "Invalid request."})
+    else:
+        return JsonResponse({"success": False, "message": "Invalid request method."})
 
+ 
 
 
 from django.shortcuts import render, redirect

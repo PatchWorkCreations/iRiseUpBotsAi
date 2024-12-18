@@ -520,7 +520,7 @@ def send_ezra_welcome_email(user_email, random_password):
                     Please log in to update your password and unlock the full potential of Ezra AI, 
                     your personal success companion.
                 </p>
-                <a href="https://iriseup.ai/login" class="button">Log In Now</a>
+                <a href="https://www.iriseup.ai/sign_in" class="button">Log In Now</a>
                 <p>Best regards,<br><strong>The Ezra AI Team</strong></p>
             </div>
 
