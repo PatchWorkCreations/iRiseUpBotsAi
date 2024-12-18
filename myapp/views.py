@@ -419,20 +419,6 @@ def send_welcomepassword_email(user_email, random_password):
     email.send()
 
 
-from .utils import send_email_with_graph_api
-
-# Send a test email
-response = send_email_with_graph_api(
-    to_email="recipient@example.com",
-    subject="Test Email from Microsoft Graph",
-    body="<p>This is a test email sent using Microsoft Graph API.</p>",
-    is_html=True
-)
-
-if response["success"]:
-    print("Email sent successfully!")
-else:
-    print(f"Error sending email: {response['error']}")
 
 
 
@@ -2169,130 +2155,6 @@ def echo_thank_you(request):
 def gideon_thank_you(request):
     return render(request, 'myapp/aibots/landingpage/thankyou/gideon.html')
 
-import json
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
-from django.utils.crypto import get_random_string
-from django.core.mail import EmailMultiAlternatives
-from .models import UserCourseAccess
-
-def send_ezra_welcome_email(user_email, random_password):
-    """
-    Sends a personalized welcome email with HTML design to new Ezra users.
-    """
-    subject = 'Welcome to Ezra AI – Your Personal Success Companion!'
-    from_email = 'iriseupgroupofcompanies@gmail.com'  # Update with your actual sender email
-    to_email = [user_email]
-
-    # Plain text fallback content
-    text_content = (
-        f"Hello {user_email},\n\n"
-        "Welcome to Ezra AI! Your personal success companion is ready to assist you.\n"
-        f"Here is your temporary password: {random_password}\n\n"
-        "Please log in to update your password and begin your journey to success.\n\n"
-        "Best regards,\n"
-        "The Ezra AI Team"
-    )
-
-    # HTML content
-    html_content = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Welcome to Ezra AI</title>
-        <style>
-            body {{
-                font-family: Arial, sans-serif;
-                color: #333;
-                line-height: 1.6;
-                background-color: #f4f4f4;
-                margin: 0;
-                padding: 0;
-            }}
-            .container {{
-                max-width: 600px;
-                margin: 20px auto;
-                background-color: #ffffff;
-                border-radius: 8px;
-                overflow: hidden;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            }}
-            .header {{
-                background-color: #4e73df;
-                color: #ffffff;
-                padding: 20px;
-                text-align: center;
-            }}
-            .content {{
-                padding: 30px 20px;
-                text-align: left;
-                background-color: #ffffff;
-            }}
-            .content p {{
-                font-size: 16px;
-                margin-bottom: 20px;
-            }}
-            .button {{
-                display: inline-block;
-                padding: 12px 25px;
-                color: #ffffff;
-                background-color: #4e73df;
-                text-decoration: none;
-                border-radius: 5px;
-                font-size: 16px;
-            }}
-            .button:hover {{
-                background-color: #375a7f;
-            }}
-            .footer {{
-                text-align: center;
-                padding: 15px;
-                background-color: #f4f4f4;
-                color: #888;
-                font-size: 12px;
-            }}
-            .footer a {{
-                color: #4e73df;
-                text-decoration: none;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <!-- Email Header -->
-            <div class="header">
-                <h1>Welcome to Ezra AI, {user_email}!</h1>
-            </div>
-
-            <!-- Email Content -->
-            <div class="content">
-                <p>Hello {user_email},</p>
-                <p>Your account has been successfully created. Below is your temporary password:</p>
-                <p><strong>Temporary Password:</strong> {random_password}</p>
-                <p>
-                    Please log in to update your password and unlock the full potential of Ezra AI, 
-                    your personal success companion.
-                </p>
-                <a href="https://iriseup.ai/login" class="button">Log In Now</a>
-                <p>Best regards,<br><strong>The Ezra AI Team</strong></p>
-            </div>
-
-            <!-- Email Footer -->
-            <div class="footer">
-                <p>Ezra AI | Columbus, Ohio, USA | <a href="https://iriseup.ai/unsubscribe">Unsubscribe</a></p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
-
-    # Create and send the email
-    email = EmailMultiAlternatives(subject, text_content, from_email, to_email)
-    email.attach_alternative(html_content, "text/html")
-    email.send()
-
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -2345,6 +2207,30 @@ def jvzoo_ipn(request):
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
     return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+
+from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from .utils import send_ezra_welcome_email  # Ensure this is correctly imported
+
+from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
+from django.shortcuts import render
+from django.http import JsonResponse
+
+def manual_account_activation(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        if not User.objects.filter(email=email).exists():
+            temp_password = get_random_string(10)
+            user = User.objects.create_user(username=email, email=email, password=temp_password)
+            # Send Email with temp password
+            send_ezra_welcome_email(user_email=email, random_password=temp_password)
+            return JsonResponse({"success": True, "message": f"Account activated! Check your email: {email}"})
+        else:
+            return JsonResponse({"success": False, "message": "Account already exists. Please log in."})
+    return JsonResponse({"success": False, "message": "Invalid request."})
 
 
 
@@ -3123,3 +3009,29 @@ def change_plan(request):
     }
 
     return render(request, 'myapp/aibots/settings/change_plan.html', context)
+
+
+from django.conf import settings
+from django.core.mail import send_mail
+from django.http import JsonResponse
+import logging
+
+logger = logging.getLogger(__name__)
+
+def test_email_view(request):
+    try:
+        logger.info(f"Using EMAIL_HOST_USER: {settings.EMAIL_HOST_USER}")
+        logger.info(f"Using EMAIL_HOST_PASSWORD: {settings.EMAIL_HOST_PASSWORD}")
+
+        send_mail(
+            'Test Email',
+            'Testing email with current settings.',
+            settings.EMAIL_HOST_USER,
+            ['juliavcitorio16@gmail.com'],  # Replace with a real recipient email
+            fail_silently=False,
+        )
+        return JsonResponse({"success": True, "message": "Test email sent successfully."})
+    except Exception as e:
+        logger.error(f"Error sending test email: {e}")
+        return JsonResponse({"success": False, "message": str(e)})
+

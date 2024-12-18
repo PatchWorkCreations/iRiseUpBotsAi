@@ -178,4 +178,7 @@ urlpatterns = [
 
 
     path('chat/<str:ai_name>/', views.dynamic_chat, name='dynamic_chat'),
+     path('manual-account-activation/', views.manual_account_activation, name='manual_account_activation'),
+   path('send-test-email/', views.test_email_view, name='send_test_email'),
+
 ] 

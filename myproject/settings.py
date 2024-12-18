@@ -155,17 +155,31 @@ LOGGING = {
    
 import os
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Use SMTP backend
-EMAIL_HOST = 'smtp.gmail.com'  # Gmail SMTP Server
-EMAIL_PORT = 587  # TLS Port
-EMAIL_USE_TLS = True  # Gmail requires TLS
+import os
+import environ
 
-# Your Gmail credentials
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'iriseupgroupofcompanies@gmail.com')  # Replace with your Gmail address
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Use App Password if 2FA is enabled
+# Initialize django-environ
+env = environ.Env()
 
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL',"iRiseUp AI Team <iriseupgroupofcompanies@gmail.com>")
+# Load environment variables from .env file (if exists)
+environ.Env.read_env()
 
+# Function to fetch environment variables with fallback to os.getenv
+def get_env(var_name, default=None):
+    """
+    Fetch environment variable using django-environ first,
+    then fallback to os.getenv if not found.
+    """
+    return env(var_name, default=os.getenv(var_name, default))
+
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = get_env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = int(get_env('EMAIL_PORT', default=587))
+EMAIL_USE_TLS = get_env('EMAIL_USE_TLS', default=True) in [True, 'True', 'true', 1, '1']
+EMAIL_HOST_USER = get_env('EMAIL_HOST_USER', default='iriseupgroupofcompanies@gmail.com')
+EMAIL_HOST_PASSWORD = get_env('EMAIL_HOST_PASSWORD')  # App password
+DEFAULT_FROM_EMAIL = get_env('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
 
 # Third-party API keys
 OPENAI_API_KEY = env('OPENAI_API_KEY')

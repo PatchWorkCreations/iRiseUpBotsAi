@@ -410,3 +410,130 @@ def send_failure_email(user_email, error_message):
     email = EmailMultiAlternatives(subject, text_content, from_email, to_email)
     email.attach_alternative(html_content, "text/html")
     email.send()
+
+
+
+
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
+from django.core.mail import EmailMultiAlternatives
+from .models import UserCourseAccess
+
+def send_ezra_welcome_email(user_email, random_password):
+    """
+    Sends a personalized welcome email with HTML design to new Ezra users.
+    """
+    subject = 'Welcome to Ezra AI – Your Personal Success Companion!'
+    from_email = 'iriseupgroupofcompanies@gmail.com'  # Update with your actual sender email
+    to_email = [user_email]
+
+    # Plain text fallback content
+    text_content = (
+        f"Hello {user_email},\n\n"
+        "Welcome to Ezra AI! Your personal success companion is ready to assist you.\n"
+        f"Here is your temporary password: {random_password}\n\n"
+        "Please log in to update your password and begin your journey to success.\n\n"
+        "Best regards,\n"
+        "The Ezra AI Team"
+    )
+
+    # HTML content
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Welcome to Ezra AI</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                color: #333;
+                line-height: 1.6;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 20px auto;
+                background-color: #ffffff;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }}
+            .header {{
+                background-color: #4e73df;
+                color: #ffffff;
+                padding: 20px;
+                text-align: center;
+            }}
+            .content {{
+                padding: 30px 20px;
+                text-align: left;
+                background-color: #ffffff;
+            }}
+            .content p {{
+                font-size: 16px;
+                margin-bottom: 20px;
+            }}
+            .button {{
+                display: inline-block;
+                padding: 12px 25px;
+                color: #ffffff;
+                background-color: #4e73df;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 16px;
+            }}
+            .button:hover {{
+                background-color: #375a7f;
+            }}
+            .footer {{
+                text-align: center;
+                padding: 15px;
+                background-color: #f4f4f4;
+                color: #888;
+                font-size: 12px;
+            }}
+            .footer a {{
+                color: #4e73df;
+                text-decoration: none;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!-- Email Header -->
+            <div class="header">
+                <h1>Welcome to Ezra AI, {user_email}!</h1>
+            </div>
+
+            <!-- Email Content -->
+            <div class="content">
+                <p>Hello {user_email},</p>
+                <p>Your account has been successfully created. Below is your temporary password:</p>
+                <p><strong>Temporary Password:</strong> {random_password}</p>
+                <p>
+                    Please log in to update your password and unlock the full potential of Ezra AI, 
+                    your personal success companion.
+                </p>
+                <a href="https://iriseup.ai/login" class="button">Log In Now</a>
+                <p>Best regards,<br><strong>The Ezra AI Team</strong></p>
+            </div>
+
+            <!-- Email Footer -->
+            <div class="footer">
+                <p>Ezra AI | Columbus, Ohio, USA | <a href="https://iriseup.ai/unsubscribe">Unsubscribe</a></p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    # Create and send the email
+    email = EmailMultiAlternatives(subject, text_content, from_email, to_email)
+    email.attach_alternative(html_content, "text/html")
+    email.send()
