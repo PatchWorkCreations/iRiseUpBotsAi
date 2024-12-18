@@ -847,7 +847,6 @@ def get_first_ai(user):
 
 
 
-
 def sign_out(request):
     logout(request)  # This logs the user out
     return redirect('sign_in')  # Redirect to the sign-in page after logging out
@@ -2246,7 +2245,7 @@ from django.http import JsonResponse
 def manual_account_activation(request):
     if request.method == "POST":
         email = request.POST.get('email')
-        product_id = request.POST.get('product_id', 'default_product_id')  # Retrieve product_id if passed
+        product_id = request.POST.get('product_id')  # Retrieve product_id if passed
 
         # Check if the user exists
         if not User.objects.filter(email=email).exists():
