@@ -153,22 +153,25 @@ LOGGING = {
 
 # Email settings
    
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Use SMTP backend
-EMAIL_HOST = 'smtp.office365.com'  # Default to Outlook SMTP
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587').strip().split()[0])  # Extract valid integer
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 'yes')  # Convert to boolean
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')  # Must be provided in the environment
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')  # Must be provided in the environment
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'hello@iriseupacademy.com')  # Provide a default sender email
-
 import os
 
-EMAIL_CLIENT_ID = os.getenv("EMAIL_CLIENT_ID")
-EMAIL_CLIENT_SECRET = os.getenv("EMAIL_CLIENT_SECRET")
-EMAIL_TENANT_ID = os.getenv("EMAIL_TENANT_ID")
-EMAIL_ENDPOINT = os.getenv("EMAIL_ENDPOINT")
-DEFAULT_FROM_EMAIL = "hello@iriseupacademy.com"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Use SMTP backend
+EMAIL_HOST = 'smtp.gmail.com'  # Gmail SMTP Server
+EMAIL_PORT = 587  # TLS Port
+EMAIL_USE_TLS = True  # Gmail requires TLS
+
+# Your Gmail credentials
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'iriseupgroupofcompanies@gmail.com')  # Replace with your Gmail address
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Use App Password if 2FA is enabled
+
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL',"iRiseUp AI Team <iriseupgroupofcompanies@gmail.com>")
+
 
 # Third-party API keys
 OPENAI_API_KEY = env('OPENAI_API_KEY')
 SQUARE_ACCESS_TOKEN = env('SQUARE_ACCESS_TOKEN')
+
+
+AI_PRODUCTS = {
+    "414255": "ezra",      # Ezra Ai
+}

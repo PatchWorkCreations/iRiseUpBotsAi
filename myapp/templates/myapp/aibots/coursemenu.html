@@ -573,7 +573,12 @@
             </div>
         </div>
           
-
+        <!-- Check if Access is Expired -->
+        {% if is_expired %}
+        <div class="alert alert-warning">
+            Your access has expired. Please renew your subscription to continue using the AI Bots.
+        </div>
+        {% else %}
         <!-- AI Bots Selection Section -->
         <!-- AI Bots Section -->
         <div class="ai-boxes">

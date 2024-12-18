@@ -203,14 +203,14 @@ from datetime import timedelta
 class UserCourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     selected_plan = models.CharField(
-    max_length=20,
-    choices=[('1-week', '1-week'), ('4-week', '4-week'), ('12-week', '12-week'), ('lifetime', 'lifetime')],
-    default='1-week'  # Set a default value here
-)
-
+        max_length=20,
+        choices=[('1-week', '1-week'), ('4-week', '4-week'), ('12-week', '12-week'), ('lifetime', 'lifetime')],
+        default='1-week'
+    )
     expiration_date = models.DateTimeField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)  # Track if the user's course access is active
-    has_paid = models.BooleanField(default=False)  # Track if the user has paid for the plan
+    is_active = models.BooleanField(default=True)
+    has_paid = models.BooleanField(default=False)
+    product_id = models.CharField(max_length=20, null=True, blank=True)  # AI Product ID
 
     # Constants for the different plans
     PLAN_DURATIONS = {

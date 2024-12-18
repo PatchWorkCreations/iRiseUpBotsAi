@@ -1,0 +1,341 @@
+{% extends 'myapp/aibots/landingpage/base.html' %}
+{% load static %}
+{% block title %}Echo Page{% endblock %}
+
+{% block content %}
+{% block header %}
+{% load static %}
+
+<header class="header-05">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="logo-1">
+                    <a href="#"><img src="{% static 'assets/images/logo6.png' %}" alt="Echo Logo"></a>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <nav class="menu_1">
+                    <div class="menuButton">
+                        <a href="#"><i class="fal fa-bars"></i></a>
+                    </div>
+                    <ul>
+                        <li class="current-menu-item menu-item-has-children">
+                            <a href="#">Home</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#portfolio">What Echo Can Do</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#testimony">Success Stories</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#pricing">Get Started</a>
+                        </li>
+                    </ul>
+                    <div class="head-nav">
+                        <a class="shapro-btn-5" href="#pricing"><span>Start Creating with Echo!</span></a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+<section class="banner-05" style="background-image: url({% static 'assets/images/home5/banner.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="b5-shape tw-stretch-element-inside-column animated">
+                    <img src="{% static 'assets/images/home5/banner-shape.png' %}" alt="Echo Shape">
+                </div>
+                <div class="banner-content-5 text-center">
+                    <h2 class="animated">
+                        Meet Echo!
+                        <img src="{% static 'assets/images/home5/title-shape.png' %}" alt="Title Shape">
+                    </h2>
+                    <p class="animated">
+                        Ideas. Inspiration. Creation. Simplified.<br>
+                        Your Personal AI for Bringing Big Ideas to Life.
+                    </p>
+                </div>
+                <div class="b5-layer-thumb animated">
+                    <img src="{% static 'assets/images/home5/layer.png' %}" alt="Layer">
+                    <img class="layer-left" src="{% static 'assets/images/home5/layer2.png' %}" alt="Layer Left">
+                    <img class="layer-right" src="{% static 'assets/images/home5/layer3.png' %}" alt="Layer Right">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="portfolio" class="mobile-app-sec">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 offset-lg-2">
+                <h2 class="sec-title">
+                    What’s Your Big Idea? Let’s Make It Happen.
+                </h2>
+                <p class="sec-desc">
+                    Whether it’s writing a book, composing a song, inventing a recipe, or brainstorming a product—Echo brings your ideas to life, step by step.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="order-booking-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="booking-area">
+                    <div class="booking-feature-item">
+                        <h5>Brainstorm Big Ideas</h5>
+                        <p>Stuck at the starting point? Echo generates and refines ideas—whether it’s for products, books, or music.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-2">
+                        <h5>Create Stunning Content</h5>
+                        <p>From books and lyrics to recipes and designs—Echo guides you to create with confidence.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-3">
+                        <h5>Perfect and Refine</h5>
+                        <p>Get actionable feedback to improve your projects and take them to the next level.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <h2 class="sec-title">
+                    Let’s Turn Your Vision Into Reality
+                </h2>
+                <p class="sec-desc">
+                    With Echo by your side, creating becomes simple, inspiring, and fun. Let’s get started!
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Start Creating Now!</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonial Section Start -->
+<section id="testimony" class="testimonial-section-3" style="background-image: url({% static 'assets/images/home5/4.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="testimonial-slider-three owl-carousel">
+                    <!-- Testimonial 1 -->
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user1.png' %}" alt="User Feedback 1">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Jess<span>Aspiring Author</span></h5>
+                            <p>
+                                “Echo helped me outline my novel in one afternoon. I went from zero ideas to a complete plot that I’m excited to write!”
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user2.png' %}" alt="User Feedback 2">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Alex<span>Podcaster</span></h5>
+                            <p>
+                                “I wanted to create a song for my podcast intro, and Echo composed a melody that fit perfectly. It saved me hours!”
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Testimonial 3 -->
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user3.png' %}" alt="User Feedback 3">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Sarah<span>Entrepreneur</span></h5>
+                            <p>
+                                “My product idea felt vague until Echo helped me brainstorm features and refine the design. Now I’m launching my first prototype!”
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Testimonial 4 -->
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user4.png' %}" alt="User Feedback 4">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Carlos<span>Food Blogger</span></h5>
+                            <p>
+                                “As a chef, I use Echo for recipe inspiration. It’s like having a creative sous-chef who never runs out of ideas!”
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Testimonial Section End -->
+
+
+<!-- About Section Start -->
+<section class="about-section-6">
+    <div class="container">
+        <div class="row">
+            <!-- Left Column: Content -->
+            <div class="col-lg-6 col-md-6">
+                <h2 class="sec-title">
+                    Meet Echo: Your Personal Creativity AI
+                </h2>
+                <p class="sec-desc">
+                    Echo turns your ideas into reality with simple, inspiring tools for brainstorming, designing, and creating—whether it’s a product, book, recipe, or song.
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Start Creating with Echo</span></a>
+            </div>
+            <!-- Right Column: Image -->
+            <div class="col-lg-6 col-md-6">
+                <div class="ab-thumb-6">
+                    <img src="{% static 'assets/images/home5/6.png' %}" alt="Echo AI Assistant">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- About Section End -->
+<!-- Pricing Section Start -->
+<section id="pricing" class="pricing-section-5" style="padding-bottom: 20px;">
+    <div class="container">
+        <div class="row">
+            <!-- Plan 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p1.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>44 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Brainstorm & Create</span>
+                    <h3>Echo Starter</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>Idea Brainstorming</li>
+                        <li><i class="fas fa-check"></i>Content Outlining</li>
+                        <li><i class="fas fa-check"></i>Recipe & Song Creation</li>
+                        <li><i class="fas fa-check"></i>Basic Design Support</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#"><span>Get Started</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Plan 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p2.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>34 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Advanced Creativity Tools</span>
+                    <h3>Echo Pro</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>All Starter Features</li>
+                        <li><i class="fas fa-check"></i>Product Design Refinement</li>
+                        <li><i class="fas fa-check"></i>Advanced Story Outlining</li>
+                        <li><i class="fas fa-check"></i>Melody & Lyric Suggestions</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#"><span>Subscribe Now</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Plan 3 -->
+            <div class="col-lg-4 offset-lg-0 col-md-6 offset-md-3">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p3.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>54 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Complete Creative Suite</span>
+                    <h3>Echo Enterprise</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>All Pro Features</li>
+                        <li><i class="fas fa-check"></i>Project Collaboration Tools</li>
+                        <li><i class="fas fa-check"></i>Visual Design Prototypes</li>
+                        <li><i class="fas fa-check"></i>Dedicated Creative Coaching</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#"><span>Subscribe Now</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Pricing Section End -->
+
+
+{% block footer %}
+<footer class="footer-5">
+    <div class="footer-shape">
+        <div class="sf-left">
+            <img src="{% static 'assets/images/home5/f-shape-left.png' %}" alt="Left Shape">
+        </div>
+        <div class="sf-right">
+            <img src="{% static 'assets/images/home5/f-shape-right.png' %}" alt="Right Shape">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1">
+                <aside class="widget">
+                    <div class="about-widget-two text-center">
+                        <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo7.png' %}" alt="Echo Logo"></a>
+                        <h2>Stay Inspired with Echo’s Creative Insights</h2>
+                    </div>
+                </aside>
+                <aside class="widget">
+                    <form action="#" method="post">
+                        <div class="mc4wp-form-fields">
+                            <input type="email" name="EMAIL" placeholder="Enter Your Email for Creative Tips">
+                            <button type="submit" value="Sign up"><i class="far fa-arrow-right"></i></button>
+                        </div>
+                    </form>
+                </aside>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Contact Us -->
+            <div class="col-lg-4 col-md-6">
+                <aside class="widget contact-widget">
+                    <h3 class="widget-title">Contact Us</h3>
+                    <div class="contact-info">
+                        <p>Echo AI Creative Support</p>
+                        <p>support@echoai.com</p>
+                        <p>+1 (800) 456-7890</p>
+                    </div>
+                </aside>
+            </div>
+            <!-- About Us -->
+            <div class="col-lg-4 col-md-6 borders">
+                <aside class="widget">
+                    <div class="about-widget">
+                        <h3 class="widget-title">About Echo AI</h3>
+                        <p>
+                            Echo is your personal AI assistant for unlocking creativity, brainstorming big ideas, and turning inspiration into tangible results—one step at a time.
+                        </p>
+                        <div class="ab-social">
+                            <a class="fac" href="https://www.facebook.com/profile.php?id=61562534103108"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+        <!-- Copyright Start -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="copyright text-center">
+                    <p>Copyright © {{ year }} <a href="#">Echo AI</a> - All Rights Reserved. Built with care by the Echo AI Team.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+    </div>
+</footer>
+
+{% endblock %}
+{% endblock %}

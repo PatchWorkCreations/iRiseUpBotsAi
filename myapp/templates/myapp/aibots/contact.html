@@ -1,0 +1,128 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% load static %}
+
+{% block title %}Contact Us - iRiseUp.AI{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    /* General Styling */
+    .contact-us-container {
+        max-width: 800px;
+        margin: 30px auto;
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-us-header {
+        background-color: #1F3A93;
+        color: #ffffff;
+        padding: 1rem;
+    }
+
+    .contact-us-header h1 {
+        font-size: 1.5rem;
+        margin: 0;
+        color: #f4f6f9;
+    }
+
+    .contact-us-back-btn {
+        color: #ffffff;
+        font-size: 1.2rem;
+        text-decoration: none;
+    }
+
+    /* Form Styling */
+    .form-group label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-control,
+    .form-control-file {
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        background-color: #1F3A93;
+        border-color: #1F3A93;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #162d6e;
+        border-color: #162d6e;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #5a6268;
+    }
+</style>
+
+{% include 'myapp/aibots/header.html' %}
+<div class="contact-us-container mt-5">
+    <h2 class="text-center mt-4">Submit a Request</h2>
+    
+    <form method="post" enctype="multipart/form-data" class="contact-us-form mt-4">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="requester">Name</label>
+            <input type="text" class="form-control" id="requester" name="requester" placeholder="Your Name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" class="form-control" id="subject" name="subject" placeholder="Brief Subject" required>
+        </div>
+
+        <div class="form-group">
+            <label for="query_type">Query Type</label>
+            <select class="form-control" id="query_type" name="query_type" required>
+                <option value="">Choose...</option>
+                {% for key, value in form.query_type.field.choices %}
+                    <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="6" placeholder="Describe your issue" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="attachment">Attachment</label>
+            <input type="file" class="form-control-file" id="attachment" name="attachment">
+            <p class="small text-muted mt-2">You can attach relevant documents or screenshots (optional).</p>
+        </div>
+
+        <div class="form-group text-center mt-4">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="{% url 'coursemenu' %}" class="btn btn-secondary ml-2">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock %}

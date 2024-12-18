@@ -1,0 +1,334 @@
+{% extends 'myapp/aibots/landingpage/base.html' %}
+{% load static %}
+{% block title %}Rudy Page{% endblock %}
+
+{% block content %}
+{% block header %}
+{% load static %}
+
+<header class="header-05">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Logo Section -->
+            <div class="col-lg-3">
+                <div class="logo-1">
+                    <a href="#">
+                        <img src="{% static 'assets/images/logo6.png' %}" alt="Logo">
+                    </a>
+                </div>
+            </div>
+            <!-- Navigation Section -->
+            <div class="col-lg-9">
+                <nav class="menu_1">
+                    <div class="menuButton">
+                        <a href="#">
+                            <i class="fal fa-bars"></i>
+                        </a>
+                    </div>
+                    <ul>
+                        <li class="current-menu-item menu-item-has-children">
+                            <a href="#">Home</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#portfolio">What’s Next?</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#testimony">Success Stories</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#pricing">Contact</a>
+                        </li>
+                    </ul>
+                    <div class="head-nav">
+                        <a class="shapro-btn-5" href="#pricing">
+                            <span>Let’s Get Started</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+{% endblock %}
+<section class="banner-05" style="background-image: url({% static 'assets/images/home5/banner.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="b5-shape tw-stretch-element-inside-column animated">
+                    <img src="{% static 'assets/images/home5/banner-shape.png' %}" alt="Rudy Shape">
+                </div>
+                <div class="banner-content-5">
+                    <h2 class="animated">
+                        Meet Rudy
+                        <img src="{% static 'assets/images/home5/title-shape.png' %}" alt="Title Shape">
+                    </h2>
+                    <p class="animated">
+                        Your Fun, Friendly Health & Wellness Sidekick
+                    </p>
+                </div>
+                <div class="b5-layer-thumb animated">
+                    <img src="{% static 'assets/images/home5/layer.png' %}" alt="Layer">
+                    <img class="layer-left" src="{% static 'assets/images/home5/layer2.png' %}" alt="Layer Left">
+                    <img class="layer-right" src="{% static 'assets/images/home5/layer3.png' %}" alt="Layer Right">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>  
+
+<section id="portfolio" class="mobile-app-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <h2 class="sec-title">
+                    Ready to Feel Better, Move More, and Stress Less? 🎉
+                </h2>
+                <p class="sec-desc">
+                    Meet Rudy—your fun, friendly AI wellness sidekick that makes getting healthier simple, stress-free, and (dare we say) fun.
+                </p>
+                <p class="sec-desc">
+                    “Here’s what we’ll do together: Set easy, achievable goals, celebrate your progress, and turn your ‘I should do this’ into ‘I did it!’ moments.”
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Let’s Get Started!</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="order-booking-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="booking-area">
+                    <img src="{% static 'assets/images/home5/1.png' %}" alt="Rudy Feature Image">
+                    <div class="booking-feature-item">
+                        <i class="shapro-innovation"></i>
+                        <h5>The “Wake Up Feeling AMAZING” </h5>
+                        <p>Rudy optimizes your sleep routine, gently nudges you to unplug, and helps you wake up refreshed like a superhero after an epic nap.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-2">
+                        <i class="shapro-box"></i>
+                        <h5>The “Goals? Crushed It.” </h5>
+                        <p>Rudy helps you build and track small, realistic goals—without guilt or overwhelm—so you feel proud of every win.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-3">
+                        <i class="shapro-shooting"></i>
+                        <h5>The “Goodbye Stress, Hello Sanity” </h5>
+                        <p>Rudy introduces simple mindfulness tools like breathing exercises and journaling, so you handle stress with calm clarity.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <h2 class="sec-title">
+                    Why Wait? Let Rudy Help You Become Your Best Self.
+                </h2>
+                <p class="sec-desc">
+                    Rudy isn’t just another app—it’s your personal wellness coach who simplifies the path to feeling incredible.
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Let’s Do This—Meet Rudy Today!</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="about-section-6">
+    <div class="container">
+        <div class="row">
+            <!-- Left Column: Content -->
+            <div class="col-lg-6 col-md-6">
+                <h2 class="sec-title">
+                    Meet Rudy: Your Fun, Friendly Health & Wellness Sidekick
+                </h2>
+                <p class="sec-desc">
+                    Tired of feeling tired? Rudy makes getting fit, stress-free, and well-rested simple—and fun. From better sleep to hitting your goals, Rudy’s here to guide you every step of the way.
+                </p>
+                <a class="shapro-btn-5" href="#pricing"<span>Let’s Do This—Meet Rudy Today!</span></a>
+            </div>
+            <!-- Right Column: Image -->
+            <div class="col-lg-6 col-md-6">
+                <div class="ab-thumb-6">
+                    <img src="{% static 'assets/images/home5/6.png' %}" alt="Rudy AI Assistant">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Testimonial Section Start -->
+<section id="testimony" class="testimonial-section-3" style="background-image: url({% static 'assets/images/home5/4.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="testimonial-slider-three owl-carousel">
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user1.png' %}" alt="User Feedback 1">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Alex<span>New Runner</span></h5>
+                            <p>“Rudy made getting active so easy and fun. I’m waking up energized and proud of every step I take!”</p>
+                        </div>
+                    </div>
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user2.png' %}" alt="User Feedback 2">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Jessie<span>Busy Parent</span></h5>
+                            <p>“Thanks to Rudy, I’m sleeping better, moving more, and feeling less stressed. It’s like having a personal cheerleader!”</p>
+                        </div>
+                    </div>
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user3.png' %}" alt="User Feedback 3">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Jordan<span>Wellness Enthusiast</span></h5>
+                            <p>“Rudy turned my health goals into something achievable. I’m finally looking forward to taking care of myself!”</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="pricing" class="pricing-section-5" style="padding-bottom: 20px;">
+    <div class="container">
+        <div class="row">
+            <!-- Plan 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p1.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>44 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Clarity & Productivity Essentials</span>
+                    <h3>Ezra Starter</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>Personalized Task Management</li>
+                        <li><i class="fas fa-check"></i>Daily Productivity Insights</li>
+                        <li><i class="fas fa-check"></i>AI Scheduling Assistant</li>
+                        <li><i class="fas fa-check"></i>24/7 Support</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#pricing"<span>Get Started</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Plan 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p2.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>34 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Advanced Coaching & Tools</span>
+                    <h3>Ezra Pro</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>All Starter Features</li>
+                        <li><i class="fas fa-check"></i>Project Planning Tools</li>
+                        <li><i class="fas fa-check"></i>Custom Business Insights</li>
+                        <li><i class="fas fa-check"></i>Advanced Integrations</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#pricing"<span>Subscribe Now</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Plan 3 -->
+            <div class="col-lg-4 offset-lg-0 col-md-6 offset-md-3">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p3.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>54 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Full Business Suite</span>
+                    <h3>Ezra Enterprise</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>All Pro Features</li>
+                        <li><i class="fas fa-check"></i>Team Collaboration Tools</li>
+                        <li><i class="fas fa-check"></i>Dedicated AI Support</li>
+                        <li><i class="fas fa-check"></i>Comprehensive Data Analytics</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#pricing"<span>Subscribe Now</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Testimonial Section End -->
+
+{% block footer %}
+{% load static %}
+<footer class="footer-5">
+    <div class="footer-shape">
+        <div class="sf-left">
+            <img src="{% static 'assets/images/home5/f-shape-left.png' %}" alt="Left Shape">
+        </div>
+        <div class="sf-right">
+            <img src="{% static 'assets/images/home5/f-shape-right.png' %}" alt="Right Shape">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1">
+                <aside class="widget">
+                    <div class="about-widget-two text-center">
+                        <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo7.png' %}" alt="Rudy Logo"></a>
+                        <h2>Stay Inspired with Rudy Wellness Tips</h2>
+                    </div>
+                </aside>
+                <aside class="widget">
+                    <form action="#" method="post">
+                        <div class="mc4wp-form-fields">
+                            <input type="email" name="EMAIL" placeholder="Enter Your Email for Wellness Updates">
+                            <button type="submit" value="Sign up"><i class="far fa-arrow-right"></i></button>
+                        </div>
+                    </form>
+                </aside>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Contact Us -->
+            <div class="col-lg-4 col-md-6">
+                <aside class="widget contact-widget">
+                    <h3 class="widget-title">Contact Us</h3>
+                    <div class="contact-info">
+                        <p>Rudy Wellness Support</p>
+                        <p>support@rudywellness.com</p>
+                        <p>+1 (800) 987-6543</p>
+                    </div>
+                </aside>
+            </div>
+            <!-- About Us -->
+            <div class="col-lg-4 col-md-6 borders">
+                <aside class="widget">
+                    <div class="about-widget">
+                        <h3 class="widget-title">About Rudy</h3>
+                        <p>
+                            Rudy is your friendly wellness sidekick, here to make fitness, stress relief, and better sleep simple and achievable—one step at a time.
+                        </p>
+                        <div class="ab-social">
+                            <a class="fac" href="https://www.facebook.com/profile.php?id=61562534103108"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+        <!-- Copyright Start -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="copyright text-center">
+                    <p>Copyright © {{ year }} <a href="#">Rudy Wellness</a> - All Rights Reserved. Powered by the Rudy Team.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+    </div>
+</footer>
+
+{% endblock %}
+{% endblock %}

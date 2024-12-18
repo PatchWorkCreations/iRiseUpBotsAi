@@ -1,0 +1,331 @@
+{% extends 'myapp/aibots/landingpage/base.html' %}
+{% load static %}
+{% block title %}Gideon Page{% endblock %}
+
+{% block content %}
+{% block header %}
+{% load static %}
+
+<header class="header-05">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="logo-1">
+                    <a href="#"><img src="{% static 'assets/images/logo6.png' %}" alt="Logo"></a>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <nav class="menu_1">
+                    <div class="menuButton">
+                        <a href="#"><i class="fal fa-bars"></i></a>
+                    </div>
+                    <ul>
+                        <li class="current-menu-item menu-item-has-children">
+                            <a href="#">Home</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#portfolio">How It Works</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#testimony">Success Stories</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#pricing">Get Started</a>
+                        </li>
+                    </ul>
+                    <div class="head-nav">
+                        <a class="shapro-btn-5" href="#pricing"><span>Let’s Grow Together!</span></a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+{% endblock %}
+<section class="banner-05" style="background-image: url({% static 'assets/images/home5/banner.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="b5-shape tw-stretch-element-inside-column animated">
+                    <img src="{% static 'assets/images/home5/banner-shape.png' %}" alt="Gideon Shape">
+                </div>
+                <div class="banner-content-5">
+                    <h2 class="animated">
+                        Meet Gideon
+                        <img src="{% static 'assets/images/home5/title-shape.png' %}" alt="Title Shape">
+                    </h2>
+                    <p class="animated">
+                        Your Small Business Superpower<br> Smart Insights. Simple Steps. Bigger Results.
+                    </p>
+                </div>
+                <div class="b5-layer-thumb animated">
+                    <img src="{% static 'assets/images/home5/layer.png' %}" alt="Layer">
+                    <img class="layer-left" src="{% static 'assets/images/home5/layer2.png' %}" alt="Layer Left">
+                    <img class="layer-right" src="{% static 'assets/images/home5/layer3.png' %}" alt="Layer Right">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="portfolio" class="mobile-app-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <h2 class="sec-title">
+                    Running a Small Business Can Be Tough—But It Doesn’t Have to Be.
+                </h2>
+                <p class="sec-desc">
+                    From tracking sales to improving cash flow and planning growth strategies, Gideon simplifies the work, so you can focus on what you do best.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="order-booking-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="booking-area">
+                    <img src="{% static 'assets/images/home5/1.png' %}" alt="Gideon Feature Image">
+                    <div class="booking-feature-item">
+                        <i class="shapro-innovation"></i>
+                        <h5>Track Your Business Performance</h5>
+                        <p>See clear, actionable insights on your revenue, expenses, and sales—no spreadsheets needed.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-2">
+                        <i class="shapro-box"></i>
+                        <h5>Boost Cash Flow and Profits</h5>
+                        <p>Manage cash flow, cut unnecessary expenses, and maximize profits with Gideon’s smart suggestions.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-3">
+                        <i class="shapro-shooting"></i>
+                        <h5>Optimize Inventory</h5>
+                        <p>Never overstock or run out—Gideon predicts demand and keeps inventory streamlined for your needs.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <h2 class="sec-title">
+                    Make Smarter Business Decisions with Gideon
+                </h2>
+                <p class="sec-desc">
+                    Get simple, actionable insights to grow smarter, save time, and stress less. Let’s make running your small business easier, together.
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Let’s Grow Together!</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonial Section Start -->
+<section id="testimony" class="testimonial-section-3" style="background-image: url({% static 'assets/images/home5/4.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="testimonial-slider-three owl-carousel">
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user1.png' %}" alt="User Feedback 1">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Samantha<span>Boutique Owner</span></h5>
+                            <p>
+                                “Gideon shows me exactly where to focus. My sales are up 20% this year!”
+                            </p>
+                        </div>
+                    </div>
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user2.png' %}" alt="User Feedback 2">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>David<span>Retail Business Owner</span></h5>
+                            <p>
+                                “Gideon’s inventory insights saved me thousands in unnecessary costs!”
+                            </p>
+                        </div>
+                    </div>
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user3.png' %}" alt="User Feedback 3">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Maria<span>Café Owner</span></h5>
+                            <p>
+                                “Managing my cash flow is finally stress-free, thanks to Gideon.”
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Testimonial Section End -->
+<!-- About Section Start -->
+<section class="about-section-6">
+    <div class="container">
+        <div class="row">
+            <!-- Left Column: Content -->
+            <div class="col-lg-6 col-md-6">
+                <h2 class="sec-title">
+                    Meet Gideon: Your Small Business Superpower
+                </h2>
+                <p class="sec-desc">
+                    Gideon simplifies business performance tracking, cash flow management, and inventory optimization so you can focus on growing your business with confidence.
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Let’s Grow Together!</span></a>
+            </div>
+            <!-- Right Column: Image -->
+            <div class="col-lg-6 col-md-6">
+                <div class="ab-thumb-6">
+                    <img src="{% static 'assets/images/home5/6.png' %}" alt="Gideon AI Assistant">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- About Section End -->
+
+<!-- Pricing Section Start -->
+<section id="pricing" class="pricing-section-5" style="padding-bottom: 20px;">
+    <div class="container">
+        <div class="row">
+            <!-- Plan 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p1.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>44 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Performance Essentials</span>
+                    <h3>Gideon Starter</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>Visual Business Performance Reports</li>
+                        <li><i class="fas fa-check"></i>Expense Tracking Made Simple</li>
+                        <li><i class="fas fa-check"></i>Cash Flow Insights</li>
+                        <li><i class="fas fa-check"></i>24/7 Business Support</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#"><span>Get Started</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Plan 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p2.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>34 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Advanced Growth Tools</span>
+                    <h3>Gideon Pro</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>All Starter Features</li>
+                        <li><i class="fas fa-check"></i>Inventory Optimization</li>
+                        <li><i class="fas fa-check"></i>Customer Trend Analysis</li>
+                        <li><i class="fas fa-check"></i>Growth Opportunity Insights</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#"><span>Subscribe Now</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Plan 3 -->
+            <div class="col-lg-4 offset-lg-0 col-md-6 offset-md-3">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p3.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>54 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Complete Business Suite</span>
+                    <h3>Gideon Enterprise</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>All Pro Features</li>
+                        <li><i class="fas fa-check"></i>Advanced Cash Flow Forecasting</li>
+                        <li><i class="fas fa-check"></i>Competitor Insights</li>
+                        <li><i class="fas fa-check"></i>Dedicated Business AI Support</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#"><span>Subscribe Now</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Pricing Section End -->
+
+{% block footer %}
+ <!-- Footer Section Start -->
+<footer class="footer-5">
+    <div class="footer-shape">
+        <div class="sf-left">
+            <img src="{% static 'assets/images/home5/f-shape-left.png' %}" alt="Left Shape">
+        </div>
+        <div class="sf-right">
+            <img src="{% static 'assets/images/home5/f-shape-right.png' %}" alt="Right Shape">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1">
+                <aside class="widget">
+                    <div class="about-widget-two text-center">
+                        <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo7.png' %}" alt="Gideon Logo"></a>
+                        <h2>Grow Smarter with Gideon Insights</h2>
+                    </div>
+                </aside>
+                <aside class="widget">
+                    <form action="#" method="post">
+                        <div class="mc4wp-form-fields">
+                            <input type="email" name="EMAIL" placeholder="Enter Your Email for Business Tips">
+                            <button type="submit" value="Sign up"><i class="far fa-arrow-right"></i></button>
+                        </div>
+                    </form>
+                </aside>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Contact Us -->
+            <div class="col-lg-4 col-md-6">
+                <aside class="widget contact-widget">
+                    <h3 class="widget-title">Contact Us</h3>
+                    <div class="contact-info">
+                        <p>Gideon Business Support</p>
+                        <p>support@gideonai.com</p>
+                        <p>+1 (800) 987-6543</p>
+                    </div>
+                </aside>
+            </div>
+            <!-- About Us -->
+            <div class="col-lg-4 col-md-6 borders">
+                <aside class="widget">
+                    <div class="about-widget">
+                        <h3 class="widget-title">About Gideon</h3>
+                        <p>
+                            Gideon is your AI-powered business partner, providing insights, strategies, and tools to help small businesses grow smarter and faster.
+                        </p>
+                        <div class="ab-social">
+                            <a class="fac" href="https://www.facebook.com/GideonAI"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+        <!-- Copyright Start -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="copyright text-center">
+                    <p>Copyright © {{ year }} <a href="#">Gideon AI</a> - All Rights Reserved. Empowering Small Businesses to Thrive.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+    </div>
+</footer>
+<!-- Footer Section End -->
+
+{% endblock %}
+
+{% endblock %}

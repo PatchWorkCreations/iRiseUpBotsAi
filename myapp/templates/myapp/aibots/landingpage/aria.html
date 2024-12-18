@@ -1,0 +1,311 @@
+{% extends 'myapp/aibots/landingpage/base.html' %}
+{% load static %}
+{% block title %}Aria Page{% endblock %}
+
+{% block content %}
+{% block header %}
+{% load static %}
+
+<header class="header-05">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Logo Section -->
+            <div class="col-lg-3">
+                <div class="logo-1">
+                    <a href="#">
+                        <img src="{% static 'assets/images/logo6.png' %}" alt="Logo">
+                    </a>
+                </div>
+            </div>
+            <!-- Navigation Section -->
+            <div class="col-lg-9">
+                <nav class="menu_1">
+                    <div class="menuButton">
+                        <a href="#">
+                            <i class="fal fa-bars"></i>
+                        </a>
+                    </div>
+                    <ul>
+                        <li class="current-menu-item menu-item-has-children">
+                            <a href="#">Home</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#portfolio">What’s Next?</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#testimony">Success Stories</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#pricing">Contact</a>
+                        </li>
+                    </ul>
+                    <div class="head-nav">
+                        <a class="shapro-btn-5" href="#pricing">
+                            <span>Start Your Journey</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+<section class="banner-05" style="background-image: url({% static 'assets/images/home5/banner.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="b5-shape tw-stretch-element-inside-column animated">
+                    <img src="{% static 'assets/images/home5/banner-shape.png' %}" alt="Aria Shape">
+                </div>
+                <div class="banner-content-5">
+                    <h2 class="animated">
+                        Meet Aria
+                        <img src="{% static 'assets/images/home5/title-shape.png' %}" alt="Title Shape">
+                    </h2>
+                    <p class="animated">
+                        Your Personal Emotional Support Companion
+                    </p>
+                </div>
+                <div class="b5-layer-thumb animated">
+                    <img src="{% static 'assets/images/home5/layer.png' %}" alt="Layer">
+                    <img class="layer-left" src="{% static 'assets/images/home5/layer2.png' %}" alt="Layer Left">
+                    <img class="layer-right" src="{% static 'assets/images/home5/layer3.png' %}" alt="Layer Right">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>  
+
+<section id="portfolio" class="mobile-app-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <h2 class="sec-title">
+                    Feeling Overwhelmed? Stressed? Lonely?
+                </h2>
+                <p class="sec-desc">
+                    Meet Aria—your safe, supportive space for stress relief, self-care, and finding balance. You don’t have to do it alone anymore.
+                </p>
+                <p class="sec-desc">
+                    “Think of me as your calm voice in a noisy world. I’ll listen, guide, and celebrate every small step you take toward feeling better.”
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Start Your Journey with Aria</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="order-booking-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="booking-area">
+                    <img src="{% static 'assets/images/home5/1.png' %}" alt="Aria Feature Image">
+                    <div class="booking-feature-item">
+                        <i class="shapro-innovation"></i>
+                        <h5>Real-Time Stress Relief</h5>
+                        <p>Feeling overwhelmed? Aria guides you through proven techniques like breathing exercises and mindfulness to bring instant calm.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-2">
+                        <i class="shapro-box"></i>
+                        <h5>Safe, Empathetic Conversations</h5>
+                        <p>Share how you’re feeling—no judgment, no pressure. Aria listens, encourages, and supports you through it all.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-3">
+                        <i class="shapro-shooting"></i>
+                        <h5>Track Your Emotions & Build Insights</h5>
+                        <p>Understand your triggers and patterns. Aria helps you reflect, offering small changes that make big differences.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <h2 class="sec-title">
+                    A Support System You Can Trust
+                </h2>
+                <p class="sec-desc">
+                    Aria is here to listen, encourage, and help you feel more balanced—one step at a time. You deserve peace of mind, and Aria can help.
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Let’s Get Started</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonial Section Start -->
+<section id="testimony" class="testimonial-section-3" style="background-image: url({% static 'assets/images/home5/4.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="testimonial-slider-three owl-carousel">
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user1.png' %}" alt="User Feedback 1">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Alex<span>Overwhelmed Professional</span></h5>
+                            <p>“Aria gave me space to breathe and tools to cope. I feel calmer and more in control of my emotions.”</p>
+                        </div>
+                    </div>
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user2.png' %}" alt="User Feedback 2">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Jess<span>Busy Mom</span></h5>
+                            <p>“Life was chaos before Aria. Now I have moments of peace that help me be there for my family.”</p>
+                        </div>
+                    </div>
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user3.png' %}" alt="User Feedback 3">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Jordan<span>Student</span></h5>
+                            <p>“I didn’t realize how much I needed Aria until I started feeling better every day.”</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Testimonial Section End -->
+
+<section id="pricing" class="pricing-section-5" style="padding-bottom: 20px;">
+    <div class="container">
+        <div class="row">
+            <!-- Plan 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p1.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>14 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Essential Emotional Support</span>
+                    <h3>Aria Starter</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>Guided Breathing Exercises</li>
+                        <li><i class="fas fa-check"></i>Daily Affirmations & Check-ins</li>
+                        <li><i class="fas fa-check"></i>Safe, Empathetic Conversations</li>
+                        <li><i class="fas fa-check"></i>Basic Mood Tracking</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#pricing"><span>Get Started</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Plan 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p2.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>24 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Advanced Support & Insights</span>
+                    <h3>Aria Pro</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>All Starter Features</li>
+                        <li><i class="fas fa-check"></i>Advanced Mood & Stress Insights</li>
+                        <li><i class="fas fa-check"></i>Personalized Relaxation Routines</li>
+                        <li><i class="fas fa-check"></i>Weekly Progress Reports</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#pricing"><span>Subscribe Now</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Plan 3 -->
+            <div class="col-lg-4 offset-lg-0 col-md-6 offset-md-3">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p3.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>34 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Comprehensive Wellbeing Suite</span>
+                    <h3>Aria Premium</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>All Pro Features</li>
+                        <li><i class="fas fa-check"></i>One-on-One Guided Support</li>
+                        <li><i class="fas fa-check"></i>Custom Emotional Wellness Plans</li>
+                        <li><i class="fas fa-check"></i>24/7 Priority Check-ins</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#pricing"><span>Subscribe Now</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% block footer %}
+{% load static %}
+<footer class="footer-5">
+    <div class="footer-shape">
+        <div class="sf-left">
+            <img src="{% static 'assets/images/home5/f-shape-left.png' %}" alt="Left Shape">
+        </div>
+        <div class="sf-right">
+            <img src="{% static 'assets/images/home5/f-shape-right.png' %}" alt="Right Shape">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1">
+                <aside class="widget">
+                    <div class="about-widget-two text-center">
+                        <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo7.png' %}" alt="Aria Logo"></a>
+                        <h2>Find Calm & Balance with Aria</h2>
+                        <p>Your daily companion for emotional support, self-care, and personal growth.</p>
+                    </div>
+                </aside>
+                <aside class="widget">
+                    <form action="#" method="post">
+                        <div class="mc4wp-form-fields">
+                            <input type="email" name="EMAIL" placeholder="Enter Your Email for Supportive Insights">
+                            <button type="submit" value="Sign up"><i class="far fa-arrow-right"></i></button>
+                        </div>
+                    </form>
+                </aside>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Contact Us -->
+            <div class="col-lg-4 col-md-6">
+                <aside class="widget contact-widget">
+                    <h3 class="widget-title">Contact Us</h3>
+                    <div class="contact-info">
+                        <p>Aria Support Team</p>
+                        <p>support@ariawellness.com</p>
+                        <p>+1 (800) 456-7890</p>
+                    </div>
+                </aside>
+            </div>
+            <!-- About Aria -->
+            <div class="col-lg-4 col-md-6 borders">
+                <aside class="widget">
+                    <div class="about-widget">
+                        <h3 class="widget-title">About Aria</h3>
+                        <p>
+                            Aria is your personal emotional support companion, designed to help you manage stress, build positive habits, and find calm—one moment at a time.
+                        </p>
+                        <div class="ab-social">
+                            <a class="fac" href="https://www.facebook.com/ariawellness"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+        <!-- Copyright Start -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="copyright text-center">
+                    <p>Copyright © {{ year }} <a href="#">Aria Wellness</a> - All Rights Reserved. Powered by the Aria Team.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+    </div>
+</footer>
+
+{% endblock %}
+{% endblock %}

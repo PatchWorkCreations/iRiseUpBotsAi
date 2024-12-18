@@ -10,7 +10,7 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('blog-classic/', views.blogclassic, name='blogclassic'),
     path('blog/', views.blog, name='blog'),
-    path('contact/', views.contact, name='contact'),
+    
     path('faq/', views.faq, name='faq'),
 
     path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
@@ -141,6 +141,7 @@ urlpatterns = [
     path('about_amigo/', views.about_amigo, name='about_amigo'),
     path('feedback/', views.feedback, name='feedback'),
     path('contact_us/', views.contact_us, name='contact_us'),
+    path('contact-us/', views.contactus, name='contactus'),
     path('delete_deactivate/', views.delete_deactivate, name='delete_deactivate'),
     path('deactivate_account/', views.deactivate_account, name='deactivate_account'),
     path('delete_account/', views.delete_account, name='delete_account'),
@@ -156,4 +157,25 @@ urlpatterns = [
 
     path('set-selected-plan/', views.set_selected_plan, name='set_selected_plan'),
     path('change_plan/', views.change_plan, name='change_plan'),
+
+
+
+    path('ezra/', views.ezra_view, name='ezra'),
+    path('rudy/', views.rudy_view, name='rudy'),
+    path('aria/', views.aria_view, name='aria'),
+    path('einstein/', views.einstein_view, name='einstein'),
+    path('kash/', views.kash_view, name='kash'),
+    path('echo/', views.echo_view, name='echo'),
+    path('gideon/', views.gideon_view, name='gideon'),
+
+    path('thankyou-ezra/', views.ezra_thank_you, name='thankyou-ezra'),
+    path('thankyou-rudy/', views.rudy_thank_you, name='thankyou-rudy'),
+    path('thankyou-aria/', views.aria_thank_you, name='thankyou-aria'),
+    path('thankyou-einstein/', views.einstein_thank_you, name='thankyou-einstein'),
+    path('thankyou-kash/', views.kash_thank_you, name='thankyou-kash'),
+    path('thankyou-echo/', views.echo_thank_you, name='thankyou-echo'),
+    path('thankyou-gideon/', views.gideon_thank_you, name='thankyou-gideon'),
+
+
+    path('chat/<str:ai_name>/', views.dynamic_chat, name='dynamic_chat'),
 ] 

@@ -1,0 +1,331 @@
+{% extends 'myapp/aibots/landingpage/base.html' %}
+{% load static %}
+{% block title %}Kash Page{% endblock %}
+
+{% block content %}
+{% block header %}
+<header class="header-05">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Logo Section -->
+            <div class="col-lg-3">
+                <div class="logo-1">
+                    <a href="#">
+                        <img src="{% static 'assets/images/logo6.png' %}" alt="Logo">
+                    </a>
+                </div>
+            </div>
+            <!-- Navigation Section -->
+            <div class="col-lg-9">
+                <nav class="menu_1">
+                    <div class="menuButton">
+                        <a href="#"><i class="fal fa-bars"></i></a>
+                    </div>
+                    <ul>
+                        <li class="current-menu-item menu-item-has-children">
+                            <a href="#">Home</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#portfolio">What’s Next?</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#testimony">Success Stories</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#pricing">Contact</a>
+                        </li>
+                    </ul>
+                    <div class="head-nav">
+                        <a class="shapro-btn-5" href="#pricing">
+                            <span>Let’s Get Started</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+<!-- Hero Section -->
+<section class="banner-05" style="background-image: url({% static 'assets/images/home5/banner.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="banner-content-5">
+                    <h2 class="animated">
+                        Meet Kash
+                        <img src="{% static 'assets/images/home5/title-shape.png' %}" alt="Title Shape">
+                    </h2>
+                    <p class="animated">
+                        Your Go-To AI Assistant for Making Life Simple, Fun, and Hassle-Free
+                    </p>
+                </div>
+            </div>
+            <div class="b5-layer-thumb animated">
+                <img src="{% static 'assets/images/home5/layer.png' %}" alt="Layer">
+                <img class="layer-left" src="{% static 'assets/images/home5/layer2.png' %}" alt="Layer Left">
+                <img class="layer-right" src="{% static 'assets/images/home5/layer3.png' %}" alt="Layer Right">
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+
+<!-- What’s Next Section -->
+<section id="portfolio" class="mobile-app-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <h2 class="sec-title">Tired of Tech Stress and Confusion?</h2>
+                <p class="sec-desc">
+                    Whether it’s setting up a new gadget, fixing a tech issue, or creating your dream website—Kash makes everything clear, simple, and fun.
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Start Exploring with Me!</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Key Features Section -->
+<section class="order-booking-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="booking-area">
+                    <img src="{% static 'assets/images/home5/1.png' %}" alt="Kash Feature Image">
+                    <div class="booking-feature-item">
+                        <h5>Master Your Gadgets</h5>
+                        <p>New phone? Tablet? Kash guides you through features step-by-step—no stress, no confusion.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-2">
+                        <h5>Fix Problems Without the Frustration</h5>
+                        <p>Wi-Fi issues? App trouble? Kash troubleshoots calmly and quickly.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-3">
+                        <h5>Create Stunning Websites</h5>
+                        <p>From brainstorming to building, Kash simplifies creating content and beautiful websites—no coding needed.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <h2 class="sec-title">Say Goodbye to Tech Overwhelm</h2>
+                <p class="sec-desc">
+                    Kash turns frustration into solutions and ideas into achievements—one simple step at a time.
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Let’s Get Started!</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Success Stories Section -->
+<section id="testimony" class="testimonial-section-3" style="background-image: url({% static 'assets/images/home5/4.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="testimonial-slider-three owl-carousel">
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user1.png' %}" alt="User Feedback 1">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Jess<span>New Phone Owner</span></h5>
+                            <p>“Kash made me feel like a tech expert—now I actually know how to use my phone!”</p>
+                        </div>
+                    </div>
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user2.png' %}" alt="User Feedback 2">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Mark<span>Small Business Owner</span></h5>
+                            <p>“Building a website seemed impossible until Kash guided me step by step. It’s live and looks fantastic!”</p>
+                        </div>
+                    </div>
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user3.png' %}" alt="User Feedback 3">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Clara<span>Busy Professional</span></h5>
+                            <p>“I used to stress over every tech issue. Now Kash solves everything in minutes!”</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section Start -->
+<section class="about-section-6">
+    <div class="container">
+        <div class="row">
+            <!-- Left Column: Content -->
+            <div class="col-lg-6 col-md-6">
+                <h2 class="sec-title">
+                    Meet Kash: Your AI Assistant for Simple, Stress-Free Living
+                </h2>
+                <p class="sec-desc">
+                    Kash makes figuring out gadgets, troubleshooting issues, and creating content a breeze—so you can spend less time stressed and more time enjoying what you love.
+                </p>
+                <a class="shapro-btn-5" href="#"><span>Start Exploring with Kash</span></a>
+            </div>
+            <!-- Right Column: Image -->
+            <div class="col-lg-6 col-md-6">
+                <div class="ab-thumb-6">
+                    <img src="{% static 'assets/images/home5/6.png' %}" alt="Kash AI Assistant">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- About Section End -->
+
+<!-- Pricing Section Start -->
+<section id="pricing" class="pricing-section-5" style="padding-bottom: 20px;">
+    <div class="container">
+        <div class="row">
+            <!-- Plan 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p1.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>19 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Gadget Master Starter</span>
+                    <h3>Kash Basics</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>Step-by-Step Gadget Setup</li>
+                        <li><i class="fas fa-check"></i>Tech Troubleshooting Support</li>
+                        <li><i class="fas fa-check"></i>Quick Feature Tutorials</li>
+                        <li><i class="fas fa-check"></i>24/7 Tech Assistance</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#"><span>Get Started</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Plan 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p2.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>29 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">Content & Website Assistant</span>
+                    <h3>Kash Pro</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>All Starter Features</li>
+                        <li><i class="fas fa-check"></i>Content Brainstorming Tools</li>
+                        <li><i class="fas fa-check"></i>Website Design Guidance</li>
+                        <li><i class="fas fa-check"></i>Step-by-Step Customization</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#"><span>Subscribe Now</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Plan 3 -->
+            <div class="col-lg-4 offset-lg-0 col-md-6 offset-md-3">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p3.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>49 <sup>.99</sup><p>/mo</p>
+                    </div>
+                    <span class="p-sub">All-in-One AI Solution</span>
+                    <h3>Kash Ultimate</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>All Pro Features</li>
+                        <li><i class="fas fa-check"></i>Full Website Creation Support</li>
+                        <li><i class="fas fa-check"></i>Advanced Troubleshooting</li>
+                        <li><i class="fas fa-check"></i>Priority 24/7 Support</li>
+                    </ul>
+                    <div class="text-center">
+                        <a class="shapro-btn-5" href="#"><span>Subscribe Now</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Pricing Section End -->
+
+
+{% block footer %}
+<!-- Footer Section Start -->
+
+{% load static %}
+
+<footer class="footer-5">
+    <div class="footer-shape">
+        <div class="sf-left">
+            <img src="{% static 'assets/images/home5/f-shape-left.png' %}" alt="Left Shape">
+        </div>
+        <div class="sf-right">
+            <img src="{% static 'assets/images/home5/f-shape-right.png' %}" alt="Right Shape">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1">
+                <aside class="widget">
+                    <div class="about-widget-two text-center">
+                        <a href="{% url 'index' %}">
+                            <img src="{% static 'assets/images/logo7.png' %}" alt="Kash Logo">
+                        </a>
+                        <h2>Stay Updated with Kash Insights</h2>
+                    </div>
+                </aside>
+                <aside class="widget">
+                    <form action="#" method="post">
+                        <div class="mc4wp-form-fields">
+                            <input type="email" name="EMAIL" placeholder="Enter Your Email for Tips and Updates">
+                            <button type="submit" value="Sign up"><i class="far fa-arrow-right"></i></button>
+                        </div>
+                    </form>
+                </aside>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Contact Us -->
+            <div class="col-lg-4 col-md-6">
+                <aside class="widget contact-widget">
+                    <h3 class="widget-title">Contact Us</h3>
+                    <div class="contact-info">
+                        <p>Kash AI Support</p>
+                        <p>support@kashai.com</p>
+                        <p>+1 (800) 987-6543</p>
+                    </div>
+                </aside>
+            </div>
+            <!-- About Us -->
+            <div class="col-lg-4 col-md-6 borders">
+                <aside class="widget">
+                    <div class="about-widget">
+                        <h3 class="widget-title">About Kash</h3>
+                        <p>
+                            Kash is your go-to AI assistant for solving tech stress, mastering gadgets, creating content, and simplifying life one step at a time.
+                        </p>
+                        <div class="ab-social">
+                            <a class="fac" href="https://www.facebook.com/profile.php?id=61562534103108">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+        <!-- Copyright Start -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="copyright text-center">
+                    <p>Copyright © {{ year }} <a href="#">Kash AI</a> - All Rights Reserved. Built with care by the Kash AI Team.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+    </div>
+</footer>
+<!-- Footer Section End -->
+{% endblock %}
+
+{% endblock %}

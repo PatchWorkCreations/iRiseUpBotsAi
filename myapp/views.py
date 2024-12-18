@@ -61,8 +61,7 @@ def blogclassic(request):
 def blog(request):
     return render(request, 'myapp/blog.html')
 
-def contact(request):
-    return render(request, 'myapp/contact.html')
+
 
 def faq(request):
     return render(request, 'myapp/faq.html')
@@ -761,6 +760,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .forms import SignInForm
+from .models import UserCourseAccess
+from django.conf import settings
 import logging
 from django.contrib.auth.models import User
 
@@ -769,8 +770,8 @@ logger = logging.getLogger(__name__)
 def sign_in(request):
     if request.user.is_authenticated:
         logger.debug(f"User {request.user.username} tried to access the login page while already logged in.")
-        return redirect('coursemenu')
-    
+        return redirect('dynamic_chat', ai_name=get_first_ai(request.user))
+
     if request.method == 'POST':
         form = SignInForm(request.POST)
 
@@ -795,7 +796,7 @@ def sign_in(request):
                         login(request, user)  # Log in after reactivation
                         logger.debug(f"Redirecting to course menu for reactivated user: {user.username}")
                         messages.success(request, f'Welcome back, {user.username}!')
-                        return redirect('coursemenu')
+                        return redirect_to_user_ai(user)
                 except User.DoesNotExist:
                     user = None
 
@@ -810,7 +811,7 @@ def sign_in(request):
                     login(request, user)
                     logger.debug(f"Redirecting to course menu for user: {user.username}")
                     messages.success(request, f'Welcome back, {user.username}!')
-                    return redirect('coursemenu')
+                    return redirect_to_user_ai(user)
             else:
                 logger.error(f"Authentication failed for identifier: {login_identifier}")
                 messages.error(request, 'Invalid username/email or password. Please try again.')
@@ -820,6 +821,29 @@ def sign_in(request):
         form = SignInForm()
 
     return render(request, 'myapp/quiz/sign_in.html', {'form': form})
+
+
+def redirect_to_user_ai(user):
+    """
+    Redirects the user to their respective AI chat based on the product ID.
+    """
+    access = UserCourseAccess.objects.filter(user=user, is_active=True).first()
+    if access:
+        ai_name = settings.AI_PRODUCTS.get(access.product_id)
+        if ai_name:
+            return redirect('dynamic_chat', ai_name=ai_name)
+    # If no access or invalid AI, redirect to a fallback page
+    return redirect('coursemenu')
+
+
+def get_first_ai(user):
+    """
+    Returns the first AI chat name the user has access to, for redirecting authenticated users.
+    """
+    access = UserCourseAccess.objects.filter(user=user, is_active=True).first()
+    if access:
+        return settings.AI_PRODUCTS.get(access.product_id)
+    return None
 
 
 
@@ -2077,7 +2101,253 @@ def pathfinder_chat(request):
     user_name = request.user.first_name if request.user.is_authenticated else None
     return render(request, 'myapp/aibots/bots/pathfinder_chat.html', {'user_name': user_name})
 
-# views.py
+
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.conf import settings
+from .models import UserCourseAccess
+
+def dynamic_chat(request, ai_name):
+    if not request.user.is_authenticated:
+        return redirect('login')  # Redirect unauthenticated users to login
+
+    # Find the product ID for the requested AI
+    product_id = [pid for pid, name in settings.AI_PRODUCTS.items() if name == ai_name]
+    if not product_id:
+        return JsonResponse({"status": "error", "message": "Invalid AI name."}, status=404)
+
+    # Check if the user has access to the requested AI
+    access = UserCourseAccess.objects.filter(user=request.user, product_id=product_id[0], is_active=True).first()
+    if access:
+        return render(request, f'myapp/aibots/bots/{ai_name}_chat.html', {'user_name': request.user.first_name})
+    else:
+        return JsonResponse({"status": "error", "message": f"You do not have access to {ai_name.capitalize()} AI."}, status=403)
+
+
+from django.shortcuts import render
+
+def ezra_view(request):
+    return render(request, 'myapp/aibots/landingpage/ezra.html')
+
+def rudy_view(request):
+    return render(request, 'myapp/aibots/landingpage/rudy.html')
+
+def aria_view(request):
+    return render(request, 'myapp/aibots/landingpage/aria.html')
+
+def einstein_view(request):
+    return render(request, 'myapp/aibots/landingpage/einstein.html')
+
+def kash_view(request):
+    return render(request, 'myapp/aibots/landingpage/kash.html')
+
+def echo_view(request):
+    return render(request, 'myapp/aibots/landingpage/echo.html')
+
+def gideon_view(request):
+    return render(request, 'myapp/aibots/landingpage/gideon.html')
+
+
+def ezra_thank_you(request):
+    return render(request, 'myapp/aibots/landingpage/thankyou/ezra.html')
+
+def rudy_thank_you(request):
+    return render(request, 'myapp/aibots/landingpage/thankyou/rudy.html')
+
+def aria_thank_you(request):
+    return render(request, 'myapp/aibots/landingpage/thankyou/aria.html')
+
+def einstein_thank_you(request):
+    return render(request, 'myapp/aibots/landingpage/thankyou/einstein.html')
+
+def kash_thank_you(request):
+    return render(request, 'myapp/aibots/landingpage/thankyou/kash.html')
+
+def echo_thank_you(request):
+    return render(request, 'myapp/aibots/landingpage/thankyou/echo.html')
+
+def gideon_thank_you(request):
+    return render(request, 'myapp/aibots/landingpage/thankyou/gideon.html')
+
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
+from django.core.mail import EmailMultiAlternatives
+from .models import UserCourseAccess
+
+def send_ezra_welcome_email(user_email, random_password):
+    """
+    Sends a personalized welcome email with HTML design to new Ezra users.
+    """
+    subject = 'Welcome to Ezra AI – Your Personal Success Companion!'
+    from_email = 'iriseupgroupofcompanies@gmail.com'  # Update with your actual sender email
+    to_email = [user_email]
+
+    # Plain text fallback content
+    text_content = (
+        f"Hello {user_email},\n\n"
+        "Welcome to Ezra AI! Your personal success companion is ready to assist you.\n"
+        f"Here is your temporary password: {random_password}\n\n"
+        "Please log in to update your password and begin your journey to success.\n\n"
+        "Best regards,\n"
+        "The Ezra AI Team"
+    )
+
+    # HTML content
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Welcome to Ezra AI</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                color: #333;
+                line-height: 1.6;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 20px auto;
+                background-color: #ffffff;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }}
+            .header {{
+                background-color: #4e73df;
+                color: #ffffff;
+                padding: 20px;
+                text-align: center;
+            }}
+            .content {{
+                padding: 30px 20px;
+                text-align: left;
+                background-color: #ffffff;
+            }}
+            .content p {{
+                font-size: 16px;
+                margin-bottom: 20px;
+            }}
+            .button {{
+                display: inline-block;
+                padding: 12px 25px;
+                color: #ffffff;
+                background-color: #4e73df;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 16px;
+            }}
+            .button:hover {{
+                background-color: #375a7f;
+            }}
+            .footer {{
+                text-align: center;
+                padding: 15px;
+                background-color: #f4f4f4;
+                color: #888;
+                font-size: 12px;
+            }}
+            .footer a {{
+                color: #4e73df;
+                text-decoration: none;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!-- Email Header -->
+            <div class="header">
+                <h1>Welcome to Ezra AI, {user_email}!</h1>
+            </div>
+
+            <!-- Email Content -->
+            <div class="content">
+                <p>Hello {user_email},</p>
+                <p>Your account has been successfully created. Below is your temporary password:</p>
+                <p><strong>Temporary Password:</strong> {random_password}</p>
+                <p>
+                    Please log in to update your password and unlock the full potential of Ezra AI, 
+                    your personal success companion.
+                </p>
+                <a href="https://iriseup.ai/login" class="button">Log In Now</a>
+                <p>Best regards,<br><strong>The Ezra AI Team</strong></p>
+            </div>
+
+            <!-- Email Footer -->
+            <div class="footer">
+                <p>Ezra AI | Columbus, Ohio, USA | <a href="https://iriseup.ai/unsubscribe">Unsubscribe</a></p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    # Create and send the email
+    email = EmailMultiAlternatives(subject, text_content, from_email, to_email)
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
+from .models import UserCourseAccess
+import json
+
+
+@csrf_exempt
+def jvzoo_ipn(request):
+    if request.method == "POST":
+        try:
+            # Parse incoming JVZoo data
+            data = json.loads(request.body.decode('utf-8'))
+            email = data.get('payer_email')
+            product_id = data.get('product_id')
+            payment_status = data.get('payment_status')  # Example field to validate payment
+
+            # Validate Payment
+            if payment_status != "Completed":
+                return JsonResponse({"status": "error", "message": "Payment not completed"}, status=400)
+
+            # Get product name from settings
+            ai_name = settings.AI_PRODUCTS.get(product_id)
+            if not ai_name:
+                return JsonResponse({"status": "error", "message": "Invalid product ID"}, status=400)
+
+            # Create user account if it doesn't exist
+            if not User.objects.filter(email=email).exists():
+                temp_password = get_random_string(10)
+                user = User.objects.create_user(username=email, email=email, password=temp_password)
+                user.save()
+
+                # Assign course access
+                UserCourseAccess.objects.create(
+                    user=user,
+                    selected_plan="lifetime",
+                    is_active=True,
+                    has_paid=True,
+                    product_id=product_id  # Store product ID dynamically
+                )
+
+                # Send HTML email with credentials
+                send_ezra_welcome_email(user_email=email, random_password=temp_password)
+                return JsonResponse({"status": "success", "message": f"User created for {ai_name} and email sent."}, status=200)
+
+            return JsonResponse({"status": "info", "message": "User already exists."}, status=200)
+
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+
+
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Subscriber  # Assuming you have a Subscriber model
@@ -2328,6 +2598,58 @@ def contact_us(request):
         form = SubmitRequestForm()
 
     return render(request, 'myapp/aibots/settings/contact_us.html', {'form': form})
+
+
+def contactus(request):
+    if request.method == 'POST':
+        form = SubmitRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Process the form data
+            requester = form.cleaned_data['requester']
+            subject = form.cleaned_data['subject']
+            query_type = form.cleaned_data['query_type']
+            description = form.cleaned_data['description']
+            attachment = form.cleaned_data.get('attachment')
+            email = form.cleaned_data['email']
+
+            # Prepare the email content
+            email_subject = f"{query_type}: {subject}"
+            html_message = render_to_string('myapp/quiz/support/submit_request_email.html', {
+                'requester': requester,
+                'subject': subject,
+                'query_type': query_type,
+                'description': description,
+                'email': email,
+            })
+            plain_message = strip_tags(html_message)
+            from_email = 'hello@iriseupacademy.com'  # Replace with your email
+            to = 'email'  # Send to yourself
+
+            # Send the email
+            send_mail(
+                email_subject,
+                plain_message,
+                from_email,
+                [to],  # Ensure to pass as a list
+                html_message=html_message,
+                fail_silently=False,
+            )
+
+            # Redirect to the success page and pass the data as context
+            return render(request, 'myapp/aibots/settings/submit_request_success.html', {
+                'requester': requester,
+                'subject': subject,
+                'query_type': query_type,
+                'description': description
+            })
+
+    else:
+        form = SubmitRequestForm()
+
+    return render(request, 'myapp/aibots/contact.html', {'form': form})
+
+
+
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
