@@ -1,5 +1,5 @@
 {% extends "myapp/aibots/bots/bot_base.html" %}
-{% block title %}Echo - Your Creative Inspiration{% endblock %}
+{% block title %}Imagine - Your Creative Inspiration{% endblock %}
 {% load static %}
 {% block content %}
 
@@ -8,7 +8,7 @@
         <button class="back-button" onclick="window.history.back()">
             ← <!-- Unicode arrow for simplicity -->
         </button>
-        <div class="header-title">Echo - Your Creative Inspiration 🎨</div>
+        <div class="header-title">Imagine - Your Creative Inspiration 🎨</div>
     </div>
     <div id="chatbox">
         <!-- Chat messages will appear here -->
@@ -101,8 +101,8 @@
 
     // Function to initiate the chat with the bot's greeting message
     function initiateBotMessage(userName) {
-    const botGreeting = `Hey, ${userName}! I’m Echo! 🎨 Ready to brainstorm and inspire creativity. Got any projects in mind?`;
-    addMessage('Echo', botGreeting);
+    const botGreeting = `Hey, ${userName}! I’m Imagine! 🎨 Ready to brainstorm and inspire creativity. Got any projects in mind?`;
+    addMessage('Imagine', botGreeting);
 }
 
     document.addEventListener('DOMContentLoaded', () => {
