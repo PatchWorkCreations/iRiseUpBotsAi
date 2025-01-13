@@ -160,12 +160,12 @@ urlpatterns = [
 
 
 
-    path('ezra/', views.ezra_view, name='ezra'),
-    path('rudy/', views.rudy_view, name='rudy'),
-    path('aria/', views.aria_view, name='aria'),
-    path('einstein/', views.einstein_view, name='einstein'),
-    path('kash/', views.kash_view, name='kash'),
-    path('echo/', views.echo_view, name='echo'),
+    path('elevate/', views.ezra_view, name='ezra'),
+    path('thrive/', views.rudy_view, name='rudy'),
+    path('lumos/', views.aria_view, name='aria'),
+    path('mentor-iq/', views.einstein_view, name='einstein'),
+    path('nexus/', views.kash_view, name='kash'),
+    path('imagine/', views.echo_view, name='echo'),
     path('gideon/', views.gideon_view, name='gideon'),
 
     path('thankyou-ezra/', views.ezra_thank_you, name='thankyou-ezra'),
