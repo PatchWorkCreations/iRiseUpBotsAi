@@ -169,12 +169,12 @@ urlpatterns = [
     path('gideon/', views.gideon_view, name='gideon'),
     path('keystone/', views.keystone_view, name='keystone'),
 
-    path('thankyou-ezra/', views.ezra_thank_you, name='thankyou-ezra'),
-    path('thankyou-rudy/', views.rudy_thank_you, name='thankyou-rudy'),
-    path('thankyou-aria/', views.aria_thank_you, name='thankyou-aria'),
-    path('thankyou-einstein/', views.einstein_thank_you, name='thankyou-einstein'),
-    path('thankyou-kash/', views.kash_thank_you, name='thankyou-kash'),
-    path('thankyou-echo/', views.echo_thank_you, name='thankyou-echo'),
+    path('thankyou-elevate/', views.ezra_thank_you, name='thankyou-ezra'),
+    path('thankyou-thrive/', views.rudy_thank_you, name='thankyou-rudy'),
+    path('thankyou-lumos/', views.aria_thank_you, name='thankyou-aria'),
+    path('thankyou-mentor-iq/', views.einstein_thank_you, name='thankyou-einstein'),
+    path('thankyou-nexus/', views.kash_thank_you, name='thankyou-kash'),
+    path('thankyou-imagine/', views.echo_thank_you, name='thankyou-echo'),
     path('thankyou-gideon/', views.gideon_thank_you, name='thankyou-gideon'),
     path('thankyou-keystone/', views.keystone_thank_you, name='thankyou-keystone'),
 
@@ -187,4 +187,7 @@ urlpatterns = [
     path('dashboard/lumos/', views.lumos_dashboard, name='lumos_dashboard'),
     path('dashboard/imagine/', views.imagine_dashboard, name='imagine_dashboard'),
     path('dashboard/gideon/', views.gideon_dashboard, name='gideon_dashboard'),
+    path('dashboard/mentor-iq/', views.mentor_iq_dashboard, name='mentor_iq_dashboard'),
+    path('dashboard/nexus/', views.nexus_dashboard, name='nexus_dashboard'),
+    path('dashboard/keystone/', views.keystone_dashboard, name='keystone_dashboard'),
 ] 
