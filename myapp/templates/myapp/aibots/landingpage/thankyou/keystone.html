@@ -1,0 +1,571 @@
+{% extends 'myapp/aibots/landingpage/base.html' %}
+{% load static %}
+{% block title %}Keystone Page{% endblock %}
+
+{% block content %}
+{% block header %}
+{% load static %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<style>
+    /* General Reset */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    line-height: 1.6;
+    background-color: #f8f9fc;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+h1, h2, h3 {
+    margin: 0 0 15px;
+}
+
+p {
+    margin: 0 0 20px;
+}
+
+/* Variables */
+:root {
+    --primary-color: #4e73df;
+    --secondary-color: #1cc88a;
+    --light-color: #f8f9fc;
+    --dark-color: #333;
+    --border-radius: 8px;
+}
+
+/* Next Steps Section */
+.servicepage-section {
+    padding: 60px 20px;
+    background-color: var(--light-color);
+    text-align: center;
+}
+
+.servicepage-section .sec-title {
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.servicepage-section ol {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    text-align: left;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.servicepage-section ol li {
+    margin: 10px 0;
+    font-size: 18px;
+    color: var(--dark-color);
+}
+
+.servicepage-section a {
+    display: inline-block;
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.servicepage-section a:hover {
+    background-color: var(--primary-color);
+}
+
+/* Motivational Quote Section */
+.rss-section {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: var(--light-color);
+    font-style: italic;
+}
+
+.rss-section blockquote {
+    font-size: 24px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.rss-section h2 {
+    color: whitesmoke;
+}
+
+
+.rss-section p {
+    font-size: 18px;
+    color: whitesmoke;
+}
+
+.rss-section a {
+    display: inline-block;
+    margin-top: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.rss-section a:hover {
+    background-color: var(--secondary-color);
+}
+
+
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+/* Service Section */
+.servicedetails-section {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    margin: 40px auto;
+    max-width: 900px;
+    animation: fadeInUp 1s ease-in-out;
+}
+
+.servicedetails-section .ser-title {
+    font-size: 32px;
+    color: #4e73df; /* Primary color */
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.servicedetails-section p {
+    font-size: 18px;
+    color: #555;
+    margin-top: 10px;
+    line-height: 1.8;
+}
+
+/* Hero Section */
+/* Hero Section */
+.client-section {
+    padding: 80px 20px;
+    background-size: cover;
+    background-position: center;
+    background-color: #f4f7fa; /* Light background for modern feel */
+    border-radius: 12px;
+}
+
+.client-section .sec-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c3e50; /* Dark gray-blue for a clean look */
+    margin-bottom: 20px;
+}
+
+.client-section .sec-desc {
+    font-size: 18px;
+    color: #555; /* Neutral dark gray */
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.client-section .hero-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.client-section .hero-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #555;
+}
+
+.client-section .hero-list li::before {
+    content: '✔';
+    font-size: 18px;
+    color: #1cc88a; /* Green checkmark */
+    margin-right: 10px;
+}
+
+.client-section .hero-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .client-section {
+        text-align: center;
+    }
+
+    .client-section .hero-image {
+        margin-top: 20px;
+    }
+}
+
+/* Button Hover Animation */
+.shapro-btn-1 {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    background: #1cc88a;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+    z-index: 2;
+    position: relative;
+}
+
+.shapro-btn-1:hover {
+    background: #17a673;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+</style>
+
+<header class="header-05">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="logo-1">
+                    <a href="#"><img src="{% static 'assets/images/logo6.png' %}" alt="Logo"></a>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <nav class="menu_1">
+                    <div class="menuButton">
+                        <a href="#"><i class="fal fa-bars"></i></a>
+                    </div>
+                    <ul>
+                        <li class="current-menu-item menu-item-has-children">
+                            <a href="#">Home</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#portfolio">Portfolio</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#testimony">Testimony</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#">Testimony</a>
+                        </li>
+                    </ul>
+                    <div class="head-nav">
+                        <a class="shapro-btn-5" href="#pricing"><span>Start My Journey</span></a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Banner Section Start -->
+<section class="page-banner" style="background-image: url(assets/images/banner.jpg);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="banner-title">You’re In! Welcome to the Keystone Family.</h2>
+                <p class="breadcrumbs"><a href="index.html">Home</a> - Thank You</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Banner Section End -->
+
+<!-- Modal Trigger (Hidden) -->
+<div class="modal fade" id="activationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="activationModalLabel">Activate Your Account</h5>
+            </div>
+            <div class="modal-body">
+                <form id="activationForm" method="POST">
+                    {% csrf_token %}
+                   
+                    <div class="mb-3">
+                        <input type="hidden" name="product_id" value="414303"> 
+                        <label for="email" class="form-label">Enter Your Email</label>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="your-email@example.com" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Activate Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Service Start -->
+<section class="servicedetails-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h3 class="ser-title">
+                    Your Journey to Professional and Personal Success Starts Now!
+                </h3>
+                <p>
+                    You did it! You took the first step toward clearer direction, smarter decisions, and a more organized, stress-free life. Keystone is ready to help you achieve your goals, one simple step at a time.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Service End -->
+
+<!-- Hero Section Start -->
+<!-- Hero Section Start -->
+<section class="client-section" style="background-image: url(assets/images/service/bg-2.jpg);">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left Text Section -->
+            <div class="col-lg-6 col-md-12">
+                <h2 class="sec-title">Hey there! I’m Keystone, your personal success companion.</h2>
+                <p class="sec-desc">
+                    I’ll be by your side to:
+                </p>
+                <ul class="hero-list">
+                    <li>Simplify your big dreams into actionable daily steps.</li>
+                    <li>Help you navigate those tough career or life decisions.</li>
+                    <li>Keep you organized, productive, and confident as you crush your goals.</li>
+                </ul>
+                <p class="sec-desc">
+                    No overwhelm. No confusion. Just you, making progress—and having fun while you do it!
+                </p>
+            </div>
+            <!-- Right Image Section -->
+            <div class="col-lg-6 col-md-12 text-center">
+                <img src="assets/images/Keystone-welcome.gif" alt="Keystone Welcome Animation" class="hero-image">
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hero Section End -->
+
+<!-- Hero Section End -->
+
+<!-- Next Steps Start -->
+<section class="servicepage-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="sub-title">What Happens Next?</div>
+                <h2 class="sec-title">Here’s How to Get Started:</h2>
+                <ol>
+                    <li>📧 Check Your Email: I just sent you a welcome message with everything you need to get started.</li>
+                    <li>Log In and Say Hi: Dive into your personalized success dashboard and tell me your goals. (It’s easy—I promise!)</li>
+                    <li>🚀 Take Your First Step: Whether it’s a career plan, a project idea, or just organizing your day, Keystone will help you take action.</li>
+                </ol>
+                <a class="shapro-btn-1" href="#"><span>Let’s Get Started!</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Next Steps End -->
+
+<!-- Motivational Quote Start -->
+<section class="rss-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <blockquote class="quote">
+                    <h2>“Success doesn’t happen overnight. But starting today? That’s how you change everything.”</h2>
+                    <p>– Keystone (your new favorite AI coach)</p>
+                </blockquote>
+                <p>P.S. Don’t forget—you’re not alone on this journey. Keystone’s got your back, every step of the way.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Motivational Quote End -->
+{% block footer %}
+<!-- Footer Section Start -->
+
+  <!-- Footer Section Start -->
+  {% load static %}
+
+<!-- Footer Section Start -->
+<footer class="footer-5">
+    <div class="footer-shape">
+        <div class="sf-left">
+            <img src="{% static 'assets/images/home5/f-shape-left.png' %}" alt="Left Shape">
+        </div>
+        <div class="sf-right">
+            <img src="{% static 'assets/images/home5/f-shape-right.png' %}" alt="Right Shape">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1">
+                <aside class="widget">
+                    <div class="about-widget-two text-center">
+                        <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo7.png' %}" alt="Keystone Logo"></a>
+                        <h2>Stay Updated with Keystone AI Insights</h2>
+                    </div>
+                </aside>
+                <aside class="widget">
+                    <form action="#" method="post">
+                        <div class="mc4wp-form-fields">
+                            <input type="email" name="EMAIL" placeholder="Enter Your Email">
+                            <button type="submit" value="Sign up"><i class="far fa-arrow-right"></i></button>
+                        </div>
+                    </form>
+                </aside>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Contact Us -->
+            <div class="col-lg-4 col-md-6">
+                <aside class="widget contact-widget">
+                    <h3 class="widget-title">Contact Us</h3>
+                    <div class="contact-info">
+                        <p>Keystone AI Headquarters</p>
+                        <p>support@Keystoneai.com</p>
+                        <p>+1 (800) 123-4567</p>
+                    </div>
+                </aside>
+            </div>
+            <!-- About Us -->
+            <div class="col-lg-4 col-md-6 borders">
+                <aside class="widget">
+                    <div class="about-widget">
+                        <h3 class="widget-title">About Keystone AI</h3>
+                        <p>
+                            Keystone is your personal AI assistant designed to boost productivity, streamline workflows, and provide insightful support for business and personal growth.
+                        </p>
+                        <div class="ab-social">
+                            <a class="fac" href="https://www.facebook.com/profile.php?id=61562534103108"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+        <!-- Copyright Start -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="copyright text-center">
+                    <p>Copyright © {{ year }} <a href="#">Keystone AI</a> - All Rights Reserved. Built with care by the Keystone AI Team.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+    </div>
+</footer>
+<!-- Footer Section End -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Auto-Trigger Modal Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show the modal immediately when the page loads
+        const activationModal = new bootstrap.Modal(document.getElementById('activationModal'));
+        activationModal.show();
+
+        // Handle form submission
+        const form = document.getElementById('activationForm');
+        const modalBody = document.querySelector('.modal-body');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent form refresh
+
+            const formData = new FormData(form);
+            fetch("{% url 'manual_account_activation' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    modalBody.innerHTML = `<p class="text-success">${data.message}</p>`;
+                } else {
+                    modalBody.innerHTML = `<p class="text-danger">${data.message}</p>`;
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                modalBody.innerHTML = `<p class="text-danger">Something went wrong. Please try again.</p>`;
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+
+{% endblock %}
+
+{% endblock %}

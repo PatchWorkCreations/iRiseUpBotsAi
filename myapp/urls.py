@@ -167,6 +167,7 @@ urlpatterns = [
     path('nexus/', views.kash_view, name='kash'),
     path('imagine/', views.echo_view, name='echo'),
     path('gideon/', views.gideon_view, name='gideon'),
+    path('keystone/', views.keystone_view, name='keystone'),
 
     path('thankyou-ezra/', views.ezra_thank_you, name='thankyou-ezra'),
     path('thankyou-rudy/', views.rudy_thank_you, name='thankyou-rudy'),
@@ -181,4 +182,9 @@ urlpatterns = [
    path('manual-account-activation/', views.manual_account_activation, name='manual_account_activation'),
    path('send-test-email/', views.test_email_view, name='send_test_email'),
 
+    path('dashboard/elevate/', views.elevate_dashboard, name='elevate_dashboard'),
+    path('dashboard/thrive/', views.thrive_dashboard, name='thrive_dashboard'),
+    path('dashboard/lumos/', views.lumos_dashboard, name='lumos_dashboard'),
+    path('dashboard/imagine/', views.imagine_dashboard, name='imagine_dashboard'),
+    path('dashboard/gideon/', views.gideon_dashboard, name='gideon_dashboard'),
 ] 

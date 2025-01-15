@@ -581,19 +581,11 @@
             Your access has expired. Please renew your subscription to continue using the AI Bots.
         </div>
         {% else %}
-        <!-- AI Bots Selection Section -->
+      
         <!-- AI Bots Section -->
         <div class="ai-boxes">
-            <!-- Ezra -->
-            <div class="ai-box">
-                <div class="ai-box-content">
-                    <h3>Hi, I'm Elevate! 🌟</h3>
-                    <p>Let's work together on your personal and professional goals!</p>
-                </div>
-                <img src="{% static 'myapp/images/aiimages/elevate.png' %}" alt="Ezra">
-                <button class="upgrades-btn" onclick="location.href='{% url 'inspire_chat' %}'">Start Chat</button>
-            </div>
-
+            
+             
             <!-- Rudy -->
             <div class="ai-box">
                 <div class="ai-box-content">
@@ -604,65 +596,7 @@
                 <button class="upgrades-btn" onclick="location.href='{% url 'pulse_chat' %}'">Start Chat</button>
             </div>
 
-            <!-- Aria -->
-            <div class="ai-box">
-                <div class="ai-box-content">
-                    <h3>Hi, I'm Lumos! 🤗</h3>
-                    <p>I'm here to provide support and companionship whenever you need it!</p>
-                </div>
-                <img src="{% static 'myapp/images/aiimages/lumos.png' %}" alt="Aria">
-                <button class="upgrades-btn" onclick="location.href='{% url 'soulspark_chat' %}'">Start Chat</button>
-            </div>
-
-            <!-- Einstein -->
-            <div class="ai-box">
-                <div class="ai-box-content">
-                    <h3>Hi, I'm Mentor IQ! 📚</h3>
-                    <p>Let me guide you on your educational and career journey!</p>
-                </div>
-                <img src="{% static 'myapp/images/aiimages/mentor_iq.png' %}" alt="Einstein">
-                <button class="upgrades-btn" onclick="location.href='{% url 'mindforge_chat' %}'">Start Chat</button>
-            </div>
-
-            <!-- Kash -->
-            <div class="ai-box">
-                <div class="ai-box-content">
-                    <h3>Hi, I'm Nexus! 💬🌐</h3>
-                    <p>I'm here to ensure seamless customer and accessibility support for you!</p>
-                </div>
-                <img src="{% static 'myapp/images/aiimages/nexus.png' %}" alt="Kash">
-                <button class="upgrades-btn" onclick="location.href='{% url 'bridge_chat' %}'">Start Chat</button>
-            </div>
-
-            <!-- Jordan -->
-            <div class="ai-box">
-                <div class="ai-box-content">
-                    <h3>Hi, I'm Keystone! 💼⚖️</h3>
-                    <p>Let’s build a secure financial and legal foundation together!</p>
-                </div>
-                <img src="{% static 'myapp/images/aiimages/keystone.png' %}" alt="Jordan">
-                <button class="upgrades-btn" onclick="location.href='{% url 'fortify_chat' %}'">Start Chat</button>
-            </div>
-
-            <!-- Echo -->
-            <div class="ai-box">
-                <div class="ai-box-content">
-                    <h3>Hi, I'm Imagine! 🎨</h3>
-                    <p>Let's spark creativity and bring your ideas to life!</p>
-                </div>
-                <img src="{% static 'myapp/images/aiimages/imagine.png' %}" alt="Echo">
-                <button class="upgrades-btn" onclick="location.href='{% url 'echo_chat' %}'">Start Chat</button>
-            </div>
-
-            <!-- Gideon -->
-            <div class="ai-box">
-                <div class="ai-box-content">
-                    <h3>Hi, I'm Gideon! 🚀</h3>
-                    <p>Let's grow your small business with powerful insights!</p>
-                </div>
-                <img src="{% static 'myapp/images/aiimages/gideon.png' %}" alt="Gideon">
-                <button class="upgrades-btn" onclick="location.href='{% url 'pathfinder_chat' %}'">Start Chat</button>
-            </div>
+            
         </div>
         {% endif %} 
 </div>

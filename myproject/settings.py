@@ -187,9 +187,12 @@ SQUARE_ACCESS_TOKEN = env('SQUARE_ACCESS_TOKEN')
 
 
 AI_PRODUCTS = {
-    "414255": "inspire_chat.html",      # Ezra AI
-    "414273": "pulse_chat.html",      # Rudy AI
-    "414195": "soulspark_chat.html",      # Aria AI
-    "414223": "echo_chat.html",      # Echo AI
-    "414260": "gideon_chat.html",    # Gideon AI
+    "414255": "inspire_chat.html",      # Elevate AI
+    "414273": "pulse_chat.html",        # Thrive AI
+    "414195": "soulspark_chat.html",    # Lumos AI
+    "414223": "echo_chat.html",         # Imagine AI
+    "414260": "gideon_chat.html",       # Gideon AI
+    "414301": "mentor_iq_chat.html",    # Mentor IQ AI (New Product ID)
+    "414302": "nexus_chat.html",        # Nexus AI (New Product ID)
+    "414303": "keystone_chat.html",     # Keystone AI (New Product ID)
 }

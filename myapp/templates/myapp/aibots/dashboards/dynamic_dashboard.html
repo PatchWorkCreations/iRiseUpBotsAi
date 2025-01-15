@@ -1,0 +1,50 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block title %}Dashboard - {{ bot_info.name }}{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h2>Welcome, {{ user_name }} 👋</h2>
+    <p>Explore your AI assistant, <strong>{{ bot_info.name }}</strong>!</p>
+
+    <div class="ai-box">
+        <img src="{% static bot_info.image %}" alt="{{ bot_info.name }}">
+        <h3>{{ bot_info.name }}</h3>
+        <p>{{ bot_info.description }}</p>
+
+        
+        <button class="btn btn-primary" onclick="location.href='{% url "inspire_chat" %}'">Start Chat</button>
+
+    </div>
+</div>
+
+<style>
+    .dashboard {
+        text-align: center;
+        padding: 2rem;
+    }
+    .ai-box {
+        margin: 2rem auto;
+        max-width: 600px;
+        padding: 1.5rem;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background: #f9f9f9;
+    }
+    .ai-box img {
+        max-width: 200px;
+        margin-bottom: 1rem;
+    }
+    .btn-primary {
+        background: #1F3A93;
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .btn-primary:hover {
+        background: #142856;
+    }
+</style>
+{% endblock %}

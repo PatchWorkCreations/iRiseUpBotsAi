@@ -1,0 +1,340 @@
+{% extends 'myapp/aibots/landingpage/base.html' %}
+{% load static %}
+{% block title %}Keystone - Emotional Support and Well-Being Companion{% endblock %}
+
+{% block content %}
+{% block header %}
+{% load static %}
+
+<header class="header-05">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Logo Section -->
+            <div class="col-lg-3">
+                <div class="logo-1">
+                    <a href="#">
+                        <img src="{% static 'assets/images/logo6.png' %}" alt="Logo">
+                    </a>
+                </div>
+            </div>
+            <!-- Navigation Section -->
+            <div class="col-lg-9">
+                <nav class="menu_1">
+                    <div class="menuButton">
+                        <a href="#">
+                            <i class="fal fa-bars"></i>
+                        </a>
+                    </div>
+                    <ul>
+                        <li class="current-menu-item menu-item-has-children">
+                            <a href="#">Home</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#portfolio">What’s Next?</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#testimony">Success Stories</a>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="#pricing">Contact</a>
+                        </li>
+                    </ul>
+                    <div class="head-nav">
+                        <a class="shapro-btn-5" href="#pricing">
+                            <span>Start Your Journey</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+<section class="banner-05" style="background-image: url({% static 'assets/images/home5/banner.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="b5-shape tw-stretch-element-inside-column animated">
+                    <img src="{% static 'assets/images/home5/banner-shape.png' %}" alt="Keystone Shape">
+                </div>
+                <div class="banner-content-5">
+                    <h2 class="animated" 
+                        style="font-size: 4.5rem; 
+                               word-break: keep-all; 
+                               white-space: nowrap; 
+                               overflow-wrap: break-word; 
+                               margin-bottom: 1rem; 
+                               text-align: center; 
+                               line-height: 1.2; 
+                               font-size: calc(2.5rem + 1.5vw); /* Adjusts size responsively */">
+                        Meet Keystone
+                        <img src="{% static 'assets/images/home5/title-shape.png' %}" alt="Title Shape">
+                    </h2>
+                    <p class="animated" 
+                       style="font-size: calc(1rem + 0.5vw); 
+                              text-align: center; 
+                              line-height: 1.5; 
+                              margin: 0 auto; 
+                              max-width: 600px;">
+                        Your Trusted Advisor for Finance and Legal Insights
+                    </p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="portfolio" class="mobile-app-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <h2 class="sec-title">
+                    Step into 2025 with Financial Confidence—Keystone Is Here for You!
+                </h2>
+                <p class="sec-desc">
+                    Keystone is here to empower you with practical advice on budgeting, savings, and legal basics—all delivered in a friendly, easy-to-understand way.
+                </p>
+                <p class="sec-desc">
+                    “Think of me as your guide to navigating complex topics with clarity and confidence. Let’s tackle your financial and legal questions, one step at a time.”
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Start Your Journey with Keystone</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="order-booking-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="booking-area">
+                    <img src="{% static 'assets/images/home5/1.png' %}" alt="Keystone Feature Image">
+                    <div class="booking-feature-item">
+                        <i class="shapro-innovation"></i>
+                        <h5>Simplify Finance and Legal Decisions with Keystone</h5>
+                        <p>Keystone empowers you to make informed decisions on budgeting, savings, and legal basics.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-2">
+                        <i class="shapro-box"></i>
+                        <h5>Clear, Practical Guidance</h5>
+                        <p>Keystone simplifies complex financial and legal topics, giving you the tools to navigate with confidence.</p>
+                    </div>
+                    <div class="booking-feature-item bfi-3">
+                        <i class="shapro-shooting"></i>
+                        <h5>Plan Ahead & Build Security</h5>
+                        <p>With Keystone, create a roadmap for your financial and legal goals, ensuring peace of mind for the future.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <h2 class="sec-title">
+                    A Trusted Partner in Finance and Legal Matters
+                </h2>
+                <p class="sec-desc">
+                    Keystone is your advisor, simplifying decisions and helping you build a strong foundation. Take control of your finances and legal matters with confidence.
+                </p>
+                <a class="shapro-btn-5" href="#pricing"><span>Let’s Get Started</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Testimonial Section Start -->
+<section id="testimony" class="testimonial-section-3" style="background-image: url({% static 'assets/images/home5/4.png' %});">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="testimonial-slider-three owl-carousel">
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user.png' %}" alt="User Feedback 1">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Alex<span>Small Business Owner</span></h5>
+                            <p>“Keystone helped me streamline my finances and set clear goals for my business. I feel more confident and in control.”</p>
+                        </div>
+                    </div>
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user.png' %}" alt="User Feedback 2">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Jess<span>Freelancer</span></h5>
+                            <p>“Managing my budget used to be stressful, but Keystone broke it down into simple steps. Now I can focus on my work.”</p>
+                        </div>
+                    </div>
+                    <div class="ts-three-item text-center">
+                        <div class="ts-author-thumb">
+                            <img src="{% static 'assets/images/home5/user.png' %}" alt="User Feedback 3">
+                        </div>
+                        <div class="tsi-three-author">
+                            <h5>Jordan<span>New Graduate</span></h5>
+                            <p>“Keystone guided me through student loan planning and saving for my future. It’s like having a mentor by my side.”</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonial Section End -->
+<!-- Pricing Section Start -->
+<section id="pricing" class="pricing-section-5" style="padding-bottom: 20px;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <!-- Plan 1 -->
+            <!--
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p1.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>14 <sup>.99</sup><p> One-Time</p>
+                    </div>
+                    <span class="p-sub">Essential Emotional Support</span>
+                    <h3>Keystone Starter</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>Guided Breathing Exercises</li>
+                        <li><i class="fas fa-check"></i>Daily Affirmations & Check-ins</li>
+                        <li><i class="fas fa-check"></i>Safe, Empathetic Conversations</li>
+                        <li><i class="fas fa-check"></i>Basic Mood Tracking</li>
+                    </ul>
+                    <div class="text-center">
+                        <a href="https://www.jvzoo.com/b/0/414277/7">
+                            <img src="https://i.jvzoo.com/0/414277/7" alt="Keystone: Your Emotional Compass AI" border="0" style="width: 250px;" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+            -->
+            <!-- Plan 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p2.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>37 <sup>.87</sup><p> One-Time</p>
+                    </div>
+                    <span class="p-sub">Your Financial & Legal Assistant</span>
+                    <h3>Keystone Pro</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>Simple Budgeting Tips</li>
+                        <li><i class="fas fa-check"></i>Understand Legal Basics</li>
+                        <li><i class="fas fa-check"></i>Quick Answers to Finance FAQs</li>
+                        <li><i class="fas fa-check"></i>Guided Support for Your Goals</li>
+                    </ul>
+                    <div class="text-center">
+                        <p><strong>Get started today!</strong></p>
+                        <a href="https://www.jvzoo.com/b/0/414277/7">
+                            <img src="https://i.jvzoo.com/0/414277/7" alt="Keystone: Your AI Advisor" border="0" style="width: 250px;" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Plan 3 -->
+            <!--
+            <div class="col-lg-4 offset-lg-0 col-md-6 offset-md-3">
+                <div class="pricing-item-5" style="background-image: url({% static 'assets/images/home5/p3.jpg' %});">
+                    <div class="p-price">
+                        <sup class="currency">$</sup>34 <sup>.99</sup><p> One-Time</p>
+                    </div>
+                    <span class="p-sub">Comprehensive Wellbeing Suite</span>
+                    <h3>Keystone Premium</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i>All Pro Features</li>
+                        <li><i class="fas fa-check"></i>One-on-One Guided Support</li>
+                        <li><i class="fas fa-check"></i>Custom Emotional Wellness Plans</li>
+                        <li><i class="fas fa-check"></i>24/7 Priority Check-ins</li>
+                    </ul>
+                    <div class="text-center">
+                        <a href="https://www.jvzoo.com/b/0/414277/7">
+                            <img src="https://i.jvzoo.com/0/414277/7" alt="Keystone: Your Emotional Compass AI" border="0" style="width: 250px;" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+</section>
+
+
+
+{% block footer %}
+{% load static %}
+<footer class="footer-5">
+    <div class="footer-shape">
+        <div class="sf-left">
+            <img src="{% static 'assets/images/home5/f-shape-left.png' %}" alt="Left Shape">
+        </div>
+        <div class="sf-right">
+            <img src="{% static 'assets/images/home5/f-shape-right.png' %}" alt="Right Shape">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1">
+                <aside class="widget">
+                    <div class="about-widget-two text-center">
+                        <a href="{% url 'index' %}">
+                            <img src="{% static 'assets/images/logo7.png' %}" alt="Keystone Logo">
+                        </a>
+                        <h2>Navigate Finance & Legal with Keystone</h2>
+                        <p>Your trusted assistant for simplified budgeting, legal guidance, and peace of mind.</p>
+                    </div>
+                    
+                </aside>
+                <aside class="widget">
+                    <form action="#" method="post">
+                        <div class="mc4wp-form-fields">
+                            <input type="email" name="EMAIL" placeholder="Enter Your Email for Supportive Insights">
+                            <button type="submit" value="Sign up"><i class="far fa-arrow-right"></i></button>
+                        </div>
+                    </form>
+                </aside>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Contact Us -->
+            <div class="col-lg-4 col-md-6">
+                <aside class="widget contact-widget">
+                    <h3 class="widget-title">Contact Us</h3>
+                    <div class="contact-info">
+                        <p>Keystone Support Team</p>
+                        <p>iriseupgroupofcompanies@gmail.com </p>
+                         
+                    </div>
+                </aside>
+            </div>
+            <!-- About Keystone -->
+            <div class="col-lg-4 col-md-6 borders">
+                <aside class="widget">
+                    <div class="about-widget">
+                        <h3 class="widget-title">About Keystone</h3>
+                        <p>
+                            Keystone is your trusted finance and legal assistant, here to simplify budgeting, savings, and legal basics. Let Keystone guide you toward financial clarity and peace of mind—one step at a time.
+                        </p>
+
+                        <div class="ab-social">
+                            <a class="fac" href="https://www.facebook.com/Keystonewellness"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+        <!-- Copyright Start -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="copyright text-center">
+                    <p>Copyright © 2025 <a href="#">Keystone Wellness</a> - All Rights Reserved. Powered by the Keystone Team.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+    </div>
+</footer>
+
+{% endblock %}
+{% endblock %}

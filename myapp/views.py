@@ -95,9 +95,39 @@ from django.db.models import Prefetch
 
 from django.contrib.auth.decorators import login_required
 
+from django.shortcuts import redirect
+from myapp.models import UserCourseAccess
+
+# Centralized product-to-dashboard mapping
+DASHBOARD_ROUTES = {
+    "414255": "elevate_dashboard",
+    "414273": "thrive_dashboard",
+    "414195": "lumos_dashboard",
+    "414223": "imagine_dashboard",
+    "414260": "gideon_dashboard",
+    "414301": "mentor_iq_dashboard",
+    "414302": "nexus_dashboard",
+    "414303": "keystone_dashboard",
+}
+
 @login_required
 def coursemenu(request):
+    """
+    Redirect users to their respective dashboards based on their product ID.
+    If no product ID is associated, render the course menu.
+    """
+    user = request.user
+    access = UserCourseAccess.objects.filter(user=user, is_active=True).first()
+
+    if access:
+        product_id = access.product_id
+        dashboard_name = DASHBOARD_ROUTES.get(product_id)
+        if dashboard_name:
+            return redirect(dashboard_name)
+
+    # Fallback: Render course menu if no valid access or product ID
     return render(request, 'myapp/aibots/coursemenu.html')
+
 
 def subscription_terms_new(request):
     return render(request, 'myapp/aibots/subscription_terms.html')
@@ -807,33 +837,133 @@ def sign_in(request):
 
     return render(request, 'myapp/quiz/sign_in.html', {'form': form})
 
+from django.shortcuts import redirect
+from myapp.models import UserCourseAccess
 
-def redirect_to_user_ai(user):
+def redirect_to_dashboard(user):
     """
-    Redirects the user to their respective AI chat based on the product ID.
+    Redirect the user to their respective dashboard based on their product ID.
     """
     access = UserCourseAccess.objects.filter(user=user, is_active=True).first()
     if access:
-        return redirect('dynamic_chat', product_id=access.product_id)
-    # If no access, redirect to a fallback page
+        product_id = access.product_id
+        if product_id == "414255":
+            return redirect('elevate_dashboard')
+        elif product_id == "414273":
+            return redirect('thrive_dashboard')
+        elif product_id == "414195":
+            return redirect('lumos_dashboard')
+        elif product_id == "414223":
+            return redirect('imagine_dashboard')
+        elif product_id == "414260":
+            return redirect('gideon_dashboard')
+        elif product_id == "kash":  # Example if kash has no ID assigned
+            return redirect('nexus_dashboard')
+        elif product_id == "jordan":  # Example if jordan has no ID assigned
+            return redirect('keystone_dashboard')
+    # Default fallback if no access or product ID is found
     return redirect('coursemenu')
 
 
-def dynamic_chat(request, product_id):
+def redirect_to_user_ai(user):
+    access = UserCourseAccess.objects.filter(user=user, is_active=True).first()
+
+    if not access:
+        return redirect('coursemenu')
+
+    product_id = access.product_id
+
+    # Map product_id to dashboard view names
+    DASHBOARD_ROUTES = {
+        "414255": "elevate_dashboard",
+        "414273": "thrive_dashboard",
+        "414195": "lumos_dashboard",
+        "414223": "imagine_dashboard",
+        "414260": "gideon_dashboard",
+        "414301": "mentor_iq_dashboard",
+        "414302": "nexus_dashboard",
+        "414303": "keystone_dashboard",
+    }
+
+    dashboard_name = DASHBOARD_ROUTES.get(product_id)
+    if dashboard_name:
+        return redirect(dashboard_name)
+
+    return redirect('coursemenu')  # Fallback if no dashboard is defined
+
+
+
+from django.shortcuts import render, get_object_or_404
+from django.conf import settings
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def lumos_dashboard(request):
+    return render(request, 'myapp/aibots/dashboards/lumos_dashboard.html', {
+        "user_name": request.user.first_name,
+    })
+
+@login_required
+def mentor_iq_dashboard(request):
+    return render(request, 'myapp/aibots/dashboards/mentor_iq_dashboard.html', {
+        "user_name": request.user.first_name,
+    })
+
+@login_required
+def elevate_dashboard(request):
+    return render(request, 'myapp/aibots/dashboards/elevate_dashboard.html', {
+        "user_name": request.user.first_name,
+    })
+
+@login_required
+def thrive_dashboard(request):
+    return render(request, 'myapp/aibots/dashboards/thrive_dashboard.html', {
+        "user_name": request.user.first_name,
+    })
+
+@login_required
+def imagine_dashboard(request):
+    return render(request, 'myapp/aibots/dashboards/imagine_dashboard.html', {
+        "user_name": request.user.first_name,
+    })
+
+@login_required
+def gideon_dashboard(request):
+    return render(request, 'myapp/aibots/dashboards/gideon_dashboard.html', {
+        "user_name": request.user.first_name,
+    })
+
+@login_required
+def nexus_dashboard(request):
+    return render(request, 'myapp/aibots/dashboards/nexus_dashboard.html', {
+        "user_name": request.user.first_name,
+    })
+
+@login_required
+def keystone_dashboard(request):
+    return render(request, 'myapp/aibots/dashboards/keystone_dashboard.html', {
+        "user_name": request.user.first_name,
+    })
+
+
+
+# Add other dashboard views as needed
+
+def serve_dashboard(request, product_id, template_name):
     """
-    Renders the chat page based on the product ID.
+    Helper function to check access and render the appropriate dashboard.
     """
     if not request.user.is_authenticated:
         return redirect('login')
 
-    # Check if the user has access to the product ID
+    # Check if the user has access to this product ID
     access = UserCourseAccess.objects.filter(user=request.user, product_id=product_id, is_active=True).first()
-    if access:
-        # Dynamically resolve the template name based on product ID
-        template_name = settings.AI_PRODUCTS.get(product_id)
-        if template_name:
-            return render(request, f'myapp/aibots/bots/{template_name}', {'user_name': request.user.first_name})
-    return JsonResponse({"status": "error", "message": "You do not have access to this AI."}, status=403)
+    if not access:
+        return render(request, "myapp/errors/403.html", status=403)
+
+    return render(request, template_name, {"user_name": request.user.first_name})
+
 
 
 def get_first_ai(user):
@@ -2158,6 +2288,11 @@ def echo_view(request):
 def gideon_view(request):
     return render(request, 'myapp/aibots/landingpage/gideon.html')
 
+def keystone_view(request):
+    return render(request, 'myapp/aibots/landingpage/keystone.html')
+
+ 
+
 
 def ezra_thank_you(request):
     return render(request, 'myapp/aibots/landingpage/thankyou/ezra.html')
@@ -2276,6 +2411,8 @@ def manual_account_activation(request):
         return JsonResponse({"success": False, "message": "Invalid request method."})
 
  
+ 
+
 
 
 from django.shortcuts import render, redirect
@@ -2412,7 +2549,7 @@ def personal_info_update(request):
             user.save()
 
             messages.success(request, 'Profile updated successfully!')
-            return redirect('coursemenu')
+            return redirect_to_dashboard(user)
         except IntegrityError:
             messages.error(request, 'This email is already associated with another account.')
             return redirect('personal_info_update')
@@ -2448,7 +2585,7 @@ def personal_information(request):
             user.save()
 
             messages.success(request, 'Profile updated successfully!')
-            return redirect('coursemenu')
+            return redirect_to_dashboard(user)
         except IntegrityError:
             messages.error(request, 'This email is already associated with another account.')
             return redirect('personal_information')
@@ -3039,7 +3176,7 @@ def change_plan(request):
                 current_access.save()
 
                 logger.info(f"User {user.username} changed their plan to {selected_plan}")
-                return redirect('coursemenu')  # Redirect to course menu after change
+                return redirect_to_dashboard(user)  # Redirect to course menu after change
             else:
                 logger.warning(f"User {user.username} has no current access, unable to change plan.")
 
