@@ -2315,6 +2315,9 @@ def echo_thank_you(request):
 def gideon_thank_you(request):
     return render(request, 'myapp/aibots/landingpage/thankyou/gideon.html')
 
+def keystone_thank_you(request):
+    return render(request, 'myapp/aibots/landingpage/thankyou/keystone.html')
+
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt

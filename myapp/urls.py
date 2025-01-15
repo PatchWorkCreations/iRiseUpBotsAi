@@ -176,7 +176,7 @@ urlpatterns = [
     path('thankyou-kash/', views.kash_thank_you, name='thankyou-kash'),
     path('thankyou-echo/', views.echo_thank_you, name='thankyou-echo'),
     path('thankyou-gideon/', views.gideon_thank_you, name='thankyou-gideon'),
-
+    path('thankyou-keystone/', views.keystone_thank_you, name='thankyou-keystone'),
 
    path('chat/<str:product_id>/', views.dynamic_chat, name='dynamic_chat'),
    path('manual-account-activation/', views.manual_account_activation, name='manual_account_activation'),
