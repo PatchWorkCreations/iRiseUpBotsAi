@@ -167,18 +167,33 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="activationModalLabel">Activate Your Account</h5>
+                <h5 class="modal-title" id="activationModalLabel">I’m Excited You’re Here! 🎉</h5>
             </div>
             <div class="modal-body">
                 <form id="activationForm" method="POST">
                     {% csrf_token %}
-                   
+
+                    <!-- First Name Field -->
                     <div class="mb-3">
-                        <input type="hidden" name="product_id" value="414301"
-                        <label for="email" class="form-label">Enter Your Email</label>
+                        <label for="first_name" class="form-label">
+                            I’m so excited you’re here! Can you share your first name so I can personalize your experience?
+                        </label>
+                        <input type="text" name="first_name" class="form-control" id="first_name" placeholder="e.g., Alex" required>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            What’s the best email we can use to activate your account?
+                        </label>
                         <input type="email" name="email" class="form-control" id="email" placeholder="your-email@example.com" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Activate Account</button>
+
+                    <!-- Hidden Product ID -->
+                    <input type="hidden" name="product_id" value="414301">
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary">Activate My Account 🚀</button>
                 </form>
             </div>
         </div>
@@ -248,8 +263,8 @@
             <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1">
                 <aside class="widget">
                     <div class="about-widget-two text-center">
-                        <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo7.png' %}" alt="Rudy Logo"></a>
-                        <h2>Stay Updated with Rudy Insights</h2>
+                        <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo7.png' %}" alt="Mentor IQ Logo"></a>
+                        <h2>Stay Updated with Mentor IQ Insights</h2>
                     </div>
                 </aside>
                 <aside class="widget">
@@ -304,7 +319,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+          document.addEventListener('DOMContentLoaded', function() {
         // Show the modal immediately when the page loads
         const activationModal = new bootstrap.Modal(document.getElementById('activationModal'));
         activationModal.show();
@@ -314,8 +329,17 @@
         const modalBody = document.querySelector('.modal-body');
 
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent form refresh
+            e.preventDefault();
 
+            const firstName = form.querySelector('[name="first_name"]').value.trim();
+            const email = form.querySelector('[name="email"]').value.trim();
+
+            if (!firstName || !email) {
+                modalBody.innerHTML = `<p class="text-danger">Please fill out all fields before submitting.</p>`;
+                return;
+            }
+
+            // Proceed with fetch if validation passes
             const formData = new FormData(form);
             fetch("{% url 'manual_account_activation' %}", {
                 method: 'POST',
@@ -337,6 +361,7 @@
                 modalBody.innerHTML = `<p class="text-danger">Something went wrong. Please try again.</p>`;
             });
         });
+
     });
 </script>
 {% endblock %}

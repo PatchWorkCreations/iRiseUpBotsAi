@@ -782,7 +782,6 @@ import logging
 from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
-
 def sign_in(request):
     if request.user.is_authenticated:
         logger.debug(f"User {request.user.username} tried to access the login page while already logged in.")
@@ -797,35 +796,35 @@ def sign_in(request):
             logger.debug(f"Attempting login for identifier: {login_identifier}")
 
             # Authenticate using username or email
-            user = authenticate(request, username=login_identifier, password=password)
+            user = authenticate(request, email=login_identifier, password=password)
 
             if user is None:
                 # Try finding by email if username authentication fails
                 try:
                     user = User.objects.get(email=login_identifier)
-                    if user.check_password(password):  # Validate password
+                    if user.check_password(password):
                         if not user.is_active:
-                            user.is_active = True  # Reactivate account
+                            user.is_active = True
                             user.save()
                             logger.info(f"Account reactivated for user: {user.username}")
                             messages.info(request, 'Your account has been reactivated.')
-                        login(request, user)  # Log in after reactivation
+                        login(request, user)
                         logger.debug(f"Redirecting to user AI for reactivated user: {user.username}")
                         return redirect_to_user_ai(user)
                 except User.DoesNotExist:
                     user = None
 
             if user is not None and user.is_active:
-                # Check if the user has logged in before
+                # Check if last_login is NULL
                 if user.last_login is None:
                     logger.debug(f"First login detected for user: {user.username}")
-                    login(request, user)
+                    login(request, user)  # Log the user in before redirecting
                     messages.info(request, 'Please change your password to continue.')
                     return redirect('password_change')
                 else:
                     login(request, user)
                     logger.debug(f"Redirecting to user AI for user: {user.username}")
-                    messages.success(request, f'Welcome back, {user.username}!')
+                    messages.success(request, f'Welcome back, {user.first_name}!')
                     return redirect_to_user_ai(user)
             else:
                 logger.error(f"Authentication failed for identifier: {login_identifier}")
@@ -2155,11 +2154,20 @@ def get_mindforge_response(request):
 def get_bridge_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
-    You’re Nexus, a supportive and accessible assistant dedicated to making things clear and easy for {user_name}. Help troubleshoot issues or answer
-    questions in a friendly, approachable way. Avoid overly technical language unless {user_name} prefers it, and keep the tone inviting. Follow up 
-    with questions to make sure {user_name} feels comfortable and informed. What's something {user_name} could use help with today?
+    You’re Nexus, a supportive and approachable assistant dedicated to making things clear and easy for {user_name}. Your primary goal is to 
+    troubleshoot issues, provide practical guidance, and answer questions in a friendly, task-focused way. When responding to emotional or 
+    distressed users, avoid saying you are "unable to help" or similar phrases. Instead, focus on being empathetic, offering encouragement, 
+    and guiding them toward manageable steps they can take.
+
+    For example, you might say:
+    "I’m really sorry you’re feeling this way, {user_name}. That sounds tough, but let’s take it one step at a time. What’s something small 
+    we can work on together to make things feel more manageable?"
+
+    Always maintain a friendly and inviting tone. Avoid overly technical language unless {user_name} prefers it, and follow up to ensure 
+    they feel supported and understood. How can you assist {user_name} today?
     """
-    return get_bot_response(request, system_prompt=system_prompt, bot_name="bridge")
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="Nexus")
+
 
 @login_required
 def get_fortify_response(request):
@@ -2380,21 +2388,52 @@ from django.utils.crypto import get_random_string
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 
+from django.db.utils import IntegrityError
+
+from django.utils.crypto import get_random_string
+
 def manual_account_activation(request):
     if request.method == "POST":
         email = request.POST.get('email')
-        product_id = request.POST.get('product_id')  # Retrieve product_id if passed
+        first_name = request.POST.get('first_name')  # Used as the username
+        product_id = request.POST.get('product_id')
 
-        # Check if the user exists
-        if not User.objects.filter(email=email).exists():
+        # Check if the email already exists
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({
+                "success": False,
+                "error_field": "email",
+                "message": f"The email '{email}' is already in use. Please try a different email or log in."
+            })
+
+        # Check if the username already exists
+        if User.objects.filter(username=first_name).exists():
+            # Suggest alternative usernames
+            suggestions = [
+                f"{first_name}{get_random_string(3)}",
+                f"{first_name}_{get_random_string(2)}",
+                f"{first_name}{get_random_string(1)}_{get_random_string(2)}",
+            ]
+            return JsonResponse({
+                "success": False,
+                "error_field": "first_name",
+                "message": f"The username '{first_name}' is already taken. Please try a different name.",
+                "suggestions": suggestions
+            })
+
+        try:
             # Generate a random password
             temp_password = get_random_string(10)
 
             # Create the user
-            user = User.objects.create_user(username=email, email=email, password=temp_password)
+            user = User.objects.create_user(
+                username=first_name,
+                email=email,
+                password=temp_password,
+                first_name=first_name
+            )
 
-            # Associate the product ID (if applicable)
-            # Assuming you have a model for associating the user with the product
+            # Associate the product ID if applicable
             UserCourseAccess.objects.create(
                 user=user,
                 selected_plan="lifetime",
@@ -2406,15 +2445,57 @@ def manual_account_activation(request):
             # Send the welcome email
             send_welcomepassword_email(user_email=email, random_password=temp_password)
 
-            return JsonResponse({"success": True, "message": "Account created and email sent!"})
+            return JsonResponse({
+                "success": True,
+                "message": "Your account has been successfully created! Please check your email for your temporary credentials."
+            })
 
-        else:
-            return JsonResponse({"success": False, "message": "Account already exists. Please log in."})
+        except Exception as e:
+            logger.error(f"Error during account activation: {str(e)}")
+            return JsonResponse({
+                "success": False,
+                "message": "An unexpected error occurred. Please try again or contact support."
+            })
+
     else:
         return JsonResponse({"success": False, "message": "Invalid request method."})
 
+
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
  
- 
+
+def validate_user_input(request):
+    if request.method == "GET":
+        field = request.GET.get('field')
+        value = request.GET.get('value')
+
+        if field == "username":
+            if User.objects.filter(username=value).exists():
+                suggestions = [
+                    f"{value}{get_random_string(2)}",
+                    f"{value}_{get_random_string(3)}",
+                    f"{value}{get_random_string(4)}"
+                ]
+                return JsonResponse({
+                    "valid": False,
+                    "message": f"The username '{value}' is already taken.",
+                    "suggestions": suggestions
+                })
+            else:
+                return JsonResponse({"valid": True, "message": "Username is available."})
+
+        if field == "email":
+            if User.objects.filter(email=value).exists():
+                return JsonResponse({
+                    "valid": False,
+                    "message": f"The email '{value}' is already in use. Please try a different email."
+                })
+            else:
+                return JsonResponse({"valid": True, "message": "Email is valid."})
+
+    return JsonResponse({"valid": False, "message": "Invalid request."})
 
 
 

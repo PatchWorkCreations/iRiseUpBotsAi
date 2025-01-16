@@ -23,72 +23,53 @@
 </div>
 
 <script>
-    const userName = "{{ user_name|default:'there' }}";
+      const userName = "{{ user_name|default:'there' }}";
     const chatbox = document.getElementById('chatbox');
     const typingIndicator = document.getElementById('typing-indicator');
+    const messageInput = document.getElementById('message');
+    const sendButton = document.getElementById('send');
 
     // Function to display messages in the chatbox
-    function addMessage(sender, text, type = 'bot') {
+    function addMessage(sender, text) {
         const messageClass = sender === 'You' ? 'user' : 'bot';
         const formattedText = formatResponse(text);
         const messageHTML = `
             <div class="message ${messageClass}">
                 ${formattedText}
-                <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
             </div>
         `;
         chatbox.innerHTML += messageHTML;
         chatbox.scrollTop = chatbox.scrollHeight;
     }
 
-    // Function to show 'Seen' status
+    // Show 'Seen' status
     function showSeenStatus() {
-        const seenStatus = '<div id="seenStatus" class="seen">Seen ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) + '</div>';
-        chatbox.innerHTML += seenStatus;
+        // Check if 'Seen' status already exists
+        let seenElement = document.getElementById('seenStatus');
+        if (!seenElement) {
+            seenElement = document.createElement('div');
+            seenElement.id = 'seenStatus';
+            seenElement.className = 'seen';
+            seenElement.textContent = `Seen ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+            chatbox.appendChild(seenElement); // Append 'Seen' status
+            chatbox.scrollTop = chatbox.scrollHeight; // Scroll to bottom
+        }
     }
 
     // Remove 'Seen' status
     function removeSeenStatus() {
         const seenElement = document.getElementById('seenStatus');
         if (seenElement) {
-            seenElement.remove();
+            seenElement.remove(); // Remove the element if it exists
         }
     }
 
-    // Format function to handle different types of response formatting
-    function formatResponse(text, keywords = []) {
-    // Convert newline characters to HTML line breaks for paragraph separation
-    text = text.replace(/\n/g, '<br>');
 
-    // Bold section headers like "Warm-up", "Circuit", etc., by detecting capitalized phrases or standalone lines
-    text = text.replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:');
-
-    // Make text within double asterisks bold (**text** -> <strong>text</strong>)
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-    // Convert hyphenated or asterisk bullets into unordered list items
-    text = text.replace(/<br>-\s/g, '<ul><li>'); // Start unordered list for bullet points
-    text = text.replace(/<\/li><br>-\s/g, '</li><li>'); // Continue unordered list
-    text = text.replace(/<\/li><br>/g, '</li></ul>'); // Close unordered list
-
-    // Convert numbered items into an ordered list (1. Item, 2. Item)
-    text = text.replace(/<br>(\d+)\.\s/g, (match, p1) => {
-        return p1 === "1" ? '<ol><li>' : '</li><li>';
-    });
-    text = text.replace(/<\/li><br>(?!\d+\.)/g, '</li></ol>'); // Close ordered list at end
-
-    // Handle optional keywords to dynamically bold
-    keywords.forEach(keyword => {
-        const regex = new RegExp(`\\b(${keyword})\\b`, 'gi');
-        text = text.replace(regex, '<strong>$1</strong>');
-    });
-
-    // Ensure any open lists are closed at the end
-    if (!text.endsWith('</ul>')) text += '</ul>';
-    if (!text.endsWith('</ol>')) text += '</ol>';
-
-    return text;
-}
+    // Format function to handle response formatting
+    function formatResponse(text) {
+        return text.replace(/\n/g, '<br>');
+    }
 
     // Show and hide typing indicator
     function showTypingIndicator() {
@@ -99,27 +80,20 @@
         typingIndicator.style.display = 'none';
     }
 
-    // Function to initiate the chat with the bot's greeting message
-    function initiateBotMessage(userName) {
-    const botGreeting = `Hi, ${userName}! I’m Nexus! 💬 Need help or have questions? I'm here to make things simple and accessible. What's on your mind?`;
-    addMessage('Nexus', botGreeting);
-}
+    // Function to send a message
+    function sendMessage() {
+        const message = messageInput.value.trim();
+        if (message === '') return; // Ignore empty messages
 
-    document.addEventListener('DOMContentLoaded', () => {
-        initiateBotMessage(userName);  // Pass userName here
-    });
+        // Display user's message in the chatbox
+        addMessage('You', message);
 
-    // Send message on 'Send' button click
-    document.getElementById('send').addEventListener('click', function() {
-        const message = document.getElementById('message').value;
-        if (message.trim() === '') return;
+        // Show typing indicator
+        showSeenStatus(); // Show 'Seen' status
+        showTypingIndicator(); // Show typing indicator
 
-        addMessage('You', message, 'user');
-
-        showSeenStatus();
-        showTypingIndicator();
-
-        fetch('/api/chat/bridge/', {
+        // Simulate server response
+        fetch('/api/chat/nexus/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -129,17 +103,34 @@
                 'message': message
             })
         })
-        .then(response => response.json())
-        .then(data => {
-            hideTypingIndicator();
-            removeSeenStatus();
-            addMessage('Bridge', data.response, 'bot');
-            document.getElementById('message').value = '';
-        })
-        .catch(error => {
-            hideTypingIndicator();
-            console.error('Error:', error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                removeSeenStatus();
+                hideTypingIndicator();
+                addMessage('Nexus', data.response); // Display bot's response
+                messageInput.value = ''; // Clear input field
+            })
+            .catch(error => {
+                hideTypingIndicator();
+                console.error('Error:', error);
+            });
+    }
+
+    // Initialize bot greeting
+    document.addEventListener('DOMContentLoaded', () => {
+        const botGreeting = `Hi, ${userName}! I’m Nexus! 💬 Need help or have questions? I'm here to make things simple and accessible. What's on your mind?`;
+        addMessage('Nexus', botGreeting);
     });
+
+    // Event listener for Enter key
+    messageInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form behavior
+            sendMessage(); // Trigger sendMessage
+        }
+    });
+
+    // Event listener for Send button
+    sendButton.addEventListener('click', sendMessage);
 </script>
 {% endblock %}

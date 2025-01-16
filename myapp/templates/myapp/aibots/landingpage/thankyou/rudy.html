@@ -163,27 +163,46 @@
         </div>
     </div>
 </section>
+
 <div class="modal fade" id="activationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="activationModalLabel">Activate Your Account</h5>
+                <h5 class="modal-title" id="activationModalLabel">I’m Excited You’re Here! 🎉</h5>
             </div>
             <div class="modal-body">
                 <form id="activationForm" method="POST">
                     {% csrf_token %}
-                   
+
+                    <!-- First Name Field -->
                     <div class="mb-3">
-                        <input type="hidden" name="product_id" value="414273"> 
-                        <label for="email" class="form-label">Enter Your Email</label>
+                        <label for="first_name" class="form-label">
+                            I’m so excited you’re here! Can you share your first name so I can personalize your experience?
+                        </label>
+                        <input type="text" name="first_name" class="form-control" id="first_name" placeholder="e.g., Alex" required>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            What’s the best email we can use to activate your account?
+                        </label>
                         <input type="email" name="email" class="form-control" id="email" placeholder="your-email@example.com" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Activate Account</button>
+
+                    <!-- Hidden Product ID -->
+                    <input type="hidden" name="product_id" value="414273">
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary">Activate My Account 🚀</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+
 
 <section class="servicedetails-section">
     <div class="container">
@@ -313,8 +332,17 @@
         const modalBody = document.querySelector('.modal-body');
 
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent form refresh
+            e.preventDefault();
 
+            const firstName = form.querySelector('[name="first_name"]').value.trim();
+            const email = form.querySelector('[name="email"]').value.trim();
+
+            if (!firstName || !email) {
+                modalBody.innerHTML = `<p class="text-danger">Please fill out all fields before submitting.</p>`;
+                return;
+            }
+
+            // Proceed with fetch if validation passes
             const formData = new FormData(form);
             fetch("{% url 'manual_account_activation' %}", {
                 method: 'POST',
@@ -336,6 +364,7 @@
                 modalBody.innerHTML = `<p class="text-danger">Something went wrong. Please try again.</p>`;
             });
         });
+
     });
 </script>
 {% endblock %}

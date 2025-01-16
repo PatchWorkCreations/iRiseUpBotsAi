@@ -111,12 +111,12 @@ urlpatterns = [
     path('chat/soulspark/', views.soulspark_chat, name='soulspark_chat'), # Harper Chat
 
     # Additional API Endpoints for Renamed Bots
-    path('api/chat/nexus/', views.get_nexus_response, name='get_nexus_response'),      # Ezra
+     
     path('api/chat/mindforge/', views.get_mindforge_response, name='get_mindforge_response'),  # Einstein
-    path('api/chat/bridge/', views.get_bridge_response, name='get_bridge_response'),   # Nico
+    path('api/chat/nexus/', views.get_bridge_response, name='get_bridge_response'),   # Nico
 
     # Additional Chat Views
-    path('chat/nexus/', views.nexus_chat, name='nexus_chat'),           # Ezra Chat
+     
     path('chat/mindforge/', views.mindforge_chat, name='mindforge_chat'),  # Einstein Chat
     path('chat/bridge/', views.bridge_chat, name='bridge_chat'),         # Nico Chat
 
@@ -190,4 +190,6 @@ urlpatterns = [
     path('dashboard/mentor-iq/', views.mentor_iq_dashboard, name='mentor_iq_dashboard'),
     path('dashboard/nexus/', views.nexus_dashboard, name='nexus_dashboard'),
     path('dashboard/keystone/', views.keystone_dashboard, name='keystone_dashboard'),
+    path('validate-user-input/', views.validate_user_input, name='validate_user_input'),
+
 ] 
