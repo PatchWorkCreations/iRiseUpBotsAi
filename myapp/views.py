@@ -878,7 +878,7 @@ def redirect_to_user_ai(user):
         "414273": "thrive_dashboard",
         "414195": "lumos_dashboard",
         "414223": "imagine_dashboard",
-        "414260": "gideon_dashboard",
+        "414281": "gideon_dashboard",
         "414301": "mentor_iq_dashboard",
         "414302": "nexus_dashboard",
         "414303": "keystone_dashboard",
