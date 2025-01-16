@@ -169,14 +169,15 @@ urlpatterns = [
     path('gideon/', views.gideon_view, name='gideon'),
     path('keystone/', views.keystone_view, name='keystone'),
 
-    path('thankyou-elevate/', views.ezra_thank_you, name='thankyou-ezra'),
-    path('thankyou-thrive/', views.rudy_thank_you, name='thankyou-rudy'),
-    path('thankyou-lumos/', views.aria_thank_you, name='thankyou-aria'),
-    path('thankyou-mentor-iq/', views.einstein_thank_you, name='thankyou-einstein'),
-    path('thankyou-nexus/', views.kash_thank_you, name='thankyou-kash'),
-    path('thankyou-imagine/', views.echo_thank_you, name='thankyou-echo'),
-    path('thankyou-gideon/', views.gideon_thank_you, name='thankyou-gideon'),
-    path('thankyou-keystone/', views.keystone_thank_you, name='thankyou-keystone'),
+    path('ty/e/', views.ezra_thank_you, name='thankyou-ezra'),
+    path('ty/r/', views.rudy_thank_you, name='thankyou-rudy'),
+    path('ty/a/', views.aria_thank_you, name='thankyou-aria'),
+    path('ty/ei/', views.einstein_thank_you, name='thankyou-einstein'),
+    path('ty/k/', views.kash_thank_you, name='thankyou-kash'),
+    path('ty/ec/', views.echo_thank_you, name='thankyou-echo'),
+    path('ty/g/', views.gideon_thank_you, name='thankyou-gideon'),
+    path('ty/ks/', views.keystone_thank_you, name='thankyou-keystone'),
+
 
    path('chat/<str:product_id>/', views.dynamic_chat, name='dynamic_chat'),
    path('manual-account-activation/', views.manual_account_activation, name='manual_account_activation'),
