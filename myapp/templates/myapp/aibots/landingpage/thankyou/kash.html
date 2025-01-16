@@ -173,21 +173,22 @@
                 <form id="activationForm" method="POST">
                     {% csrf_token %}
 
-                    <!-- First Name Field -->
                     <div class="mb-3">
-                        <label for="first_name" class="form-label">
-                            I’m so excited you’re here! Can you share your first name so I can personalize your experience?
-                        </label>
-                        <input type="text" name="first_name" class="form-control" id="first_name" placeholder="e.g., Alex" required>
-                    </div>
+        <label for="first_name" class="form-label">
+            I’m so excited you’re here! Can you share your first name so I can personalize your experience?
+        </label>
+        <input type="text" name="first_name" class="form-control" id="first_name" placeholder="e.g., Alex" required>
+        <small class="form-text feedback"></small> <!-- Feedback goes here -->
+    </div>
 
-                    <!-- Email Field -->
-                    <div class="mb-3">
-                        <label for="email" class="form-label">
-                            What’s the best email we can use to activate your account?
-                        </label>
-                        <input type="email" name="email" class="form-control" id="email" placeholder="your-email@example.com" required>
-                    </div>
+    <!-- Email Field -->
+    <div class="mb-3">
+        <label for="email" class="form-label">
+            What’s the best email we can use to activate your account?
+        </label>
+        <input type="email" name="email" class="form-control" id="email" placeholder="your-email@example.com" required>
+        <small class="form-text feedback"></small> <!-- Feedback goes here -->
+    </div>
 
                     <!-- Hidden Product ID -->
                     <input type="hidden" name="product_id" value="414302">
@@ -319,50 +320,126 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Show the modal immediately when the page loads
-        const activationModal = new bootstrap.Modal(document.getElementById('activationModal'));
-        activationModal.show();
+    document.addEventListener('DOMContentLoaded', function () {
+    // Initialize the modal and show it on page load
+    const activationModal = new bootstrap.Modal(document.getElementById('activationModal'));
+    activationModal.show();
 
-        // Handle form submission
-        const form = document.getElementById('activationForm');
-        const modalBody = document.querySelector('.modal-body');
+    const form = document.getElementById('activationForm');
+    const modalBody = document.querySelector('.modal-body');
+    const firstNameInput = form.querySelector('[name="first_name"]');
+    const emailInput = form.querySelector('[name="email"]');
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
+    // Utility function to show feedback
+    function showFeedback(inputElement, valid, message, suggestions = []) {
+        const feedbackElement = inputElement.nextElementSibling; // Assuming feedback is placed after the input
+        if (!feedbackElement) return;
 
-            const firstName = form.querySelector('[name="first_name"]').value.trim();
-            const email = form.querySelector('[name="email"]').value.trim();
+        // Update feedback message and styling
+        feedbackElement.textContent = message;
+        feedbackElement.style.color = valid ? "green" : "red";
 
-            if (!firstName || !email) {
-                modalBody.innerHTML = `<p class="text-danger">Please fill out all fields before submitting.</p>`;
-                return;
-            }
+        // Handle suggestions
+        if (!valid && suggestions.length > 0) {
+            feedbackElement.innerHTML += "<br>Suggestions: " + suggestions.map(s => 
+                `<button type="button" class="btn btn-link username-suggestion">${s}</button>`
+            ).join('');
+        }
 
-            // Proceed with fetch if validation passes
-            const formData = new FormData(form);
-            fetch("{% url 'manual_account_activation' %}", {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
+        // Add event listeners for suggestion buttons
+        document.querySelectorAll('.username-suggestion').forEach(button => {
+            button.addEventListener('click', () => {
+                inputElement.value = button.textContent;
+                inputElement.classList.remove('is-invalid');
+                feedbackElement.textContent = "Username is available."; // Clear suggestions
+                feedbackElement.style.color = "green";
+            });
+        });
+    }
+
+    // Function to validate input in real-time
+    function validateInput(field, value, inputElement) {
+        fetch(`/validate-user-input/?field=${field}&value=${value}`)
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    modalBody.innerHTML = `<p class="text-success">${data.message}</p>`;
-                } else {
-                    modalBody.innerHTML = `<p class="text-danger">${data.message}</p>`;
-                }
+                showFeedback(inputElement, data.valid, data.message, data.suggestions || []);
             })
             .catch(error => {
                 console.error("Error:", error);
-                modalBody.innerHTML = `<p class="text-danger">Something went wrong. Please try again.</p>`;
             });
-        });
+    }
 
+    // Real-time validation for the first name (username)
+    firstNameInput.addEventListener('input', function () {
+        const value = firstNameInput.value.trim();
+        if (value.length > 0) {
+            validateInput('username', value, firstNameInput);
+        }
     });
+
+    // Real-time validation for the email
+    emailInput.addEventListener('input', function () {
+        const value = emailInput.value.trim();
+        if (value.length > 0) {
+            validateInput('email', value, emailInput);
+        }
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Reset any previous error highlights
+        firstNameInput.classList.remove('is-invalid');
+        emailInput.classList.remove('is-invalid');
+
+        const formData = new FormData(form);
+
+        fetch("{% url 'manual_account_activation' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                modalBody.innerHTML = `<p class="text-success">${data.message}</p>`;
+            } else {
+                // Display error message
+                modalBody.innerHTML = `<p class="text-danger">${data.message}</p>`;
+
+                // Highlight the problematic field
+                if (data.error_field === "email") {
+                    emailInput.classList.add('is-invalid');
+                } else if (data.error_field === "first_name") {
+                    firstNameInput.classList.add('is-invalid');
+
+                    // Show username suggestions
+                    if (data.suggestions) {
+                        const suggestionsHTML = data.suggestions.map(suggestion => 
+                            `<button type="button" class="btn btn-link username-suggestion">${suggestion}</button>`
+                        ).join('');
+                        modalBody.innerHTML += `<p>Suggestions:</p>${suggestionsHTML}`;
+                    }
+
+                    // Add event listeners for username suggestions
+                    document.querySelectorAll('.username-suggestion').forEach(button => {
+                        button.addEventListener('click', () => {
+                            firstNameInput.value = button.textContent;
+                            firstNameInput.classList.remove('is-invalid');
+                        });
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            modalBody.innerHTML = `<p class="text-danger">Something went wrong. Please try again.</p>`;
+        });
+    });
+});
 </script>
 {% endblock %}
 
