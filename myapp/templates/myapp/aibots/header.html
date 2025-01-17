@@ -4,7 +4,11 @@
 <nav class="navbar navbar-expand-md navbar-light fixed-top custom-navbar">
     <div class="container">
         <a href="{% url 'personalized_plan' %}#home" class="navbar-brand">
-            <img src="{% static 'assets/images/logo2.png' %}" alt="Logo" class="logo">
+            <div class="logo-1">
+                <a href="{% url 'personalized_plan' %}">
+                    <img src="{% static 'assets/images/logo2.png' %}" alt="Logo">
+                </a>
+            </div>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
