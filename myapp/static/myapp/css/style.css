@@ -598,7 +598,7 @@ form textarea {
 }@media (max-width:767px) {
     .home-intro .content h2 {
         font-size: 40px;
-        margin-top: 150px;
+        margin-top: 8px;
     }
 
     .process-work .col-md-6 .content {
