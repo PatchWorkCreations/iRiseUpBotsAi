@@ -175,40 +175,23 @@
     50% { opacity: 1; transform: scale(1.2); }
 }
 
-/* Adjustments for smaller screens */
 @media (max-width: 768px) {
     .chat-container {
-        border-radius: 0;
-    }
-
-    .chat-header {
-        font-size: 18px;
-        padding: 10px;
+        height: 100vh; /* Make the chat container occupy the full viewport height */
+        display: flex;
+        flex-direction: column;
     }
 
     #chatbox {
-        padding: 10px;
-    }
-
-    .message {
-        font-size: 14px;
-        padding: 8px 12px;
+        flex-grow: 1; /* Ensures the chatbox grows to fill available space */
+        overflow-y: auto; /* Add scrolling inside the chatbox if necessary */
     }
 
     .chat-footer {
-        padding: 10px;
-    }
-
-    #message {
-        font-size: 14px;
-        padding: 8px 10px;
-    }
-
-    #send {
-        padding: 8px 12px;
-        font-size: 14px;
+        flex-shrink: 0; /* Prevents the footer from shrinking */
     }
 }
+
 
 /* Adjustments for large screens */
 @media (min-width: 1024px) {
