@@ -173,15 +173,21 @@ function formatResponse(text, keywords = []) {
     // Event listener for Send button
     sendButton.addEventListener('click', sendMessage);
 
-// Adjust the --vh variable for better compatibility
-function setViewportHeight() {
-    let vh = window.innerHeight * 0.01;
+// Adjust viewport height for Safari/Chrome
+function adjustViewportHeight() {
+    const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
 }
 
-// Call it initially and on resize
-setViewportHeight();
-window.addEventListener('resize', setViewportHeight);
+// Prevent the keyboard from pushing footer out of view
+window.addEventListener('resize', () => {
+    document.body.style.height = `${window.innerHeight}px`;
+    document.body.style.overflow = 'hidden';
+});
+
+// Run on load and resize
+adjustViewportHeight();
+window.addEventListener('resize', adjustViewportHeight);
 
 </script>
 {% endblock %}
