@@ -171,21 +171,21 @@ urlpatterns = [
 
     # Shortened URLs
     path('ty/e/', views.ezra_thank_you, name='thankyou-ezra-short'),
-    path('ty/r/', views.rudy_thank_you, name='thankyou-rudy-short'),
-    path('ty/a/', views.aria_thank_you, name='thankyou-aria-short'),
-    path('ty/ei/', views.einstein_thank_you, name='thankyou-einstein-short'),
-    path('ty/k/', views.kash_thank_you, name='thankyou-kash-short'),
-    path('ty/ec/', views.echo_thank_you, name='thankyou-echo-short'),
+    path('ty/t/', views.rudy_thank_you, name='thankyou-rudy-short'),
+    path('ty/l/', views.aria_thank_you, name='thankyou-aria-short'),
+    path('ty/miq/', views.einstein_thank_you, name='thankyou-einstein-short'),
+    path('ty/n/', views.kash_thank_you, name='thankyou-kash-short'),
+    path('ty/im/', views.echo_thank_you, name='thankyou-echo-short'),
     path('ty/g/', views.gideon_thank_you, name='thankyou-gideon-short'),
     path('ty/ks/', views.keystone_thank_you, name='thankyou-keystone-short'),
 
     # Readable URLs
-    path('thankyou/ezra/', views.ezra_thank_you, name='thankyou-ezra'),
-    path('thankyou/rudy/', views.rudy_thank_you, name='thankyou-rudy'),
-    path('thankyou/aria/', views.aria_thank_you, name='thankyou-aria'),
-    path('thankyou/einstein/', views.einstein_thank_you, name='thankyou-einstein'),
-    path('thankyou/kash/', views.kash_thank_you, name='thankyou-kash'),
-    path('thankyou/echo/', views.echo_thank_you, name='thankyou-echo'),
+    path('thankyou/elevate/', views.ezra_thank_you, name='thankyou-ezra'),
+    path('thankyou/thrive/', views.rudy_thank_you, name='thankyou-rudy'),
+    path('thankyou/lumos/', views.aria_thank_you, name='thankyou-aria'),
+    path('thankyou/mentor-iq/', views.einstein_thank_you, name='thankyou-einstein'),
+    path('thankyou/nexus/', views.kash_thank_you, name='thankyou-kash'),
+    path('thankyou/iamgine/', views.echo_thank_you, name='thankyou-echo'),
     path('thankyou/gideon/', views.gideon_thank_you, name='thankyou-gideon'),
     path('thankyou/keystone/', views.keystone_thank_you, name='thankyou-keystone'),
 
