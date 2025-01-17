@@ -74,20 +74,30 @@
 }
 
 .message {
-    margin-bottom: 10px;
-    padding: 10px 15px;
+    position: relative; /* Ensure the message bubble serves as a positioning context */
+    padding: 10px 15px; /* Adjust padding as needed */
+    margin-bottom: 25px; /* Add extra margin for the "seen" status below */
     border-radius: 15px;
     max-width: 75%;
     word-wrap: break-word;
-    align-self: flex-start;
 }
 
 .message.user {
-    background-color: #2446b6;
+    align-self: flex-end; /* Align user messages to the right */
+    background-color: #2446b6; /* User message background */
     color: white;
-    align-self: flex-end;
     text-align: left;
     border-radius: 15px 15px 0 15px;
+}
+
+.message .seen-status {
+    position: relative; /* Position relative to the message bubble container */
+    display: block; /* Ensure it appears as a block element */
+    margin-top: 5px; /* Add spacing between the message and the "seen" status */
+    font-size: 12px;
+    color: #888; /* Subtle gray color */
+    opacity: 0.8; /* Slight transparency for subtlety */
+    text-align: right; /* Align text to the right under the message */
 }
 
 .message.bot {
@@ -112,6 +122,8 @@
     align-items: center;
     border-top: 1px solid #ddd;
 }
+
+
 
 #message {
     flex-grow: 1;
