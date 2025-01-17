@@ -177,20 +177,61 @@
 
 @media (max-width: 768px) {
     .chat-container {
-        height: 100vh; /* Make the chat container occupy the full viewport height */
+        height: 100vh; /* Full viewport height */
         display: flex;
         flex-direction: column;
+        overflow: hidden; /* Prevent overall scrolling of the container */
     }
 
     #chatbox {
-        flex-grow: 1; /* Ensures the chatbox grows to fill available space */
-        overflow-y: auto; /* Add scrolling inside the chatbox if necessary */
+        flex-grow: 1; /* Allow the chatbox to fill remaining vertical space */
+        overflow-y: auto; /* Enable scrolling inside the chatbox */
+        padding: 15px;
+        background-color: #fafafa;
+    }
+
+    .chat-header,
+    .chat-footer {
+        height: 60px; /* Consistent height for both header and footer */
+        flex-shrink: 0; /* Ensure they don't shrink */
+        display: flex;
+        align-items: center;
+        padding: 0 15px; /* Add spacing inside */
+    }
+
+    .chat-header {
+        background-color: #1F3A93; /* Header background */
+        color: white;
     }
 
     .chat-footer {
-        flex-shrink: 0; /* Prevents the footer from shrinking */
+        background-color: #f1f1f1; /* Footer background */
+        border-top: 1px solid #ddd; /* Add a top border for distinction */
+    }
+
+    #message {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 14px;
+    }
+
+    #send {
+        background-color: #2141aa;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 50px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    #send:hover {
+        background-color: #0056b3;
     }
 }
+
 
 
 /* Adjustments for large screens */

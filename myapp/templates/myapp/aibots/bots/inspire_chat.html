@@ -174,5 +174,16 @@
 
     // Event listener for Send button
     sendButton.addEventListener('click', sendMessage);
+
+// Adjust the --vh variable for better compatibility
+function setViewportHeight() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Call it initially and on resize
+setViewportHeight();
+window.addEventListener('resize', setViewportHeight);
+
 </script>
 {% endblock %}
