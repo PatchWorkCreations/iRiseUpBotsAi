@@ -101,7 +101,7 @@ urlpatterns = [
     path('index', views.index, name='index'),
     path('index2', views.index2, name='index2'),
     
-     path('api/chat/inspire/', views.get_inspire_response, name='get_inspire_response'),  # Ezra
+    path('api/chat/inspire/', views.get_inspire_response, name='get_inspire_response'),  # Ezra
     path('api/chat/pulse/', views.get_pulse_response, name='get_pulse_response'),        # Caleb
     path('api/chat/soulspark/', views.get_soulspark_response, name='get_soulspark_response'),  # Harper
 
