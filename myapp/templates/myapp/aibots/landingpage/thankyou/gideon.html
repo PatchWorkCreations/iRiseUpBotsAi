@@ -125,6 +125,17 @@
     color: whitesmoke;
 }
 </style>
+<div id="loaderOverlay" class="loader-overlay">
+    <div class="spinner-container">
+        <div class="spinner-border custom-spinner" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="custom-text">Processing your request, please wait...</p>
+    </div>
+</div>
+
+
+
 <header class="header-05">
     <div class="container-fluid">
         <div class="row">
@@ -163,39 +174,49 @@
         </div>
     </div>
 </section>
-<div class="modal fade" id="activationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true">
+<div class="modal fade" id="activationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="activationModalLabel">I’m Excited You’re Here! 🎉</h5>
+                <h5 class="modal-title" id="activationModalLabel">Welcome! Let’s Get Started 🚀</h5>
             </div>
             <div class="modal-body">
+                <p class="text-muted">Activate your account in 3 quick steps! Just share your details below, and we’ll guide you from there. 😊</p>
                 <form id="activationForm" method="POST">
                     {% csrf_token %}
 
+                    <!-- First Name Field -->
                     <div class="mb-3">
-        <label for="first_name" class="form-label">
-            I’m so excited you’re here! Can you share your first name so I can personalize your experience?
-        </label>
-        <input type="text" name="first_name" class="form-control" id="first_name" placeholder="e.g., Alex" required>
-        <small class="form-text feedback"></small> <!-- Feedback goes here -->
-    </div>
+                        <label for="first_name" class="form-label" style="font-weight: bold;">What’s your first name? 😊</label>
+                        <small class="form-text text-muted">Just your first name, no need for last names!</small>
+                        <input type="text" name="first_name" class="form-control" id="first_name" placeholder="e.g., Alex" required>
+                        
+                        <small class="form-text"></small>
+                    </div>
 
-    <!-- Email Field -->
-    <div class="mb-3">
-        <label for="email" class="form-label">
-            What’s the best email we can use to activate your account?
-        </label>
-        <input type="email" name="email" class="form-control" id="email" placeholder="your-email@example.com" required>
-        <small class="form-text feedback"></small> <!-- Feedback goes here -->
-    </div>
+                    <!-- Email Field -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label" style="font-weight: bold;">Where can we send your account activation details? 📧</label>
+                        <small class="form-text text-muted">Make sure it’s an email you check often!</small>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="your-email@example.com" required>
+                         
+                        <small class="form-text"></small>
+                    </div>
 
                     <!-- Hidden Product ID -->
                     <input type="hidden" name="product_id" value="414281">
 
                     <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary">Activate My Account 🚀</button>
+                    <button type="submit" class="btn btn-primary">Let’s Get Started 🚀</button>
+                    <p class="text-muted mt-2">We’ll send you a confirmation email right away.</p>
+
+                    <p class="mt-3 text-center">
+                        Already have an account? <a href="https://www.iriseup.ai/sign_in" class="text-primary">Click here to log in</a>.
+                    </p>
                 </form>
+
+                </div>
+
             </div>
         </div>
     </div>
@@ -329,13 +350,23 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     // Initialize the modal and show it on page load
-    const activationModal = new bootstrap.Modal(document.getElementById('activationModal'));
+    const activationModal = new bootstrap.Modal(document.getElementById('activationModal'), {
+    backdrop: 'static', // Prevent outside click from closing
+    keyboard: false // Disable closing with Escape key
+    });
     activationModal.show();
+
 
     const form = document.getElementById('activationForm');
     const modalBody = document.querySelector('.modal-body');
     const firstNameInput = form.querySelector('[name="first_name"]');
     const emailInput = form.querySelector('[name="email"]');
+    const loaderOverlay = document.getElementById('loaderOverlay');
+    console.log(loaderOverlay);
+
+    loaderOverlay.classList.add('show'); // To show
+    loaderOverlay.classList.remove('show'); // To hide
+
 
     // Utility function to show feedback
     function showFeedback(inputElement, valid, message, suggestions = []) {
@@ -396,6 +427,8 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', function (e) {
         e.preventDefault();
 
+        loaderOverlay.style.display = 'flex';
+
         // Reset any previous error highlights
         firstNameInput.classList.remove('is-invalid');
         emailInput.classList.remove('is-invalid');
@@ -411,8 +444,12 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
+            loaderOverlay.style.display = 'none';
+
             if (data.success) {
                 modalBody.innerHTML = `<p class="text-success">${data.message}</p>`;
+                        // Optionally close the modal after success
+                        setTimeout(() => activationModal.hide(), 5000);
             } else {
                 // Display error message
                 modalBody.innerHTML = `<p class="text-danger">${data.message}</p>`;
@@ -442,11 +479,15 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .catch(error => {
+            loaderOverlay.style.display = 'none';
+
             console.error("Error:", error);
             modalBody.innerHTML = `<p class="text-danger">Something went wrong. Please try again.</p>`;
         });
     });
 });
+
+
 </script>
 {% endblock %}
 

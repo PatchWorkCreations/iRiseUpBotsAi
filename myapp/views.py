@@ -2445,7 +2445,7 @@ def manual_account_activation(request):
 
             return JsonResponse({
                 "success": True,
-                "message": "Your account has been successfully created! Please check your email for your temporary credentials."
+                "message": "Your account has been successfully created! Please check your email or spam folder for your temporary credentials."
             })
 
         except Exception as e:
