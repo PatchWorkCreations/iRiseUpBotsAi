@@ -3298,3 +3298,10 @@ def test_email_view(request):
         logger.error(f"Error sending test email: {e}")
         return JsonResponse({"success": False, "message": str(e)})
 
+
+
+def iriseupai_landing(request):
+    """
+    Landing page for iRiseUp AI.
+    """
+    return render(request, 'myapp/aibots/iriseupai/iriseupai_landing.html')

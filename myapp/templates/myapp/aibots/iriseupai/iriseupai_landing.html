@@ -1,0 +1,95 @@
+{% extends "myapp/aibots/iriseupai/base.html" %}
+
+{% block title %}
+    iRiseUp AI - Landing Page
+{% endblock %}
+
+{% block content %}
+<style>
+/* Central Heading */
+h1.display-4 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    color: #333333; /* Neutral dark gray for professional tone */
+}
+
+/* Input Field */
+.input-container {
+    width: 50%; /* Set container width */
+    margin: 0 auto;
+}
+
+.input-field {
+    border: 1px solid #ced4da;
+    border-radius: 25px;
+    padding: 15px;
+    font-size: 1.1rem;
+    width: 100%; /* Ensure responsive width */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: #495057;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+/* Buttons */
+.professional-button {
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px 20px;
+    color: #333333; /* Dark gray text for professionalism */
+    border: 1px solid #333333; /* Neutral gray outline */
+    background-color: #ffffff; /* Clean white background */
+    transition: all 0.3s ease;
+}
+
+.professional-button:hover {
+    background-color: #333333; /* Dark background on hover */
+    color: #ffffff; /* White text on hover */
+    transform: translateY(-2px); /* Subtle hover effect */
+}
+
+/* Overall Spacing */
+.container {
+    max-width: 800px; /* Limit width for better focus */
+    margin: auto;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .input-container {
+        width: 80%;
+    }
+
+    .action-buttons button {
+        width: 100%;
+        margin-top: 10px; /* Stack buttons on small screens */
+    }
+}
+
+</style>
+<div class="container text-center py-5">
+    <!-- Central Message -->
+    <h1 class="display-4 mt-5 mb-4 text-dark">What’s in your thoughts?</h1>
+
+    <!-- Input Section -->
+    <div class="input-container mx-auto">
+        <input type="text" class="form-control mx-auto input-field" placeholder="Message iRiseUp AI">
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons mt-4">
+        <button class="btn btn-outline-dark mx-2 professional-button">Get Advice</button>
+        <button class="btn btn-outline-dark mx-2 professional-button">Analyze Text</button>
+        <button class="btn btn-outline-dark mx-2 professional-button">Help Me Write</button>
+        <button class="btn btn-outline-dark mx-2 professional-button">More</button>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

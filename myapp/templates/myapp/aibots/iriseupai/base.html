@@ -1,0 +1,214 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}iRiseUp Ai{% endblock %}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Start Include All CSS -->
+        <link rel="stylesheet" href="{% static 'assets/css/bootstrap.css' %}"/>
+        <link rel="stylesheet" href="{% static 'assets/css/font-awesome.min.css' %}"/>
+        <link rel="stylesheet" href="{% static 'assets/css/shapro-icon.css' %}"/>
+        <link rel="stylesheet" href="{% static 'assets/css/animate.css' %}"/>
+        <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}"/>
+        <link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}"/>
+        <link rel="stylesheet" href="{% static 'assets/css/slick.css' %}"/>
+        <link rel="stylesheet" href="{% static 'assets/css/lightcase.css' %}"/>
+        <link rel="stylesheet" href="{% static 'assets/css/preset.css' %}"/>
+        <link rel="stylesheet" href="{% static 'assets/css/theme.css' %}"/>
+        <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}" />
+        <link rel="stylesheet" href="{% static 'assets/css/responsiveness.css' %}" />
+
+        <!-- End Include All CSS -->
+
+        <!-- Favicon Icon -->
+        <link rel="icon" type="image/png" href="{% static 'assets/images/favicon.png' %}">
+
+        {% block extra_head %}{% endblock %}
+    </head>
+    <style>
+        
+.is-invalid {
+    border-color: #dc3545; /* Bootstrap's red border */
+    background-color: #f8d7da; /* Light red background */
+}
+
+/* General Modal Styling */
+.modal-content {
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    background-color: white;
+}
+
+/* Modal Header Styling */
+.modal-header {
+    background-color: #007bff; /* Blue header */
+    color: white;
+    text-align: center;
+    border-radius: 12px 12px 0 0;
+}
+
+/* Modal Title Styling */
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Modal Body Styling */
+.modal-body {
+    font-family: 'Arial', sans-serif;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Center Modal Properly on Full Screen */
+.modal-dialog {
+    display: flex;
+    align-items: center; /* Vertically center */
+    justify-content: center; /* Horizontally center */
+    min-height: 100vh; /* Full viewport height */
+    margin: 0 auto; /* Center horizontally on the screen */
+}
+
+/* Force Full Alignment on Large Screens */
+.modal-dialog-centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto !important; /* Override Bootstrap defaults */
+    max-width: 500px; /* Limit width for better readability */
+    width: 100%;
+}
+
+/* Input Field Styling */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Button Styling */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust Modal Width for Mobile */
+@media (max-width: 767px) {
+    .modal-content {
+        width: 95%; /* Fit mobile screens */
+        margin: 0 auto;
+    }
+}
+
+/* Style the "Already have an account" text */
+p.text-center a {
+    color: #007bff; /* Match your primary theme color */
+    text-decoration: none; /* Remove underline for cleaner look */
+    font-weight: bold; /* Make the link stand out */
+}
+
+p.text-center a:hover {
+    text-decoration: underline; /* Underline on hover for clarity */
+    color: #0056b3; /* Darker blue for hover */
+}
+
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Dimmed background */
+    z-index: 9999; /* Ensure it's above all other elements */
+    display: none; /* Hidden initially */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    display: hidden; /* Flexbox for centering */
+    flex-direction: column; /* Stack spinner and text vertically */
+}
+
+.loader-overlay.show {
+    display: flex; /* Show the loader when the class is applied */
+}
+
+.spinner-container {
+    text-align: center; /* Align spinner and text centrally */
+}
+
+.custom-spinner {
+    width: 4rem; /* Adjust spinner size */
+    height: 4rem;
+    border-width: 0.4rem; /* Adjust border thickness */
+    color: whitesmoke !important; /* Ensure spinner color is whitesmoke */
+}
+
+.custom-text {
+    margin-top: 1rem; /* Add spacing between spinner and text */
+    font-size: 1.2rem; /* Adjust font size */
+    color: whitesmoke !important; /* Force text color to whitesmoke */
+    text-align: center; /* Center-align the text */
+}
+
+    </style>
+    <body>
+        <!-- Preloader Start -->
+        <!--                        
+        <div class="preloader">
+            <div class='circle'>
+                <div class="circle-cutter"></div>
+                <div class="circle-inner"></div>
+            </div>
+        </div>
+        -->
+        <!-- Preloader End -->
+
+        <!-- Header Start -->
+       
+        <!-- Header End -->
+
+        <!-- Main Content -->
+        {% include 'myapp/aibots/iriseupai/header.html' %}
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+        {% include 'myapp/aibots/iriseupai/footer.html' %}
+        <!-- End Main Content -->
+      
+
+        <!-- JavaScript Files -->
+        <script src="{% static 'assets/js/jquery.js' %}"></script>
+        <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'assets/js/jquery.appear.js' %}"></script>
+        <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'assets/js/jquery.shuffle.min.js' %}"></script>
+        <script src="{% static 'assets/js/tweenmax.min.js' %}"></script>
+        <script src="{% static 'assets/js/slick.js' %}"></script>
+        <script src="{% static 'assets/js/lightcase.js' %}"></script>
+        <script src="{% static 'assets/js/gmaps.js' %}"></script>
+        <script src="https://maps.google.com/maps/api/js?key=AIzaSyBJtPMZ_LWZKuHTLq5o08KSncQufIhPU3o"></script>
+        <script src="{% static 'assets/js/jquery.easing.1.3.js' %}"></script>
+        <script src="{% static 'assets/js/circle-progress.js' %}"></script>
+        <script src="{% static 'assets/js/theme.js' %}"></script>
+
+        {% block extra_js %}{% endblock %}
+    </body>
+</html>

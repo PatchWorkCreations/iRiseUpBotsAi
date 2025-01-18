@@ -3,7 +3,7 @@ from myapp import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', views.personalized_plan, name='personalized_plan'),
+    path(' ', views.personalized_plan, name='personalized_plan'),
     path('sign_in', views.sign_in, name='sign_in'),
     path('sign_out/', views.sign_out, name='sign_out'),
 
@@ -204,4 +204,5 @@ urlpatterns = [
     path('dashboard/keystone/', views.keystone_dashboard, name='keystone_dashboard'),
     path('validate-user-input/', views.validate_user_input, name='validate_user_input'),
 
+    path('iriseup', views.iriseupai_landing, name='iriseupai_landing'),
 ] 
