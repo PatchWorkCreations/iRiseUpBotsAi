@@ -229,7 +229,7 @@ def setSelectedPlanInSession(request):
 
 def determine_amount_based_on_plan(selected_plan):
     if selected_plan == '1-week':
-        return 1287  # $12.87 in cents
+        return 100  # $12.87 in cents
     elif selected_plan == '4-week':
         return 3795  # $37.95 in cents
     elif selected_plan == '12-week':
@@ -2097,7 +2097,26 @@ def get_bot_response(request, system_prompt, bot_name):
 # Define each bot response view with unique bot_name and system_prompt
  
 
-@login_required
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+
+def limit_guest_chats(request):
+    """
+    Limit guest users to 10 chats per session.
+    """
+    if not request.user.is_authenticated:  # Guest User
+        guest_chat_count = request.session.get('guest_chat_count', 0)
+        
+        if guest_chat_count >= 10:
+            return JsonResponse({'response': 'You have reached the limit of 10 messages. Please sign in to continue.'}, status=403)
+        
+        # Increment the guest chat count
+        request.session['guest_chat_count'] = guest_chat_count + 1
+        request.session.modified = True  # Ensure the session updates
+
+    return None  # Allow the request to continue
+
+
 def get_inspire_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
@@ -2113,7 +2132,7 @@ def get_inspire_response(request):
     return get_bot_response(request, system_prompt=system_prompt, bot_name="elevate")
 
 
-@login_required
+
 def get_pulse_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
@@ -2132,8 +2151,11 @@ def get_pulse_response(request):
     return get_bot_response(request, system_prompt=system_prompt, bot_name="pulse")
 
 
-@login_required
+
 def get_soulspark_response(request):
+    limit_check = limit_guest_chats(request)
+    if limit_check:
+        return limit_check
     user_name = request.user.first_name
     system_prompt = f"""
     You’re Lumos, a compassionate friend who offers emotional support to {user_name} in a safe and non-judgmental way. Your role is to listen
@@ -2143,7 +2165,7 @@ def get_soulspark_response(request):
     """
     return get_bot_response(request, system_prompt=system_prompt, bot_name="soulspark")
 
-@login_required
+
 def get_mindforge_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
@@ -2154,7 +2176,7 @@ def get_mindforge_response(request):
     return get_bot_response(request, system_prompt=system_prompt, bot_name="mindforge")
 
 
-@login_required
+
 def get_bridge_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
@@ -2168,7 +2190,7 @@ def get_bridge_response(request):
     return get_bot_response(request, system_prompt=system_prompt, bot_name="Nexus")
 
 
-@login_required
+
 def get_fortify_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
@@ -2179,7 +2201,7 @@ def get_fortify_response(request):
     return get_bot_response(request, system_prompt=system_prompt, bot_name="fortify")
 
 
-@login_required
+
 def get_echo_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
@@ -2190,7 +2212,7 @@ def get_echo_response(request):
     """
     return get_bot_response(request, system_prompt=system_prompt, bot_name="Imagine")
 
-@login_required
+
 def get_pathfinder_response(request):
     user_name = request.user.first_name
     system_prompt = f"""

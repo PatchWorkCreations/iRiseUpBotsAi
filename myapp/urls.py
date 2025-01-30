@@ -205,4 +205,12 @@ urlpatterns = [
     path('validate-user-input/', views.validate_user_input, name='validate_user_input'),
 
     path('iriseup', views.iriseupai_landing, name='iriseupai_landing'),
+    
+    path('api/chat/lumos/', views.get_soulspark_response, name='get_soulspark_response'),  # Lumos (was soulspark)
+    path('api/chat/mentor-iq/', views.get_mindforge_response, name='get_mindforge_response'),  # Mentor IQ (was mindforge)
+    path('api/chat/elevate/', views.get_inspire_response, name='get_inspire_response'),  # Elevate (was inspire)
+    path('api/chat/thrive/', views.get_pulse_response, name='get_pulse_response'),  # Thrive (was pulse)
+    path('api/chat/imagine/', views.get_echo_response, name='get_echo_response'),  # Imagine (was echo)
+    path('api/chat/gideon/', views.get_pathfinder_response, name='get_pathfinder_response'),  # Gideon (same)
+    path('api/chat/nexus/', views.get_bridge_response, name='get_bridge_response'),  # Nexus (was bridge)
 ] 
