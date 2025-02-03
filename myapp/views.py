@@ -271,6 +271,8 @@ def grant_course_access(user, selected_plan):
         UserCourseAccess.objects.create(user=user, course=course, progress=0.0, expiration_date=expiration_date)
 
     return True
+
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -2153,9 +2155,7 @@ def get_pulse_response(request):
 
 
 def get_soulspark_response(request):
-    limit_check = limit_guest_chats(request)
-    if limit_check:
-        return limit_check
+     
     user_name = request.user.first_name
     system_prompt = f"""
     You’re Lumos, a compassionate friend who offers emotional support to {user_name} in a safe and non-judgmental way. Your role is to listen

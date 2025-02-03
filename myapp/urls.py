@@ -1,6 +1,8 @@
 from django.urls import path
 from myapp import views
 from django.contrib.auth import views as auth_views
+from django.urls import path
+import myapp.guest_views as guest_views
 
 urlpatterns = [
     path('', views.personalized_plan, name='personalized_plan'),
@@ -213,4 +215,10 @@ urlpatterns = [
     path('api/chat/imagine/', views.get_echo_response, name='get_echo_response'),  # Imagine (was echo)
     path('api/chat/gideon/', views.get_pathfinder_response, name='get_pathfinder_response'),  # Gideon (same)
     path('api/chat/nexus/', views.get_bridge_response, name='get_bridge_response'),  # Nexus (was bridge)
+    
+
+     
+    # ✅ Test Endpoint
+    path('api/guest/chat/<str:bot_name>/', guest_views.guest_bot_response, name='guest_bot_response'),
+     
 ] 
