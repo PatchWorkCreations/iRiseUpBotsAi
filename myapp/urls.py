@@ -5,7 +5,7 @@ from django.urls import path
 import myapp.guest_views as guest_views
 
 urlpatterns = [
-    path('', views.personalized_plan, name='personalized_plan'),
+    path('personalized_plan', views.personalized_plan, name='personalized_plan'),
     path('sign_in', views.sign_in, name='sign_in'),
     path('sign_out/', views.sign_out, name='sign_out'),
 
@@ -206,7 +206,7 @@ urlpatterns = [
     path('dashboard/keystone/', views.keystone_dashboard, name='keystone_dashboard'),
     path('validate-user-input/', views.validate_user_input, name='validate_user_input'),
 
-    path('iriseup', views.iriseupai_landing, name='iriseupai_landing'),
+    path('', views.iriseupai_landing, name='iriseupai_landing'),
     
     path('api/chat/lumos/', views.get_soulspark_response, name='get_soulspark_response'),  # Lumos (was soulspark)
     path('api/chat/mentor-iq/', views.get_mindforge_response, name='get_mindforge_response'),  # Mentor IQ (was mindforge)
