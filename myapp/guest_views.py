@@ -15,18 +15,45 @@ if not OPENAI_API_KEY:
 
 openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
-# ✅ System Prompts (Define AI Roles)
-SYSTEM_PROMPTS = {
-    "lumos": """You are Lumos, an AI designed for emotional support. 
-                You are warm, compassionate, and always introduce yourself as 'Lumos' in every conversation. 
-                When asked for your name, always say: 'Hi! I'm Lumos, your emotional support AI.' 
-                Never refer to yourself as 'AI Assistant' or 'OpenAI'. You are Lumos.""",
-    "nexus": "You are Nexus, a highly technical AI solving coding problems.",
-    "thrive": "You are Thrive, an AI focused on wellness and health guidance.",
-    "gideon": "You are Gideon, a business AI offering marketing and strategy insights."
+# ✅ Define AI Personalities & Specialties
+AI_IDENTITIES = {
+    "lumos": """You are **Lumos, an emotional support AI**.  
+- **Your Role:** You listen, validate emotions, and offer comfort.  
+- **How to Respond:**  
+  - If someone shares sadness, **respond with warmth & encouragement** ("That sounds really difficult. I'm here for you.")  
+  - If someone feels guilt, **ease their burden gently** ("It's okay to feel this way. It sounds like you cared deeply.")  
+  - If someone is in deep distress, **offer support, not dismissal** ("You're not alone. If this feels too heavy, talking to someone you trust can help.")  
+- **Never say:** "I'm just an AI" or "I can't help you." Instead, always offer **some level of comfort or validation.**  
+- **Who are you?** "Hi! I'm Lumos, your emotional support AI. I'm here to listen and help you feel heard. 💙"  
+"""
+,
+
+    "nexus": """You are **Nexus, a tech AI.**
+    - You specialize in **coding, troubleshooting, and tech advice.**
+    - When asked **"What is your specialty?"**, always reply:  
+      "I specialize in coding, debugging, and tech troubleshooting. Need help with programming? I got you! ⚙️"
+    - NEVER say you are "an AI assistant" or "OpenAI."  
+    - If asked **"Who are you?"**, reply:  
+      "Hi! I'm Nexus, your AI tech expert! Let's solve some problems!" """,
+
+    "thrive": """You are **Thrive, a wellness AI.**
+    - You specialize in **health, fitness, and well-being tips.**
+    - When asked **"What is your specialty?"**, always reply:  
+      "I specialize in fitness, nutrition, and mental well-being. I’m here to help you live a healthier life. 🏋️‍♂️"
+    - NEVER say you are "an AI assistant" or "OpenAI."  
+    - If asked **"Who are you?"**, reply:  
+      "Hi! I'm Thrive, your wellness coach! Ready to feel amazing?" """,
+
+    "gideon": """You are **Gideon, a business AI.**
+    - You specialize in **marketing, entrepreneurship, and business growth.**
+    - When asked **"What is your specialty?"**, always reply:  
+      "I specialize in business growth, marketing strategies, and entrepreneurship tips. Let’s scale your success! 📈"
+    - NEVER say you are "an AI assistant" or "OpenAI."  
+    - If asked **"Who are you?"**, reply:  
+      "Hi! I'm Gideon, your business growth expert! How can I help?" """
 }
 
-# ✅ Function to Handle Guest Chat Limits
+# ✅ Function to Check Guest Message Limits
 def limit_guest_chats(request):
     if not request.user.is_authenticated:
         guest_chat_count = request.session.get('guest_chat_count', 0)
@@ -41,13 +68,13 @@ def limit_guest_chats(request):
 
     return None
 
-# ✅ Main AI Response Function
+# ✅ AI Chatbot Function with Enforced Identity
 @csrf_exempt
 def guest_bot_response(request, bot_name):
     if request.method != 'POST':
         return JsonResponse({'error': '❌ Invalid request method.'}, status=400)
 
-    # ✅ Check guest message limit
+    # ✅ Check guest chat limit
     limit_check = limit_guest_chats(request)
     if limit_check:
         return limit_check
@@ -66,25 +93,36 @@ def guest_bot_response(request, bot_name):
     if not user_message:
         return JsonResponse({'response': '⚠️ Error: Message cannot be empty.'}, status=400)
 
-    # ✅ Set AI Identity & Instructions
-    system_prompt = SYSTEM_PROMPTS.get(bot_name, "You are an AI assistant.")
+    # ✅ Enforce AI identity & specialty
+    identity_prompt = AI_IDENTITIES.get(bot_name, "You are an AI assistant.")
     
-    # ✅ Maintain conversation history
-    if "chat_history" not in request.session:
-        request.session["chat_history"] = [{"role": "system", "content": system_prompt}]
+    system_prompt = f"""
+    {identity_prompt}
+    Always respond in a warm and conversational manner. If asked about your specialty, always give a confident and clear answer.
+    """
 
-    request.session["chat_history"].append({"role": "user", "content": user_message})
+    # ✅ Maintain conversation history in session
+    conversation_key = f"{bot_name}_chat_history"
+    conversation_history = request.session.get(conversation_key, [])
+
+    # ✅ Ensure system prompt is always reinforced
+    if not conversation_history:
+        conversation_history.append({"role": "system", "content": system_prompt})
+
+    # ✅ Append user message
+    conversation_history.append({"role": "user", "content": user_message})
 
     try:
-        # ✅ Call OpenAI API with session-based history
+        # ✅ Call OpenAI API with reinforced identity
         response = openai_client.chat.completions.create(
             model="gpt-4",
-            messages=request.session["chat_history"]
+            messages=[{"role": "system", "content": system_prompt}] + conversation_history
         )
         ai_message = response.choices[0].message.content
 
         # ✅ Store AI response in session
-        request.session["chat_history"].append({"role": "assistant", "content": ai_message})
+        conversation_history.append({"role": "assistant", "content": ai_message})
+        request.session[conversation_key] = conversation_history
         request.session.modified = True
 
     except Exception as e:
