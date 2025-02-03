@@ -982,6 +982,153 @@ def sign_out(request):
     logout(request)  # This logs the user out
     return redirect('sign_in')  # Redirect to the sign-in page after logging out
 
+def send_welcome_email(user_email, first_name):
+    """
+    Sends a professional and warm welcome email to new iRiseUp AI users.
+    """
+    subject = "🚀 Welcome to iRiseUp AI – Your Future Starts Here!"
+    from_email = settings.DEFAULT_FROM_EMAIL  # Make sure this is set in settings.py
+    to_email = [user_email]
+
+    # Plain text fallback content
+    text_content = (
+        f"Dear {first_name},\n\n"
+        "Welcome to iRiseUp AI! We are thrilled to have you join a growing community of innovators, leaders, and visionaries like yourself.\n\n"
+        "Our mission is simple: to empower you with AI-driven tools that help you achieve more, faster.\n\n"
+        "We believe in your potential, and we’re here to support you every step of the way.\n\n"
+        "If you have any questions or need assistance, feel free to reach out to our support team anytime.\n\n"
+        "Let’s make this journey extraordinary together!\n\n"
+        "Best regards,\n"
+        "The iRiseUp AI Team"
+    )
+
+    # HTML Content
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Welcome to iRiseUp AI</title>
+        <style>
+            body {{
+                font-family: 'Arial', sans-serif;
+                color: #333;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 20px auto;
+                background-color: #ffffff;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                padding: 30px;
+            }}
+            .header {{
+                background-color: #007bff;
+                color: #ffffff;
+                padding: 20px;
+                text-align: center;
+                font-size: 22px;
+                font-weight: bold;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+            }}
+            .content {{
+                padding: 25px;
+                text-align: left;
+                font-size: 16px;
+                line-height: 1.6;
+                color: #444;
+            }}
+            .footer {{
+                text-align: center;
+                padding: 15px;
+                font-size: 12px;
+                color: #888;
+                background-color: #f9f9f9;
+                border-bottom-left-radius: 8px;
+                border-bottom-right-radius: 8px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                Welcome to iRiseUp AI, {first_name}!
+            </div>
+
+            <div class="content">
+                <p>Dear {first_name},</p>
+                <p>We're excited to welcome you to the iRiseUp AI family! 🎉</p>
+                <p>At iRiseUp AI, we believe that success is built on knowledge, innovation, and the right tools. You’ve taken a big step in the right direction, and we’re here to guide you every step of the way.</p>
+                <p>Our AI-driven platform is designed to help you maximize your potential, streamline your workflow, and unlock new opportunities.</p>
+                <p>If you ever need assistance, our support team is ready to help.</p>
+                <p>Here’s to your success, {first_name}! 🚀</p>
+                <p>Best regards,<br><strong>The iRiseUp AI Team</strong></p>
+            </div>
+
+            <div class="footer">
+                This is an automated email, please do not reply. <br>
+                If you have any questions, feel free to contact our support team.
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    # Create and send the email
+    email = EmailMultiAlternatives(subject, text_content, from_email, to_email)
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.http import JsonResponse
+from django.db import IntegrityError  
+
+def signup_view(request):
+    if request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        # 🛑 Check for existing username & email BEFORE creation
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({"success": False, "message": "Username already taken!", "error_field": "username"})
+        
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({"success": False, "message": "Email already registered!", "error_field": "email"})
+
+        # ✅ Wrap user creation inside a Try-Catch Block
+        try:
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+            send_welcome_email(user_email=email, first_name=first_name)
+        except IntegrityError:
+            return JsonResponse({"success": False, "message": "This username is already taken! Try another one.", "error_field": "username"})
+
+        # ✅ Login user & redirect to `coursemenu`
+        login(request, user)
+        return JsonResponse({
+            "success": True, 
+            "message": "🎉 Welcome! Your AI-powered journey starts now.",
+            "redirect_url": "/coursemenu/"  # 🔥 Ensure we pass the redirect URL
+        })
+
+    return render(request, "myapp/aibots/iriseupai/signup.html")
+
 
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy

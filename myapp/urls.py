@@ -220,5 +220,5 @@ urlpatterns = [
      
     # ✅ Test Endpoint
     path('api/guest/chat/<str:bot_name>/', guest_views.guest_bot_response, name='guest_bot_response'),
-     
+    path('signup/', views.signup_view, name='signup'),
 ] 

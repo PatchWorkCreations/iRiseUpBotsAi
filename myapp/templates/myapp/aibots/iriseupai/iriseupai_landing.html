@@ -807,8 +807,164 @@
     }
 }
 
+/* 🌟 Modern Signup Modal */
+/* 🎨 General Modal Styling */
+.signup-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 💎 Modal Content Box */
+.signup-modal-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: slideIn 0.4s ease-in-out;
+}
+
+/* ❌ Close Button */
+.signup-close-button {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    font-size: 22px;
+    color: #555;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.signup-close-button:hover {
+    color: #ff4757;
+    transform: scale(1.2);
+}
+
+/* 🚀 Title Styling */
+.signup-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+/* 📌 Text */
+.signup-text {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* ✅ Primary CTA Button */
+.signup-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    width: 100%;
+    text-align: center;
+}
+
+.signup-btn:hover {
+    background: linear-gradient(90deg, #0056b3, #003f80);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.4);
+}
+
+/* 👀 Secondary Option */
+.signup-secondary {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 12px;
+}
+
+.signup-secondary a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-secondary a:hover {
+    text-decoration: underline;
+}
+
+/* 🌟 Animation Effects */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* 📱 Mobile Optimization */
+@media (max-width: 480px) {
+    .signup-modal-content {
+        max-width: 90%;
+        padding: 20px;
+    }
+    
+    .signup-title {
+        font-size: 1.6rem;
+    }
+
+    .signup-text {
+        font-size: 1rem;
+    }
+
+    .signup-btn {
+        font-size: 1.1rem;
+        padding: 10px 20px;
+    }
+}
 
 </style>
+
+<div id="signup-modal" class="signup-modal">
+    <div class="signup-modal-content">
+        <span class="signup-close-button" onclick="closeSignupModal()">&times;</span>
+        
+        <!-- 🚀 Stronger Headline -->
+        <h2 class="signup-title">🚀 Don’t Miss Out on More Chats!</h2>
+
+        <!-- 🔥 Key Benefit Statement -->
+        <p class="signup-text">
+            You've hit the free trial limit. Sign up now to unlock more chats and deeper AI insights—free!  
+        </p>
+
+        <!-- ✅ Action-Oriented CTA -->
+        <a href="{% url 'signup' %}" class="signup-btn">🔥 Unlock More Chats Now</a>
+
+        <!-- 👀 Subtle Secondary Option -->
+        <p class="signup-secondary">
+            No credit card required. <a href="#" onclick="closeSignupModal()">Maybe later</a>
+        </p>
+    </div>
+</div>
+
 
 <section class="hero-section-iriseup">
     <div class="container">
@@ -871,7 +1027,7 @@
         <!-- Trial Limit Message -->
         <p id="trial-limit-message" class="hidden">
             🚀 You've reached the free trial limit! Sign up for unlimited chats.
-            <a href="/signup" class="btn btn-primary">Unlock Full AI Access</a>
+            <a href="{% url 'signup' %}" class="btn btn-primary">Unlock Full AI Access</a>
         </p>
     </div>
 </section>
@@ -1103,7 +1259,7 @@
                     <li><i class="fas fa-check-circle"></i> Up to 8 Chats/Day – Great for casual use</li>
                     <li><i class="fas fa-check-circle"></i> 1 AI Assistant – Meet Lumos, your first AI guide</li>
                 </ul>
-                <a href="/signup" class="btn btn-secondary">Try for Free</a>
+                <a href="{% url 'signup' %}" class="btn btn-secondary">Try for Free</a>
             </div>
 
             <!-- Pro Plan (Most Popular) -->
@@ -1150,73 +1306,74 @@ document.addEventListener('DOMContentLoaded', function () {
     const typingIndicator = document.getElementById('typing-indicator');
     const messageInput = document.getElementById('message');
     const sendButton = document.getElementById('send');
-    const trialLimitMessage = document.getElementById('trial-limit-message');
     const aiSelect = document.getElementById('ai-select');
     const aiNameDisplay = document.getElementById('ai-name');
+    const signupModal = document.getElementById('signup-modal');
 
-    let messageCount = 0;
-    const TRIAL_LIMIT = 10;  // Matches backend guest chat limit
-    let currentAI = aiSelect.value;
+    // ✅ Ensure the correct trial limit
+    const TRIAL_LIMIT = 10;
 
-    // 🛡️ Get CSRF Token for Logged-in Users
+    // ✅ Fetch stored message count or initialize it to 0
+    let messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
+
+    // 🔍 Debugging: Log message count to console
+    console.log("🔥 Initial messageCount:", messageCount);
+
     function getCSRFToken() {
         const token = document.querySelector('meta[name="csrf-token"]');
         return token ? token.getAttribute('content') : null;
     }
 
-    function formatResponse(text) {
-    if (!text) return '';
-
-    // Convert new lines to `<br>` for paragraph separation
-    text = text.replace(/\n/g, '<br>');
-
-    // Convert numbered lists (1., 2., 3.) into `<ol><li></li></ol>`
-    text = text.replace(/<br>(\d+)\.\s/g, (match, p1) => {
-        return p1 === "1" ? '<ol><li>' : '</li><li>';
-    });
-    text = text.replace(/<\/li><br>(?!\d+\.)/g, '</li></ol><br>'); // Close ordered list at end
-
-    // Convert bullet points (- or *) into `<ul><li></li></ul>`
-    text = text.replace(/<br>[-*]\s/g, '<ul><li>');  // Start unordered list
-    text = text.replace(/<\/li><br>[-*]\s/g, '</li><li>');  // Continue list
-    text = text.replace(/<\/li><br>/g, '</li></ul><br>');  // Close unordered list
-
-    // Ensure any open lists are closed at the end
-    if (!text.endsWith('</ul>')) text += '</ul>';
-    if (!text.endsWith('</ol>')) text += '</ol>';
-
-    // Bold section headers (Detects capitalized words followed by :)
-    text = text.replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:');
-
-    return text;
-}
-
-// ✅ Update `addMessage` function to use `formatResponse`
-function addMessage(sender, text) {
-    const formattedText = formatResponse(text);
-    const messageClass = sender === 'You' ? 'user' : 'bot';
-    const messageHTML = `
-        <div class="message ${messageClass}">
-            ${formattedText}
-            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-        </div>
-    `;
-    chatbox.innerHTML += messageHTML;
-    chatbox.scrollTop = chatbox.scrollHeight;
-}
-
-
-    // 🔄 Handle AI Switching
-    aiSelect.addEventListener('change', function () {
-        currentAI = this.value;
-        aiNameDisplay.textContent = this.options[this.selectedIndex].text.replace(/🔹|💡|⚙️|📈/g, '').trim();
-        chatbox.innerHTML = `
-            <div class="message bot">
-                Hi there! 👋 I'm ${aiNameDisplay.textContent}. Ask me anything!
-                <div class="message-time"></div>
+    function addMessage(sender, text) {
+        const messageClass = sender === 'You' ? 'user' : 'bot';
+        const messageHTML = `
+            <div class="message ${messageClass}">
+                ${text}
+                <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
             </div>
         `;
-    });
+        chatbox.innerHTML += messageHTML;
+        chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+        typingIndicator.style.display = 'flex';
+    }
+
+    function hideTypingIndicator() {
+        typingIndicator.style.display = 'none';
+    }
+
+    // 🚀 Show Signup Modal when Trial Limit is Reached
+    function showSignupModal() {
+    console.log("🛑 Reached trial limit! Showing signup modal.");
+    
+    // Check if modal exists
+    if (!signupModal) {
+        console.error("❌ signupModal not found in DOM!");
+        return;
+    }
+
+    signupModal.style.display = "flex"; // ✅ Force visibility
+    signupModal.classList.add("show");
+    document.body.style.overflow = "hidden"; 
+}
+
+
+function closeSignupModal() {
+    console.log("🔄 Closing signup modal.");
+    
+    // Check if modal exists
+    if (!signupModal) {
+        console.error("❌ signupModal not found in DOM!");
+        return;
+    }
+
+    signupModal.style.display = "none"; // ✅ Hide modal properly
+    signupModal.classList.remove("show");
+    document.body.style.overflow = "auto"; 
+}
+
 
     function sendMessage() {
         const message = messageInput.value.trim();
@@ -1225,7 +1382,21 @@ function addMessage(sender, text) {
         addMessage('You', message);
         showTypingIndicator();
 
-        fetch(`/api/guest/chat/${currentAI}/`, {
+        // ✅ Debugging: Ensure message count updates correctly
+        console.log("📨 Sending message:", message);
+        console.log("📊 Current message count before increment:", messageCount);
+
+        if (messageCount >= TRIAL_LIMIT) {
+            showSignupModal();  // ✅ Ensure this only triggers after the 10th message
+            return;
+        }
+
+        messageCount++; // ✅ Increase count
+        localStorage.setItem('messageCount', messageCount);
+
+        console.log("✅ New messageCount after increment:", messageCount); // Debugging
+
+        fetch(`/api/guest/chat/${aiSelect.value}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1238,7 +1409,12 @@ function addMessage(sender, text) {
         .then(data => {
             hideTypingIndicator();
             addMessage(aiNameDisplay.textContent, data.response);
-            messageInput.value = '';  
+            messageInput.value = '';
+
+            // ✅ Show modal ONLY when limit is reached
+            if (messageCount >= TRIAL_LIMIT) {
+                setTimeout(showSignupModal, 500);
+            }
         })
         .catch(error => {
             hideTypingIndicator();
@@ -1247,65 +1423,6 @@ function addMessage(sender, text) {
         });
     }
 
-    // 🎭 Show/Hide Typing Indicator
-    function showTypingIndicator() {
-        typingIndicator.style.display = 'flex';
-    }
-
-    function hideTypingIndicator() {
-        typingIndicator.style.display = 'none';
-    }
-
-    // 🚀 Send Message Function
-    function sendMessage() {
-        const message = messageInput.value.trim();
-        console.log("📨 Attempting to send:", message);  // ✅ Debugging line
-
-        if (!message) {  
-            console.warn("⚠️ Empty message, ignoring send action.");
-            return;
-        }
-
-        addMessage('You', message);
-        showTypingIndicator();
-
-        fetch(`/api/guest/chat/${currentAI}/`, {  // ✅ FIXED API URL for guest users
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCSRFToken()  // ✅ Ensure CSRF Token is included
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify({ message: message }) // ✅ Ensure valid JSON format
-        })
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            hideTypingIndicator();
-            addMessage(aiNameDisplay.textContent, data.response);
-            messageInput.value = '';  
-        })
-        .catch(error => {
-            hideTypingIndicator();
-            console.error('❌ Fetch Error:', error);
-            addMessage('System', '⚠️ Oops! Something went wrong. Please try again.');
-        });
-    }
-
-    // 🔄 Function to Refresh CSRF Token
-    function refreshCSRFToken() {
-        return fetch('/get-csrf-token/', { method: 'GET', credentials: 'same-origin' })  // Ensure we use the same session
-            .then(response => response.json())
-            .then(data => {
-                console.log("🔄 CSRF Token Refreshed:", data.csrf_token);
-                document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.csrf_token);
-            })
-            .catch(error => console.error("❌ CSRF Token Refresh Failed:", error));
-    }
-
-    // ⏎ Send Message on Enter Key
     messageInput.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -1313,9 +1430,16 @@ function addMessage(sender, text) {
         }
     });
 
-    // 🖱️ Send Message on Button Click
     sendButton.addEventListener('click', sendMessage);
+
+    // ✅ Reset message count when modal is closed
+    document.querySelector('.signup-close-button').addEventListener('click', function () {
+        closeSignupModal();
+        localStorage.setItem('messageCount', 0); // Reset count when user closes modal
+        console.log("🔄 Reset message count after signup modal closed.");
+    });
 });
+
 
 
 </script>
