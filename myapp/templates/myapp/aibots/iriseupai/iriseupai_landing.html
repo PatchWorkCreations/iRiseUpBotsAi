@@ -2,6 +2,9 @@
 {% load static %}
 {% block title %}iRiseUp AI - Your AI-Powered Experts{% endblock %}
 {% block content %}
+<head>
+    <script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
+</head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <meta name="csrf-token" content="{{ csrf_token }}">
 
@@ -941,6 +944,121 @@
     }
 }
 
+/* ✅ Ensure Modal is Not Hidden */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    z-index: 1055;
+}
+
+.modal-backdrop {
+    z-index: 1049; /* Lower than modal's z-index */
+    background-color: rgba(0, 0, 0, 0.5); /* Add semi-transparent background */
+}
+
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px; /* Adjust modal width as needed */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3{
+    padding-top: 8px;
+    font-size: 20px;
+    text-align: center;
+}
+
+
+/* Header styles */
+.modal-header {
+
+    display: flex;
+    justify-content: center; 
+    align-items: center; /* Align items vertically */
+    position: relative; /* Position elements within the header */
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+
+.modal-header .close {
+    padding: 10px 15px;
+    background-color: #f3f4f6;
+    position: absolute;
+    left: 15px; /* Adjust the position of the close button to the left */
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.modal-header .close:hover {
+    color: black;
+}
+
+
+/* Body styles */
+.modal-body {
+    padding: 15px;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+.modal-body h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.modal-body h2 .highlight {
+    color: #5860F8; /* Purple color */
+}
+#payment-selection {
+    display: flex;
+    justify-content: center; /* Centers the button */
+}
+
+.payment-selection-btn {
+    background-color: #f3f4f6;
+    border: 2px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%; /* Adjusts the button width */
+    max-width: 300px; /* Optional: limit the button width */
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+#card-button {
+    background-color: #5860F8;
+    color: white;
+}
+
 </style>
 
 <div id="signup-modal" class="signup-modal">
@@ -1243,7 +1361,7 @@
     </div>
 </div>
 
-<!--                            
+                           
 <section id="pricing" class="pricing-section">
     <div class="container">
         <h2 class="pricing-title">💰 Simple & Transparent Pricing</h2>
@@ -1273,7 +1391,7 @@
                     <li><i class="fas fa-check-circle"></i> Unlimited Chats – No limits, ask anytime</li>
                     <li><i class="fas fa-check-circle"></i> Priority Support – AI + Human help</li>
                 </ul>
-                <a href="/checkout?plan=pro" class="btn btn-primary standout-btn">🚀 Unlock Full AI Access</a>
+                <a href="#" class="btn btn-primary standout-btn open-checkout" data-plan="pro" data-price="$20/month">🚀 Unlock Full AI Access</a>
             </div>
             
 
@@ -1291,7 +1409,7 @@
                     <li><i class="fas fa-check-circle"></i> All Future Updates Included</li>
                     <li><i class="fas fa-check-circle"></i> Priority Customer Support</li>
                 </ul>
-                <a href="/checkout?plan=one-year" class="btn btn-primary">Get 1-Year Access & Save!</a>
+                <a href="#" class="btn btn-primary open-checkout" data-plan="one-year" data-price="$127 one-time">Get 1-Year Access & Save!</a>
                 
             </div>
         </div>
@@ -1299,8 +1417,70 @@
         <p class="money-back">✔️ 14-Day Money-Back Guarantee – Try any plan risk-free!</p>
     </div>
 </section>
--->
+ 
+<!-- Square Payment Modal -->
+<!-- Checkout Modal -->
+<div class="modal" id="checkout-modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close-modal">&times;</span>
+            <h2>Checkout</h2>
+        </div>
+        <h3><span style="color: #5860F8;">91% of users </span>are satisfied with the plan and stay with us after its completion</h3>
 
+        <div id="payment-selection">
+            <button id="card-button" class="payment-selection-btn">Pay with Card</button>
+        </div>
+
+        <div id="card-payment" class="payment-option" style="display:none;">
+            <h3 style="text-align: center;">Pay with Card</h3>
+
+            <div class="card-icons">
+                <img src="{% static 'myapp/images/card_icons/1.svg' %}" alt="Card Icon 1" />
+            <img src="{% static 'myapp/images/card_icons/2.svg' %}" alt="Card Icon 2" />
+            <img src="{% static 'myapp/images/card_icons/3.svg' %}" alt="Card Icon 3" />
+            <img src="{% static 'myapp/images/card_icons/4.svg' %}" alt="Card Icon 4" />
+            <img src="{% static 'myapp/images/card_icons/5.svg' %}" alt="Card Icon 5" />
+            <img src="{% static 'myapp/images/card_icons/6.svg' %}" alt="Card Icon 6" />
+            </div>
+
+            <div class="form-container">
+                <h2>Fill Out Your Information</h2>
+                <form id="payment-form">
+                    <input type="hidden" id="selected-plan" name="plan">
+
+                    <div class="form-group">
+                        <label for="givenName">First Name</label>
+                        <input type="text" id="givenName" name="givenName" placeholder="e.g. John" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="familyName">Last Name</label>
+                        <input type="text" id="familyName" name="familyName" placeholder="e.g. Doe" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="e.g. yourname@example.com" class="form-control" required>
+                    </div>
+
+                    <div id="card-container" class="form-group"></div>
+
+                    <button id="pay-now-btn" type="submit" class="btn-submit">Pay Now</button>
+                    <div id="loader" class="loader" style="display: none;"></div>
+                    <p id="processing-message" class="processing-message" style="display: none;">Processing your payment...</p>
+                </form>
+            </div>
+
+            <div class="pay-safe">
+                <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Secure Payment" class="safe-icon" />
+                <span>Pay safe & secure</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const chatbox = document.getElementById('chatbox');
@@ -1439,6 +1619,125 @@ function closeSignupModal() {
         localStorage.setItem('messageCount', 0); // Reset count when user closes modal
         console.log("🔄 Reset message count after signup modal closed.");
     });
+});
+
+// Square Payment 
+
+ 
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ JavaScript loaded!"); // Debugging check
+
+    // Get modal elements
+    const modal = document.getElementById("checkout-modal");
+    const openCheckoutButtons = document.querySelectorAll(".open-checkout");
+    const closeModalButton = document.querySelector(".close-modal"); // Fix this reference
+    const selectedPlanInput = document.getElementById("selected-plan"); // Hidden input field inside the form
+    const payNowButton = document.getElementById("pay-now-btn");
+    const cardPaymentSection = document.getElementById("card-payment");
+    let selectedPlan = "pro"; // Default plan
+    let squareInitialized = false;
+
+    // ✅ Function to open the modal
+    openCheckoutButtons.forEach(button => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+
+            console.log("🛒 Checkout button clicked!"); // Debugging check
+
+            // Get the plan from button attributes
+            selectedPlan = this.getAttribute("data-plan");
+
+            if (!modal) {
+                console.error("❌ Modal element not found in the DOM!");
+                return;
+            }
+
+            // Set the hidden input field for form submission
+            if (selectedPlanInput) {
+                selectedPlanInput.value = selectedPlan;
+            }
+
+            // Show the modal
+            modal.style.display = "block";
+            document.body.style.overflow = "hidden"; // Prevent scrolling when modal is open
+
+            setupSquarePayments(); // Initialize Square payment UI
+        });
+    });
+
+    // ✅ Function to close the modal
+    if (closeModalButton) {
+        closeModalButton.addEventListener("click", function () {
+            console.log("❌ Closing modal..."); // Debugging check
+            modal.style.display = "none";
+            document.body.style.overflow = "auto"; // Restore scrolling
+        });
+    } else {
+        console.error("❌ Close button not found!");
+    }
+
+    // ✅ Close modal if user clicks outside of it
+    window.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+    });
+
+    // ✅ Square payment setup function
+    async function setupSquarePayments() {
+        if (squareInitialized) return; // Prevent multiple initializations
+
+        console.log("🔄 Initializing Square Payments..."); // Debugging check
+
+        try {
+            const payments = Square.payments('sq0idp-jpJ9YFYpLwuh5nFx4B-qXg', '45B8XGXSPP8E3');
+            const card = await payments.card();
+            await card.attach("#card-container");
+
+            payNowButton.addEventListener("click", async function (event) {
+                event.preventDefault();
+                payNowButton.disabled = true;
+
+                try {
+                    const result = await card.tokenize();
+                    if (result.status === "OK") {
+                        console.log("✅ Payment token generated!"); // Debugging check
+
+                        const response = await fetch("/process-ai-subscription/", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRFToken": "{{ csrf_token }}",
+                            },
+                            body: JSON.stringify({
+                                source_id: result.token,
+                                plan: selectedPlan,
+                            }),
+                        });
+
+                        const jsonResult = await response.json();
+                        if (jsonResult.success) {
+                            window.location.href = "/success/";
+                        } else {
+                            alert(jsonResult.error);
+                        }
+                    } else {
+                        alert("Payment failed: " + result.errors[0].message);
+                    }
+                } catch (e) {
+                    console.error(e.message);
+                    alert("Payment failed: " + e.message);
+                } finally {
+                    payNowButton.disabled = false;
+                }
+            });
+
+            squareInitialized = true;
+        } catch (error) {
+            console.error("⚠️ Square Payment Initialization Error:", error);
+        }
+    }
 });
 
 

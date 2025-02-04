@@ -10,6 +10,24 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.auth.models import User
 
+class AIUserSubscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    plan = models.CharField(
+        max_length=50,
+        choices=[
+            ('free', 'Free'),
+            ('pro', 'Pro Monthly'),
+            ('one-year', 'One-Year Access')
+        ]
+    )
+    start_date = models.DateTimeField(auto_now_add=True)
+    expiration_date = models.DateTimeField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.plan}"
+
+
 class SquareCustomer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Support multiple cards
     customer_id = models.CharField(max_length=255, unique=True)

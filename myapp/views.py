@@ -1129,6 +1129,94 @@ def signup_view(request):
 
     return render(request, "myapp/aibots/iriseupai/signup.html")
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+import uuid
+import logging
+from square.client import Client
+from django.conf import settings
+from django.utils import timezone
+from datetime import timedelta
+from .models import AIUserSubscription
+
+logger = logging.getLogger(__name__)
+
+# Initialize Square client
+square_client = Client(
+    access_token=settings.SQUARE_ACCESS_TOKEN,
+    environment='production',  # Always in production mode
+)
+
+PLAN_PRICES = {
+    'pro': 2000,  # $20/month
+    'one-year': 12700,  # $127/year
+}
+
+@csrf_exempt
+def process_ai_subscription(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            card_token = data.get('source_id')
+            selected_plan = data.get('plan')
+            verification_token = data.get('verification_token')
+            user_email = data.get('email')
+
+            if not user_email:
+                return JsonResponse({"error": "Missing email."}, status=400)
+
+            user = User.objects.filter(email=user_email).first()
+            if not user:
+                return JsonResponse({"error": "User not found."}, status=404)
+
+            amount = PLAN_PRICES.get(selected_plan, 0)
+            if amount == 0:
+                return JsonResponse({"error": "Invalid plan selected."}, status=400)
+
+            # Step 1: Check if customer exists or create a new one
+            customer_result = square_client.customers.create_customer(
+                body={"email_address": user_email}
+            )
+
+            if customer_result.is_error():
+                logger.error("Customer creation failed: %s", customer_result.errors)
+                return JsonResponse({"error": "Could not create customer."}, status=400)
+
+            customer_id = customer_result.body['customer']['id']
+
+            # Step 2: Process payment
+            payment_result = square_client.payments.create_payment(
+                body={
+                    "source_id": card_token,
+                    "idempotency_key": str(uuid.uuid4()),
+                    "amount_money": {"amount": amount, "currency": "USD"},
+                    "verification_token": verification_token,
+                    "autocomplete": True,
+                    "customer_id": customer_id,
+                }
+            )
+
+            if payment_result.is_error():
+                return JsonResponse({"error": "Payment failed. Try again."}, status=400)
+
+            # Step 3: Update user subscription
+            expiration_date = timezone.now() + timedelta(days=365) if selected_plan == 'one-year' else timezone.now() + timedelta(days=30)
+
+            AIUserSubscription.objects.update_or_create(
+                user=user,
+                defaults={"plan": selected_plan, "expiration_date": expiration_date, "is_active": True}
+            )
+
+            return JsonResponse({"success": True, "message": "Subscription activated!"})
+
+        except Exception as e:
+            logger.error("Payment error: %s", str(e), exc_info=True)
+            return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+
 
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
