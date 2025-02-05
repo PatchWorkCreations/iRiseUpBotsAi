@@ -2314,6 +2314,13 @@ def get_bot_response(request, system_prompt, bot_name):
         if not user_message or user_message.strip() == "":
             return JsonResponse({'response': 'Error: Message cannot be empty.'})
 
+        # 🔹 Check user's subscription plan
+        user_subscription = AIUserSubscription.objects.filter(user=request.user, is_active=True).first()
+        user_plan = user_subscription.plan if user_subscription else "free"
+
+        # 🔹 Select OpenAI Model Based on Subscription Plan
+        model_version = "gpt-3.5-turbo" if user_plan == "free" else "gpt-4"
+
         # Use a bot-specific session key for conversation history
         conversation_key = f"{bot_name}_conversation_history"
         conversation_history = request.session.get(conversation_key, [])
@@ -2333,9 +2340,9 @@ def get_bot_response(request, system_prompt, bot_name):
             conversation_history = [{"role": "system", "content": f"Summary of previous conversation: {summary}"}] + conversation_history[-5:]
 
         try:
-            # Send conversation history for response
+            # 🔹 Send conversation history for response
             response = openai_client.chat.completions.create(
-                model="gpt-4",
+                model=model_version,
                 messages=[{"role": "system", "content": system_prompt}] + conversation_history
             )
             message = response.choices[0].message.content
@@ -2351,6 +2358,7 @@ def get_bot_response(request, system_prompt, bot_name):
         return JsonResponse({'response': message})
 
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
 
 
 # Define each bot response view with unique bot_name and system_prompt
