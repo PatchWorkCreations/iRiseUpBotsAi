@@ -1123,7 +1123,7 @@ def signup_view(request):
             user.first_name = first_name
             user.last_name = last_name
             user.save()
-            send_welcome_email(user_email=email, first_name=first_name)
+             
         except IntegrityError:
             return JsonResponse({"success": False, "message": "This username is already taken! Try another one.", "error_field": "username"})
 
