@@ -945,118 +945,220 @@
 }
 
 /* ✅ Ensure Modal is Not Hidden */
+/* 🔥 Make modal full-screen friendly */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 1055;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-    z-index: 1055;
-}
-
-.modal-backdrop {
-    z-index: 1049; /* Lower than modal's z-index */
-    background-color: rgba(0, 0, 0, 0.5); /* Add semi-transparent background */
-}
-
-
-.modal-content {
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 400px; /* Adjust modal width as needed */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.modal-content h3{
-    padding-top: 8px;
-    font-size: 20px;
-    text-align: center;
-}
-
-
-/* Header styles */
-.modal-header {
-
+    background: rgba(0, 0, 0, 0.6); /* Darker background */
+    backdrop-filter: blur(5px); /* Smooth blur effect */
     display: flex;
-    justify-content: center; 
-    align-items: center; /* Align items vertically */
-    position: relative; /* Position elements within the header */
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease-in-out;
+    padding: 10px; /* Prevents overflowing content on smaller screens */
+}
+
+/* 🖼️ Modal Content - Adjusts to Screen Size */
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px; /* Default max-width for desktop */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeInUp 0.4s ease-in-out;
+}
+
+/* 🔄 Smooth Modal Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 🌟 Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f3f4f6;
 }
 
 .modal-header h2 {
-    margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: #333;
+    font-weight: 600;
+    margin: 0 auto;
+    text-align: center;
 }
 
-
+/* ❌ Close Button */
 .modal-header .close {
-    padding: 10px 15px;
-    background-color: #f3f4f6;
     position: absolute;
-    left: 15px; /* Adjust the position of the close button to the left */
+    right: 15px;
+    top: 10px;
     font-size: 1.5rem;
     font-weight: bold;
-    color: #aaa;
+    color: #999;
+    background: none;
+    border: none;
     cursor: pointer;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    transition: color 0.3s ease;
 }
 
 .modal-header .close:hover {
-    color: black;
+    color: #ff4757; /* Red on hover */
 }
 
-
-/* Body styles */
-.modal-body {
+/* 📌 Responsive Form Styling */
+.form-container {
     padding: 15px;
-    font-size: 1rem;
-    color: #333;
-    line-height: 1.5;
-}
-
-.modal-body h2 {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.modal-body h2 .highlight {
-    color: #5860F8; /* Purple color */
-}
-#payment-selection {
-    display: flex;
-    justify-content: center; /* Centers the button */
-}
-
-.payment-selection-btn {
-    background-color: #f3f4f6;
-    border: 2px solid #ddd;
-    padding: 10px;
     border-radius: 8px;
-    width: 100%; /* Adjusts the button width */
-    max-width: 300px; /* Optional: limit the button width */
-    margin-bottom: 15px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    box-sizing: border-box;
+    background: #f9f9f9;
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.05);
 }
 
-#card-button {
-    background-color: #5860F8;
+/* 🏗️ Form Inputs */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* 🖥️ Input Fields */
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+}
+
+/* 💡 Highlight Input on Focus */
+.form-control:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* 🔽 Country Dropdown */
+.select2-container {
+    width: 100% !important;
+}
+
+/* 💳 Card Container */
+#card-container {
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Pay Now Button */
+.btn-submit {
+    background: linear-gradient(90deg, #28a745, #218838);
     color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
+}
+
+/* ✨ Hover Effect */
+.btn-submit:hover {
+    background: linear-gradient(90deg, #218838, #1e7e34);
+    transform: translateY(-2px);
+}
+
+/* 💳 Card Icons */
+.card-icons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.card-icons img {
+    width: 45px;
+    transition: transform 0.3s ease;
+}
+
+/* ✨ Hover Effect for Icons */
+.card-icons img:hover {
+    transform: scale(1.1);
+}
+
+/* 📱 Mobile Optimizations */
+@media (max-width: 768px) {
+    .modal {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        align-items: flex-start;
+        overflow-y: auto; /* Enable scrolling for smaller screens */
+    }
+
+    .modal-content {
+        width: 100%;
+        max-width: none;
+        height: 100vh; /* Full height */
+        border-radius: 0; /* No rounded edges for fullscreen */
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .modal-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .btn-submit {
+        font-size: 1.1rem;
+    }
+}
+
+/* 📺 Full-Screen Optimizations */
+@media (min-width: 1200px) {
+    .modal-content {
+        max-width: 550px;
+        padding: 30px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.6rem;
+    }
+
+    .form-container {
+        padding: 20px;
+    }
 }
 
 </style>
@@ -1417,31 +1519,28 @@
         <p class="money-back">✔️ 14-Day Money-Back Guarantee – Try any plan risk-free!</p>
     </div>
 </section>
- 
-<!-- Square Payment Modal -->
+ <!-- Checkout Modal -->
 <!-- Checkout Modal -->
-<div class="modal" id="checkout-modal" style="display: none;">
+<div id="checkout-modal" class="modal" style="display:none;">
     <div class="modal-content">
         <div class="modal-header">
             <span class="close-modal">&times;</span>
             <h2>Checkout</h2>
         </div>
-        <h3><span style="color: #5860F8;">91% of users </span>are satisfied with the plan and stay with us after its completion</h3>
 
-        <div id="payment-selection">
-            <button id="card-button" class="payment-selection-btn">Pay with Card</button>
-        </div>
+        <h3><span style="color: #5860F8;">91% of users</span> are satisfied with the plan and stay with us after its completion</h3>
 
-        <div id="card-payment" class="payment-option" style="display:none;">
+        <!-- Payment Form (Visible Immediately) -->
+        <div id="card-payment">
             <h3 style="text-align: center;">Pay with Card</h3>
 
-            <div class="card-icons">
+            <div class="card-icons" style="text-align: center;">
                 <img src="{% static 'myapp/images/card_icons/1.svg' %}" alt="Card Icon 1" />
-            <img src="{% static 'myapp/images/card_icons/2.svg' %}" alt="Card Icon 2" />
-            <img src="{% static 'myapp/images/card_icons/3.svg' %}" alt="Card Icon 3" />
-            <img src="{% static 'myapp/images/card_icons/4.svg' %}" alt="Card Icon 4" />
-            <img src="{% static 'myapp/images/card_icons/5.svg' %}" alt="Card Icon 5" />
-            <img src="{% static 'myapp/images/card_icons/6.svg' %}" alt="Card Icon 6" />
+                <img src="{% static 'myapp/images/card_icons/2.svg' %}" alt="Card Icon 2" />
+                <img src="{% static 'myapp/images/card_icons/3.svg' %}" alt="Card Icon 3" />
+                <img src="{% static 'myapp/images/card_icons/4.svg' %}" alt="Card Icon 4" />
+                <img src="{% static 'myapp/images/card_icons/5.svg' %}" alt="Card Icon 5" />
+                <img src="{% static 'myapp/images/card_icons/6.svg' %}" alt="Card Icon 6" />
             </div>
 
             <div class="form-container">
@@ -1458,29 +1557,58 @@
                         <input type="text" id="familyName" name="familyName" placeholder="e.g. Doe" class="form-control" required>
                     </div>
                     <div class="form-group">
+                        <label for="addressLine1">Address Line 1</label>
+                        <input type="text" id="addressLine1" name="addressLine1" placeholder="e.g. 1234 Elm Street" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" placeholder="e.g. New York" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" placeholder="e.g. NY" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="countryCode">Country Code</label>
+                        <select id="countryCode" name="countryCode" class="form-control select2" required>
+                            <option value="" disabled selected>Select a country code</option>
+                            <option value="US">United States (+1)</option>
+                            <option value="CA">Canada (+1)</option>
+                            <option value="GB">United Kingdom (+44)</option>
+                            <option value="AU">Australia (+61)</option>
+                            <option value="IN">India (+91)</option>
+                            <option value="DE">Germany (+49)</option>
+                            <option value="FR">France (+33)</option>
+                            <option value="PH">Philippines (+63)</option>
+                            <option value="JP">Japan (+81)</option>
+                            <option value="CN">China (+86)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" id="phone" name="phone" placeholder="e.g. +1 234 567 8900 (US)" class="form-control" required>
+                    </div>
+                    <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" placeholder="e.g. yourname@example.com" class="form-control" required>
                     </div>
 
                     <div id="card-container" class="form-group"></div>
-
                     <button id="pay-now-btn" type="submit" class="btn-submit">Pay Now</button>
                     <div id="loader" class="loader" style="display: none;"></div>
                     <p id="processing-message" class="processing-message" style="display: none;">Processing your payment...</p>
                 </form>
-            </div>
-
-            <div class="pay-safe">
-                <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Secure Payment" class="safe-icon" />
-                <span>Pay safe & secure</span>
+                 
+                
             </div>
         </div>
     </div>
 </div>
 
 
+
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const chatbox = document.getElementById('chatbox');
@@ -1621,121 +1749,111 @@ function closeSignupModal() {
     });
 });
 
-// Square Payment 
+// Square Payment  
+document.addEventListener("DOMContentLoaded", async function () {
+    console.log("✅ JavaScript loaded!");
 
- 
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("✅ JavaScript loaded!"); // Debugging check
-
-    // Get modal elements
-    const modal = document.getElementById("checkout-modal");
     const openCheckoutButtons = document.querySelectorAll(".open-checkout");
-    const closeModalButton = document.querySelector(".close-modal"); // Fix this reference
-    const selectedPlanInput = document.getElementById("selected-plan"); // Hidden input field inside the form
+    const checkoutModal = document.getElementById("checkout-modal");
+    const closeModalButton = document.querySelector(".close-modal");
     const payNowButton = document.getElementById("pay-now-btn");
-    const cardPaymentSection = document.getElementById("card-payment");
-    let selectedPlan = "pro"; // Default plan
+    const selectedPlanInput = document.getElementById("selected-plan");
+
     let squareInitialized = false;
+    let card;
 
-    // ✅ Function to open the modal
-    openCheckoutButtons.forEach(button => {
-        button.addEventListener("click", function (event) {
-            event.preventDefault(); // Prevent default link behavior
-
-            console.log("🛒 Checkout button clicked!"); // Debugging check
-
-            // Get the plan from button attributes
-            selectedPlan = this.getAttribute("data-plan");
-
-            if (!modal) {
-                console.error("❌ Modal element not found in the DOM!");
-                return;
-            }
-
-            // Set the hidden input field for form submission
-            if (selectedPlanInput) {
-                selectedPlanInput.value = selectedPlan;
-            }
-
-            // Show the modal
-            modal.style.display = "block";
-            document.body.style.overflow = "hidden"; // Prevent scrolling when modal is open
-
-            setupSquarePayments(); // Initialize Square payment UI
-        });
-    });
-
-    // ✅ Function to close the modal
-    if (closeModalButton) {
-        closeModalButton.addEventListener("click", function () {
-            console.log("❌ Closing modal..."); // Debugging check
-            modal.style.display = "none";
-            document.body.style.overflow = "auto"; // Restore scrolling
-        });
-    } else {
-        console.error("❌ Close button not found!");
+    if (!checkoutModal) {
+        console.error("❌ Checkout modal not found!");
+        return;
     }
 
-    // ✅ Close modal if user clicks outside of it
-    window.addEventListener("click", function (event) {
-        if (event.target === modal) {
-            modal.style.display = "none";
-            document.body.style.overflow = "auto";
-        }
+    // ✅ Open checkout modal
+    openCheckoutButtons.forEach(button => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();
+            console.log("💳 Checkout button clicked!");
+
+            const selectedPlan = this.getAttribute("data-plan");
+            selectedPlanInput.value = selectedPlan;
+            checkoutModal.style.display = "flex";
+
+            setupSquarePayments();
+        });
     });
 
-    // ✅ Square payment setup function
-    async function setupSquarePayments() {
-        if (squareInitialized) return; // Prevent multiple initializations
+    // ✅ Close modal
+    closeModalButton.addEventListener("click", function () {
+        checkoutModal.style.display = "none";
+    });
 
-        console.log("🔄 Initializing Square Payments..."); // Debugging check
+    async function setupSquarePayments() {
+        if (squareInitialized) return;
+
+        console.log("🔄 Initializing Square Payments...");
 
         try {
-            const payments = Square.payments('sq0idp-jpJ9YFYpLwuh5nFx4B-qXg', '45B8XGXSPP8E3');
-            const card = await payments.card();
+            const payments = Square.payments("sq0idp-jpJ9YFYpLwuh5nFx4B-qXg", "45B8XGXSPP8E3");
+            card = await payments.card();
             await card.attach("#card-container");
+
+            console.log("✅ Card attached to container!");
+            squareInitialized = true;
 
             payNowButton.addEventListener("click", async function (event) {
                 event.preventDefault();
-                payNowButton.disabled = true;
-
-                try {
-                    const result = await card.tokenize();
-                    if (result.status === "OK") {
-                        console.log("✅ Payment token generated!"); // Debugging check
-
-                        const response = await fetch("/process-ai-subscription/", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRFToken": "{{ csrf_token }}",
-                            },
-                            body: JSON.stringify({
-                                source_id: result.token,
-                                plan: selectedPlan,
-                            }),
-                        });
-
-                        const jsonResult = await response.json();
-                        if (jsonResult.success) {
-                            window.location.href = "/success/";
-                        } else {
-                            alert(jsonResult.error);
-                        }
-                    } else {
-                        alert("Payment failed: " + result.errors[0].message);
-                    }
-                } catch (e) {
-                    console.error(e.message);
-                    alert("Payment failed: " + e.message);
-                } finally {
-                    payNowButton.disabled = false;
-                }
+                await processPayment();
             });
 
-            squareInitialized = true;
         } catch (error) {
             console.error("⚠️ Square Payment Initialization Error:", error);
+        }
+    }
+
+    async function processPayment() {
+        try {
+            payNowButton.disabled = true;
+
+            const result = await card.tokenize();
+            if (result.status !== "OK") {
+                alert("Payment failed: " + result.errors[0].message);
+                payNowButton.disabled = false;
+                return;
+            }
+
+            console.log("✅ Payment token generated!");
+
+            const response = await fetch("/process-ai-subscription/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: JSON.stringify({
+                    source_id: result.token,
+                    plan: selectedPlanInput.value,
+                    givenName: document.getElementById("givenName").value,
+                    familyName: document.getElementById("familyName").value,
+                    addressLine1: document.getElementById("addressLine1").value,
+                    city: document.getElementById("city").value,
+                    state: document.getElementById("state").value,
+                    countryCode: document.getElementById("countryCode").value,
+                    phone: document.getElementById("phone").value,
+                    email: document.getElementById("email").value,
+                }),
+            });
+
+            const jsonResult = await response.json();
+
+            if (jsonResult.success) {
+                window.location.href = "/success/";
+            } else {
+                alert(jsonResult.error);
+            }
+        } catch (error) {
+            console.error("⚠️ Payment Error:", error);
+            alert("Payment failed: " + error.message);
+        } finally {
+            payNowButton.disabled = false;
         }
     }
 });

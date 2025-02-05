@@ -1131,6 +1131,7 @@ def signup_view(request):
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 import json
 import uuid
 import logging
@@ -1145,76 +1146,90 @@ logger = logging.getLogger(__name__)
 # Initialize Square client
 square_client = Client(
     access_token=settings.SQUARE_ACCESS_TOKEN,
-    environment='production',  # Always in production mode
+    environment='production',  # Ensure this is in 'production' mode
 )
 
 PLAN_PRICES = {
-    'pro': 2000,  # $20/month
-    'one-year': 12700,  # $127/year
+    'pro': 2000,       # $20/month
+    'one-year': 12700, # $127/year
 }
 
-@csrf_exempt
+@csrf_exempt  # ⚠️ Consider using csrf_protect instead of csrf_exempt for security
 def process_ai_subscription(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            card_token = data.get('source_id')
-            selected_plan = data.get('plan')
-            verification_token = data.get('verification_token')
-            user_email = data.get('email')
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request method."}, status=405)
 
-            if not user_email:
-                return JsonResponse({"error": "Missing email."}, status=400)
+    try:
+        data = json.loads(request.body)
+        card_token = data.get('source_id')
+        selected_plan = data.get('plan')
+        user_email = data.get('email')
 
-            user = User.objects.filter(email=user_email).first()
-            if not user:
-                return JsonResponse({"error": "User not found."}, status=404)
+        if not user_email:
+            return JsonResponse({"error": "Missing email."}, status=400)
 
-            amount = PLAN_PRICES.get(selected_plan, 0)
-            if amount == 0:
-                return JsonResponse({"error": "Invalid plan selected."}, status=400)
+        logger.info(f"Processing subscription for {user_email} - Plan: {selected_plan}")
 
-            # Step 1: Check if customer exists or create a new one
-            customer_result = square_client.customers.create_customer(
-                body={"email_address": user_email}
-            )
+        # 🛠 Ensure user exists, or create one
+        user, created = User.objects.get_or_create(email=user_email, defaults={"username": user_email.split("@")[0]})
 
+        amount = PLAN_PRICES.get(selected_plan)
+        if not amount:
+            return JsonResponse({"error": "Invalid plan selected."}, status=400)
+
+        # ✅ Step 1: Check if customer exists in Square
+        search_response = square_client.customers.search_customers(
+            body={"query": {"filter": {"email_address": {"exact": user_email}}}}
+        )
+
+        if search_response.is_error():
+            logger.warning("Customer search failed: %s", search_response.errors)
+            return JsonResponse({"error": "Failed to retrieve customer."}, status=400)
+
+        customer_id = None
+        if 'customers' in search_response.body and len(search_response.body['customers']) > 0:
+            customer_id = search_response.body['customers'][0]['id']
+            logger.info(f"Customer found in Square: {customer_id}")
+        else:
+            # Create new customer if none exists
+            customer_result = square_client.customers.create_customer(body={"email_address": user_email})
             if customer_result.is_error():
                 logger.error("Customer creation failed: %s", customer_result.errors)
                 return JsonResponse({"error": "Could not create customer."}, status=400)
-
             customer_id = customer_result.body['customer']['id']
+            logger.info(f"New customer created: {customer_id}")
 
-            # Step 2: Process payment
-            payment_result = square_client.payments.create_payment(
-                body={
-                    "source_id": card_token,
-                    "idempotency_key": str(uuid.uuid4()),
-                    "amount_money": {"amount": amount, "currency": "USD"},
-                    "verification_token": verification_token,
-                    "autocomplete": True,
-                    "customer_id": customer_id,
-                }
-            )
+        # ✅ Step 2: Process Payment
+        payment_result = square_client.payments.create_payment(
+            body={
+                "source_id": card_token,
+                "idempotency_key": str(uuid.uuid4()),  # Ensure unique payment request
+                "amount_money": {"amount": amount, "currency": "USD"},
+                "customer_id": customer_id,
+                "autocomplete": True,
+            }
+        )
 
-            if payment_result.is_error():
-                return JsonResponse({"error": "Payment failed. Try again."}, status=400)
+        if payment_result.is_error():
+            logger.error("Payment processing failed: %s", payment_result.errors)
+            return JsonResponse({"error": "Payment failed. Try again."}, status=400)
 
-            # Step 3: Update user subscription
-            expiration_date = timezone.now() + timedelta(days=365) if selected_plan == 'one-year' else timezone.now() + timedelta(days=30)
+        # ✅ Step 3: Activate Subscription
+        expiration_date = timezone.now() + timedelta(days=365 if selected_plan == 'one-year' else 30)
 
-            AIUserSubscription.objects.update_or_create(
-                user=user,
-                defaults={"plan": selected_plan, "expiration_date": expiration_date, "is_active": True}
-            )
+        subscription, created = AIUserSubscription.objects.update_or_create(
+            user=user,
+            defaults={"plan": selected_plan, "expiration_date": expiration_date, "is_active": True}
+        )
 
-            return JsonResponse({"success": True, "message": "Subscription activated!"})
+        logger.info(f"Subscription activated for {user_email} - Plan: {selected_plan}, Expires: {expiration_date}")
 
-        except Exception as e:
-            logger.error("Payment error: %s", str(e), exc_info=True)
-            return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
+        return JsonResponse({"success": True, "message": "Subscription activated!"})
 
-    return JsonResponse({"error": "Invalid request method."}, status=405)
+    except Exception as e:
+        logger.exception("Unexpected error in payment processing")
+        return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
+
 
 
 
