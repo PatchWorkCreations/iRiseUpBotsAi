@@ -1150,9 +1150,16 @@ square_client = Client(
 )
 
 PLAN_PRICES = {
+    'pro': 50,       # $20/month
+    'one-year': 50, # $127/year
+}
+
+"""              
+PLAN_PRICES = {
     'pro': 2000,       # $20/month
     'one-year': 12700, # $127/year
 }
+"""
 
 @csrf_exempt  # ⚠️ Consider using csrf_protect instead of csrf_exempt for security
 def process_ai_subscription(request):
