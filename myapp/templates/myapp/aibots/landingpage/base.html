@@ -167,6 +167,241 @@ p.text-center a:hover {
     text-align: center; /* Center-align the text */
 }
 
+.pricing-card.standout {
+    background: linear-gradient(135deg, #0056b3, #003c82); /* Darker Blue for Contrast */
+    color: white;
+}
+
+/* Ensure all text inside Pro Plan is readable */
+.pricing-card.standout h3, 
+.pricing-card.standout .price,
+.pricing-card.standout .pricing-features li {
+    color: white !important; /* Force white for visibility */
+}
+
+/* Increase Font Weight for Readability */
+.pricing-card.standout h3 {
+    font-weight: 800; /* Make Title Stand Out */
+}
+
+/* Adjust Feature List Readability */
+.pricing-card.standout .pricing-features li i {
+    color: #ffcc00; /* Gold Checkmarks for Visibility */
+}
+
+/* Adjust the Max AI Power Badge */
+.highlighted-badge {
+    background-color: #ffcc00;
+    color: #333;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+
+/* General Pricing Section */
+.pricing-section {
+    text-align: center;
+    padding: 80px 0;
+    background: #f8f9fa;
+}
+
+.pricing-title {
+    font-size: 2.8rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 15px;
+}
+
+.pricing-subtext {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 35px;
+}
+
+/* Pricing Container */
+.pricing-container {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    flex-wrap: wrap;
+}
+
+/* Pricing Card */
+.pricing-card {
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.08);
+    width: 340px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    border-top: 5px solid transparent;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Plan Titles */
+.pricing-card h3 {
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+/* Price */
+.price {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+/* Discounted Price */
+.discounted-price {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.original-price {
+    font-size: 1.2rem;
+    text-decoration: line-through;
+    color: #888;
+    margin-left: 8px;
+}
+
+/* Savings Badge */
+.savings-badge {
+    background-color: #28a745;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+/* Features List */
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin-top: 20px;
+}
+
+.pricing-features li {
+    font-size: 1.1rem;
+    color: #444;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.pricing-features li i {
+    color: #28a745;
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+/* CTA Button */
+.btn {
+    display: inline-block;
+    padding: 14px 22px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+}
+
+/* Money-Back Guarantee */
+.money-back {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 20px;
+}
+
+ 
+/* Popular Badge */
+.badge.most-popular {
+    background-color: #ffcc00;
+    color: #333;
+    font-weight: bold;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+/* Price */
+.price {
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.price-month {
+    font-size: 1.2rem;
+    font-weight: normal;
+    opacity: 0.8;
+}
+
+/* Max AI Power Badge */
+.highlighted-badge {
+    background-color: #28a745;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+/* Features List */
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin: 20px auto;
+    max-width: 250px;
+}
+
+.pricing-features li {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.pricing-features li i {
+    color: #28a745;
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
     </style>
     <body>
         <!-- Preloader Start -->
