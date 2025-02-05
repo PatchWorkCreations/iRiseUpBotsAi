@@ -981,13 +981,15 @@ def get_first_ai(user):
 def sign_out(request):
     logout(request)  # This logs the user out
     return redirect('sign_in')  # Redirect to the sign-in page after logging out
-
 def send_welcome_email(user_email, first_name):
     """
     Sends a professional and warm welcome email to new iRiseUp AI users.
     """
+    from django.core.mail import EmailMultiAlternatives
+    from django.core.mail.backends.smtp import SMTPException
+
     subject = "🚀 Welcome to iRiseUp AI – Your Future Starts Here!"
-    from_email = settings.DEFAULT_FROM_EMAIL  # Make sure this is set in settings.py
+    from_email = 'iRiseUp AI Team <iriseupgroupofcompanies@gmail.com>'
     to_email = [user_email]
 
     # Plain text fallback content
@@ -1079,10 +1081,16 @@ def send_welcome_email(user_email, first_name):
     </html>
     """
 
-    # Create and send the email
-    email = EmailMultiAlternatives(subject, text_content, from_email, to_email)
-    email.attach_alternative(html_content, "text/html")
-    email.send()
+    # Try sending the email
+    try:
+        email = EmailMultiAlternatives(subject, text_content, from_email, to_email)
+        email.attach_alternative(html_content, "text/html")
+        email.send(fail_silently=False)  # Set to False so Django will raise an error if it fails
+        print(f"✅ Email successfully sent to {user_email}")
+    except SMTPException as e:
+        print(f"❌ Failed to send email: {e}")
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
