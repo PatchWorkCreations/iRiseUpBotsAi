@@ -222,4 +222,6 @@ urlpatterns = [
     path('api/guest/chat/<str:bot_name>/', guest_views.guest_bot_response, name='guest_bot_response'),
     path('signup/', views.signup_view, name='signup'),
     path('process-ai-subscription/', views.process_ai_subscription, name='process_ai_subscription'),
+
+    path("api/get-user-plan/", views.get_user_plan, name="get-user-plan"),
 ] 

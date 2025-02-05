@@ -2305,6 +2305,20 @@ def summarize_history(conversation_history):
         logger.error(f"Error summarizing history: {e}")
         return "Summary unavailable due to an error."
 
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from myapp.models import AIUserSubscription
+
+@login_required
+def get_user_plan(request):
+    """
+    Returns the user's AI model plan (Free: GPT-3.5, Pro/One-Year: GPT-4).
+    """
+    user_subscription = AIUserSubscription.objects.filter(user=request.user, is_active=True).first()
+    user_plan = user_subscription.plan if user_subscription else "free"
+
+    return JsonResponse({"plan": user_plan})
+
 
 @login_required
 def get_bot_response(request, system_prompt, bot_name):

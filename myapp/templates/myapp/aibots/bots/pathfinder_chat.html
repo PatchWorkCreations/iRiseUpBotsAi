@@ -8,7 +8,8 @@
         <button class="back-button" onclick="window.history.back()">
             ← <!-- Unicode arrow for simplicity -->
         </button>
-        <div class="header-title">Gideon - Your Business Growth Guide 🚀</div>
+        <div class="header-title">Gideon - Your Business Growth Guide 🚀   <span id="model-version" style="font-size: 14px; color: #888; margin-left: 8px;"></span>
+        </div>
     </div>
     <div id="chatbox">
         <!-- Chat messages will appear here -->
@@ -184,6 +185,21 @@ window.addEventListener('resize', () => {
     document.body.style.height = `${window.innerHeight}px`;
     document.body.style.overflow = 'hidden';
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+        fetch("/api/get-user-plan/")  // Call an API endpoint to get the user's subscription plan
+            .then(response => response.json())
+            .then(data => {
+                let modelText = " | Using: GPT-3.5";  // Default for free users
+                
+                if (data.plan === "pro" || data.plan === "one-year") {
+                    modelText = " | Using: GPT-4";  // Show GPT-4 for pro/one-year
+                }
+
+                document.getElementById("model-version").innerText = modelText;
+            })
+            .catch(error => console.error("Error fetching model version:", error));
+    });
 
 // Run on load and resize
 adjustViewportHeight();
