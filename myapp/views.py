@@ -110,14 +110,24 @@ DASHBOARD_ROUTES = {
     "414303": "keystone_dashboard",
 }
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from myapp.models import AIUserSubscription, UserCourseAccess
+
 @login_required
 def coursemenu(request):
     """
     Redirect users to their respective dashboards based on their product ID.
     If no product ID is associated, render the course menu.
+    Also determines if the user has a Pro or One-Year plan.
     """
     user = request.user
     access = UserCourseAccess.objects.filter(user=user, is_active=True).first()
+    subscription = AIUserSubscription.objects.filter(user=user, is_active=True).first()
+
+    # Determine user's plan
+    user_plan = subscription.plan if subscription else "free"
+    is_pro_user = user_plan in ["pro", "one-year"]
 
     if access:
         product_id = access.product_id
@@ -125,8 +135,8 @@ def coursemenu(request):
         if dashboard_name:
             return redirect(dashboard_name)
 
-    # Fallback: Render course menu if no valid access or product ID
-    return render(request, 'myapp/aibots/coursemenu.html')
+    # Pass the plan status to the template
+    return render(request, 'myapp/aibots/coursemenu.html', {"is_pro_user": is_pro_user})
 
 
 def subscription_terms_new(request):
@@ -1246,7 +1256,8 @@ def process_ai_subscription(request):
         return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
 
 
-
+def upgrade_to_pro(request):
+    return render(request, "myapp/aibots/settings/upgrade_to_pro.html")
 
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy

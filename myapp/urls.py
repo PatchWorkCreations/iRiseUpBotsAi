@@ -224,4 +224,5 @@ urlpatterns = [
     path('process-ai-subscription/', views.process_ai_subscription, name='process_ai_subscription'),
 
     path("api/get-user-plan/", views.get_user_plan, name="get-user-plan"),
+    path("upgrade-to-pro/", views.upgrade_to_pro, name="upgrade_to_pro"),
 ] 

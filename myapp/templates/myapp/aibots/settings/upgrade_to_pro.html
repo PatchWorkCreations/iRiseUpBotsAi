@@ -1,0 +1,702 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% load static %}
+{% block title %}Upgrade to Pro - iRiseUp.AI{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<head>
+    <script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
+</head>
+
+<style>
+/* 🚀 Hero Section */
+.hero-upgrade {
+    background: linear-gradient(135deg, #1F3A93, #4A69BD);
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+    border-radius: 10px;
+}
+
+.hero-upgrade h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.hero-upgrade p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.hero-bullet-points {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.hero-bullet-points li {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-bullet-points li i {
+    margin-right: 10px;
+    color: #FFD700;
+}
+
+/* 🎯 Pricing Section */
+/* 🎯 Pricing Section */
+.pricing-section {
+    text-align: center;
+    padding: 80px 20px;
+    background: #f8f9fa;
+}
+
+.pricing-title {
+    font-size: 2.8rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.pricing-subtext {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 35px;
+}
+
+/* Pricing Container */
+.pricing-container {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    flex-wrap: wrap;
+}
+
+/* Pricing Card */
+.pricing-card {
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.08);
+    width: 340px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    border-top: 5px solid transparent;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Free Plan */
+.free-plan {
+    border-top: 5px solid #bbb;
+}
+
+/* Standout (Most Popular Plan) */
+.pricing-card.standout {
+    background: #1F3A93;
+    color: white;
+    position: relative;
+    border-top: 5px solid #FFD700;
+}
+
+.standout h3,
+.standout .price,
+.standout .pricing-features li {
+    color: white;
+}
+
+.standout .highlighted-badge {
+    background: #FFD700;
+    color: #222;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+/* Yearly Plan */
+.yearly-plan {
+    border-top: 5px solid #28a745;
+}
+
+/* Most Popular Badge */
+.badge.most-popular {
+    background-color: #FFD700;
+    color: #222;
+    font-weight: bold;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+/* Price */
+.price {
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.price-month {
+    font-size: 1.2rem;
+    font-weight: normal;
+    opacity: 0.8;
+}
+
+/* Discounted Price */
+.original-price {
+    font-size: 1.2rem;
+    text-decoration: line-through;
+    color: #888;
+    margin-left: 8px;
+}
+
+/* Savings Badge */
+.highlighted-badge {
+    background-color: #28a745;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+/* Features List */
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin: 20px auto;
+    max-width: 250px;
+}
+
+.pricing-features li {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.pricing-features li i {
+    color: #28a745;
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+/* CTA Button */
+.btn {
+    display: inline-block;
+    padding: 14px 22px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .pricing-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .pricing-card {
+        width: 90%;
+    }
+}
+
+
+/* ✨ Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 22px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(90deg, #0056b3, #003f80);
+    transform: translateY(-3px);
+}
+
+/* 💳 Checkout Modal */
+  
+/* 💳 Improved Checkout Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1055;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+/* 🔹 Modal Content */
+.modal-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeInUp 0.4s ease-in-out;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+/* 🔥 Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    flex-grow: 1;
+}
+
+/* ❌ Close Button */
+.close-modal {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    position: absolute;
+    right: 15px;
+}
+
+.close-modal:hover {
+    color: #ff4757;
+}
+
+/* 💳 Payment Form */
+.form-container {
+    padding: 20px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* 📦 Input Fields */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* 🌟 Payment Cards */
+.card-icons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.card-icons img {
+    width: 45px;
+    transition: transform 0.3s ease;
+}
+
+.card-icons img:hover {
+    transform: scale(1.1);
+}
+
+/* 💳 Card Container */
+#card-container {
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Payment Button */
+.btn-submit {
+    background: linear-gradient(90deg, #28a745, #218838);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
+}
+
+.btn-submit:hover {
+    background: linear-gradient(90deg, #218838, #1e7e34);
+    transform: translateY(-2px);
+}
+
+/* 🚀 Mobile Optimization */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 100%;
+        max-width: 90%;
+        padding: 20px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .form-container {
+        padding: 15px;
+    }
+
+    .btn-submit {
+        font-size: 1.1rem;
+        padding: 10px;
+    }
+}
+
+/* 🎬 Smooth Modal Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pay-safe {
+    text-align: center;
+    align-items: center;
+    background-color: #f4fdf4; /* Light green background color */
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #74b948; /* Green color for text */
+    margin-top: 10px; /* Space above the section */
+}
+
+.pay-safe .safe-icon {
+    width: 20px; /* Adjust the icon size as needed */
+    height: 20px;
+    margin-right: 8px; /* Space between the icon and the text */
+}
+
+.header {
+        background-color: #1F3A93; /* Primary Navy Blue */
+        color: #ffffff;
+        padding: 1rem;
+    }
+    .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .header h1 {
+        font-size: 1.5rem;
+        color: #f4f6f9;
+        margin: 0;
+    }
+    .back-btn {
+        color: #ffffff;
+        font-size: 1.2rem;
+        text-decoration: none;
+    }
+</style>
+
+<!-- 🚀 Upgrade to Pro Hero Section -->
+<header class="header">
+    <div class="container d-flex align-items-center justify-content-between">
+        <a href="javascript:history.go(-1)" class="back-btn">
+            <i class="fa-solid fa-arrow-left" style="color: white;"></i>
+        </a>
+        <h1>🚀 Unlock the Full Power of iRiseUp.AI</h1>
+    </div>
+</header>
+
+<!-- 💰 Pricing Plans -->
+<!-- 🎯 Pricing Plans Section -->
+<section id="pricing" class="pricing-section">
+    <div class="container">
+        <h2 class="pricing-title">💰 Simple & Transparent Pricing</h2>
+        <p class="pricing-subtext">No hidden fees, no surprises—just powerful AI at your fingertips.</p>
+
+        <div class="pricing-container">
+            <!-- 🔹 Free Plan -->
+            <div class="pricing-card free-plan current-plan">
+                <span class="badge current-badge">✅ Current Plan</span>
+                <h3>🚀 Start for Free – No Risk!</h3>
+                <p class="free-title">Free – Your AI Trial Awaits!</p>
+                <ul class="pricing-features">
+                    <li><i class="fa-solid fa-check-circle"></i> Limited AI Access – Try AI power</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Up to 8 Chats/Day – Great for casual use</li>
+                    <li><i class="fa-solid fa-check-circle"></i> 1 AI Assistant – Meet Lumos</li>
+                </ul>
+                <button class="btn btn-secondary disabled-btn" disabled>✔ Active Plan</button>
+            </div>
+            
+
+            <!-- 🔥 Pro Monthly Plan (Most Popular) -->
+            <div class="pricing-card standout">
+                <span class="badge most-popular">🔥 Most Popular</span>
+                <h3>💡 Pro Plan – Your AI Powerhouse</h3>
+                <p class="price">$20<span class="price-month">/month</span></p>
+                <span class="highlighted-badge">Max AI Power Unlocked</span>
+                <ul class="pricing-features">
+                    <li><i class="fa-solid fa-check-circle"></i> Full AI Access (All 8 Assistants)</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Unlimited Chats – No limits, ask anytime</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Priority Support – AI + Human help</li>
+                </ul>
+                <a href="#" class="btn btn-primary open-checkout" data-plan="pro-monthly" data-price="$20">🚀 Unlock Full AI Access</a>
+            </div>
+
+            <!-- 🏆 Pro Yearly Plan (Best Value) -->
+            <div class="pricing-card yearly-plan">
+                <h3>🏆 1-Year Access – Best Long-Term Value!</h3>
+                <p class="price">$127 <span class="original-price">$468</span></p>
+                <span class="highlighted-badge">💰 You Save 73%!</span>
+                <ul class="pricing-features">
+                    <li><i class="fa-solid fa-check-circle"></i> Full AI Access for 12 Months</li>
+                    <li><i class="fa-solid fa-check-circle"></i> No Monthly Fees – Pay once, enjoy a year</li>
+                    <li><i class="fa-solid fa-check-circle"></i> All Future Updates Included</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Priority Customer Support</li>
+                </ul>
+                <a href="#" class="btn btn-primary open-checkout" data-plan="pro-yearly" data-price="$127">🏆 Get 1-Year Access & Save!</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- 💳 Checkout Modal -->
+<div id="checkout-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close-modal">&times;</span>
+            <h2>Checkout</h2>
+        </div>
+         
+        <!-- Payment Form -->
+        <div id="card-payment">
+            <h3 style="text-align: center;">Pay with Card</h3>
+
+            <!-- 🏦 Payment Cards -->
+            <div class="card-icons">
+                <img src="{% static 'myapp/images/card_icons/1.svg' %}" alt="Card Icon 1" />
+                <img src="{% static 'myapp/images/card_icons/2.svg' %}" alt="Card Icon 2" />
+                <img src="{% static 'myapp/images/card_icons/3.svg' %}" alt="Card Icon 3" />
+                <img src="{% static 'myapp/images/card_icons/4.svg' %}" alt="Card Icon 4" />
+                <img src="{% static 'myapp/images/card_icons/5.svg' %}" alt="Card Icon 5" />
+                <img src="{% static 'myapp/images/card_icons/6.svg' %}" alt="Card Icon 6" />
+            </div>
+
+            <!-- 📝 Form Fields -->
+            <div class="form-container">
+                <h2>Fill Out Your Information</h2>
+                <form id="payment-form">
+                    <input type="hidden" id="selected-plan" name="plan">
+
+                    <div class="form-group">
+                        <label for="givenName">First Name</label>
+                        <input type="text" id="givenName" name="givenName" placeholder="e.g. John" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="familyName">Last Name</label>
+                        <input type="text" id="familyName" name="familyName" placeholder="e.g. Doe" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addressLine1">Address Line 1</label>
+                        <input type="text" id="addressLine1" name="addressLine1" placeholder="e.g. 1234 Elm Street" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" placeholder="e.g. New York" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" placeholder="e.g. NY" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="countryCode">Country Code</label>
+                        <select id="countryCode" name="countryCode" class="form-control select2" required>
+                            <option value="" disabled selected>Select a country code</option>
+                            <option value="US">United States (+1)</option>
+                            <option value="CA">Canada (+1)</option>
+                            <option value="GB">United Kingdom (+44)</option>
+                            <option value="AU">Australia (+61)</option>
+                            <option value="IN">India (+91)</option>
+                            <option value="DE">Germany (+49)</option>
+                            <option value="FR">France (+33)</option>
+                            <option value="PH">Philippines (+63)</option>
+                            <option value="JP">Japan (+81)</option>
+                            <option value="CN">China (+86)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" id="phone" name="phone" placeholder="e.g. +1 234 567 8900 (US)" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="e.g. yourname@example.com" class="form-control" required>
+                    </div>
+
+                    <div id="card-container" class="form-group"></div>
+                    <button id="pay-now-btn" type="submit" class="btn-submit">Pay Now</button>
+                </form>
+                <div class="pay-safe">
+                    <img src="{% static 'myapp/images/card_icons/check_icon.png' %}" alt="Safe Icon" class="safe-icon" />
+                    <span>Pay safe & secure</span>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+    const openCheckoutButtons = document.querySelectorAll(".open-checkout");
+    const checkoutModal = document.getElementById("checkout-modal");
+    const closeModalButton = document.querySelector(".close-modal");
+    const payNowButton = document.getElementById("pay-now-btn");
+    const selectedPlanInput = document.getElementById("selected-plan");
+
+    let squareInitialized = false;
+    let card;
+
+    openCheckoutButtons.forEach(button => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();
+            const selectedPlan = this.getAttribute("data-plan");
+            selectedPlanInput.value = selectedPlan;
+            checkoutModal.style.display = "flex";
+            setupSquarePayments();
+        });
+    });
+
+    closeModalButton.addEventListener("click", function () {
+        checkoutModal.style.display = "none";
+    });
+
+    async function setupSquarePayments() {
+        if (squareInitialized) return;
+        const payments = Square.payments("sq0idp-jpJ9YFYpLwuh5nFx4B-qXg", "45B8XGXSPP8E3");
+        card = await payments.card();
+        await card.attach("#card-container");
+        squareInitialized = true;
+
+        payNowButton.addEventListener("click", async function (event) {
+            event.preventDefault();
+            await processPayment();
+        });
+    }
+
+    async function processPayment() {
+        try {
+            const result = await card.tokenize();
+            if (result.status !== "OK") {
+                alert("Payment failed: " + result.errors[0].message);
+                return;
+            }
+            const response = await fetch("/process-ai-subscription/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: JSON.stringify({
+                    source_id: result.token,
+                    plan: selectedPlanInput.value,
+                }),
+            });
+
+            const jsonResult = await response.json();
+            if (jsonResult.success) {
+                window.location.href = "/success/";
+            } else {
+                alert(jsonResult.error);
+            }
+        } catch (error) {
+            alert("Payment failed: " + error.message);
+        }
+    }
+});
+</script>
+
+{% endblock %}

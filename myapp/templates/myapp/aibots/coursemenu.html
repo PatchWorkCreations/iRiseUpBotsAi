@@ -427,6 +427,340 @@
     fill: #1F3A93; /* Adjust color */
 }
 
+/* Improved Helper Box Styling */
+.helper-box {
+    background: rgba(255, 255, 255, 0.767); /* Slight transparency for a premium glass effect */
+    backdrop-filter: blur(12px); /* Elegant blur effect */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* Smooth elevation */
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 1rem;
+    width: 90%;
+    max-width: 1200px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Title Styling */
+.helper-box h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1F3A93;
+    margin-bottom: 0.5rem;
+}
+
+/* Subtitle */
+.helper-box p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+/* Goal Options Container */
+.goal-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+/* Button Styling - Modern Look */
+.goal-options button {
+    background: linear-gradient(135deg, #1F3A93, #142856);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.3rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Hover Effect */
+.goal-options button:hover {
+    background: linear-gradient(135deg, #142856, #0F1C3F);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Icons for Buttons */
+.goal-options button i {
+    font-size: 1.2rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .helper-box {
+        padding: 1.5rem;
+        width: 95%;
+    }
+    
+    .goal-options button {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Hide AI Bots initially, they will be revealed based on user selection */
+/* Add a highlight effect */
+.highlight {
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.8) !important;
+    border: 2px solid #FFD700 !important;
+    transition: box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
+}
+
+/* Smooth transition when bots move */
+.ai-box {
+    transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+}
+
+
+/* General container styling */
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 2rem;
+}
+
+/* HEADER STYLES */
+.ai-bots-header {
+    background: linear-gradient(135deg, #1F3A93 0%, #0f256e 100%);
+    color: #ffffff;
+    padding: 2rem 1rem;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.ai-bots-header h2 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.ai-bots-header h3 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 0.8rem;
+}
+
+.ai-bots-header p {
+    font-size: 1rem;
+    opacity: 0.85;
+}
+
+/* HELPER BOX - Goal Selector */
+.helper-box {
+    text-align: center;
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.helper-box:hover {
+    transform: translateY(-3px);
+}
+
+.helper-box h3 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1F3A93;
+}
+
+.goal-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+/* GOAL BUTTONS */
+.goal-options button {
+    background-color: #1F3A93;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.goal-options button i {
+    font-size: 1.2rem;
+}
+
+.goal-options button:hover {
+    background-color: #142856;
+}
+
+/* AI BOTS GRID */
+.ai-boxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+/* AI BOT CARDS */
+.ai-box {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ai-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.ai-box img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+.ai-box h3 {
+    font-size: 1.4rem;
+    color: #1F3A93;
+    margin-bottom: 0.3rem;
+}
+
+.ai-box p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+/* BUTTON - START CHAT */
+.upgrades-btn {
+    background: #1F3A93;
+    color: white;
+    font-size: 1.1rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.upgrades-btn:hover {
+    background-color: #142856;
+}
+
+/* HIGHLIGHT EFFECT */
+.highlight {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7) !important;
+    border: 2px solid #FFD700 !important;
+    transition: box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+    .ai-bots-header h2 {
+        font-size: 1.8rem;
+    }
+
+    .ai-bots-header h3 {
+        font-size: 1rem;
+    }
+
+    .goal-options {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .goal-options button {
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .ai-boxes {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .ai-box img {
+        width: 90px;
+        height: 90px;
+    }
+}
+
+
+/* Add a highlight effect */
+.highlight {
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.8) !important;
+    border: 2px solid #FFD700 !important;
+    transition: box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
+}
+
+/* Upgrade to Pro Section */
+.upgrade-pro-section {
+    background: linear-gradient(135deg, #FFD700, #FFA500); /* Gold-Orange Gradient */
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    margin: 1rem auto;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+/* Title Styling */
+.pro-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+/* Button Styling */
+.upgrade-btn {
+    background: white;
+    color: #142856;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 0.7rem;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Button Hover */
+.upgrade-btn:hover {
+    background: #1F3A93;
+    color: white;
+}
+
+
 </style>
 
 <div class="content-wrapper">
@@ -434,14 +768,43 @@
         <!-- Header Section -->
         <div class="ai-bots-header">
             <h2>Hello, {{ user.first_name }}<span class="wave">👋</span></h2>
-            <h3>Explore Your AI-Driven Success Journey with iRiseUp.AI!</h3>
-            <p>Start a conversation with one of our expert AI bots and take your business to new heights today!</p>
+             
+                <h3>How can I assist you today?</h3>
+                <p>Select a goal, and I'll guide you to the best assitant:</p>
+                
+                <div class="goal-options">
+                    <button onclick="highlightBots('personal-growth')">
+                        <i class="fas fa-user-growth"></i> Personal Growth
+                    </button>
+                    <button onclick="highlightBots('health')">
+                        <i class="fas fa-heartbeat"></i> Health & Wellness
+                    </button>
+                    <button onclick="highlightBots('emotions')">
+                        <i class="fas fa-smile"></i> Emotional Support
+                    </button>
+                    <button onclick="highlightBots('education')">
+                        <i class="fas fa-book"></i> Learning & Skills
+                    </button>
+                    <button onclick="highlightBots('business')">
+                        <i class="fas fa-briefcase"></i> Business & Marketing
+                    </button>
+                    <button onclick="highlightBots('creativity')">
+                        <i class="fas fa-lightbulb"></i> Creativity & Ideas
+                    </button>
+                    <button onclick="highlightBots('finance')">
+                        <i class="fas fa-coins"></i> Finance & Legal
+                    </button>
+                </div>
+             
+            
             
             <!-- Gear Icon Button -->
             <button class="settings-toggle" onclick="toggleSettings()">
                 <i class="fas fa-cog"></i> <!-- FontAwesome gear icon -->
             </button>
         </div>
+
+        
         
         <!-- Settings Panel: Initially hidden -->
         <div id="bot_settings" class="bot-settings-panel">
@@ -465,6 +828,15 @@
                         </div>
                     </a>
                 </div>
+
+                {% if not is_pro_user %}
+                <div class="upgrade-pro-section">
+                    <h3 class="pro-title">🚀 Unlock Pro Features!</h3>
+                    <p>Get unlimited chats, access to GPT-4, and priority support.</p>
+                    <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">Upgrade to Pro</a>
+                </div>
+                {% endif %}
+
                 
         
                 <a href="{% url 'personal_information' %}">
@@ -582,80 +954,73 @@
         </div>
         {% else %}
         <!-- AI Bots Selection Section -->
+        
         <!-- AI Bots Section -->
         <div class="ai-boxes">
-            <!-- Ezra -->
-            <div class="ai-box">
+            <div class="ai-box" id="elevate">
                 <div class="ai-box-content">
                     <h3>Hi, I'm Elevate! 🌟</h3>
                     <p>Let's work together on your personal and professional goals!</p>
                 </div>
-                <img src="{% static 'myapp/images/aiimages/elevate.png' %}" alt="Ezra">
+                <img src="{% static 'myapp/images/aiimages/elevate.png' %}" alt="Elevate">
                 <button class="upgrades-btn" onclick="location.href='{% url 'inspire_chat' %}'">Start Chat</button>
             </div>
-
-            <!-- Rudy -->
-            <div class="ai-box">
+        
+            <div class="ai-box" id="thrive">
                 <div class="ai-box-content">
                     <h3>Hi, I'm Thrive! 🩺</h3>
                     <p>Let's focus on your health and well-being together!</p>
                 </div>
-                <img src="{% static 'myapp/images/aiimages/thrive.png' %}" alt="Rudy">
+                <img src="{% static 'myapp/images/aiimages/thrive.png' %}" alt="Thrive">
                 <button class="upgrades-btn" onclick="location.href='{% url 'pulse_chat' %}'">Start Chat</button>
             </div>
-
-            <!-- Aria -->
-            <div class="ai-box">
+        
+            <div class="ai-box" id="lumos">
                 <div class="ai-box-content">
                     <h3>Hi, I'm Lumos! 🤗</h3>
                     <p>I'm here to provide support and companionship whenever you need it!</p>
                 </div>
-                <img src="{% static 'myapp/images/aiimages/lumos.png' %}" alt="Aria">
+                <img src="{% static 'myapp/images/aiimages/lumos.png' %}" alt="Lumos">
                 <button class="upgrades-btn" onclick="location.href='{% url 'soulspark_chat' %}'">Start Chat</button>
             </div>
-
-            <!-- Einstein -->
-            <div class="ai-box">
+        
+            <div class="ai-box" id="mentor_iq">
                 <div class="ai-box-content">
                     <h3>Hi, I'm Mentor IQ! 📚</h3>
                     <p>Let me guide you on your educational and career journey!</p>
                 </div>
-                <img src="{% static 'myapp/images/aiimages/mentor_iq.png' %}" alt="Einstein">
+                <img src="{% static 'myapp/images/aiimages/mentor_iq.png' %}" alt="Mentor IQ">
                 <button class="upgrades-btn" onclick="location.href='{% url 'mindforge_chat' %}'">Start Chat</button>
             </div>
-
-            <!-- Kash -->
-            <div class="ai-box">
+        
+            <div class="ai-box" id="nexus">
                 <div class="ai-box-content">
                     <h3>Hi, I'm Nexus! 💬🌐</h3>
                     <p>I'm here to ensure seamless customer and accessibility support for you!</p>
                 </div>
-                <img src="{% static 'myapp/images/aiimages/nexus.png' %}" alt="Kash">
+                <img src="{% static 'myapp/images/aiimages/nexus.png' %}" alt="Nexus">
                 <button class="upgrades-btn" onclick="location.href='{% url 'bridge_chat' %}'">Start Chat</button>
             </div>
-
-            <!-- Jordan -->
-            <div class="ai-box">
+        
+            <div class="ai-box" id="keystone">
                 <div class="ai-box-content">
                     <h3>Hi, I'm Keystone! 💼⚖️</h3>
                     <p>Let’s build a secure financial and legal foundation together!</p>
                 </div>
-                <img src="{% static 'myapp/images/aiimages/keystone.png' %}" alt="Jordan">
+                <img src="{% static 'myapp/images/aiimages/keystone.png' %}" alt="Keystone">
                 <button class="upgrades-btn" onclick="location.href='{% url 'fortify_chat' %}'">Start Chat</button>
             </div>
-
-            <!-- Echo -->
-            <div class="ai-box">
+        
+            <div class="ai-box" id="imagine">
                 <div class="ai-box-content">
                     <h3>Hi, I'm Imagine! 🎨</h3>
                     <p>Let's spark creativity and bring your ideas to life!</p>
                 </div>
-                <img src="{% static 'myapp/images/aiimages/imagine.png' %}" alt="Echo">
+                <img src="{% static 'myapp/images/aiimages/imagine.png' %}" alt="Imagine">
                 <button class="upgrades-btn" onclick="location.href='{% url 'echo_chat' %}'">Start Chat</button>
             </div>
-
-            <!-- Gideon -->
-            <div class="ai-box">
+        
+            <div class="ai-box" id="gideon">
                 <div class="ai-box-content">
                     <h3>Hi, I'm Gideon! 🚀</h3>
                     <p>Let's grow your small business with powerful insights!</p>
@@ -664,6 +1029,7 @@
                 <button class="upgrades-btn" onclick="location.href='{% url 'pathfinder_chat' %}'">Start Chat</button>
             </div>
         </div>
+        
         {% endif %} 
 </div>
 
@@ -673,5 +1039,41 @@
         settingsPanel.classList.toggle('show');
     }
 
+    function highlightBots(category) {
+        // Remove highlight from all bots first
+        document.querySelectorAll('.ai-box').forEach(box => box.classList.remove('highlight'));
+
+        // Define which AI bots match each category (Bot IDs must match your buttons)
+        const categoryMap = {
+            'personal-growth': ['elevate', 'nexus'],
+            'health': ['thrive'],
+            'emotions': ['lumos'],
+            'education': ['mentor_iq'],
+            'business': ['gideon'],
+            'creativity': ['imagine'],
+            'finance': ['keystone']
+        };
+
+        const aiBoxesContainer = document.querySelector('.ai-boxes');
+        let sortedBots = [];
+
+        // Loop through AI boxes, add highlights & reorder
+        document.querySelectorAll('.ai-box').forEach(box => {
+            const botId = box.getAttribute('id');  // Get ID of AI bot
+
+            if (categoryMap[category].includes(botId)) {
+                box.classList.add('highlight');  // Add highlight effect
+                sortedBots.unshift(box);  // Move to top
+            } else {
+                sortedBots.push(box);  // Keep original order
+            }
+        });
+
+        // Reorder AI bots dynamically
+        aiBoxesContainer.innerHTML = "";  // Clear the container
+        sortedBots.forEach(bot => aiBoxesContainer.appendChild(bot));  // Append in new order
+    }
 </script>
+
+
 {% endblock %}
