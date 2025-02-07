@@ -53,20 +53,25 @@ AI_IDENTITIES = {
       "Hi! I'm Gideon, your business growth expert! How can I help?" """
 }
 
-# ✅ Function to Check Guest Message Limits
 def limit_guest_chats(request):
-    if not request.user.is_authenticated:
+    """
+    Limit guest users to 10 chats per session. If they exceed, prompt them to sign up.
+    """
+    if not request.user.is_authenticated:  # Guest user check
         guest_chat_count = request.session.get('guest_chat_count', 0)
-
+        
         if guest_chat_count >= 10:
             return JsonResponse({
-                'response': '🚀 You have reached the limit of 10 messages. Sign in for unlimited access.'
+                'response': '🚀 You have reached the limit of 10 messages. Sign up for unlimited access.',
+                'show_signup': True  # ✅ Frontend can detect this and show the signup modal
             }, status=403)
 
+        # ✅ Ensure the session count updates properly
         request.session['guest_chat_count'] = guest_chat_count + 1
-        request.session.modified = True
+        request.session.modified = True  # 🔹 Forces Django to save the session update
 
-    return None
+    return None  # ✅ Allows the request to proceed if limit is not reached
+
 
 # ✅ AI Chatbot Function with Enforced Identity
 @csrf_exempt

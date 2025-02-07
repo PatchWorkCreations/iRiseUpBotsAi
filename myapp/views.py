@@ -110,33 +110,32 @@ DASHBOARD_ROUTES = {
     "414303": "keystone_dashboard",
 }
 
-from django.shortcuts import render, redirect
+from django.utils.timezone import now
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from myapp.models import AIUserSubscription, UserCourseAccess
+from myapp.models import AIUserSubscription
 
 @login_required
 def coursemenu(request):
     """
-    Redirect users to their respective dashboards based on their product ID.
-    If no product ID is associated, render the course menu.
-    Also determines if the user has a Pro or One-Year plan.
+    Determines if the user is on the Pro or One-Year plan and shows the course menu.
+    Ensures expired or canceled subscriptions are not counted.
     """
     user = request.user
-    access = UserCourseAccess.objects.filter(user=user, is_active=True).first()
-    subscription = AIUserSubscription.objects.filter(user=user, is_active=True).first()
+
+    # Check if the user has an active subscription (valid expiration & not canceled)
+    subscription = AIUserSubscription.objects.filter(
+        user=user,
+        expiration_date__gt=now()  # Must be in the future
+    ).exclude(canceled_at__isnull=False).first()
 
     # Determine user's plan
     user_plan = subscription.plan if subscription else "free"
     is_pro_user = user_plan in ["pro", "one-year"]
 
-    if access:
-        product_id = access.product_id
-        dashboard_name = DASHBOARD_ROUTES.get(product_id)
-        if dashboard_name:
-            return redirect(dashboard_name)
-
-    # Pass the plan status to the template
+    # Render the course menu and pass the subscription status
     return render(request, 'myapp/aibots/coursemenu.html', {"is_pro_user": is_pro_user})
+
 
 
 def subscription_terms_new(request):
@@ -147,6 +146,9 @@ def terms_and_conditions(request):
 
 def data_privacy(request):
     return render(request, 'myapp/aibots/data_privacy.html')
+
+def terms_view(request):
+    return render(request, 'myapp/aibots/iriseupai/termsandcondition.html')
 
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -2327,17 +2329,55 @@ def summarize_history(conversation_history):
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from myapp.models import AIUserSubscription
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
+from myapp.models import AIUserSubscription
 
-@login_required
-def get_user_plan(request):
+# Set chat limits
+CHAT_LIMITS = {
+    "guest": 10,     # Guest users: 10 chats per session
+    "free": 15,      # Free registered users: 15 chats per day
+    "pro": None,     # Pro users: No limit
+    "one-year": None # One-Year users: No limit
+}
+
+def get_user_plan(user):
+    """Determine the user's AI subscription plan."""
+    if user.is_authenticated:
+        subscription = AIUserSubscription.objects.filter(user=user, is_active=True).first()
+        return subscription.plan if subscription else "free"
+    return "guest"
+
+def limit_chats(request):
     """
-    Returns the user's AI model plan (Free: GPT-3.5, Pro/One-Year: GPT-4).
+    Restricts chat messages based on user type (Guest, Free, Pro, One-Year).
     """
-    user_subscription = AIUserSubscription.objects.filter(user=request.user, is_active=True).first()
-    user_plan = user_subscription.plan if user_subscription else "free"
+    user = request.user
+    user_plan = get_user_plan(user)
+    chat_limit = CHAT_LIMITS[user_plan]
 
-    return JsonResponse({"plan": user_plan})
+    # Guests: Limit per session
+    if user_plan == "guest":
+        guest_chat_count = request.session.get('guest_chat_count', 0)
+        if guest_chat_count >= chat_limit:
+            return JsonResponse({'response': '🔒 You have reached your free chat limit. Sign up for more access!'}, status=403)
+        request.session['guest_chat_count'] = guest_chat_count + 1
+        request.session.modified = True  # Ensure session updates
 
+    # Free Users: Limit per day (stored in cache)
+    elif user_plan == "free":
+        chat_count_key = f"chat_count_{user.id}"
+        free_chat_count = cache.get(chat_count_key, 0)
+
+        if free_chat_count >= chat_limit:
+            return JsonResponse({'response': '🚀 Upgrade to Pro for unlimited chats!'}, status=403)
+
+        # Increment and store the chat count in cache (expires in 24 hours)
+        cache.set(chat_count_key, free_chat_count + 1, timeout=86400)
+
+    # Pro & One-Year users: No chat restrictions
+    return None
 
 @login_required
 def get_bot_response(request, system_prompt, bot_name):
@@ -2521,41 +2561,82 @@ def get_pathfinder_response(request):
     return get_bot_response(request, system_prompt=system_prompt, bot_name="pathfinder")
 
 
-def inspire_chat(request):
-    user_name = request.user.first_name if request.user.is_authenticated else None
-    return render(request, 'myapp/aibots/bots/inspire_chat.html', {'user_name': user_name})
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
-def pulse_chat(request):
-    user_name = request.user.first_name if request.user.is_authenticated else None
-    return render(request, 'myapp/aibots/bots/pulse_chat.html', {'user_name': user_name})
+# Dictionary mapping chatbot names to their correct template paths
+CHATBOT_TEMPLATES = {
+    'imagine': 'myapp/aibots/bots/echo_chat.html',  # Echo → Imagine
+    'keystone': 'myapp/aibots/bots/fortify_chat.html',  # Fortify → Keystone
+    'elevate': 'myapp/aibots/bots/inspire_chat.html',  # Inspire → Elevate
+    'mentor-iq': 'myapp/aibots/bots/mindforge_chat.html',  # Mindforge → Mentor IQ
+    'gideon': 'myapp/aibots/bots/pathfinder_chat.html',  # Pathfinder → Gideon
+    'thrive': 'myapp/aibots/bots/pulse_chat.html',  # Pulse → Thrive
+    'lumos': 'myapp/aibots/bots/soulspark_chat.html',  # Soulspark → Lumos
+}
 
-def soulspark_chat(request):
-    user_name = request.user.first_name if request.user.is_authenticated else None
-    return render(request, 'myapp/aibots/bots/soulspark_chat.html', {'user_name': user_name})
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from myapp.models import AIUserSubscription
 
-def nexus_chat(request):
-    user_name = request.user.first_name if request.user.is_authenticated else None
-    return render(request, 'myapp/aibots/bots/nexus_chat.html', {'user_name': user_name})
+# Dictionary mapping chatbot names to their correct template paths
+CHATBOT_TEMPLATES = {
+    'imagine': 'myapp/aibots/bots/echo_chat.html',  # Echo → Imagine
+    'keystone': 'myapp/aibots/bots/fortify_chat.html',  # Fortify → Keystone
+    'elevate': 'myapp/aibots/bots/inspire_chat.html',  # Inspire → Elevate
+    'mentor-iq': 'myapp/aibots/bots/mindforge_chat.html',  # Mindforge → Mentor IQ
+    'gideon': 'myapp/aibots/bots/pathfinder_chat.html',  # Pathfinder → Gideon
+    'thrive': 'myapp/aibots/bots/pulse_chat.html',  # Pulse → Thrive
+    'lumos': 'myapp/aibots/bots/soulspark_chat.html',  # Soulspark → Lumos
+}
 
-def mindforge_chat(request):
-    user_name = request.user.first_name if request.user.is_authenticated else None
-    return render(request, 'myapp/aibots/bots/mindforge_chat.html', {'user_name': user_name})
+# Chat limits
+GUEST_CHAT_LIMIT = 10  # Limit for guest users
+FREE_USER_CHAT_LIMIT = 20  # Limit for free users
 
-def bridge_chat(request):
-    user_name = request.user.first_name if request.user.is_authenticated else None
-    return render(request, 'myapp/aibots/bots/bridge_chat.html', {'user_name': user_name})
+def chat_view(request, bot_name):
+    """
+    Generalized chat view for all AI bots with chat limits.
+    Accepts a `bot_name` parameter to determine which chat page to render.
+    """
+    # Ensure the bot name is valid
+    template = CHATBOT_TEMPLATES.get(bot_name.lower())
+    if not template:
+        return render(request, 'myapp/aibots/bots/404.html', {'error': "Chatbot not found"})  
 
-def fortify_chat(request):
-    user_name = request.user.first_name if request.user.is_authenticated else None
-    return render(request, 'myapp/aibots/bots/fortify_chat.html', {'user_name': user_name})
+    # Handling Guest Users (Not Logged In)
+    if not request.user.is_authenticated:
+        guest_chat_count = request.session.get('guest_chat_count', 0)
+        
+        if guest_chat_count >= GUEST_CHAT_LIMIT:
+            return JsonResponse({'error': 'You have reached the guest chat limit of 10 messages. Sign up for more access!'}, status=403)
 
-def echo_chat(request):
-    user_name = request.user.first_name if request.user.is_authenticated else None
-    return render(request, 'myapp/aibots/bots/echo_chat.html', {'user_name': user_name})
+        request.session['guest_chat_count'] = guest_chat_count + 1
+        request.session.modified = True  # Ensure the session updates
 
-def pathfinder_chat(request):
+    # Handling Registered Users (Check Subscription)
+    else:
+        user_subscription = AIUserSubscription.objects.filter(user=request.user, is_active=True).first()
+        user_plan = user_subscription.plan if user_subscription else "free"
+
+        # Apply chat limit only for free users
+        if user_plan == "free":
+            free_chat_count = request.session.get('free_chat_count', 0)
+
+            if free_chat_count >= FREE_USER_CHAT_LIMIT:
+                return JsonResponse({'error': 'You have reached the free user chat limit of 20 messages. Upgrade to Pro for unlimited access!'}, status=403)
+
+            request.session['free_chat_count'] = free_chat_count + 1
+            request.session.modified = True  
+
+        # Pro and One-Year users have unlimited access (no chat limit)
+
+    # Proceed with rendering the chatbot template
     user_name = request.user.first_name if request.user.is_authenticated else None
-    return render(request, 'myapp/aibots/bots/pathfinder_chat.html', {'user_name': user_name})
+    return render(request, template, {'user_name': user_name})
+
+
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse

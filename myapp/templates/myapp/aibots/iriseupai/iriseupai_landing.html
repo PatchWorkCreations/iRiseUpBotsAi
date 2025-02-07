@@ -1180,8 +1180,9 @@
 
         <!-- 👀 Subtle Secondary Option -->
         <p class="signup-secondary">
-            No credit card required. <a href="#" onclick="closeSignupModal()">Maybe later</a>
+            No credit card required. <a href="#" onclick="closeSignupModal(); return false;">Maybe later</a>
         </p>
+        
     </div>
 </div>
 
@@ -1749,6 +1750,24 @@ function closeSignupModal() {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const aiSelect = document.getElementById('ai-select');
+    const aiNameDisplay = document.getElementById('ai-name');
+
+    // Function to update AI Name
+    function updateAIName() {
+        const selectedOption = aiSelect.options[aiSelect.selectedIndex].text; // Get selected option's text
+        aiNameDisplay.textContent = selectedOption.split(" - ")[0].trim(); // Extract AI name before "-"
+    }
+
+    // Add event listener for dropdown changes
+    aiSelect.addEventListener('change', updateAIName);
+
+    // Initialize AI name on page load
+    updateAIName();
+});
+
+
 // Square Payment  
 document.addEventListener("DOMContentLoaded", async function () {
     console.log("✅ JavaScript loaded!");
@@ -1858,6 +1877,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
+function closeSignupModal() {
+    let modal = document.querySelector('.signup-modal'); // Adjust this selector based on your modal's class or ID
+    if (modal) {
+        modal.style.display = 'none'; // Hides the modal
+    }
+}
 
 
 </script>

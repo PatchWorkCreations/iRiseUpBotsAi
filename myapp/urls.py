@@ -107,28 +107,21 @@ urlpatterns = [
     path('api/chat/pulse/', views.get_pulse_response, name='get_pulse_response'),        # Caleb
     path('api/chat/soulspark/', views.get_soulspark_response, name='get_soulspark_response'),  # Harper
 
-    # Chat Views
-    path('chat/inspire/', views.inspire_chat, name='inspire_chat'),   # Ezra Chat
-    path('chat/pulse/', views.pulse_chat, name='pulse_chat'),         # Caleb Chat
-    path('chat/soulspark/', views.soulspark_chat, name='soulspark_chat'), # Harper Chat
+     
 
     # Additional API Endpoints for Renamed Bots
      
     path('api/chat/mindforge/', views.get_mindforge_response, name='get_mindforge_response'),  # Einstein
     path('api/chat/nexus/', views.get_bridge_response, name='get_bridge_response'),   # Nico
 
-    # Additional Chat Views
-     
-    path('chat/mindforge/', views.mindforge_chat, name='mindforge_chat'),  # Einstein Chat
-    path('chat/bridge/', views.bridge_chat, name='bridge_chat'),         # Nico Chat
+    
 
     # Echo and Maven Chat API Endpoints and Views
     path('api/chat/echo/', views.get_echo_response, name='get_echo_response'),        # Echo
     path('api/chat/pathfinder/', views.get_pathfinder_response, name='get_pathfinder_response'),  # Maven
-    path('chat/echo/', views.echo_chat, name='echo_chat'),              # Echo Chat
-    path('chat/pathfinder/', views.pathfinder_chat, name='pathfinder_chat'), # Maven Chat
+  
 
-    path('chat/fortify/', views.fortify_chat, name='fortify_chat'),
+ 
     path('api/chat/fortify/', views.get_fortify_response, name='get_fortify_response'),  
 
     
@@ -225,4 +218,9 @@ urlpatterns = [
 
     path("api/get-user-plan/", views.get_user_plan, name="get-user-plan"),
     path("upgrade-to-pro/", views.upgrade_to_pro, name="upgrade_to_pro"),
-] 
+
+    path('chat/<str:bot_name>/', views.chat_view, name='chat_view'),
+
+
+    path("terms/", views.terms_view, name="terms"),
+]

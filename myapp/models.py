@@ -10,22 +10,35 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.contrib.auth.models import User
+from django.db import models
+from django.utils.timezone import now
+
 class AIUserSubscription(models.Model):
+    PLAN_CHOICES = [
+        ('free', 'Free'),
+        ('pro', 'Pro Monthly'),
+        ('one-year', 'One-Year Access')
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    plan = models.CharField(
-        max_length=50,
-        choices=[
-            ('free', 'Free'),
-            ('pro', 'Pro Monthly'),
-            ('one-year', 'One-Year Access')
-        ]
-    )
+    plan = models.CharField(max_length=50, choices=PLAN_CHOICES, default="free")
     start_date = models.DateTimeField(auto_now_add=True)
     expiration_date = models.DateTimeField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    
+    is_auto_renew = models.BooleanField(default=True)  # Auto-renewal flag
+    canceled_at = models.DateTimeField(null=True, blank=True)  # Stores when the user cancels
+
+    @property
+    def is_active(self):
+        """Ensure subscription is active only if expiration_date is in the future OR if it's Free."""
+        if self.plan == "free":
+            return True  # Free plan never expires
+        return self.expiration_date is None or self.expiration_date > now()
 
     def __str__(self):
-        return f"{self.user.username} - {self.plan}"
+        return f"{self.user.username} - {self.plan} ({'Active' if self.is_active else 'Expired'})"
+ 
 
 
 class SquareCustomer(models.Model):
