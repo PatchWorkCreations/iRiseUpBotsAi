@@ -185,9 +185,10 @@ urlpatterns = [
     path('thankyou/keystone/', views.keystone_thank_you, name='thankyou-keystone'),
 
 
-   path('chat/<str:product_id>/', views.dynamic_chat, name='dynamic_chat'),
-   path('manual-account-activation/', views.manual_account_activation, name='manual_account_activation'),
-   path('send-test-email/', views.test_email_view, name='send_test_email'),
+    #path('chat/<str:product_id>/', views.dynamic_chat, name='dynamic_chat'),
+
+    path('manual-account-activation/', views.manual_account_activation, name='manual_account_activation'),
+    path('send-test-email/', views.test_email_view, name='send_test_email'),
 
     path('dashboard/elevate/', views.elevate_dashboard, name='elevate_dashboard'),
     path('dashboard/thrive/', views.thrive_dashboard, name='thrive_dashboard'),
@@ -223,4 +224,5 @@ urlpatterns = [
 
 
     path("terms/", views.terms_view, name="terms"),
+
 ]

@@ -2378,6 +2378,14 @@ def limit_chats(request):
 
     # Pro & One-Year users: No chat restrictions
     return None
+from django.utils.timezone import now
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+import logging
+from myapp.models import AIUserSubscription
+import openai  # Ensure OpenAI client is correctly imported
+
+logger = logging.getLogger(__name__)
 
 @login_required
 def get_bot_response(request, system_prompt, bot_name):
@@ -2387,12 +2395,19 @@ def get_bot_response(request, system_prompt, bot_name):
         if not user_message or user_message.strip() == "":
             return JsonResponse({'response': 'Error: Message cannot be empty.'})
 
-        # 🔹 Check user's subscription plan
-        user_subscription = AIUserSubscription.objects.filter(user=request.user, is_active=True).first()
+        # 🔹 Check user's subscription plan correctly
+        user_subscription = AIUserSubscription.objects.filter(
+            user=request.user
+        ).exclude(
+            canceled_at__isnull=False  # Exclude canceled subscriptions
+        ).filter(
+            expiration_date__gt=now()  # Ensure the subscription is active
+        ).first()
+
         user_plan = user_subscription.plan if user_subscription else "free"
 
         # 🔹 Select OpenAI Model Based on Subscription Plan
-        model_version = "gpt-3.5-turbo" if user_plan == "free" else "gpt-4"
+        model_version = "gpt-3.5-turbo" if user_plan == "free" else "gpt-4-turbo"
 
         # Use a bot-specific session key for conversation history
         conversation_key = f"{bot_name}_conversation_history"
@@ -2401,7 +2416,7 @@ def get_bot_response(request, system_prompt, bot_name):
         # Apply the system prompt if this is the start of a new session for this bot
         if not conversation_history:
             conversation_history.append({"role": "system", "content": system_prompt})
-            print(f"System prompt applied for bot {bot_name}: {system_prompt}")
+            logger.info(f"System prompt applied for bot {bot_name}: {system_prompt}")
 
         # Append the user's message
         conversation_history.append({"role": "user", "content": user_message})
@@ -2413,12 +2428,14 @@ def get_bot_response(request, system_prompt, bot_name):
             conversation_history = [{"role": "system", "content": f"Summary of previous conversation: {summary}"}] + conversation_history[-5:]
 
         try:
-            # 🔹 Send conversation history for response
-            response = openai_client.chat.completions.create(
+            # 🔹 FIXED OpenAI API CALL for openai>=1.0.0
+            client = openai.OpenAI()  # This is the new way to call OpenAI
+            response = client.chat.completions.create(
                 model=model_version,
-                messages=[{"role": "system", "content": system_prompt}] + conversation_history
+                messages=conversation_history
             )
-            message = response.choices[0].message.content
+
+            message = response.choices[0].message.content  # Extract response text
             conversation_history.append({"role": "assistant", "content": message})
 
             # Update the session with the bot-specific conversation history
@@ -2431,6 +2448,7 @@ def get_bot_response(request, system_prompt, bot_name):
         return JsonResponse({'response': message})
 
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
 
 
 
@@ -2566,15 +2584,17 @@ from django.contrib.auth.decorators import login_required
 
 # Dictionary mapping chatbot names to their correct template paths
 CHATBOT_TEMPLATES = {
-    'imagine': 'myapp/aibots/bots/echo_chat.html',  # Echo → Imagine
-    'keystone': 'myapp/aibots/bots/fortify_chat.html',  # Fortify → Keystone
-    'elevate': 'myapp/aibots/bots/inspire_chat.html',  # Inspire → Elevate
-    'mentor-iq': 'myapp/aibots/bots/mindforge_chat.html',  # Mindforge → Mentor IQ
-    'gideon': 'myapp/aibots/bots/pathfinder_chat.html',  # Pathfinder → Gideon
-    'thrive': 'myapp/aibots/bots/pulse_chat.html',  # Pulse → Thrive
-    'lumos': 'myapp/aibots/bots/soulspark_chat.html',  # Soulspark → Lumos
+    'imagine': 'myapp/aibots/bots/echo_chat.html',
+    'keystone': 'myapp/aibots/bots/fortify_chat.html',
+    'elevate': 'myapp/aibots/bots/inspire_chat.html',
+    'mentor-iq': 'myapp/aibots/bots/mindforge_chat.html',  # Ensure naming consistency
+    'gideon': 'myapp/aibots/bots/pathfinder_chat.html',
+    'thrive': 'myapp/aibots/bots/pulse_chat.html',
+    'lumos': 'myapp/aibots/bots/soulspark_chat.html',
 }
 
+
+from django.utils.timezone import now
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -2608,16 +2628,27 @@ def chat_view(request, bot_name):
     # Handling Guest Users (Not Logged In)
     if not request.user.is_authenticated:
         guest_chat_count = request.session.get('guest_chat_count', 0)
-        
+
         if guest_chat_count >= GUEST_CHAT_LIMIT:
-            return JsonResponse({'error': 'You have reached the guest chat limit of 10 messages. Sign up for more access!'}, status=403)
+            return JsonResponse(
+                {'error': 'You have reached the guest chat limit of 10 messages. Sign up for more access!'}, 
+                status=403
+            )
 
         request.session['guest_chat_count'] = guest_chat_count + 1
         request.session.modified = True  # Ensure the session updates
 
     # Handling Registered Users (Check Subscription)
     else:
-        user_subscription = AIUserSubscription.objects.filter(user=request.user, is_active=True).first()
+        user_subscription = AIUserSubscription.objects.filter(
+            user=request.user
+        ).exclude(
+            canceled_at__isnull=False  # Exclude canceled subscriptions
+        ).filter(
+            expiration_date__gt=now()  # Ensure expiration is in the future
+        ).first()
+
+        # Determine user's plan
         user_plan = user_subscription.plan if user_subscription else "free"
 
         # Apply chat limit only for free users
@@ -2625,7 +2656,10 @@ def chat_view(request, bot_name):
             free_chat_count = request.session.get('free_chat_count', 0)
 
             if free_chat_count >= FREE_USER_CHAT_LIMIT:
-                return JsonResponse({'error': 'You have reached the free user chat limit of 20 messages. Upgrade to Pro for unlimited access!'}, status=403)
+                return JsonResponse(
+                    {'error': 'You have reached the free user chat limit of 20 messages. Upgrade to Pro for unlimited access!'}, 
+                    status=403
+                )
 
             request.session['free_chat_count'] = free_chat_count + 1
             request.session.modified = True  
