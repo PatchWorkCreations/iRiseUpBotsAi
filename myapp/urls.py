@@ -22,7 +22,7 @@ urlpatterns = [
     path('blogs/category/<int:category_id>/', views.blog_category, name='blog_category'),
     path('blogs/search/', views.blog_search, name='blog_search'),
     path('email-collection/', views.email_collection, name='email_collection'),
-    path('coursemenu/', views.coursemenu, name='coursemenu'),
+    path('iriseupdashboard/', views.iriseupdashboard, name='iriseupdashboard'),
     path('courses/', views.course_list, name='course_list'),
     path('course/continue/<int:course_id>/', views.course_continue, name='course_continue'),
 
@@ -210,8 +210,6 @@ urlpatterns = [
     path('api/chat/gideon/', views.get_pathfinder_response, name='get_pathfinder_response'),  # Gideon (same)
     path('api/chat/nexus/', views.get_bridge_response, name='get_bridge_response'),  # Nexus (was bridge)
     
-
-     
     # ✅ Test Endpoint
     path('api/guest/chat/<str:bot_name>/', guest_views.guest_bot_response, name='guest_bot_response'),
     path('signup/', views.signup_view, name='signup'),
@@ -221,7 +219,6 @@ urlpatterns = [
     path("upgrade-to-pro/", views.upgrade_to_pro, name="upgrade_to_pro"),
 
     path('chat/<str:bot_name>/', views.chat_view, name='chat_view'),
-
 
     path("terms/", views.terms_view, name="terms"),
 

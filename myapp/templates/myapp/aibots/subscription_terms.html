@@ -218,7 +218,7 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#services">Services</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'personalized_plan' %}#plan-selection-section">Access</a></li>
                 {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'coursemenu' %}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'iriseupdashboard' %}">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'sign_out' %}">Logout</a></li>
                 {% else %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'sign_in' %}">Sign in</a></li>

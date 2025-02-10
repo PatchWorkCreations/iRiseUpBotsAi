@@ -153,7 +153,7 @@
                     <a class="nav-link" href="{% url 'contactus' %}">Contact</a>
                 </li>
                 {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'coursemenu' %}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'iriseupdashboard' %}">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'sign_out' %}">Logout</a></li>
                 {% else %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'sign_in' %}">Sign in</a></li>
@@ -208,7 +208,7 @@
 
         <div class="form-group text-center mt-4">
             <button type="submit" class="btn btn-primary">Submit</button>
-            <a href="{% url 'coursemenu' %}" class="btn btn-secondary ml-2">Cancel</a>
+            <a href="{% url 'iriseupdashboard' %}" class="btn btn-secondary ml-2">Cancel</a>
         </div>
     </form>
 </div>

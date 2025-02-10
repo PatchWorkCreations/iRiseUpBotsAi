@@ -1200,7 +1200,7 @@
                 <li>One-time access—no expensive subscriptions required.</li>
             </ul>
             <div class="hero-cta">
-                <a href="#plan-selection-section" class="btn btn-primary hero-btn">🚀 Get My AI Experts Now!</a>
+                <a href="#pricing" class="btn btn-primary hero-btn">🚀 Get My AI Experts Now!</a>
                 <p class="hero-trust-text">🔥 Over 100,000 Users Trust iRiseUp AI</p>
             </div>
         </div>
@@ -1223,7 +1223,11 @@
                 <option value="nexus">⚙️ Nexus - Technical AI</option>
                 <option value="thrive">🏋️ Thrive - Health & Wellness AI</option>
                 <option value="gideon">📈 Gideon - Business & Marketing AI</option>
-            </select>
+                <option value="elevate">🚀 Elevate - Business Motivation AI</option>
+                <option value="keystone">🏛️ Keystone - Finance & Legal AI</option>
+                <option value="mentor-iq">🎓 Mentor IQ - Learning & Career AI</option>
+                <option value="imagine">🎨 Imagine - Creativity & Inspiration AI</option>
+            </select>            
         </div>
 
         <!-- Chat UI -->
@@ -1611,6 +1615,23 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 <script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const lastVisit = localStorage.getItem('lastVisit');
+    const currentTime = new Date().getTime();
+
+    // Reset message count if last visit was more than 24 hours ago
+    if (!lastVisit || currentTime - lastVisit > 86400000) {
+        localStorage.setItem('messageCount', 0);  // Reset count
+        localStorage.setItem('lastVisit', currentTime);
+        console.log("🔄 Message count reset for a new session.");
+    }
+
+    // Hide the modal on page load
+    document.querySelector('.signup-modal').style.display = 'none';
+});
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const chatbox = document.getElementById('chatbox');
     const typingIndicator = document.getElementById('typing-indicator');

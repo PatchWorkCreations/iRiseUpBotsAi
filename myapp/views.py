@@ -116,7 +116,7 @@ from django.contrib.auth.decorators import login_required
 from myapp.models import AIUserSubscription
 
 @login_required
-def coursemenu(request):
+def iriseupdashboard(request):
     """
     Determines if the user is on the Pro or One-Year plan and shows the course menu.
     Ensures expired or canceled subscriptions are not counted.
@@ -186,7 +186,7 @@ def course_continue(request, course_id):
         if user_access and not user_access.has_expired():
             return render(request, 'myapp/course_detail.html', {'course': course})
         else:
-            return redirect('coursemenu')  # Redirect to course menu if access is denied
+            return redirect('iriseupdashboard')  # Redirect to course menu if access is denied
     return render(request, 'myapp/course_detail.html', {'course': course})
 
 
@@ -875,14 +875,14 @@ def redirect_to_dashboard(user):
         elif product_id == "jordan":  # Example if jordan has no ID assigned
             return redirect('keystone_dashboard')
     # Default fallback if no access or product ID is found
-    return redirect('coursemenu')
+    return redirect('iriseupdashboard')
 
 
 def redirect_to_user_ai(user):
     access = UserCourseAccess.objects.filter(user=user, is_active=True).first()
 
     if not access:
-        return redirect('coursemenu')
+        return redirect('iriseupdashboard')
 
     product_id = access.product_id
 
@@ -902,7 +902,7 @@ def redirect_to_user_ai(user):
     if dashboard_name:
         return redirect(dashboard_name)
 
-    return redirect('coursemenu')  # Fallback if no dashboard is defined
+    return redirect('iriseupdashboard')  # Fallback if no dashboard is defined
 
 
 
@@ -1139,12 +1139,12 @@ def signup_view(request):
         except IntegrityError:
             return JsonResponse({"success": False, "message": "This username is already taken! Try another one.", "error_field": "username"})
 
-        # ✅ Login user & redirect to `coursemenu`
+        # ✅ Login user & redirect to `iriseupdashboard`
         login(request, user)
         return JsonResponse({
             "success": True, 
             "message": "🎉 Welcome! Your AI-powered journey starts now.",
-            "redirect_url": "/coursemenu/"  # 🔥 Ensure we pass the redirect URL
+            "redirect_url": "/iriseupdashboard/"  # 🔥 Ensure we pass the redirect URL
         })
 
     return render(request, "myapp/aibots/iriseupai/signup.html")
@@ -3559,7 +3559,7 @@ def set_selected_plan(request):
             request.session['selected_plan'] = selected_plan
 
             # Respond with a success message and the redirection URL
-            return JsonResponse({'success': True, 'redirect_url': '/coursemenu/'})
+            return JsonResponse({'success': True, 'redirect_url': '/iriseupdashboard/'})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
