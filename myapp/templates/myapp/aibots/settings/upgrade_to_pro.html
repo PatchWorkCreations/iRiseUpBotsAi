@@ -656,24 +656,40 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async function setupSquarePayments() {
         if (squareInitialized) return;
-        const payments = Square.payments("sq0idp-jpJ9YFYpLwuh5nFx4B-qXg", "45B8XGXSPP8E3");
-        card = await payments.card();
-        await card.attach("#card-container");
-        squareInitialized = true;
 
-        payNowButton.addEventListener("click", async function (event) {
-            event.preventDefault();
-            await processPayment();
-        });
+        console.log("🔄 Initializing Square Payments...");
+
+        try {
+            const payments = Square.payments("sq0idp-jpJ9YFYpLwuh5nFx4B-qXg", "45B8XGXSPP8E3");
+            card = await payments.card();
+            await card.attach("#card-container");
+
+            console.log("✅ Card attached to container!");
+            squareInitialized = true;
+
+            payNowButton.addEventListener("click", async function (event) {
+                event.preventDefault();
+                await processPayment();
+            });
+
+        } catch (error) {
+            console.error("⚠️ Square Payment Initialization Error:", error);
+        }
     }
 
     async function processPayment() {
         try {
+            payNowButton.disabled = true;
+
             const result = await card.tokenize();
             if (result.status !== "OK") {
                 alert("Payment failed: " + result.errors[0].message);
+                payNowButton.disabled = false;
                 return;
             }
+
+            console.log("✅ Payment token generated!");
+
             const response = await fetch("/process-ai-subscription/", {
                 method: "POST",
                 headers: {
@@ -683,17 +699,29 @@ document.addEventListener("DOMContentLoaded", async function () {
                 body: JSON.stringify({
                     source_id: result.token,
                     plan: selectedPlanInput.value,
+                    givenName: document.getElementById("givenName").value,
+                    familyName: document.getElementById("familyName").value,
+                    addressLine1: document.getElementById("addressLine1").value,
+                    city: document.getElementById("city").value,
+                    state: document.getElementById("state").value,
+                    countryCode: document.getElementById("countryCode").value,
+                    phone: document.getElementById("phone").value,
+                    email: document.getElementById("email").value,
                 }),
             });
 
             const jsonResult = await response.json();
+
             if (jsonResult.success) {
                 window.location.href = "/success/";
             } else {
                 alert(jsonResult.error);
             }
         } catch (error) {
+            console.error("⚠️ Payment Error:", error);
             alert("Payment failed: " + error.message);
+        } finally {
+            payNowButton.disabled = false;
         }
     }
 });
