@@ -943,7 +943,19 @@
                         </div>
                         <i class="fa-solid fa-angle-right"></i>
                     </div>
-                </a>                    
+                </a>     
+                {% if user.is_staff %}
+            <a href="{% url 'custom_admin:dashboard' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-user-shield"></i> <!-- Staff Dashboard icon -->
+                        <h2 class="smith new-chat">Staff Dashboard</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+            {% endif %}
+                        
             </div>
         </div>
           

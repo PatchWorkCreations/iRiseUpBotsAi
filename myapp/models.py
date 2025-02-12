@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils.timezone import now
+from django.utils.timezone import now, timedelta
 
 class AIUserSubscription(models.Model):
     PLAN_CHOICES = [
@@ -29,16 +29,33 @@ class AIUserSubscription(models.Model):
     is_auto_renew = models.BooleanField(default=True)  # Auto-renewal flag
     canceled_at = models.DateTimeField(null=True, blank=True)  # Stores when the user cancels
 
+    def save(self, *args, **kwargs):
+        """ Ensure expiration_date is correctly set for Pro and One-Year plans. """
+        if self.plan == "pro" and not self.expiration_date:
+            self.expiration_date = self.start_date + timedelta(days=30)  # 1-month subscription
+        elif self.plan == "one-year" and not self.expiration_date:
+            self.expiration_date = self.start_date + timedelta(days=365)  # 1-year subscription
+        super().save(*args, **kwargs)
+
     @property
     def is_active(self):
-        """Ensure subscription is active only if expiration_date is in the future OR if it's Free."""
+        """ Ensure subscription is active only if expiration_date is in the future OR if it's Free. """
         if self.plan == "free":
             return True  # Free plan never expires
-        return self.expiration_date is None or self.expiration_date > now()
+        return self.expiration_date is not None and self.expiration_date > now()
+
+    @property
+    def days_remaining(self):
+        """ Calculate remaining days until expiration. """
+        if self.expiration_date:
+            remaining = (self.expiration_date - now()).days
+            return max(remaining, 0)  # Prevent negative values
+        return 0
 
     def __str__(self):
-        return f"{self.user.username} - {self.plan} ({'Active' if self.is_active else 'Expired'})"
- 
+        status = "Active" if self.is_active else "Expired"
+        return f"{self.user.username} - {self.plan} ({status}, {self.days_remaining} days left)"
+
 
 
 class SquareCustomer(models.Model):

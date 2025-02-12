@@ -1181,7 +1181,8 @@ PLAN_PRICES = {
 }
 """
 
-@csrf_exempt  # ⚠️ Consider using csrf_protect instead of csrf_exempt for security
+
+@csrf_exempt
 def process_ai_subscription(request):
     if request.method != "POST":
         return JsonResponse({"error": "Invalid request method."}, status=405)
@@ -1197,34 +1198,41 @@ def process_ai_subscription(request):
 
         logger.info(f"Processing subscription for {user_email} - Plan: {selected_plan}")
 
-        # 🛠 Ensure user exists, or create one
-        user, created = User.objects.get_or_create(email=user_email, defaults={"username": user_email.split("@")[0]})
+        # Ensure user exists
+        user, created = User.objects.get_or_create(
+            email=user_email, defaults={"username": user_email.split("@")[0]}
+        )
 
         amount = PLAN_PRICES.get(selected_plan)
         if not amount:
             return JsonResponse({"error": "Invalid plan selected."}, status=400)
 
         # ✅ Step 1: Check if customer exists in Square
-        search_response = square_client.customers.search_customers(
-            body={"query": {"filter": {"email_address": {"exact": user_email}}}}
-        )
+        square_customer, created = SquareCustomer.objects.get_or_create(user=user)
 
-        if search_response.is_error():
-            logger.warning("Customer search failed: %s", search_response.errors)
-            return JsonResponse({"error": "Failed to retrieve customer."}, status=400)
+        if not square_customer.customer_id:
+            search_response = square_client.customers.search_customers(
+                body={"query": {"filter": {"email_address": {"exact": user_email}}}}
+            )
 
-        customer_id = None
-        if 'customers' in search_response.body and len(search_response.body['customers']) > 0:
-            customer_id = search_response.body['customers'][0]['id']
-            logger.info(f"Customer found in Square: {customer_id}")
-        else:
-            # Create new customer if none exists
-            customer_result = square_client.customers.create_customer(body={"email_address": user_email})
-            if customer_result.is_error():
-                logger.error("Customer creation failed: %s", customer_result.errors)
-                return JsonResponse({"error": "Could not create customer."}, status=400)
-            customer_id = customer_result.body['customer']['id']
-            logger.info(f"New customer created: {customer_id}")
+            if search_response.is_error():
+                logger.warning("Customer search failed: %s", search_response.errors)
+                return JsonResponse({"error": "Failed to retrieve customer."}, status=400)
+
+            if 'customers' in search_response.body and len(search_response.body['customers']) > 0:
+                square_customer.customer_id = search_response.body['customers'][0]['id']
+                square_customer.save()
+                logger.info(f"Customer found in Square: {square_customer.customer_id}")
+            else:
+                # Create new Square customer if not exists
+                customer_result = square_client.customers.create_customer(body={"email_address": user_email})
+                if customer_result.is_error():
+                    logger.error("Customer creation failed: %s", customer_result.errors)
+                    return JsonResponse({"error": "Could not create customer."}, status=400)
+                
+                square_customer.customer_id = customer_result.body['customer']['id']
+                square_customer.save()
+                logger.info(f"New customer created: {square_customer.customer_id}")
 
         # ✅ Step 2: Process Payment
         payment_result = square_client.payments.create_payment(
@@ -1232,7 +1240,7 @@ def process_ai_subscription(request):
                 "source_id": card_token,
                 "idempotency_key": str(uuid.uuid4()),  # Ensure unique payment request
                 "amount_money": {"amount": amount, "currency": "USD"},
-                "customer_id": customer_id,
+                "customer_id": square_customer.customer_id,
                 "autocomplete": True,
             }
         )
@@ -1241,7 +1249,30 @@ def process_ai_subscription(request):
             logger.error("Payment processing failed: %s", payment_result.errors)
             return JsonResponse({"error": "Payment failed. Try again."}, status=400)
 
-        # ✅ Step 3: Activate Subscription
+        payment_id = payment_result.body['payment']['id']
+
+        # ✅ Step 3: Store Card on File if it's a recurring plan
+        if selected_plan in ['pro', 'one-year']:
+            card_result = square_client.cards.create_card(
+                body={
+                    "idempotency_key": str(uuid.uuid4()),
+                    "source_id": payment_id,
+                    "card": {
+                        "cardholder_name": user_email,
+                        "customer_id": square_customer.customer_id,
+                    }
+                }
+            )
+
+            if card_result.is_error():
+                logger.error("Card storage failed: %s", card_result.errors)
+                return JsonResponse({"error": "Failed to store card on file."}, status=400)
+
+            square_customer.card_id = card_result.body['card']['id']
+            square_customer.save()
+            logger.info(f"Card stored for user: {user_email} - Card ID: {square_customer.card_id}")
+
+        # ✅ Step 4: Activate Subscription
         expiration_date = timezone.now() + timedelta(days=365 if selected_plan == 'one-year' else 30)
 
         subscription, created = AIUserSubscription.objects.update_or_create(
@@ -1256,8 +1287,8 @@ def process_ai_subscription(request):
     except Exception as e:
         logger.exception("Unexpected error in payment processing")
         return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
-
-
+    
+    
 def upgrade_to_pro(request):
     return render(request, "myapp/aibots/settings/upgrade_to_pro.html")
 
@@ -3323,22 +3354,52 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.timezone import now
 from django.contrib.auth.models import User
-from .models import UserCourseAccess
+from myapp.models import AIUserSubscription
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff, login_url='/admin/login/')
 def dashboard(request):
+    """
+    Displays the admin dashboard with key statistics, including Pro user count.
+    """
     total_users = User.objects.count()
     active_users = User.objects.filter(is_active=True).count()
-    users_needing_renewal = UserCourseAccess.objects.filter(expiration_date__lte=now()).count()
     deactivated_users = User.objects.filter(is_active=False).count()
+    
+    # Count Pro Users (Users on 'pro' or 'one-year' plan)
+    pro_users_count = AIUserSubscription.objects.filter(plan__in=['pro', 'one-year'], expiration_date__gt=now()).count()
 
-    return render(request, 'myapp/aibots/admin/dashboard.html', {
-        'total_users': total_users,
-        'active_users': active_users,
-        'users_needing_renewal': users_needing_renewal,
-        'deactivated_users': deactivated_users,
-    })
+    # Users whose subscriptions are due for renewal
+    users_needing_renewal = AIUserSubscription.objects.filter(expiration_date__lte=now()).exclude(plan="free").count()
 
+    context = {
+        "total_users": total_users,
+        "active_users": active_users,
+        "users_needing_renewal": users_needing_renewal,
+        "deactivated_users": deactivated_users,
+        "pro_users_count": pro_users_count,  # Add Pro users count here
+    }
+
+    return render(request, 'myapp/aibots/admin/dashboard.html', context)
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.timezone import now
+from django.contrib.auth.models import User
+from myapp.models import AIUserSubscription
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff, login_url='/admin/login/')
+def pro_users_list(request):
+    """
+    Displays a list of Pro users with their details.
+    """
+    pro_users = AIUserSubscription.objects.filter(plan__in=['pro', 'one-year'], expiration_date__gt=now()).select_related('user')
+
+    context = {
+        "pro_users": pro_users
+    }
+
+    return render(request, 'myapp/aibots/admin/pro_users.html', context)
 
 
 
@@ -3347,12 +3408,17 @@ def dashboard(request):
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.timezone import now
-from .models import UserCourseAccess
+from .models import AIUserSubscription
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff, login_url='/admin/login/')
 def renewal_dashboard(request):
-    # Fetch users needing renewal
-    users_due_for_renewal = UserCourseAccess.objects.filter(expiration_date__lte=now())
+    """
+    Show users whose subscriptions have expired or are due for renewal soon.
+    """
+    users_due_for_renewal = AIUserSubscription.objects.filter(
+        expiration_date__lte=now()
+    ).exclude(plan="free")  # Free users don’t need renewal
+
     return render(request, 'myapp/aibots/admin/renewal.html', {
         'users_due_for_renewal': users_due_for_renewal,
     })
