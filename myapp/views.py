@@ -3429,11 +3429,11 @@ import uuid
 import logging
 from django.http import JsonResponse
 from django.shortcuts import redirect
-from django.utils.timezone import timedelta
+from django.utils.timezone import timedelta, now
 from django.contrib.auth.decorators import user_passes_test
 from square.client import Client
-from .models import SquareCustomer, UserCourseAccess, Transaction
-from myapp.utils import send_renewal_email,  send_failure_email
+from .models import SquareCustomer, AIUserSubscription, Transaction
+from myapp.utils import send_renewal_email, send_failure_email
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
@@ -3453,14 +3453,14 @@ def process_renewals(request):
 
         for user_id in user_ids:
             try:
-                # Fetch user and customer details
-                user_course_access = UserCourseAccess.objects.get(user_id=user_id)
+                # Fetch user subscription and customer details
+                subscription = AIUserSubscription.objects.get(user_id=user_id)
                 square_customer = SquareCustomer.objects.get(user_id=user_id)
 
-                # Determine renewal amount
-                amount = determine_amount_based_on_plan(user_course_access.selected_plan)
+                # Determine renewal amount based on plan
+                amount = determine_amount_based_on_plan(subscription.plan)
                 if amount <= 0:
-                    results.append(f"Invalid plan or amount for {user_course_access.user.email}")
+                    results.append(f"Invalid plan or amount for {subscription.user.email}")
                     continue
 
                 # Charge the stored card
@@ -3478,47 +3478,46 @@ def process_renewals(request):
                 )
 
                 if payment_result.is_success():
-                    # Update subscription expiration date
-                    if user_course_access.selected_plan == '1-week':
-                        user_course_access.expiration_date += timedelta(weeks=1)
-                    elif user_course_access.selected_plan == '4-week':
-                        user_course_access.expiration_date += timedelta(weeks=4)
-                    elif user_course_access.selected_plan == '12-week':
-                        user_course_access.expiration_date += timedelta(weeks=12)
+                    # ✅ Update subscription expiration date
+                    if subscription.plan == 'pro':
+                        subscription.expiration_date = now() + timedelta(days=30)
+                    elif subscription.plan == 'one-year':
+                        subscription.expiration_date = now() + timedelta(days=365)
 
-                    user_course_access.save()
+                    subscription.save()
 
-                    # Log successful transaction
+                    # ✅ Log successful transaction
                     Transaction.objects.create(
-                        user=user_course_access.user,
+                        user=subscription.user,
                         status='success',
                         amount=amount,
-                        subscription_type=user_course_access.selected_plan,
+                        subscription_type=subscription.plan,
                         recurring=True,
-                        next_billing_date=user_course_access.expiration_date
+                        next_billing_date=subscription.expiration_date
                     )
 
-                    # Send renewal confirmation email
+                    # ✅ Send renewal confirmation email
                     send_renewal_email(
-                        user_email=user_course_access.user.email,
-                        expiration_date=user_course_access.expiration_date,
-                        selected_plan=user_course_access.selected_plan
+                        user_email=subscription.user.email,
+                        expiration_date=subscription.expiration_date,
+                        selected_plan=subscription.plan
                     )
 
-                    results.append(f"Successfully renewed {user_course_access.user.email}")
-                else:
-                    # Handle payment failure
-                    error_message = ", ".join([error['detail'] for error in payment_result.errors])
-                    results.append(f"Failed to renew {user_course_access.user.email}: {error_message}")
+                    results.append(f"Successfully renewed {subscription.user.email}")
 
-                    # Send failure email to the user
+                else:
+                    # ❌ Handle payment failure
+                    error_message = ", ".join([error['detail'] for error in payment_result.errors])
+                    results.append(f"Failed to renew {subscription.user.email}: {error_message}")
+
+                    # ❌ Send failure email to the user
                     send_failure_email(
-                        user_email=user_course_access.user.email,
+                        user_email=subscription.user.email,
                         error_message=error_message
                     )
 
-            except UserCourseAccess.DoesNotExist:
-                results.append(f"UserCourseAccess not found for user ID {user_id}")
+            except AIUserSubscription.DoesNotExist:
+                results.append(f"AIUserSubscription not found for user ID {user_id}")
             except SquareCustomer.DoesNotExist:
                 results.append(f"SquareCustomer not found for user ID {user_id}")
             except Exception as e:
