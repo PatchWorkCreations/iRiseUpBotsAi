@@ -1277,7 +1277,7 @@ def process_ai_subscription(request):
 
         subscription, created = AIUserSubscription.objects.update_or_create(
             user=user,
-            defaults={"plan": selected_plan, "expiration_date": expiration_date, "is_active": True}
+            defaults={"plan": selected_plan, "expiration_date": expiration_date}
         )
 
         logger.info(f"Subscription activated for {user_email} - Plan: {selected_plan}, Expires: {expiration_date}")
@@ -1288,7 +1288,7 @@ def process_ai_subscription(request):
         logger.exception("Unexpected error in payment processing")
         return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
     
-    
+
 def upgrade_to_pro(request):
     return render(request, "myapp/aibots/settings/upgrade_to_pro.html")
 
@@ -2409,6 +2409,7 @@ def limit_chats(request):
 
     # Pro & One-Year users: No chat restrictions
     return None
+
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
