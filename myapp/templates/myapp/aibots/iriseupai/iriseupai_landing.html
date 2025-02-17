@@ -8,160 +8,133 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <meta name="csrf-token" content="{{ csrf_token }}">
 
-<style>
-/* 🌟 Optimized Hero Section - More Compact & Engaging */
-.hero-section-iriseup {
-    background: linear-gradient(135deg, #eef2f7, #ffffff);
-    padding: 80px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: relative;
-    min-height: 80vh; /* Reduce wasted space while keeping balance */
-}
-
-/* Subtle Background Effect */
-.hero-section-iriseup::before {
-    content: "";
-    position: absolute;
-    top: -40px;
-    left: -40px;
-    width: 250px;
-    height: 250px;
-    background: radial-gradient(circle, rgba(0, 123, 255, 0.2), transparent);
-    opacity: 0.3;
-    z-index: 0;
-}
-
-.hero-section-iriseup::after {
-    content: "";
-    position: absolute;
-    bottom: -40px;
-    right: -40px;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(0, 123, 255, 0.15), transparent);
-    opacity: 0.3;
-    z-index: 0;
-}
-
-/* 🌟 Content Centering with Better Width */
-.hero-content {
-    max-width: 850px; /* Increase max-width for better balance */
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-}
-
-/* 🏆 Headline - Better Readability & Hierarchy */
-.hero-content h1 {
-    font-size: 3rem;
-    font-weight: 800;
-    color: #222;
-    line-height: 1.2;
-    margin-bottom: 15px;
-    font-family: 'Poppins', sans-serif;
-}
-
-/* 🎯 Highlight Text */
-.hero-content .highlight {
-    color: #007bff;
-    font-weight: 900;
-    display: inline-block;
-}
-
-/* 📌 Subtext - More Engaging */
-.hero-content p {
-    font-size: 1.2rem;
-    color: #444;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    font-family: 'Inter', sans-serif;
-}
-
-/* 📌 Bullet Points - Compact & Aligned */
-.hero-bullet-points {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0;
-}
-
-.hero-bullet-points li {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 8px; /* Reduce space between items */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Inter', sans-serif;
-}
-
-/* ✅ Stylish Checkmark Icons */
-.hero-bullet-points li::before {
-    content: "✔";
-    font-size: 1.2rem;
-    color: #007bff;
-    font-weight: bold;
-    margin-right: 8px;
-}
-
-/* 🎯 CTA Button - More Impactful */
-.hero-cta {
-    margin-top: 25px;
-}
-
-.hero-btn {
-    background: linear-gradient(90deg, #007bff, #0056b3);
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
-    padding: 12px 28px;
-    border-radius: 8px;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-    font-family: 'Poppins', sans-serif;
-}
-
-/* ✨ Improved Hover Effect */
-.hero-btn:hover {
-    background: linear-gradient(90deg, #0056b3, #003f80);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
-}
-
-/* 🔥 Trust Badge - Aligned with CTA */
-.hero-trust-text {
-    font-size: 1rem;
-    color: #666;
-    margin-top: 10px;
-    font-family: 'Inter', sans-serif;
-}
-
-/* 📱 Responsive Adjustments */
-@media (max-width: 768px) {
+<style>/* 🎨 Modern & Dynamic Hero Section */
     .hero-section-iriseup {
+        background: linear-gradient(135deg, #f8fafc, #ffffff);
         padding: 80px 20px;
-        min-height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        min-height: 75vh;
+        border-radius: 10px;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05);
     }
-
+    
+    /* 🌟 Content Styling */
     .hero-content {
-        max-width: 100%;
+        max-width: 750px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        z-index: 1;
     }
-
+    
     .hero-content h1 {
         font-size: 2.5rem;
+        font-weight: 700;
+        color: #222;
+        line-height: 1.3;
+        margin-bottom: 15px;
+        font-family: 'Poppins', sans-serif;
     }
-
+    
+    .hero-content .highlight {
+        color: #2563eb;
+        font-weight: 900;
+    }
+    
+    .hero-content p {
+        font-size: 1.1rem;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    /* ✅ Updated Feature List */
+    .hero-feature-list {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        padding: 20px 0;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .hero-feature-item {
+        flex: 1 1 45%;
+        display: flex;
+        align-items: center;
+        font-size: 1.2rem;
+        color: #333;
+        font-family: 'Inter', sans-serif;
+        margin-bottom: 15px;
+    }
+    
+    .hero-feature-item i {
+        font-size: 1.5rem;
+        color: #2563eb;
+        margin-right: 10px;
+    }
+    
+    /* 🎯 CTA Button */
+    .hero-cta {
+        margin-top: 25px;
+    }
+    
     .hero-btn {
-        width: 100%;
-        padding: 12px;
+        background: #2563eb;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: bold;
+        padding: 12px 24px;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
     }
-}
+    
+    .hero-btn:hover {
+        background: #1e40af;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3);
+    }
+    
+    .hero-trust-text {
+        font-size: 1rem;
+        color: #666;
+        margin-top: 12px;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    /* 📱 Responsive Design */
+    @media (max-width: 768px) {
+        .hero-section-iriseup {
+            padding: 70px 15px;
+            min-height: auto;
+        }
+    
+        .hero-content {
+            max-width: 100%;
+        }
+    
+        .hero-content h1 {
+            font-size: 2rem;
+        }
+    
+        .hero-feature-list {
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        .hero-btn {
+            width: 100%;
+        }
+    }
 
 /* 🎯 Why Choose iRiseUp AI - Section */
 .why-choose-iriseup {
@@ -1186,22 +1159,21 @@
     </div>
 </div>
 
-
 <section class="hero-section-iriseup">
     <div class="container">
         <div class="hero-content">
-            <h1>🚀 Get Expert AI Guidance <span class="highlight">to Work Smarter & Scale Faster</span></h1>
+            <h1>🚀 Get Expert AI Guidance <span class="highlight">Without the Overwhelm</span></h1>
             <p>
-                Access 8 AI-powered assistants designed to help you make smarter decisions, improve productivity, and provide expert insights—whenever you need them.
+                Tired of AI tools that feel like they’re speaking another language? Meet <strong>iRiseUp.ai</strong>—your friendly, no-nonsense AI sidekick. We’ve got <strong>8 AI-powered assistants</strong> ready to help you make smarter decisions, boost productivity, and give you the expert insights you need—without the headache.
             </p>
             <ul class="hero-bullet-points">
-                <li>Get expert-backed advice on business, wellness, and creativity.</li>
-                <li>Save time with AI-powered guidance—no need to do it alone.</li>
-                <li>One-time access—no expensive subscriptions required.</li>
+                <li><strong>Expert advice made simple</strong>: Get guidance on business, wellness, and creativity—no PhD required.</li>
+                <li><strong>Save time, not sanity</strong>: Let AI handle the heavy lifting so you can focus on what matters most.</li>
+                <li><strong>No subscriptions, no stress</strong>: One-time access means no sneaky recurring fees.</li>
             </ul>
             <div class="hero-cta">
                 <a href="#pricing" class="btn btn-primary hero-btn">🚀 Get My AI Experts Now!</a>
-                <p class="hero-trust-text">🔥 Over 100,000 Users Trust iRiseUp AI</p>
+                <p class="hero-trust-text">🔥 Join 100,000+ Users Who Trust iRiseUp.ai</p>
             </div>
         </div>
     </div>
@@ -1257,100 +1229,175 @@
     </div>
 </section>
 
-
-<section id="about" class="why-choose-iriseup">
-    <div class="container">
-        <h2 class="section-title">🚀 Why Choose <span class="highlight">iRiseUp AI?</span></h2>
-        <p class="why-subtext">
-            Your AI-powered team is designed to work smarter, automate tasks, and bring expert insights at your fingertips.
-        </p>
-
-        <div class="features-grid">
-            <!-- Feature 1 -->
-            <div class="feature-item">
-                <div class="icon-container">
-                    <i class="fas fa-bolt feature-icon"></i>
+<style>
+    /* 🎨 Modern & Dynamic Hero Section */
+    .why-choose-iriseup {
+        background: linear-gradient(135deg, #f8fafc, #ffffff);
+        padding: 60px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        min-height: 75vh;
+        border-radius: 10px;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* 🌟 Content Styling */
+    .why-choose-iriseup .container {
+        max-width: 850px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .why-choose-iriseup h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #222;
+        line-height: 1.3;
+        margin-bottom: 15px;
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .why-choose-iriseup .highlight {
+        color: #2563eb;
+        font-weight: 900;
+    }
+    
+    .why-subtext {
+        font-size: 1.2rem;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 25px;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    /* ✅ Features Grid */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        text-align: left;
+        justify-content: center;
+    }
+    
+    .feature-item {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+    
+    .feature-item .icon-container {
+        font-size: 2rem;
+        color: #2563eb;
+        margin-bottom: 10px;
+    }
+    
+    .feature-item h3 {
+        font-size: 1.4rem;
+        color: #222;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .feature-item p {
+        font-size: 1rem;
+        color: #555;
+        font-family: 'Inter', sans-serif;
+        line-height: 1.5;
+    }
+    
+    /* 📱 Responsive Design */
+    @media (max-width: 768px) {
+        .why-choose-iriseup {
+            padding: 50px 15px;
+            min-height: auto;
+        }
+    
+        .why-choose-iriseup h2 {
+            font-size: 2rem;
+        }
+    }
+    </style>
+    
+    <section id="about" class="why-choose-iriseup">
+        <div class="container">
+            <h2 class="section-title">🚀 Why Choose <span class="highlight">iRiseUp AI?</span></h2>
+            <p class="why-subtext">
+                Your AI-powered team is designed to work smarter, automate tasks, and bring expert insights at your fingertips.
+            </p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="icon-container">⚡</div>
+                    <h3>Instant Expert Assistance</h3>
+                    <p>8 AI-powered assistants available <strong>24/7</strong> to guide your decisions and automate processes.</p>
                 </div>
-                <h3>Instant Expert Assistance</h3>
-                <p>8 AI-powered assistants available <strong>24/7</strong> to guide your decisions and automate processes.</p>
-            </div>
-
-            <!-- Feature 2 -->
-            <div class="feature-item">
-                <div class="icon-container">
-                    <i class="fas fa-stopwatch feature-icon"></i>
+                <div class="feature-item">
+                    <div class="icon-container">⏳</div>
+                    <h3>Save 30+ Hours/Week</h3>
+                    <p>Let AI handle repetitive tasks so you can focus on what truly matters.</p>
                 </div>
-                <h3>Save 30+ Hours/Week</h3>
-                <p>Let AI handle repetitive tasks so you can focus on what truly matters.</p>
-            </div>
-
-            <!-- Feature 3 - Updated Pricing Message -->
-            <div class="feature-item">
-                <div class="icon-container">
-                    <i class="fas fa-wallet feature-icon"></i>
+                <div class="feature-item">
+                    <div class="icon-container">💰</div>
+                    <h3>Flexible Plans for Any Budget</h3>
+                    <p>Choose a plan that fits your needs—<strong>monthly, yearly, or lifetime options available.</strong></p>
                 </div>
-                <h3>Flexible Plans for Any Budget</h3>
-                <p>Choose a plan that fits your needs—<strong>monthly, yearly, or lifetime options available.</strong></p>
-            </div>
-
-            <!-- Feature 4 -->
-            <div class="feature-item">
-                <div class="icon-container">
-                    <i class="fas fa-rocket feature-icon"></i>
+                <div class="feature-item">
+                    <div class="icon-container">🚀</div>
+                    <h3>Boost Growth & Productivity</h3>
+                    <p>AI-powered solutions tailored for <strong>business, marketing, and personal success.</strong></p>
                 </div>
-                <h3>Boost Growth & Productivity</h3>
-                <p>AI-powered solutions tailored for <strong>business, marketing, and personal success.</strong></p>
             </div>
         </div>
-    </div>
-</section>
-
-<section id="howitworks" class="how-it-works">
-    <div class="container">
-        <h2>🧠 How iRiseUp AI Works in <span class="highlight">3 Simple Steps</span></h2>
-        <p class="how-subtext">
-            It’s fast, easy, and built to help you scale effortlessly. Just follow these three steps:
-        </p>
-
-        <div class="steps-container">
-            <!-- Step 1 -->
-            <div class="step-card">
-                <span class="step-number">1️⃣</span>
-                <h3>Pick Your AI Assistant</h3>
-                <p>Choose from 8 expert AI assistants designed for business, marketing, and productivity.</p>
+    </section>
+    
+    <section id="howitworks" class="how-it-works">
+        <div class="container">
+            <h2>🧠 How iRiseUp AI Works in <span class="highlight">3 Simple Steps</span></h2>
+            <p class="how-subtext">
+                It’s fast, easy, and built to help you scale effortlessly. Just follow these three steps:
+            </p>
+            <div class="steps-container">
+                <div class="step-card">
+                    <span class="step-number">1️⃣</span>
+                    <h3>Pick Your AI Assistant</h3>
+                    <p>Choose from 8 expert AI assistants designed for business, marketing, and productivity.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-number">2️⃣</span>
+                    <h3>Ask Questions & Get Instant Help</h3>
+                    <p>Get expert insights, automations, and solutions—AI responds in seconds.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-number">3️⃣</span>
+                    <h3>Achieve Results Effortlessly</h3>
+                    <p>Scale your business, optimize tasks, and work smarter, not harder.</p>
+                </div>
             </div>
-
-            <!-- Step 2 -->
-            <div class="step-card">
-                <span class="step-number">2️⃣</span>
-                <h3>Ask Questions & Get Instant Help</h3>
-                <p>Get expert insights, automations, and solutions—AI responds in seconds.</p>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="step-card">
-                <span class="step-number">3️⃣</span>
-                <h3>Achieve Results Effortlessly</h3>
-                <p>Scale your business, optimize tasks, and work smarter, not harder.</p>
+            <div class="how-cta">
+                <a href="#pricing" class="btn btn-primary how-btn">🔥 Start Using AI Now</a>
             </div>
         </div>
+    </section>
 
-        <div class="how-cta">
-            <a href="#pricing" class="btn btn-primary how-btn">🔥 Start Using AI Now</a>
-        </div>
-    </div>
-</section>
 
 <div id="portfolio" class="portfolio section-bottom-only">
     <div class="container">
-        <div class="ai-intro-header">
+        
+        <section class="ai-intro-header">
             <h5 class="ai-subtitle">🚀 Meet Your AI-Powered Workforce</h5>
             <h2 class="ai-title">The Perfect AI Assistant for Every Task</h2>
             <p class="ai-description">
                 From business strategy to creativity, our AI team is built to support, automate, and enhance your workflow effortlessly.
             </p>
-        </div>
-        
+        </section>
+
         
         <div class="portfolio-filter-menu">
             <ul>
@@ -1479,6 +1526,7 @@
             <div class="pricing-card free-plan">
                 <h3>🚀 Start for Free – No Risk!</h3>
                 <p class="price free-text">Free <span class="small-text">– Your AI Trial Awaits!</span></p>
+                <p>Not sure if AI is for you? Dip your toes in with our FREE TRIAL—no strings attached.  </p>
                 <ul class="pricing-features">
                     <li><i class="fas fa-check-circle"></i> Limited AI Access – Try AI power</li>
                     <li><i class="fas fa-check-circle"></i> Up to 8 Chats/Day – Great for casual use</li>
