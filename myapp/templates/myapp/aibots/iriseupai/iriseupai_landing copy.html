@@ -1307,6 +1307,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const typingIndicator = document.getElementById('typing-indicator');
     const messageInput = document.getElementById('message');
     const sendButton = document.getElementById('send');
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const sendButton = document.getElementById("send");
+
+        if (sendButton) {
+            sendButton.disabled = true; // Disable the send button
+            sendButton.style.backgroundColor = "#ccc"; // Make it look disabled
+            sendButton.style.cursor = "not-allowed"; // Change cursor
+            sendButton.innerText = "Limit Reached"; // Update text
+        }
+    });
     const aiSelect = document.getElementById('ai-select');
     const aiNameDisplay = document.getElementById('ai-name');
     const signupModal = document.getElementById('signup-modal');

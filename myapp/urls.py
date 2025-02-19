@@ -112,8 +112,7 @@ urlpatterns = [
     # Additional API Endpoints for Renamed Bots
      
     path('api/chat/mindforge/', views.get_mindforge_response, name='get_mindforge_response'),  # Einstein
-    path('api/chat/nexus/', views.get_bridge_response, name='get_bridge_response'),   # Nico
-
+    
     
 
     # Echo and Maven Chat API Endpoints and Views
@@ -221,5 +220,5 @@ urlpatterns = [
     path('chat/<str:bot_name>/', views.chat_view, name='chat_view'),
 
     path("terms/", views.terms_view, name="terms"),
-
+     
 ]

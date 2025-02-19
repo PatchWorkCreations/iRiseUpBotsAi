@@ -1,7 +1,10 @@
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.db import models
+from django.contrib.auth.models import User
 from django.utils.timezone import now, timedelta
+
 
 class AIUserSubscription(models.Model):
     PLAN_CHOICES = [
@@ -10,7 +13,7 @@ class AIUserSubscription(models.Model):
         ('one-year', 'One-Year Access')
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     plan = models.CharField(max_length=50, choices=PLAN_CHOICES, default="free")
     start_date = models.DateTimeField(auto_now_add=True)
     expiration_date = models.DateTimeField(null=True, blank=True)
@@ -18,12 +21,19 @@ class AIUserSubscription(models.Model):
     is_auto_renew = models.BooleanField(default=True)  # Auto-renewal flag
     canceled_at = models.DateTimeField(null=True, blank=True)  # Stores when the user cancels
 
+    # New Fields for Chat Tracking
+    chat_count = models.IntegerField(default=0)
+    chat_last_used = models.DateTimeField(null=True, blank=True)
+
     def save(self, *args, **kwargs):
         """ Ensure expiration_date is correctly set for Pro and One-Year plans. """
-        if self.plan == "pro" and not self.expiration_date:
+        if self.plan == "pro":
             self.expiration_date = self.start_date + timedelta(days=30)  # 1-month subscription
-        elif self.plan == "one-year" and not self.expiration_date:
+        elif self.plan == "one-year":
             self.expiration_date = self.start_date + timedelta(days=365)  # 1-year subscription
+        elif self.plan == "free":
+            self.expiration_date = None  # Free plan never expires
+
         super().save(*args, **kwargs)
 
     @property
@@ -41,9 +51,35 @@ class AIUserSubscription(models.Model):
             return max(remaining, 0)  # Prevent negative values
         return 0
 
+    def reset_chat_count_if_needed(self):
+        """ Reset chat count if 45 minutes have passed since last use. """
+        if self.chat_last_used and now() > self.chat_last_used + timedelta(minutes=45):
+            self.chat_count = 0
+            self.chat_last_used = now()
+            self.save()
+
+
+    def increment_chat_count(self):
+        """ Increment chat count and update last used timestamp. """
+        self.chat_count += 1
+        self.chat_last_used = now()
+        self.save()
+
+    def has_reached_chat_limit(self):
+        """ Check if user has exceeded their daily chat limit. """
+        self.reset_chat_count_if_needed()
+
+        if self.plan == "free" and self.chat_count >= 20:
+            return True
+        elif self.plan == "pro" or self.plan == "one-year":
+            return False  # Unlimited for paid users
+
+        return False
+
     def __str__(self):
         status = "Active" if self.is_active else "Expired"
         return f"{self.user.username} - {self.plan} ({status}, {self.days_remaining} days left)"
+
 
 
 

@@ -30,6 +30,7 @@
     const messageInput = document.getElementById('message');
     const sendButton = document.getElementById('send');
 
+     
     // Function to display messages in the chatbox
     function addMessage(sender, text) {
         const messageClass = sender === 'You' ? 'user' : 'bot';
@@ -122,40 +123,63 @@ function formatResponse(text, keywords = []) {
     }
 
     // Function to send a message
-    function sendMessage() {
-        const message = messageInput.value.trim();
-        if (message === '') return; // Ignore empty messages
+    // Function to send a message
+function sendMessage() {
+    const message = messageInput.value.trim();
+    if (message === '') return; // Ignore empty messages
 
-        // Display user's message in the chatbox
-        addMessage('You', message);
+    // Display user's message in the chatbox
+    addMessage('You', message);
 
-        // Show typing indicator
-        showSeenStatus(); // Show 'Seen' status
-        showTypingIndicator(); // Show typing indicator
+    // Show typing indicator and 'Seen' status
+    showSeenStatus();
+    showTypingIndicator();
 
-        // Simulate server response
-        fetch('/api/chat/echo/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: new URLSearchParams({
-                'message': message
-            })
+    // Simulate server response
+    fetch('/api/chat/echo/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: new URLSearchParams({
+            'message': message
         })
-            .then(response => response.json())
-            .then(data => {
-                removeSeenStatus();
-                hideTypingIndicator();
-                addMessage('Imagine', data.response); // Display bot's response
-                messageInput.value = ''; // Clear input field
-            })
-            .catch(error => {
-                hideTypingIndicator();
-                console.error('Error:', error);
-            });
-    }
+    })
+    .then(response => response.json())
+    .then(data => {
+        removeSeenStatus();
+        hideTypingIndicator();
+
+        if (data.image_url) {
+            // If response contains an image URL, show it
+            addImageMessage('Imagine', data.image_url);
+        } else {
+            // Otherwise, show text response
+            addMessage('Imagine', data.response);
+        }
+
+        messageInput.value = ''; // Clear input field
+    })
+    .catch(error => {
+        hideTypingIndicator();
+        console.error('Error:', error);
+    });
+}
+
+// Function to add an image response in the chat
+function addImageMessage(sender, imageUrl) {
+    const messageClass = sender === 'You' ? 'user' : 'bot';
+    const messageHTML = `
+        <div class="message ${messageClass}">
+            <img src="${imageUrl}" alt="Generated Image" style="max-width: 100%; border-radius: 8px;">
+            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+        </div>
+    `;
+    chatbox.innerHTML += messageHTML;
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+
 
     // Initialize bot greeting
     document.addEventListener('DOMContentLoaded', () => {

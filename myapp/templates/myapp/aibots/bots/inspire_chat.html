@@ -24,11 +24,27 @@
 </div>
 
 <script>
-          const userName = "{{ user_name|default:'there' }}";
+    const userName = "{{ user_name|default:'there' }}";
     const chatbox = document.getElementById('chatbox');
     const typingIndicator = document.getElementById('typing-indicator');
     const messageInput = document.getElementById('message');
     const sendButton = document.getElementById('send');
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const filterContainer = document.querySelector('.filtr-container');
+    
+    if (filterContainer && $('.filtr-container').length) {
+        try {
+            $('.filtr-container').filterizr();
+        } catch (error) {
+            console.error("🚨 Filterizr Initialization Error:", error);
+        }
+    } else {
+        console.warn("🚨 Warning: .filtr-container not found! Skipping Filterizr.");
+    }
+});
+
+
 
     // Function to display messages in the chatbox
     function addMessage(sender, text) {
@@ -123,40 +139,51 @@
     }
 
     // Function to send a message
+    // Function to send a message
     function sendMessage() {
-        const message = messageInput.value.trim();
-        if (message === '') return; // Ignore empty messages
+    const message = messageInput.value.trim();
+    if (message === '') return; // Ignore empty messages
 
-        // Display user's message in the chatbox
-        addMessage('You', message);
+    // Display user's message in the chatbox
+    addMessage('You', message);
 
-        // Show typing indicator
-        showSeenStatus(); // Show 'Seen' status
-        showTypingIndicator(); // Show typing indicator
+    // Show typing indicator
+    showSeenStatus();
+    showTypingIndicator();
 
-        // Simulate server response
-        fetch('/api/chat/inspire/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: new URLSearchParams({
-                'message': message
-            })
+    // Fetch and log the current chat count before sending the message
+    fetch('/api/get-chat-count/')
+        .then(response => response.json())
+        .then(data => {
+            console.log(`📊 Chat Count: ${data.chat_count || 0} | Limit: ${data.chat_limit || "Unlimited"} | Status: ${data.error || '✅ Allowed'}`);
         })
-            .then(response => response.json())
-            .then(data => {
-                removeSeenStatus();
-                hideTypingIndicator();
-                addMessage('Elevate', data.response); // Display bot's response
-                messageInput.value = ''; // Clear input field
-            })
-            .catch(error => {
-                hideTypingIndicator();
-                console.error('Error:', error);
-            });
-    }
+        .catch(error => console.error('Error fetching chat count:', error));
+
+    // Simulate server response
+    fetch('/api/chat/inspire/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: new URLSearchParams({
+            'message': message
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            removeSeenStatus();
+            hideTypingIndicator();
+            addMessage('Elevate', data.response);
+            messageInput.value = ''; // Clear input field
+        })
+        .catch(error => {
+            hideTypingIndicator();
+            console.error('Error:', error);
+        });
+}
+
+
 
     // Initialize bot greeting
     document.addEventListener('DOMContentLoaded', () => {

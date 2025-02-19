@@ -2409,22 +2409,12 @@ def limit_chats(request):
 
     # Pro & One-Year users: No chat restrictions
     return None
-
-from django.utils.timezone import now
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-import logging
-from myapp.models import AIUserSubscription
-import openai  # Ensure OpenAI client is correctly imported
-
-logger = logging.getLogger(__name__)
-
 @login_required
 def get_bot_response(request, system_prompt, bot_name):
     if request.method == 'POST':
-        user_message = request.POST.get('message')
+        user_message = request.POST.get('message', '').strip()
 
-        if not user_message or user_message.strip() == "":
+        if not user_message:
             return JsonResponse({'response': 'Error: Message cannot be empty.'})
 
         # 🔹 Check user's subscription plan correctly
@@ -2459,6 +2449,31 @@ def get_bot_response(request, system_prompt, bot_name):
             summary = summarize_history(conversation_history)
             conversation_history = [{"role": "system", "content": f"Summary of previous conversation: {summary}"}] + conversation_history[-5:]
 
+        # 🔹 Special Handling for Imagine – Generate Images
+        if bot_name == "Imagine":
+            wants_image = any(phrase in user_message.lower() for phrase in [
+                "generate an image of", "draw", "create a picture of", "make an artwork of",
+                "design a visual of", "create a graphic for"
+            ])
+
+            if wants_image:
+                try:
+                    # Call OpenAI's DALL-E 3 API for image generation
+                    client = openai.OpenAI()
+                    image_response = client.images.generate(
+                        model="dall-e-3",
+                        prompt=user_message,
+                        n=1,  # Generate only one image
+                        size="1024x1024"
+                    )
+
+                    image_url = image_response.data[0].url  # Get image URL
+                    return JsonResponse({'response': 'Here’s your generated image!', 'image_url': image_url})
+
+                except Exception as e:
+                    logger.error(f"OpenAI DALL-E Error: {e}")
+                    return JsonResponse({'response': f'Error: Unable to generate an image. {str(e)}'})
+
         try:
             # 🔹 FIXED OpenAI API CALL for openai>=1.0.0
             client = openai.OpenAI()  # This is the new way to call OpenAI
@@ -2480,7 +2495,6 @@ def get_bot_response(request, system_prompt, bot_name):
         return JsonResponse({'response': message})
 
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
-
 
 
 
@@ -2628,79 +2642,87 @@ CHATBOT_TEMPLATES = {
 
 from django.utils.timezone import now
 from django.shortcuts import render
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
+from datetime import timedelta
 from myapp.models import AIUserSubscription
 
 # Dictionary mapping chatbot names to their correct template paths
 CHATBOT_TEMPLATES = {
-    'imagine': 'myapp/aibots/bots/echo_chat.html',  # Echo → Imagine
-    'keystone': 'myapp/aibots/bots/fortify_chat.html',  # Fortify → Keystone
-    'elevate': 'myapp/aibots/bots/inspire_chat.html',  # Inspire → Elevate
-    'mentor-iq': 'myapp/aibots/bots/mindforge_chat.html',  # Mindforge → Mentor IQ
-    'gideon': 'myapp/aibots/bots/pathfinder_chat.html',  # Pathfinder → Gideon
-    'thrive': 'myapp/aibots/bots/pulse_chat.html',  # Pulse → Thrive
-    'lumos': 'myapp/aibots/bots/soulspark_chat.html',  # Soulspark → Lumos
+    'imagine': 'myapp/aibots/bots/echo_chat.html',
+    'keystone': 'myapp/aibots/bots/fortify_chat.html',
+    'elevate': 'myapp/aibots/bots/inspire_chat.html',
+    'mentor-iq': 'myapp/aibots/bots/mindforge_chat.html',
+    'gideon': 'myapp/aibots/bots/pathfinder_chat.html',
+    'thrive': 'myapp/aibots/bots/pulse_chat.html',
+    'lumos': 'myapp/aibots/bots/soulspark_chat.html',
 }
 
-# Chat limits
-GUEST_CHAT_LIMIT = 10  # Limit for guest users
-FREE_USER_CHAT_LIMIT = 20  # Limit for free users
+GUEST_CHAT_LIMIT = 10
+FREE_USER_CHAT_LIMIT = 20
+RESET_INTERVAL = timedelta(minutes=45)  # 45-minute reset time
 
 def chat_view(request, bot_name):
     """
-    Generalized chat view for all AI bots with chat limits.
-    Accepts a `bot_name` parameter to determine which chat page to render.
+    View for individual AI bot chats with chat limit handling.
     """
     # Ensure the bot name is valid
     template = CHATBOT_TEMPLATES.get(bot_name.lower())
     if not template:
-        return render(request, 'myapp/aibots/bots/404.html', {'error': "Chatbot not found"})  
+        return render(request, 'myapp/aibots/bots/404.html', {'error': "Chatbot not found"})
+
+    chat_limit_reached = False
+    chat_reset_time = None
+    upgrade_url = "/upgrade-to-pro/"
 
     # Handling Guest Users (Not Logged In)
     if not request.user.is_authenticated:
         guest_chat_count = request.session.get('guest_chat_count', 0)
+        chat_last_used = request.session.get('guest_chat_last_used')
 
+        # If 45 minutes have passed, reset chat count
+        if chat_last_used:
+            last_used_time = now().fromisoformat(chat_last_used)
+            if now() > last_used_time + RESET_INTERVAL:
+                guest_chat_count = 0
+                request.session['guest_chat_count'] = 0
+                request.session['guest_chat_last_used'] = now().isoformat()
+
+        # Block further chats if the limit is reached
         if guest_chat_count >= GUEST_CHAT_LIMIT:
-            return JsonResponse(
-                {'error': 'You have reached the guest chat limit of 10 messages. Sign up for more access!'}, 
-                status=403
-            )
-
-        request.session['guest_chat_count'] = guest_chat_count + 1
-        request.session.modified = True  # Ensure the session updates
+            chat_limit_reached = True
+            chat_reset_time = last_used_time + RESET_INTERVAL
+        else:
+            # Increment count and update timestamp
+            request.session['guest_chat_count'] = guest_chat_count + 1
+            request.session['guest_chat_last_used'] = now().isoformat()
+            request.session.modified = True
 
     # Handling Registered Users (Check Subscription)
     else:
         user_subscription = AIUserSubscription.objects.filter(
             user=request.user
         ).exclude(
-            canceled_at__isnull=False  # Exclude canceled subscriptions
+            canceled_at__isnull=False
         ).filter(
-            expiration_date__gt=now()  # Ensure expiration is in the future
+            expiration_date__gt=now()
         ).first()
 
-        # Determine user's plan
         user_plan = user_subscription.plan if user_subscription else "free"
 
-        # Apply chat limit only for free users
-        if user_plan == "free":
-            free_chat_count = request.session.get('free_chat_count', 0)
+        if user_subscription:
+            user_subscription.reset_chat_count_if_needed()  # Reset if 45 minutes have passed
 
-            if free_chat_count >= FREE_USER_CHAT_LIMIT:
-                return JsonResponse(
-                    {'error': 'You have reached the free user chat limit of 20 messages. Upgrade to Pro for unlimited access!'}, 
-                    status=403
-                )
+            if user_subscription.has_reached_chat_limit():
+                chat_limit_reached = True
+                chat_reset_time = user_subscription.chat_last_used + RESET_INTERVAL
+            else:
+                user_subscription.increment_chat_count()
 
-            request.session['free_chat_count'] = free_chat_count + 1
-            request.session.modified = True  
-
-        # Pro and One-Year users have unlimited access (no chat limit)
-
-    # Proceed with rendering the chatbot template
-    user_name = request.user.first_name if request.user.is_authenticated else None
-    return render(request, template, {'user_name': user_name})
+    return render(request, template, {
+        'chat_limit_reached': chat_limit_reached,
+        'chat_reset_time': chat_reset_time.strftime('%Y-%m-%dT%H:%M:%S') if chat_reset_time else None,
+        'upgrade_url': upgrade_url,
+        'bot_name': bot_name,
+    })
 
 
 

@@ -163,8 +163,8 @@
 
 /* 📌 Features Grid - Fixed 4 Columns */
 .features-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Always 4 columns */
+    display: flex;
+    flex-wrap: wrap;
     gap: 30px;
     justify-content: center;
     max-width: 1100px;
@@ -193,6 +193,8 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
     text-align: center;
+    flex: 1 1 calc(25% - 20px); /* 4 items per row on full view */
+    max-width: 250px; /* Ensures consistency */
 }
 
 .feature-item:hover {
@@ -1228,103 +1230,7 @@
         </p>
     </div>
 </section>
-
-<style>
-    /* 🎨 Modern & Dynamic Hero Section */
-    .why-choose-iriseup {
-        background: linear-gradient(135deg, #f8fafc, #ffffff);
-        padding: 60px 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        position: relative;
-        min-height: 75vh;
-        border-radius: 10px;
-        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05);
-    }
-    
-    /* 🌟 Content Styling */
-    .why-choose-iriseup .container {
-        max-width: 850px;
-        margin: 0 auto;
-        padding: 20px;
-        text-align: center;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .why-choose-iriseup h2 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #222;
-        line-height: 1.3;
-        margin-bottom: 15px;
-        font-family: 'Poppins', sans-serif;
-    }
-    
-    .why-choose-iriseup .highlight {
-        color: #2563eb;
-        font-weight: 900;
-    }
-    
-    .why-subtext {
-        font-size: 1.2rem;
-        color: #555;
-        line-height: 1.6;
-        margin-bottom: 25px;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    /* ✅ Features Grid */
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        text-align: left;
-        justify-content: center;
-    }
-    
-    .feature-item {
-        background: #ffffff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        text-align: center;
-    }
-    
-    .feature-item .icon-container {
-        font-size: 2rem;
-        color: #2563eb;
-        margin-bottom: 10px;
-    }
-    
-    .feature-item h3 {
-        font-size: 1.4rem;
-        color: #222;
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-    
-    .feature-item p {
-        font-size: 1rem;
-        color: #555;
-        font-family: 'Inter', sans-serif;
-        line-height: 1.5;
-    }
-    
-    /* 📱 Responsive Design */
-    @media (max-width: 768px) {
-        .why-choose-iriseup {
-            padding: 50px 15px;
-            min-height: auto;
-        }
-    
-        .why-choose-iriseup h2 {
-            font-size: 2rem;
-        }
-    }
-    </style>
+ 
     
     <section id="about" class="why-choose-iriseup">
         <div class="container">
@@ -1685,7 +1591,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const typingIndicator = document.getElementById('typing-indicator');
     const messageInput = document.getElementById('message');
     const sendButton = document.getElementById('send');
-    const aiSelect = document.getElementById('ai-select');
+
+         const aiSelect = document.getElementById('ai-select');
     const aiNameDisplay = document.getElementById('ai-name');
     const signupModal = document.getElementById('signup-modal');
 
@@ -1704,16 +1611,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function addMessage(sender, text) {
-        const messageClass = sender === 'You' ? 'user' : 'bot';
-        const messageHTML = `
-            <div class="message ${messageClass}">
-                ${text}
-                <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-            </div>
-        `;
-        chatbox.innerHTML += messageHTML;
-        chatbox.scrollTop = chatbox.scrollHeight;
-    }
+    if (!chatbox) return; // Prevent errors if chatbox is missing
+
+    const messageClass = sender === 'You' ? 'user' : 'bot';
+    const formattedText = formatResponse(text, ["React", "JavaScript", "Django"]); // Highlight keywords
+
+    const messageHTML = `
+        <div class="message ${messageClass}">
+            ${formattedText}
+            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+        </div>
+    `;
+
+    chatbox.innerHTML += messageHTML;
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+
 
     function showTypingIndicator() {
         typingIndicator.style.display = 'flex';
@@ -1835,6 +1748,43 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize AI name on page load
     updateAIName();
 });
+
+function formatResponse(text, keywords = []) {
+    // ✅ Preserve new lines for paragraph separation
+    text = text.replace(/\n/g, '<br>');
+
+    // ✅ Format AI-generated code blocks properly (```jsx ... ```)
+    text = text.replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>');
+
+    // ✅ Bold section headers (e.g., "Steps:", "Instructions:")
+    text = text.replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:');
+
+    // ✅ Make bold text (Convert **text** → <strong>text</strong>)
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // ✅ Convert bullet points (- Item) to unordered lists
+    text = text.replace(/<br>-\s/g, '<ul><li>');
+    text = text.replace(/<\/li><br>-\s/g, '</li><li>');
+    text = text.replace(/<\/li><br>/g, '</li></ul>');
+
+    // ✅ Convert numbered lists (1. Item) to ordered lists
+    text = text.replace(/<br>(\d+)\.\s/g, (match, p1) => {
+        return p1 === "1" ? '<ol><li>' : '</li><li>';
+    });
+    text = text.replace(/<\/li><br>(?!\d+\.)/g, '</li></ol>');
+
+    // ✅ Highlight important keywords
+    keywords.forEach(keyword => {
+        const regex = new RegExp(`\\b(${keyword})\\b`, 'gi');
+        text = text.replace(regex, '<strong>$1</strong>');
+    });
+
+    // ✅ Ensure lists are properly closed
+    if (!text.endsWith('</ul>')) text += '</ul>';
+    if (!text.endsWith('</ol>')) text += '</ol>';
+
+    return text;
+}
 
 
 // Square Payment  

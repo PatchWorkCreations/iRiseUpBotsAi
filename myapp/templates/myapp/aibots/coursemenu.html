@@ -768,9 +768,16 @@
         <!-- Header Section -->
         <div class="ai-bots-header">
             <h2>Hello, {{ user.first_name }}<span class="wave">👋</span></h2>
+
+            {% if chat_limit_reached %}
+            <h3>🚀 You've hit your chat limit!</h3>
+            <p>⏳ Come back in <span id="countdown-timer"></span> for more free chats.</p>
+        {% else %}
+            <h3>How can I assist you today?</h3>
+            <p>Select a goal, and I'll guide you to the best assistant:</p>
+        {% endif %}
              
-                <h3>How can I assist you today?</h3>
-                <p>Select a goal, and I'll guide you to the best assitant:</p>
+                 
                 
                 <div class="goal-options">
                     <button onclick="highlightBots('personal-growth')">
@@ -1026,7 +1033,11 @@
             <div class="ai-box" id="imagine">
                 <div class="ai-box-content">
                     <h3>Hi, I'm Imagine! 🎨</h3>
-                    <p>Let's spark creativity and bring your ideas to life!</p>
+                    <p>
+                        Unleash your creativity with me! I can brainstorm ideas, spark inspiration, 
+                        and even <strong>generate stunning AI images</strong> just for you. 
+                        Whether it's art, storytelling, or design—let’s bring your vision to life! 🚀
+                    </p>
                 </div>
                 <img src="{% static 'myapp/images/aiimages/imagine.png' %}" alt="Imagine">
                 <button class="upgrades-btn" onclick="location.href='{% url 'chat_view' 'imagine' %}'">Start Chat</button>
@@ -1085,6 +1096,45 @@
         aiBoxesContainer.innerHTML = "";  // Clear the container
         sortedBots.forEach(bot => aiBoxesContainer.appendChild(bot));  // Append in new order
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const countdownTimer = document.getElementById("countdown-timer");
+
+    // ✅ Ensure countdown-timer span exists in the DOM
+    if (!countdownTimer) return;  
+
+    // ✅ Get the reset time from Django
+    const chatResetTimeString = "{{ chat_reset_time }}";
+    if (!chatResetTimeString.trim()) {
+        countdownTimer.innerHTML = "No timer set.";
+        return;
+    }
+
+    // ✅ Convert to a proper JavaScript date
+    const resetTime = new Date(chatResetTimeString).getTime();
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const timeLeft = resetTime - now;
+
+        if (timeLeft <= 0) {
+            countdownTimer.innerHTML = "Now!";
+            clearInterval(countdownInterval);
+            setTimeout(() => location.reload(), 2000);  // Reload when expired
+            return;
+        }
+
+        const minutes = Math.floor((timeLeft / 1000) / 60);
+        const seconds = Math.floor((timeLeft / 1000) % 60);
+        countdownTimer.innerHTML = `${minutes}m ${seconds}s`;
+    }
+
+    // ✅ Start countdown
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
+});
+
+
 </script>
 
 
