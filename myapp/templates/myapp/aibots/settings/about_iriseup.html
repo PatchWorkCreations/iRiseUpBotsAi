@@ -5,16 +5,16 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <style>
-    /* General styling */
+    /* General Styling */
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f6f9;
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc;
         color: #333;
     }
 
     /* Header Styling */
     .header {
-        background-color: #1F3A93; /* Primary Navy Blue */
+        background-color: #0c40b1;
         color: #fff;
         padding: 1rem;
     }
@@ -26,7 +26,7 @@
     }
 
     .header h1 {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
         margin: 0;
     }
 
@@ -36,34 +36,36 @@
         text-decoration: none;
     }
 
-    /* About section styling */
+    /* About Section */
     .about-main {
         padding: 2rem;
         background-color: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        max-width: 800px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 850px;
         margin: 2rem auto;
+        text-align: center;
     }
 
     .about-text-content p {
-        font-size: 1rem;
-        line-height: 1.5;
+        font-size: 1.1rem;
+        line-height: 1.6;
         margin-bottom: 1rem;
     }
 
+    /* Follow Us Section */
     .follow-us-title {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         font-weight: bold;
         margin-top: 2rem;
         margin-bottom: 1rem;
-        color: #1F3A93; /* Primary Navy Blue */
+        color: #2563eb;
     }
 
     .social-media-icons {
         display: flex;
         gap: 1rem;
-        justify-content: flex-start;
+        justify-content: center;
         flex-wrap: wrap;
     }
 
@@ -72,15 +74,15 @@
         align-items: center;
         text-decoration: none;
         color: #333;
-        font-size: 0.9rem;
-        border: 1px solid #e0e0e0;
+        font-size: 1rem;
+        border: 1px solid #ddd;
         border-radius: 8px;
-        padding: 0.5rem 1rem;
+        padding: 0.6rem 1.2rem;
         transition: background-color 0.2s, color 0.2s;
     }
 
     .social-media-icon:hover {
-        background-color: #1F3A93; /* Primary Navy Blue on hover */
+        background-color: #2563eb;
         color: #fff;
     }
 
@@ -94,18 +96,18 @@
     <header class="header">
         <div class="container d-flex align-items-center justify-content-between">
             <a href="{% url 'iriseupdashboard' %}" class="back-btn">
-                <i class="fa-solid fa-arrow-left" style="color: white;"></i> 
+                <i class="fa-solid fa-arrow-left"></i> 
             </a>
-            <h1 style="color: #f4f6f9;">About iRiseUp.AI</h1>
+            <h1 style="color: white;">About iRiseUp.AI</h1>
         </div>
     </header>
 
     <!-- About Section -->
     <div class="about-main">
         <div class="about-text-content">
-            <p>iRiseUp.AI is dedicated to empowering individuals and businesses to reach their highest potential. Our platform leverages advanced AI technology to provide personalized guidance and innovative solutions, whether you're aiming to enhance your business strategies or embark on a journey of personal growth.</p>
-            <p>With iRiseUp.AI, you can connect with tailored AI-driven tools that help you tackle everyday challenges, make informed decisions, and drive meaningful impact. Our mission is to make advanced artificial intelligence accessible to all, fostering growth, resilience, and empowerment in every interaction.</p>
-            <p>Explore our array of AI bots, designed to assist with everything from strategic planning to mental wellness, and become part of a community that rises together.</p>
+            <p>At <strong>iRiseUp.AI</strong>, we empower individuals and businesses to unlock their full potential. Our AI-powered tools simplify decision-making, enhance productivity, and provide personalized guidance—whether you’re growing a business or chasing a dream.</p>
+            <p>Our mission is to make AI accessible, user-friendly, and impactful. No tech jargon, no confusion—just AI solutions that work for you.</p>
+            <p>From business strategies to personal growth, iRiseUp.AI is your go-to assistant for success.</p>
         </div>
 
         <!-- Follow Us Section -->
