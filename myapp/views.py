@@ -3835,3 +3835,30 @@ def iriseupai_landing(request):
     Landing page for iRiseUp AI.
     """
     return render(request, 'myapp/aibots/iriseupai/iriseupai_landing.html')
+
+
+from gtts import gTTS
+import os
+from django.http import JsonResponse
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def text_to_speech(request):
+    text = request.GET.get('text', '').strip()
+
+    if not text:
+        return JsonResponse({"error": "No text provided"}, status=400)
+
+    try:
+        tts = gTTS(text, lang='en')
+        audio_filename = "response.mp3"
+        audio_path = os.path.join(settings.MEDIA_ROOT, audio_filename)
+
+        os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+
+        tts.save(audio_path)
+
+        return JsonResponse({"audio_url": settings.MEDIA_URL + audio_filename})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
