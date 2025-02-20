@@ -2409,6 +2409,8 @@ def limit_chats(request):
 
     # Pro & One-Year users: No chat restrictions
     return None
+
+import re
 @login_required
 def get_bot_response(request, system_prompt, bot_name):
     if request.method == 'POST':
@@ -2451,28 +2453,33 @@ def get_bot_response(request, system_prompt, bot_name):
 
         # 🔹 Special Handling for Imagine – Generate Images
         if bot_name == "Imagine":
-            wants_image = any(phrase in user_message.lower() for phrase in [
-                "generate an image of", "draw", "create a picture of", "make an artwork of",
-                "design a visual of", "create a graphic for"
-            ])
+            try:
+                # Ask GPT if the user is requesting an image
+                client = openai.OpenAI()
+                intent_response = client.chat.completions.create(
+                    model=model_version,
+                    messages=[
+                        {"role": "system", "content": "You are an AI that determines if a user is requesting a visual representation."},
+                        {"role": "user", "content": f"Does this request require an image? Reply with 'yes' or 'no': {user_message}"}
+                    ]
+                )
 
-            if wants_image:
-                try:
-                    # Call OpenAI's DALL-E 3 API for image generation
-                    client = openai.OpenAI()
+                intent_reply = intent_response.choices[0].message.content.strip().lower()
+
+                # If AI confirms it's an image request, generate an image
+                if intent_reply == "yes":
+                    structured_prompt = f"An image of {user_message}"
                     image_response = client.images.generate(
                         model="dall-e-3",
-                        prompt=user_message,
-                        n=1,  # Generate only one image
+                        prompt=structured_prompt,
+                        n=1,
                         size="1024x1024"
                     )
-
-                    image_url = image_response.data[0].url  # Get image URL
+                    image_url = image_response.data[0].url
                     return JsonResponse({'response': 'Here’s your generated image!', 'image_url': image_url})
 
-                except Exception as e:
-                    logger.error(f"OpenAI DALL-E Error: {e}")
-                    return JsonResponse({'response': f'Error: Unable to generate an image. {str(e)}'})
+            except Exception as e:
+                logger.error(f"OpenAI Intent Detection Error: {e}")
 
         try:
             # 🔹 FIXED OpenAI API CALL for openai>=1.0.0
