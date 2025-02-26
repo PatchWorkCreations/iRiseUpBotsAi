@@ -1,0 +1,780 @@
+{% extends "myapp/aibots/base.html" %}
+{% load static %}
+{% block title %}iRiseUp AI - Your AI Experts{% endblock %}
+
+{% block content %}
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+
+<style>
+/* 🔹 GENERAL STYLES - MATCHING CHATGPT */
+body {
+    font-family: 'Inter', sans-serif;
+    background: #fff;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* 🔹 HEADER */
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #fff;
+    padding: 15px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.header h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.login-btn {
+    background: black;
+    color: white;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* 🔹 MAIN CONTAINER */
+.chat-container {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    margin-top: 100px; /* To avoid overlap with the header */
+}
+
+
+
+/* Move AI Selector to Top Right */
+.move-to-top-right {
+    position: absolute;
+    top: 10px;
+    right: 120px; /* Adjust spacing from login button */
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+
+/* 🔹 CHATBOX */
+.chat-box {
+    background: #ffffff;
+    max-width: 750px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    text-align: left;
+    min-height: 300px;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+/* 🔹 CHAT MESSAGES */
+.message {
+    padding: 12px 15px;
+    margin: 12px 0;
+    border-radius: 8px;
+    max-width: 85%;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.message.user {
+    background: #007bff;
+    color: white;
+    text-align: right;
+    margin-left: auto;
+    border-radius: 15px 15px 0 15px;
+}
+
+.message.bot {
+    background: #f1f1f1;
+    color: #222;
+    text-align: left;
+    border-radius: 15px 15px 15px 0;
+}
+
+/* 🔹 CHAT INPUT BAR */
+.chat-footer {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 750px;
+    margin: 15px auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.chat-footer input {
+    flex-grow: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    font-size: 1rem;
+    outline: none;
+}
+
+.chat-footer button {
+    background: black;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.chat-footer button:hover {
+    background: #333;
+}
+
+/* 🚀 Trial Limit Message */
+#trial-limit-message {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #d9534f;
+    display: none;
+    font-weight: bold;
+}
+
+/* SIGNUP MODAL */
+.signup-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signup-modal-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.signup-close-button {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    font-size: 22px;
+    color: #555;
+    cursor: pointer;
+}
+
+.signup-btn {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    width: 100%;
+    text-align: center;
+}
+
+/* ✅ Hide header text after first message */
+.header h1.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ai-switcher {
+    margin-bottom: 20px;
+}
+
+.ai-switcher label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #007bff;
+    margin-right: 10px;
+}
+
+#ai-select {
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+#ai-select:hover {
+    border-color: #0056b3;
+}
+
+/* ✅ General AI Switcher Styling */
+.ai-switcher {
+    margin-bottom: 20px;
+}
+
+/* ✅ AI Switcher for Desktop */
+/* 🔹 HEADER FIX FOR DESKTOP */
+@media (min-width: 769px) {
+    .header {
+        display: flex;
+        justify-content: space-between; /* Ensures AI dropdown & login button align properly */
+        align-items: center;
+        padding: 15px 20px;
+        width: 100%;
+    }
+
+    /* Ensure the logo (h1) is visible */
+    .header h1 {
+        display: block !important; /* Force visibility */
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    /* ✅ AI switcher should be positioned next to the login button */
+    .ai-switcher.moved {
+        position: absolute;
+        top: 15px;
+        right: 150px; /* Ensure it's near the login button */
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    /* Ensure dropdown looks correct */
+    .ai-switcher.moved select {
+        font-size: 1rem;
+        padding: 6px 10px;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* ✅ Ensure login button stays on the right */
+    .login-btn {
+        position: absolute;
+        right: 15px;
+        top: 8px;
+        z-index: 1003;
+    }
+}
+
+/* 🖊️ Typing Indicator */
+.typing-indicator {
+    display: none;
+    font-size: 1rem;
+    color: #777;
+    font-style: italic;
+}
+
+/* ✅ COMPACT AI SWITCHER FOR MOBILE (Prevents Overlapping) */
+@media (max-width: 768px) {
+    .ai-switcher.moved {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        font-size: 1rem;
+        font-weight: bold;
+        background: white;
+        padding: 3px 8px; /* 🔹 Reduced padding */
+        border-radius: 6px; /* 🔹 Smaller radius */
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15); /* 🔹 Soft shadow */
+        z-index: 1001;
+        max-width: 160px; /* 🔹 Limits width to prevent overlap */
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    /* ✅ Hide "Choose Your AI Assistant" Label */
+    .ai-switcher.moved label {
+        display: none;
+    }
+
+    /* 🔹 Compact AI Dropdown */
+    .ai-switcher.moved select {
+        background: none;
+        border: none;
+        font-size: 0.9rem; /* 🔹 Reduced font size */
+        font-weight: bold;
+        color: #333;
+        cursor: pointer;
+        padding: 2px 6px; /* 🔹 Reduced padding */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        text-overflow: ellipsis;
+        max-width: 140px; /* 🔹 Prevents overlap with login */
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    /* ✅ Dropdown Arrow */
+    .ai-switcher.moved::after {
+        content: " ⌄";
+        font-size: 12px;
+        padding-left: 4px;
+        color: #333;
+    }
+
+    /* ✅ Keep Login Button on the Right */
+    .login-btn {
+        position: absolute;
+        right: 10px;
+        top: 8px;
+        z-index: 1003;
+        padding: 6px 12px; /* 🔹 Smaller button */
+        font-size: 0.85rem;
+    }
+}
+
+/* 🎨 General Modal Styling */
+.signup-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 💎 Modal Content Box */
+.signup-modal-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: slideIn 0.4s ease-in-out;
+}
+
+/* ❌ Close Button */
+.signup-close-button {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    font-size: 22px;
+    color: #555;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.signup-close-button:hover {
+    color: #ff4757;
+    transform: scale(1.2);
+}
+
+/* 🚀 Title Styling */
+.signup-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+/* 📌 Text */
+.signup-text {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* ✅ Primary CTA Button */
+.signup-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    width: 100%;
+    text-align: center;
+}
+
+.signup-btn:hover {
+    background: linear-gradient(90deg, #0056b3, #003f80);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.4);
+}
+
+/* 👀 Secondary Option */
+.signup-secondary {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 12px;
+}
+
+.signup-secondary a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-secondary a:hover {
+    text-decoration: underline;
+}
+
+/* 🌟 Animation Effects */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* 📱 Mobile Optimization */
+@media (max-width: 480px) {
+    .signup-modal-content {
+        max-width: 90%;
+        padding: 20px;
+    }
+    
+    .signup-title {
+        font-size: 1.6rem;
+    }
+
+    .signup-text {
+        font-size: 1rem;
+    }
+
+    .signup-btn {
+        font-size: 1.1rem;
+        padding: 10px 20px;
+    }
+}
+
+
+</style>
+
+<header class="header">
+    <h1>iRiseUp AI</h1>
+    <a href="{% url 'sign_in' %}" class="login-btn">Log in</a>
+</header>
+
+<section class="chat-container">
+    <h2 class="title">What can I help with?</h2>
+
+    <div class="ai-switcher">
+        <label for="ai-select">Choose Your AI Assistant:</label>
+        <select id="ai-select">
+            <option value="lumos">💡 Lumos - Emotional Support AI</option>
+                <option value="nexus">⚙️ Nexus - Technical AI</option>
+                <option value="thrive">🏋️ Thrive - Health & Wellness AI</option>
+                <option value="gideon">📈 Gideon - Business & Marketing AI</option>
+                <option value="elevate">🚀 Elevate - Business Motivation AI</option>
+                <option value="keystone">🏛️ Keystone - Finance & Legal AI</option>
+                <option value="mentor-iq">🎓 Mentor IQ - Learning & Career AI</option>
+                <option value="imagine">🎨 Imagine - Creativity & Inspiration AI</option>
+        </select>
+    </div>
+
+    <div class="chat-box" id="chatbox">
+        <div class="message bot">Hi there! 👋 I'm <span id="ai-name">Lumos</span>. Ask me anything!</div>
+    </div>
+
+    <div class="typing-indicator" id="typing-indicator">
+        Typing... <span></span><span></span><span></span>
+    </div>
+
+    <div class="chat-footer">
+        <input type="text" id="message" placeholder="Type a message...">
+        <button id="send">Send</button>
+    </div>
+
+    <p id="trial-limit-message" class="hidden">
+        🚀 You've reached the free trial limit! <a href="{% url 'signup' %}" class="signup-btn">Unlock Full AI Access</a>
+    </p>
+</section>
+
+<div class="signup-modal" id="signup-modal">
+    <div class="signup-modal-content">
+        <span class="signup-close-button" onclick="closeSignupModal()">&times;</span>
+        
+        <!-- 🚀 Stronger Headline -->
+        <h2 class="signup-title">🚀 Don’t Miss Out on More Chats!</h2>
+
+        <!-- 🔥 Key Benefit Statement -->
+        <p class="signup-text">
+            You've hit the free trial limit. Sign up now to unlock more chats and deeper AI insights—free!  
+        </p>
+
+        <!-- ✅ Action-Oriented CTA -->
+        <a href="{% url 'signup' %}" class="signup-btn">🔥 Unlock More Chats Now</a>
+
+        <!-- 👀 Subtle Secondary Option -->
+        <p class="signup-secondary">
+            No credit card required. <a href="{% url 'iriseupai_landing' %}" onclick="closeSignupModal(); return false;">Maybe later</a>
+        </p>
+        
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("✅ Script Loaded!");
+
+    // 🌟 Retrieve last visit timestamp & reset message count if 24 hours have passed
+    const lastVisit = localStorage.getItem('lastVisit');
+    const currentTime = new Date().getTime();
+
+    if (!lastVisit || currentTime - lastVisit > 86400000) { // Reset every 24 hours
+        localStorage.setItem('messageCount', 0);
+        localStorage.setItem('lastVisit', currentTime);
+        console.log("🔄 Message count reset for a new session.");
+    }
+
+    // 🌟 Get DOM elements
+    const chatbox = document.getElementById('chatbox');
+    const chatContainer = document.querySelector('.chat-container');
+    const chatFooter = document.querySelector('.chat-footer');
+    const messageInput = document.getElementById('message');
+    const sendButton = document.getElementById('send');
+    const aiSelect = document.getElementById('ai-select');
+    const aiSwitcher = document.querySelector('.ai-switcher');
+    const aiNameDisplay = document.getElementById('ai-name');
+    const signupModal = document.getElementById('signup-modal');
+    const titleSection = document.querySelector('.title'); // "What can I help with?" title
+    const header = document.querySelector('.header');
+    const headerTitle = document.querySelector('.header h1'); // iRiseUp AI logo
+    let aiMoved = false;
+    let chatExpanded = false;
+
+    const TRIAL_LIMIT = 10;
+    let messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
+
+    console.log("🔥 Initial messageCount:", messageCount);
+
+    signupModal.style.display = "none";
+
+    // ✅ Typing Indicator
+    const typingIndicator = document.createElement('div');
+    typingIndicator.className = 'message bot typing-indicator';
+    typingIndicator.innerHTML = "Typing...";
+
+    // ✅ Get CSRF token
+    function getCSRFToken() {
+        const token = document.querySelector('meta[name="csrf-token"]');
+        return token ? token.getAttribute('content') : null;
+    }
+
+    // ✅ Move AI Selector & Hide Logo (Mobile)
+    function moveAISelector() {
+        if (!aiMoved && aiSwitcher) {
+            if (window.innerWidth <= 768) {
+                headerTitle.style.display = "none"; // Hide the logo on mobile
+                aiSwitcher.classList.add('moved'); // Move the AI selector
+            } else {
+                aiSwitcher.classList.add('moved'); // Desktop: Move beside login button
+            }
+            aiMoved = true;
+            console.log("🎯 AI Selector moved.");
+        }
+    }
+
+    // ✅ Expand Chat to Full Screen
+    function expandChat() {
+        if (!chatExpanded) {
+            chatContainer.style.height = "100vh";
+            chatbox.style.minHeight = "calc(100vh - 150px)"; // Adjust for header/footer
+            chatbox.style.overflowY = "auto";
+            chatbox.style.padding = "15px"; // Ensure it has some padding
+
+            chatFooter.style.position = "fixed";
+            chatFooter.style.bottom = "0";
+            chatFooter.style.width = "100%";
+
+            chatExpanded = true;
+            console.log("📱 Chat expanded to full-screen.");
+        }
+    }
+
+    // ✅ Format AI Response
+    function formatResponse(text) {
+        if (!text) return ""; // Prevent errors if response is undefined
+
+        text = text.replace(/\n/g, '<br>');
+        text = text.replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>');
+        text = text.replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:');
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        return text;
+    }
+
+    // ✅ Add message to chatbox
+    function addMessage(sender, text) {
+        if (!chatbox) return;
+
+        const messageClass = sender === 'You' ? 'user' : 'bot';
+        const formattedText = formatResponse(text);
+
+        const messageHTML = `
+            <div class="message ${messageClass}" style="opacity: 0; transform: translateY(10px); transition: all 0.3s;">
+                ${formattedText}
+                <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+            </div>
+        `;
+
+        chatbox.innerHTML += messageHTML;
+        setTimeout(() => {
+            chatbox.lastElementChild.style.opacity = "1";
+            chatbox.lastElementChild.style.transform = "translateY(0)";
+        }, 100);
+
+        chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function showSignupModal() {
+    const signupModal = document.getElementById("signup-modal");
+    if (signupModal) {
+        console.log("📢 Showing signup modal...");
+        signupModal.style.display = "flex";  // ✅ Ensure the modal is visible
+    } else {
+        console.error("❌ Signup modal element not found!");
+    }
+}
+
+    function closeSignupModal() {
+        const signupModal = document.getElementById("signup-modal");
+        if (signupModal) {
+            signupModal.style.display = "none";
+        } else {
+            console.error("❌ Signup modal element not found!");
+        }
+    }
+
+    // ✅ Ensure modal closes when clicking outside
+    document.addEventListener("click", function (event) {
+        const signupModal = document.getElementById("signup-modal");
+        if (signupModal && event.target === signupModal) {
+            closeSignupModal();
+        }
+    });
+
+
+
+
+    // ✅ **Send Message to AI**
+    function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        addMessage('You', message);
+
+        console.log("📨 Sending message:", message);
+        console.log("📊 Current message count before increment:", messageCount);
+
+        if (titleSection && titleSection.style.display !== "none") {
+            titleSection.style.opacity = "0";
+            setTimeout(() => {
+                titleSection.style.display = 'none';
+            }, 300);
+        }
+
+        moveAISelector();
+        expandChat();
+
+        if (messageCount >= TRIAL_LIMIT) {
+        console.log("🚨 Trial limit reached! Showing signup modal...");
+        showSignupModal();  // ✅ Ensure the modal appears
+        return;
+    }
+
+        fetch(`/api/guest/chat/${aiSelect.value}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.response) {
+                console.error("❌ No AI response received!");
+                addMessage('System', '⚠️ Oops! No response received.');
+                return;
+            }
+
+            addMessage(aiNameDisplay.textContent, data.response);
+            messageInput.value = '';
+
+            messageCount++;
+            localStorage.setItem('messageCount', messageCount);
+            console.log("✅ New messageCount after increment:", messageCount);
+        })
+        .catch(error => {
+            console.error('❌ Fetch Error:', error);
+            addMessage('System', '⚠️ Oops! Something went wrong. Please try again.');
+        });
+    }
+
+    // ✅ **Handle Enter Key Submission**
+    messageInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // ✅ **Handle Button Click Submission**
+    sendButton.addEventListener('click', sendMessage);
+});
+
+
+
+</script>
+
+
+{% endblock %}

@@ -129,51 +129,7 @@ function formatResponse(text, keywords = []) {
     function hideTypingIndicator() {
         typingIndicator.style.display = 'none';
     }
-
-    // Function to send a message
-    // Function to send a message
-function sendMessage() {
-    const message = messageInput.value.trim();
-    if (message === '') return; // Ignore empty messages
-
-    // Display user's message in the chatbox
-    addMessage('You', message);
-
-    // Show typing indicator and 'Seen' status
-    showSeenStatus();
-    showTypingIndicator();
-
-    // Simulate server response
-    fetch('/api/chat/echo/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: new URLSearchParams({
-            'message': message
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        removeSeenStatus();
-        hideTypingIndicator();
-
-        if (data.image_url) {
-            // If response contains an image URL, show it
-            addImageMessage('Imagine', data.image_url);
-        } else {
-            // Otherwise, show text response
-            addMessage('Imagine', data.response);
-        }
-
-        messageInput.value = ''; // Clear input field
-    })
-    .catch(error => {
-        hideTypingIndicator();
-        console.error('Error:', error);
-    });
-}
+ 
 
 // Function to add an image response in the chat
 function addImageMessage(sender, imageUrl) {
@@ -236,74 +192,135 @@ document.addEventListener("DOMContentLoaded", function() {
     document.addEventListener("DOMContentLoaded", function () {
     const micButton = document.getElementById("micButton");
     const messageInput = document.getElementById("message");
+    const sendButton = document.getElementById("send");
     let recognition;
     let isRecording = false;
     let finalTranscript = ""; // ✅ Will reset every time the mic starts
 
     if ("webkitSpeechRecognition" in window) {
-      recognition = new webkitSpeechRecognition();
-      recognition.continuous = false; // ✅ Browser limitation - restart manually
-      recognition.interimResults = false;
-      recognition.lang = "en-US";
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = false; // ✅ Browser limitation - restart manually
+        recognition.interimResults = false;
+        recognition.lang = "en-US";
 
-      micButton.addEventListener("click", () => {
-        if (!isRecording) {
-          startRecognition();
-        } else {
-          stopRecognition();
-        }
-      });
-
-      function startRecognition() {
-        isRecording = true;
-        finalTranscript = ""; // ✅ Reset transcript on new activation
-        micButton.style.backgroundColor = "#ff3b3b"; // Show active recording
-        recognition.start();
-      }
-
-      function stopRecognition() {
-        isRecording = false;
-        micButton.style.backgroundColor = "#007bff"; // Reset color
-        recognition.stop();
-      }
-
-      recognition.onresult = (event) => {
-        let newTranscript = "";
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          newTranscript += event.results[i][0].transcript + " ";
-        }
-
-        finalTranscript += newTranscript; // ✅ Append only during the current session
-        messageInput.value = finalTranscript.trim();
-      };
-
-      recognition.onend = () => {
-        if (isRecording) {
-          setTimeout(() => {
-            recognition.start(); // ✅ Restart smoothly without breaking sentences
-          }, 500);
-        } else {
-          micButton.style.backgroundColor = "#007bff"; // Reset button
-        }
-      };
-
-      recognition.onerror = (event) => {
-        console.error("Speech recognition error", event);
-        if (event.error === "no-speech" || event.error === "network") {
-          setTimeout(() => {
-            if (isRecording) {
-              recognition.start();
+        micButton.addEventListener("click", () => {
+            if (!isRecording) {
+                startRecognition();
+            } else {
+                stopRecognition();
             }
-          }, 1000);
-        } else {
-          alert("Voice input failed. Please try again.");
-          stopRecognition();
+        });
+
+        function startRecognition() {
+            isRecording = true;
+            finalTranscript = ""; // ✅ Reset transcript on new activation
+            micButton.style.backgroundColor = "#ff3b3b"; // Show active recording
+            recognition.start();
         }
-      };
+
+        function stopRecognition() {
+            isRecording = false;
+            micButton.style.backgroundColor = "#007bff"; // Reset color
+            recognition.stop();
+        }
+
+        recognition.onresult = (event) => {
+            let newTranscript = "";
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                newTranscript += event.results[i][0].transcript + " ";
+            }
+
+            finalTranscript += newTranscript; // ✅ Append only during the current session
+            messageInput.value = finalTranscript.trim();
+        };
+
+        recognition.onend = () => {
+            if (isRecording) {
+                setTimeout(() => {
+                    recognition.start(); // ✅ Restart smoothly without breaking sentences
+                }, 500);
+            } else {
+                micButton.style.backgroundColor = "#007bff"; // Reset button
+            }
+        };
+
+        recognition.onerror = (event) => {
+            console.error("Speech recognition error", event);
+            if (event.error === "no-speech" || event.error === "network") {
+                setTimeout(() => {
+                    if (isRecording) {
+                        recognition.start();
+                    }
+                }, 1000);
+            } else {
+                alert("Voice input failed. Please try again.");
+                stopRecognition();
+            }
+        };
     } else {
-      alert("Speech recognition is not supported in this browser.");
+        alert("Speech recognition is not supported in this browser.");
     }
-  });
+
+    // 🔹 Stop speech recognition when sending a message
+    function sendMessage() {
+        const message = messageInput.value.trim();
+        if (message === '') return; // Ignore empty messages
+
+        // ✅ Stop voice recognition when the message is submitted
+        if (isRecording) {
+            stopRecognition();
+        }
+
+        // Display user's message in the chatbox
+        addMessage('You', message);
+
+        // Show typing indicator and 'Seen' status
+        showSeenStatus();
+        showTypingIndicator();
+
+        // Simulate server response
+        fetch('/api/chat/echo/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: new URLSearchParams({
+                'message': message
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            removeSeenStatus();
+            hideTypingIndicator();
+
+            if (data.image_url) {
+                // If response contains an image URL, show it
+                addImageMessage('Imagine', data.image_url);
+            } else {
+                // Otherwise, show text response
+                addMessage('Imagine', data.response);
+            }
+
+            messageInput.value = ''; // Clear input field
+        })
+        .catch(error => {
+            hideTypingIndicator();
+            console.error('Error:', error);
+        });
+    }
+
+    // 🔹 Ensure both Enter key and Send button trigger the stopRecording function
+    messageInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form behavior
+            sendMessage(); // Trigger sendMessage
+        }
+    });
+
+    sendButton.addEventListener('click', sendMessage);
+});
+
 
 // Run on load and resize
 adjustViewportHeight();

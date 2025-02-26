@@ -199,7 +199,9 @@ urlpatterns = [
     path('dashboard/keystone/', views.keystone_dashboard, name='keystone_dashboard'),
     path('validate-user-input/', views.validate_user_input, name='validate_user_input'),
 
-    path('', views.iriseupai_landing, name='iriseupai_landing'),
+    path('iriseupai_landing', views.iriseupai_landing, name='iriseupai_landing'),
+    path('', views.chat_iriseupai, name='chat_iriseupai'),
+    path('chat-iriseupai', views.chat_iriseupai, name='chat_iriseupai'),
     
     path('api/chat/lumos/', views.get_soulspark_response, name='get_soulspark_response'),  # Lumos (was soulspark)
     path('api/chat/mentor-iq/', views.get_mindforge_response, name='get_mindforge_response'),  # Mentor IQ (was mindforge)

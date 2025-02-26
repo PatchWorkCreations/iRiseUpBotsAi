@@ -2519,7 +2519,7 @@ def limit_guest_chats(request):
         guest_chat_count = request.session.get('guest_chat_count', 0)
         
         if guest_chat_count >= 10:
-            return JsonResponse({'response': 'You have reached the limit of 10 messages. Please sign in to continue.'}, status=403)
+            return JsonResponse({'response': 'We want to support everyone on their journey, and right now, many people are engaging with our AI. Sign in to continue the conversation—we’d love to prioritize you!'}, status=403)
         
         # Increment the guest chat count
         request.session['guest_chat_count'] = guest_chat_count + 1
@@ -3835,6 +3835,12 @@ def iriseupai_landing(request):
     Landing page for iRiseUp AI.
     """
     return render(request, 'myapp/aibots/iriseupai/iriseupai_landing.html')
+
+def chat_iriseupai(request):
+    """
+    Landing page for iRiseUp AI.
+    """
+    return render(request, 'myapp/aibots/iriseupai/chat_iriseupai.html')
 
 
 from gtts import gTTS

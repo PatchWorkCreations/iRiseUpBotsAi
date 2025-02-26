@@ -7,7 +7,7 @@
 </head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <meta name="csrf-token" content="{{ csrf_token }}">
-
+{% include 'myapp/aibots/header.html' %}
 <style>/* 🎨 Modern & Dynamic Hero Section */
     .hero-section-iriseup {
         position: relative;
@@ -121,28 +121,38 @@
     
     /* 📱 Responsive Design */
     @media (max-width: 768px) {
-        .hero-section-iriseup {
-            padding: 70px 15px;
-            min-height: auto;
-        }
-    
-        .hero-content {
-            max-width: 100%;
-        }
-    
-        .hero-content h1 {
-            font-size: 2rem;
-        }
-    
-        .hero-feature-list {
-            flex-direction: column;
-            align-items: center;
-        }
-    
-        .hero-btn {
-            width: 100%;
-        }
+    .hero-section-iriseup {
+        padding: 70px 10px;
     }
+
+    .hero-content {
+        max-width: 95%;
+        padding: 1.5rem;
+    }
+
+    .hero-content h1 {
+        font-size: 1.7rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .hero-bullet-points {
+        gap: 8px;
+    }
+
+    .hero-bullet-points li {
+        font-size: 0.95rem;
+        padding: 8px 12px;
+    }
+
+    .hero-btn {
+        font-size: 1rem;
+        padding: 12px;
+    }
+}
 
 /* 🎯 Why Choose iRiseUp AI - Section */
 .why-choose-iriseup {
@@ -1948,4 +1958,5 @@ function closeSignupModal() {
 
 
 </script>
+{% include 'myapp/aibots/footer.html' %}
 {% endblock %}
