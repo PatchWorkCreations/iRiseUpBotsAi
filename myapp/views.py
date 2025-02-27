@@ -137,6 +137,9 @@ def iriseupdashboard(request):
     return render(request, 'myapp/aibots/coursemenu.html', {"is_pro_user": is_pro_user})
 
 
+def test(request):
+    return render(request, 'myapp/aibots/iriseupai/test.html')
+
 
 def subscription_terms_new(request):
     return render(request, 'myapp/aibots/subscription_terms.html')
@@ -3868,3 +3871,26 @@ def text_to_speech(request):
         return JsonResponse({"audio_url": settings.MEDIA_URL + audio_filename})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
+
+
+from django.shortcuts import render
+
+# AI List
+AIs = [
+    {"id": "elevate", "name": "Elevate", "icon": "🌟", "description": "Let's work on your goals!", "image": "myapp/images/aiimages/elevate.png"},
+    {"id": "thrive", "name": "Thrive", "icon": "🩺", "description": "Focus on health & well-being!", "image": "myapp/images/aiimages/thrive.png"},
+    {"id": "lumos", "name": "Lumos", "icon": "🤗", "description": "Support & companionship!", "image": "myapp/images/aiimages/lumos.png"},
+    {"id": "mentor_iq", "name": "Mentor IQ", "icon": "📚", "description": "Educational & career guidance!", "image": "myapp/images/aiimages/mentor_iq.png"},
+    {"id": "nexus", "name": "Nexus", "icon": "💬🌐", "description": "Customer & accessibility support!", "image": "myapp/images/aiimages/nexus.png"},
+    {"id": "keystone", "name": "Keystone", "icon": "💼⚖️", "description": "Finance & legal foundation!", "image": "myapp/images/aiimages/keystone.png"},
+    {"id": "imagine", "name": "Imagine", "icon": "🎨", "description": "Creative inspiration & AI images!", "image": "myapp/images/aiimages/imagine.png"},
+    {"id": "gideon", "name": "Gideon", "icon": "🚀", "description": "Business & marketing insights!", "image": "myapp/images/aiimages/gideon.png"},
+]
+
+# ✅ AI Selection Page
+def chat_home(request):
+    return render(request, 'myapp/aibots/iriseupai/ai_selection.html', {"ai_list": AIs})
+
+def test_chat_view(request, ai_name):
+    return render(request, 'myapp/aibots/iriseupai/chat_window.html', {'ai_name': ai_name})

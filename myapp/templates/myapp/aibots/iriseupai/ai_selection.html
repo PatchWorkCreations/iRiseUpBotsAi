@@ -1,0 +1,1594 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% block title %}AI Bots Menu{% endblock %}
+{% load static %}
+{% block content %}
+ 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<style>
+  /* ✅ CHAT CONTAINER */
+/* ✅ GENERAL STYLES */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.messenger-container {
+    display: flex;
+    height: 100vh;
+}
+
+
+
+.chat-window {
+    flex: 1; /* Expands to fill remaining space */
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+
+/* ✅ MOBILE & DESKTOP RESPONSIVENESS */
+.messenger-container {
+    height: calc(var(--vh, 1vh) * 100);
+}
+
+
+/* ✅ MOBILE VIEW */
+.mobile-view {
+    display: none;
+}
+
+/* ✅ SHOW MOBILE VIEW ON SMALL SCREENS */
+@media (min-width: 768px) {
+    .mobile-view {
+        display: none !important; /* Completely hide mobile layout */
+    }
+    
+    .messenger-container {
+        display: flex;
+        height: 100vh;
+        width: 100%;
+        overflow: hidden;
+    }
+}
+
+/* ✅ CHAT HEADER */
+.chat-header {
+    background-color: #1F3A93;
+    color: white;
+    padding: 15px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+}
+
+#back-button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: white;
+    margin-right: 10px;
+}
+
+.header-title {
+    flex-grow: 1;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* ✅ CHAT MESSAGES */
+#chatbox {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    scroll-behavior: smooth;
+}
+
+/* ✅ MESSAGE BUBBLES */
+.message {
+    padding: 12px 15px;
+    border-radius: 15px;
+    max-width: 75%;
+    word-wrap: break-word;
+    margin-bottom: 10px;
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ✅ USER MESSAGES */
+.message.user {
+    align-self: flex-end;
+    background-color: #2446b6;
+    color: white;
+    text-align: left;
+    border-radius: 15px 15px 0 15px;
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ AI (BOT) MESSAGES */
+.message.bot {
+    background-color: #e9ecef;
+    color: #333;
+    align-self: flex-start;
+    text-align: left;
+    border-radius: 15px 15px 15px 0;
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* ✅ SEEN INDICATOR */
+.message .seen-status {
+    position: absolute;
+    bottom: -15px;
+    right: 10px;
+    font-size: 12px;
+    color: #888;
+    opacity: 0.8;
+}
+
+/* ✅ MESSAGE TIMESTAMP */
+.message-time {
+    font-size: 12px;
+    margin-top: 5px;
+    opacity: 0.6;
+    text-align: right;
+}
+
+/* ✅ TYPING INDICATOR */
+.typing-indicator {
+    position: absolute; /* Ensure it stays positioned above footer */
+    bottom: 60px; /* Push above chat footer */
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9); /* Optional background for visibility */
+    padding: 8px 12px;
+    font-style: italic;
+    color: #555;
+    font-size: 14px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure it's above footer */
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+}
+
+/* ✅ TYPING DOTS */
+.typing-indicator span {
+    width: 6px;
+    height: 6px;
+    margin: 0 2px;
+    border-radius: 50%;
+    background-color: #555;
+    display: inline-block;
+    animation: typing 1.2s infinite;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.3s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes typing {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ✅ FIX FOR SAFARI MOBILE KEYBOARD */
+@media (max-width: 768px) {
+    .typing-indicator {
+        bottom: calc(70px + env(safe-area-inset-bottom)); /* Adjust based on iOS keyboard */
+    }
+}
+
+@keyframes typing {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.chat-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    height: 60px;
+    z-index: 999;
+}
+
+
+/* ✅ CHAT INPUT */
+/* ✅ Prevent Safari Zoom on Input Focus */
+#message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 16px; /* ✅ Set to at least 16px */
+}
+
+
+/* ✅ SEND BUTTON */
+#send {
+    background-color: #2141aa;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+#send:hover {
+    background-color: #0056b3;
+}
+
+/* ✅ MIC BUTTON */
+.mic-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s ease;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mic-btn:hover {
+    background-color: #0056b3;
+}
+
+.mic-btn:active {
+    background-color: #003f7f;
+}
+
+/* ✅ LARGE SCREEN */
+@media (min-width: 1024px) {
+    .chat-container {
+        max-width: 800px;
+        margin: 0 auto;
+        height: calc(100vh - 50px);
+    }
+
+    .chat-header {
+        font-size: 22px;
+        padding: 20px;
+    }
+
+    #chatbox {
+        padding: 20px;
+    }
+
+    .message {
+        font-size: 16px;
+        padding: 12px 18px;
+    }
+
+    .chat-footer {
+        padding: 20px;
+    }
+
+    #message-input {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    #send {
+        font-size: 16px;
+        padding: 12px 20px;
+    }
+}
+
+/* ✅ Limit AI image size inside sidebar */
+.ai-list img {
+    width: 40px;  /* Smaller size */
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+/* ✅ SIDEBAR STYLING */
+.sidebar {
+    width: 300px; /* Wider for better readability */
+    background: #fff;
+    padding: 15px;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+/* ✅ AI LIST ITEMS - Improve layout */
+.ai-list {
+    list-style-type: none; /* Remove bullets */
+    padding: 0;
+    margin: 0;
+}
+
+.ai-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.2s ease-in-out;
+    gap: 10px; /* Space between image and text */
+}
+
+.ai-item:hover {
+    background: #f0f0f0; /* Hover effect */
+}
+
+/* ✅ AI PROFILE PICTURES */
+.ai-item img {
+    width: 50px;  /* Better visibility */
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid #ddd; /* Subtle border */
+}
+
+/* ✅ AI NAME AND DESCRIPTION */
+.ai-item div {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.ai-item h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.ai-item p {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: #666;
+}
+
+/* ✅ ENSURE SIDEBAR DOESN'T COLLAPSE */
+@media (min-width: 1024px) {
+    .sidebar {
+        width: 320px;
+        overflow-y: auto;
+        height: 100vh;
+    }
+}
+
+
+
+/* ✅ Hide full screen layout on mobile */
+@media (max-width: 768px) {
+    .messenger-container {
+        display: none;
+    }
+    .mobile-view {
+        display: block;
+    }
+}
+
+/* ✅ MOBILE VIEW STYLES */
+.mobile-view {
+    display: none; /* Hidden on desktop */
+    background: white;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ✅ HEADER (Chats + New Chat Button) */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.new-chat-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* ✅ SEARCH BAR */
+/* ✅ SEARCH BAR STYLING */
+.search-bar {
+    width: 85%;
+    padding: 8px 12px; /* Better spacing */
+    border: 1px solid #ccc; /* Softer border */
+    border-radius: 20px; /* Rounded edges */
+    font-size: 14px;
+    color: #333;
+    outline: none; /* Remove blue focus outline */
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* ✅ FOCUS EFFECT - Looks polished when clicked */
+.search-bar:focus {
+    border-color: #1F3A93; /* Highlight border */
+    box-shadow: 0 0 5px rgba(31, 58, 147, 0.2);
+}
+
+
+.search-bar input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+/* ✅ STORIES (Circular AI Icons) */
+.stories {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px;
+    white-space: nowrap;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+.story {
+    flex: 0 0 auto;
+    text-align: center;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.story img {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #007bff;
+    padding: 2px;
+}
+
+.story p {
+    font-size: 12px;
+    margin: 5px 0 0;
+    color: #333;
+}
+
+/* ✅ CHAT LIST */
+.chat-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    background: white;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.chat-item:hover {
+    background: #f0f0f0;
+}
+
+.chat-item img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.chat-info {
+    flex-grow: 1;
+}
+
+.chat-info h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.chat-info p {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.chat-time {
+    font-size: 12px;
+    color: #999;
+}
+
+/* ✅ BOTTOM NAVIGATION */
+/* ✅ FIXED BOTTOM NAVIGATION */
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: white;
+    border-top: 1px solid #ddd;
+    padding: 10px 0;
+    position: fixed; /* ✅ Fix it at the bottom */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* ✅ Fixed height */
+    z-index: 999; /* ✅ Ensure it's above other elements */
+}
+
+/* ✅ BOTTOM NAV BUTTONS */
+.bottom-nav button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    padding: 8px 12px;
+}
+
+/* ✅ ACTIVE BUTTON */
+.bottom-nav button.active {
+    color: #1F3A93;
+    font-weight: bold;
+}
+
+/* ✅ SETTINGS BUTTON (Fix Position) */
+.bottom-nav .settings-toggle {
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+}
+
+/* ✅ ICON STYLING */
+.bottom-nav i {
+    font-size: 20px;
+    color: #1F3A93;
+}
+
+/* ✅ FIX ICON ALIGNMENT */
+.bottom-nav button i {
+    margin-right: 5px;
+}
+
+
+/* ✅ Default: AI List Visible */
+.mobile-view {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+    background: white;
+}
+
+/* ✅ Hide chat window initially */
+.mobile-view .chat-window {
+    display: none;
+}
+
+/* ✅ When chat is active, hide AI list & show chat */
+.mobile-view.chat-active .chat-list,
+.mobile-view.chat-active .stories {
+    display: none;
+}
+
+.mobile-view.chat-active .chat-window {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+
+/* Hide header & search bar when chat is active */
+.mobile-view.chat-active .header,
+.mobile-view.chat-active .search-bar {
+    display: none;
+}
+
+/* ✅ BOTTOM NAVIGATION */
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    border-top: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.bottom-nav button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #666;
+}
+
+.bottom-nav button.active {
+    color: #007bff;
+    font-weight: bold;
+}
+
+
+
+
+  /* Settings Panel Styling */
+.bot-settings-panel {
+    position: fixed;
+    top: 0;
+    right: -300px; /* Hidden by default */
+    width: 300px;
+    height: 100%;
+    background-color: #ffffff; /* White background for contrast */
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    padding: 1rem;
+    z-index: 1000;
+    overflow-y: auto; /* Allows scrolling if content is too long */
+    font-family: Arial, sans-serif;
+}
+
+.bot-settings-panel.show {
+    right: 0; /* Slide into view */
+}
+
+.settings-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-main a {
+    text-decoration: none;
+    color: inherit; /* Keeps the text color consistent */
+}
+
+/* Profile Section */
+.settings-main-sub {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    background-color: #f5f5f5; /* Light gray background for each item */
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 0.5rem;
+}
+
+.settings-main-sub:hover {
+    background-color: #e0e0e0; /* Darker gray on hover */
+}
+
+.settings-main-sub img.menu-girl-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.smith {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+    color: #333; /* Dark gray for strong readability */
+}
+
+.smith-email {
+    font-size: 0.85rem;
+    color: #666; /* Softer gray for email text */
+}
+
+/* Individual Setting Options */
+.setting-opestion-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1rem; /* Increased top and bottom padding */
+    border-bottom: 1px solid #c0c0c0 !important; /* Black border line with !important */
+    font-size: 1.1rem; /* Larger font size for better readability */
+    transition: background-color 0.2s;
+}
+
+.setting-opestion-main:last-child {
+    border-bottom: none; /* Remove bottom border for the last item */
+}
+
+.setting-opestion-main:hover {
+    background-color: #f8f8f8; /* Lighter hover effect */
+}
+
+.setting-opestion-main-sub {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem; /* Space between icon and text */
+}
+
+.option-icon {
+    font-size: 1.25rem; /* Adjust icon size */
+    color: #1F3A93; /* Consistent color with brand */
+}
+
+.smith {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.new-chat {
+    font-size: 1rem;
+    color: #1F3A93; /* Consistent with brand color */
+    font-weight: 600;
+}
+
+.setting-opestion-main h2,
+.setting-opestion-main .smith {
+    font-size: 1.1rem; /* Larger font size for the text */
+    color: #615f5f; /* Ensure text color is clear */
+    font-weight: 600;
+    margin: 0;
+}
+
+
+.setting-opestion-main {
+    font-size: 1.1rem; /* Larger font size for the text */
+    color: #1F3A93; /* Ensure text color is clear */
+    font-weight: 600;
+    margin: 0;
+}
+
+
+/* Additional styling for the angle-right icon */
+.setting-opestion-main i.fa-angle-right {
+    font-size: 1.2rem; /* Adjusted size for the right arrow icon */
+    color: #1F3A93;
+}
+
+.setting-opestion-main:hover {
+    background-color: #f8f8f8; /* Slightly lighter background on hover */
+}
+
+.version {
+    font-size: 0.85rem;
+    color: #999;
+    margin-top: 0.3rem;
+    font-weight: 400;
+}
+
+/* Close Button */
+.close-settings-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #333; /* Icon color */
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-settings-btn:hover {
+    color: #ff484d; /* Changes color on hover */
+}
+
+/* Optional: Icon color adjustment for specific items */
+.setting-opestion-main .fa-sign-out-alt {
+    color: #ff484d; /* Red for logout icon */
+}
+
+    @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .ai-bots-header {
+            border-radius: 0; /* Remove rounded corners */
+            margin: 0; /* Remove outer margin to make it full width */
+            padding: 1.5rem 1rem; /* Adjust padding for mobile, if necessary */
+        }
+
+            .ai-bots-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .ai-bots-header h3 {
+                font-size: 1rem;
+            }
+
+            .ai-bots-header p {
+                font-size: 0.9rem;
+            }
+
+            .settings-toggle {
+                font-size: 20px;
+                top: 15px;
+                right: 15px;
+            }
+
+            /* Make AI Boxes Full-Width */
+            .ai-box {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .upgrades-btn {
+                font-size: 1rem;
+                padding: 0.5rem 1rem;
+            }
+
+            /* Adjust settings panel for mobile */
+            .bot-settings-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .bot-settings-panel.show {
+                right: 0;
+            }
+
+            .close-settings-btn {
+                font-size: 1.2rem;
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+        .menu-girl-img {
+    width: 50px;
+    height: 50px;
+    fill: #1F3A93; /* Adjust color */
+}
+
+
+
+/* BUTTON - START CHAT */
+.upgrades-btn {
+    background: #1F3A93;
+    color: white;
+    font-size: 1.1rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.upgrades-btn:hover {
+    background-color: #142856;
+}
+
+
+
+
+/* Upgrade to Pro Section */
+.upgrade-pro-section {
+    background: linear-gradient(135deg, #FFD700, #FFA500); /* Gold-Orange Gradient */
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    margin: 1rem auto;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+/* Title Styling */
+.pro-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+/* Button Styling */
+.upgrade-btn {
+    background: white;
+    color: #142856;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 0.7rem;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Button Hover */
+.upgrade-btn:hover {
+    background: #1F3A93;
+    color: white;
+}
+</style>
+<body>
+
+<!-- ✅ MOBILE VIEW -->
+<div class="mobile-view">
+    <div class="header">
+        <h2>Chats</h2>
+        <button class="new-chat-btn">✏️</button>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" placeholder="Ask AI or Search...">
+    </div>
+
+    <div class="stories">
+        {% for ai in ai_list %}
+        <div class="story" onclick="openChat('{{ ai.id }}')" data-ai-id="{{ ai.id }}">
+            <img src="{% static ai.image %}" alt="{{ ai.name }}">
+            <p>{{ ai.name }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="chat-list">
+        {% for ai in ai_list %}
+        <div class="chat-item" onclick="openChat('{{ ai.id }}')" data-ai-id="{{ ai.id }}">
+            <img src="{% static ai.image %}" alt="{{ ai.name }}">
+            <div class="chat-info">
+                <h3> {{ ai.name }}</h3>
+                <p>{{ ai.description }}</p>
+            </div>
+            <span class="chat-time">12:30 PM</span>
+        </div>
+        {% endfor %}
+        <!-- ✅ BOTTOM NAVIGATION -->
+            <div class="bottom-nav">
+                <button class="active">💬 Chats</button>
+                <button>🌐 Meta AI</button>
+                <button class="settings-toggle" onclick="toggleSettings()">
+                    <i class="fas fa-cog"></i> <!-- FontAwesome settings icon -->
+                </button>
+            </div>
+
+    </div>
+     <!-- Settings Panel: Initially hidden -->
+     <div id="bot_settings" class="bot-settings-panel">
+        <button class="close-settings-btn" onclick="toggleSettings()">
+            <i class="fas fa-times"></i> <!-- Close icon -->
+        </button>
+    
+        <div class="settings-main">
+            <!-- Profile Section -->
+            <div>
+                <a href="{% url 'personal_info_update' %}">
+                    <div class="settings-main-sub">
+                        <svg class="menu-girl-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1F3A93" width="50px" height="50px">
+                            <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
+                        </svg>
+                        
+                        <div>
+                            <h2 class="smith">{{ user.first_name }} {{ user.last_name }}</h2>
+                            <p class="smith-email">{{ user.email }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {% if not is_pro_user %}
+            <div class="upgrade-pro-section">
+                <h3 class="pro-title">🚀 Unlock Pro Features!</h3>
+                <p>Get unlimited chats, access to GPT-4, and priority support.</p>
+                <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">Upgrade to Pro</a>
+            </div>
+            {% endif %}
+
+            
+    
+            <a href="{% url 'personal_information' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-user"></i> <!-- Personal Info icon -->
+                        <h2 class="smith new-chat">Personal Info</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+
+    
+    
+            <a href="{% url 'faq' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-question-circle"></i> <!-- FAQ icon -->
+                        <h2 class="smith new-chat">FAQs</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+    
+            <a href="{% url 'data_privacy' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-shield-alt"></i> <!-- Data & Privacy icon -->
+                        <h2 class="smith new-chat">Data & Privacy Policy</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+    
+            <a href="{% url 'about_amigo' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-info-circle"></i> <!-- About icon -->
+                        <h2 class="smith new-chat">About iRiseUp.Ai</h2>
+                    </div>
+                    <p class="version">v1.0.0</p>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+    
+            <a href="{% url 'feedback' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-comment-dots"></i> <!-- Feedback icon -->
+                        <h2 class="smith new-chat">Send Feedback</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+    
+            <a href="{% url 'contact_us' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-envelope"></i> <!-- Contact Us icon -->
+                        <h2 class="smith new-chat">Contact Us</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+
+            <!--                
+            <a href="{% url 'update_payment_method' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-credit-card"></i>  
+                        <h2 class="smith new-chat">Payment Methods</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+
+            <a href="{% url 'change_plan' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-clipboard-list"></i>  
+                        <h2 class="smith new-chat">Change Plan</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+            
+        -->
+    
+            <a href="{% url 'delete_deactivate' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-user-slash" style="color: #FF4848;"></i> <!-- Delete Account icon -->
+                        <h2 class="smith new-chat">Delete or Deactivate Account</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+    
+            <a href="{% url 'sign_out' %}">
+                <div class="setting-opestion-main setting-opestion-space border-bottom-0">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-sign-out-alt" style="color: #FF4848;"></i> <!-- Logout icon in red -->
+                        <h2 class="smith new-chat">Logout</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>     
+            {% if user.is_staff %}
+        <a href="{% url 'custom_admin:dashboard' %}">
+            <div class="setting-opestion-main setting-opestion-space">
+                <div class="setting-opestion-main-sub">
+                    <i class="fa-solid fa-user-shield"></i> <!-- Staff Dashboard icon -->
+                    <h2 class="smith new-chat">Staff Dashboard</h2>
+                </div>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+        </a>
+        {% endif %}
+                    
+        </div>
+    </div>
+      
+    <!-- Check if Access is Expired -->
+    {% if is_expired %}
+    <div class="alert alert-warning">
+        Your access has expired. Please renew your subscription to continue using the AI Bots.
+    </div>
+    {% else %}
+    {% endif %} 
+
+    <!-- ✅ Mobile Chat Window (Hidden by Default) -->
+    <div class="chat-window">
+        <div class="chat-header">
+            <button id="back-button">←</button> <!-- Move Back Button Here -->
+            <h2 id="chat-ai-name">Select an AI</h2>
+        </div>
+
+        <div class="chat-messages" id="chatbox">
+            <p class="placeholder">Select an AI to start chatting.</p>
+        </div>
+
+        <div class="typing-indicator" id="typing-indicator">
+            Typing...<span></span><span></span><span></span>
+        </div>
+
+        <div class="chat-footer">
+            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+            <button id="send">Send</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ✅ FULL-SCREEN VIEW -->
+<div class="messenger-container">
+    <!-- ✅ Sidebar with AI Selection -->
+    <div class="sidebar">
+        <h2>AI Assistants</h2>
+        <input type="text" placeholder="Search AI..." class="search-bar">
+        <ul class="ai-list">
+            {% for ai in ai_list %}
+            <li class="ai-item" data-ai-id="{{ ai.id }}">
+                <img src="{% static ai.image %}" alt="{{ ai.name }}">
+                <div>
+                    <h3>{{ ai.name }} {{ ai.icon }}</h3>
+                    <p>{{ ai.description }}</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- ✅ Chat Window (Now Ensures Dynamic Updates) -->
+    <div class="chat-window">
+        <div class="chat-header">
+            <h2 id="chat-ai-name">Select an AI</h2>
+        </div>
+
+        <div class="chat-messages" id="chatbox">
+            <p class="placeholder">Select an AI to start chatting.</p>
+        </div>
+
+        <!-- ✅ Typing Indicator -->
+        <div class="typing-indicator" id="typing-indicator" style="display: none;">
+            Typing...<span></span><span></span><span></span>
+        </div>
+
+        <!-- ✅ Chat Input Section -->
+        <div class="chat-footer" style=" display: flex;
+        align-items: center;
+        justify-content: space-between; /* Prevents input field from stretching */
+        width: 100%; /* Ensures it stays within the chat window */
+        max-width: 100%; /* Prevents unwanted stretching */
+        background-color: #f1f1f1;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+        height: 60px;
+        box-sizing: border-box; /* Ensures padding is included in width */
+        overflow: hidden; /* Prevents content from overflowing */">
+            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+            <button id="send">Send</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let selectedAI = ""; // Store the currently selected AI bot
+
+    function openChat(ai_name) {
+    selectedAI = ai_name; // Set the selected AI bot
+
+    console.log("AI Selected:", ai_name); // Debugging log
+
+    // ✅ Ensure chat window is fully expanded
+    const chatWindow = document.querySelector(".chat-window");
+    if (chatWindow) {
+        chatWindow.style.display = "flex";
+        chatWindow.style.height = "100vh"; // Ensures chat fully expands
+    } else {
+        console.error("❌ ERROR: Chat window not found!");
+    }
+
+    // ✅ Update AI name in both full-screen and mobile chat headers
+    document.querySelectorAll("#chat-ai-name").forEach(chatTitle => {
+        chatTitle.innerText = ai_name.toUpperCase();
+    });
+
+    // ✅ Reset chatbox with initial message
+    document.querySelectorAll("#chatbox").forEach(chatbox => {
+        chatbox.innerHTML = `<div class="message bot">Hi, I'm ${ai_name}! How can I help you?</div>`;
+    });
+
+    // ✅ Ensure full-screen chat container is active
+    const messengerContainer = document.querySelector(".messenger-container");
+    if (messengerContainer) {
+        messengerContainer.classList.add("chat-active");
+    } else {
+        console.error("❌ ERROR: Messenger container not found!");
+    }
+
+    // ✅ MOBILE VIEW: Ensure chat is displayed properly
+    const mobileView = document.querySelector(".mobile-view");
+    if (mobileView) {
+        mobileView.classList.add("chat-active");
+        mobileView.style.height = "100vh"; // Ensure full mobile view height
+    }
+
+    // ✅ Force UI Update (Fix any delay in rendering)
+    setTimeout(() => {
+        document.querySelectorAll("#chatbox").forEach(chatbox => {
+            chatbox.scrollTop = chatbox.scrollHeight;
+        });
+    }, 200); // Increased timeout for better UI consistency
+
+    updateChatUI();
+}
+
+
+
+function updateChatUI() {
+    if (!chatHistory[selectedAI]) {
+        chatHistory[selectedAI] = [
+            { type: "bot", text: `Hi, I'm ${selectedAI}! How can I help you?` }
+        ]; // Set initial bot message
+    }
+
+    // ✅ Clear and reload chat messages in both views
+    document.querySelectorAll(".chat-messages").forEach(chatbox => {
+        chatbox.innerHTML = ""; // Clear previous messages
+        chatHistory[selectedAI].forEach(msg => {
+            chatbox.innerHTML += `<div class="message ${msg.type}">${msg.text}</div>`;
+        });
+        chatbox.scrollTop = chatbox.scrollHeight; // Auto-scroll to bottom
+    });
+}
+
+
+// ✅ Attach event listeners for BOTH mobile & full-screen selections
+function attachEventListeners() {
+    document.querySelectorAll(".story, .chat-item, .ai-item").forEach(item => {
+        item.addEventListener("click", function () {
+            let aiId = this.getAttribute("data-ai-id") || this.getAttribute("onclick")?.match(/'([^']+)'/)?.[1];
+            console.log("Clicked AI ID:", aiId); // Debugging log
+            if (aiId) {
+                openChat(aiId);
+            }
+        });
+    });
+}
+
+// ✅ Call function to attach event listeners
+attachEventListeners();
+
+
+    
+    // ✅ Handle message sending (Button Click)
+    // ✅ Handle message sending (Button Click)
+    document.querySelectorAll("#send").forEach(sendButton => {
+        sendButton.addEventListener("click", function () {
+            sendMessage(this);
+        });
+    });
+
+    // ✅ Handle "Enter" key for sending message
+    document.querySelectorAll("#message-input").forEach(inputField => {
+        inputField.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                sendMessage(this);
+            }
+        });
+    });
+
+    let chatHistory = {}; // Store chat history per AI bot
+
+    function formatResponse(text, keywords = []) {
+    // Convert newline characters to HTML line breaks for paragraph separation
+    text = text.replace(/\n/g, '<br>');
+
+    // Bold section headers like "Warm-up", "Circuit", etc.
+    text = text.replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:');
+
+    // Make text within double asterisks bold (**text** → <strong>text</strong>)
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Convert hyphenated or asterisk bullets into unordered list items
+    text = text.replace(/<br>-\s/g, '<ul><li>'); // Start unordered list for bullet points
+    text = text.replace(/<\/li><br>-\s/g, '</li><li>'); // Continue unordered list
+    text = text.replace(/<\/li><br>/g, '</li></ul>'); // Close unordered list
+
+    // Convert numbered items into an ordered list (1. Item, 2. Item)
+    text = text.replace(/<br>(\d+)\.\s/g, (match, p1) => {
+        return p1 === "1" ? '<ol><li>' : '</li><li>';
+    });
+    text = text.replace(/<\/li><br>(?!\d+\.)/g, '</li></ol>'); // Close ordered list at end
+
+    // Handle optional keywords to dynamically bold
+    keywords.forEach(keyword => {
+        const regex = new RegExp(`\\b(${keyword})\\b`, 'gi');
+        text = text.replace(regex, '<strong>$1</strong>');
+    });
+
+    // Ensure any open lists are closed at the end
+    if (!text.endsWith('</ul>')) text += '</ul>';
+    if (!text.endsWith('</ol>')) text += '</ol>';
+
+    return text;
+}
+
+
+// ✅ Function to add an image response in the chat
+function addImageMessage(sender, imageUrl) {
+    const messageClass = sender === 'You' ? 'user' : 'bot';
+    const messageHTML = `
+        <div class="message ${messageClass}">
+            <img src="${imageUrl}" alt="Generated Image" style="max-width: 100%; border-radius: 8px;">
+            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+        </div>
+    `;
+    document.querySelectorAll("#chatbox").forEach(chatbox => {
+        chatbox.innerHTML += messageHTML;
+        chatbox.scrollTop = chatbox.scrollHeight;
+    });
+}
+
+
+
+
+function sendMessage(inputElement) {
+    // Find the correct input field and chatbox for the active view
+    const messageInput = inputElement.closest(".chat-footer").querySelector("#message-input");
+    const message = messageInput.value.trim();
+    
+    if (message === "" || !selectedAI) return;
+
+    // Ensure chat history exists for the selected AI
+    if (!chatHistory[selectedAI]) {
+        chatHistory[selectedAI] = [];
+    }
+
+    // Store user message
+    chatHistory[selectedAI].push({ type: "user", text: message });
+
+    // ✅ Update both chatboxes (Full-screen & Mobile View)
+    document.querySelectorAll(".chat-messages").forEach(chatbox => {
+        chatbox.innerHTML += `<div class="message user">${message}</div>`;
+        chatbox.scrollTop = chatbox.scrollHeight; // Auto-scroll to bottom
+    });
+
+    // ✅ Convert AI name to API path dynamically
+    const apiRoutes = {
+    "lumos": "lumos",  // Lumos (was soulspark)
+    "mentor_iq": "mentor-iq",  // Mentor IQ (was mindforge)
+    "elevate": "elevate",  // Elevate (was inspire)
+    "thrive": "thrive",  // Thrive (was pulse)
+    "imagine": "imagine",  // Imagine (was echo)
+    "gideon": "gideon",  // Gideon (unchanged)
+    "nexus": "nexus",  // Nexus (was bridge)
+    "keystone": "keystone",
+};
+
+
+    let apiPath = apiRoutes[selectedAI] || selectedAI; // Use mapped name if available
+
+    function adjustTypingIndicator() {
+    const typingIndicator = document.getElementById("typing-indicator");
+    if (!typingIndicator) return;
+
+    window.addEventListener("resize", () => {
+        if (window.innerHeight < 600) { 
+            typingIndicator.style.bottom = "120px"; // Push it higher when keyboard opens
+        } else {
+            typingIndicator.style.bottom = "70px"; // Restore position when keyboard closes
+        }
+    });
+    }
+
+    // Run function on load
+    document.addEventListener("DOMContentLoaded", adjustTypingIndicator);
+
+    // ✅ Show Typing Indicator Before Fetching Response
+    document.querySelectorAll(".typing-indicator").forEach(typing => {
+        typing.style.display = "flex";
+    });
+
+    // ✅ Fetch AI response
+    fetch(`/api/chat/${apiPath}/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: new URLSearchParams({ "message": message })
+    })
+    .then(response => response.json())
+    .then(data => {
+    // ✅ Hide typing indicator for all chat views
+    document.querySelectorAll(".typing-indicator").forEach(typing => {
+        typing.style.display = "none";
+    });
+
+    // ✅ Ensure selectedAI has a valid chat history array
+    if (!chatHistory[selectedAI]) {
+        chatHistory[selectedAI] = [];
+    }
+
+    // ✅ If AI response contains an image
+    if (data.image_url) {
+        // Store image response in chat history
+        chatHistory[selectedAI].push({ type: "bot", image: data.image_url });
+
+        // ✅ Update both chatboxes (Full-screen & Mobile View)
+        document.querySelectorAll(".chat-messages").forEach(chatbox => {
+            chatbox.innerHTML += `
+                <div class="message bot">
+                    <img src="${data.image_url}" alt="Generated Image" style="max-width: 100%; border-radius: 8px;">
+                    <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                </div>`;
+            chatbox.scrollTop = chatbox.scrollHeight; // Auto-scroll chat to bottom
+        });
+
+    } else if (data.response && data.response.trim() !== "") {
+        // ✅ Format text response
+        const formattedResponse = formatResponse(data.response);
+
+        // Store text response in chat history
+        chatHistory[selectedAI].push({ type: "bot", text: data.response });
+
+        // ✅ Update both chatboxes (Full-screen & Mobile View)
+        document.querySelectorAll(".chat-messages").forEach(chatbox => {
+            chatbox.innerHTML += `<div class="message bot">${formattedResponse}</div>`;
+            chatbox.scrollTop = chatbox.scrollHeight; // Auto-scroll chat to bottom
+        });
+    } else {
+        console.error("❌ ERROR: Empty or invalid AI response received.");
+    }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        document.querySelectorAll(".typing-indicator").forEach(typing => {
+            typing.style.display = "none";
+        });
+        document.querySelectorAll(".chat-messages").forEach(chatbox => {
+            chatbox.innerHTML += `<div class="message bot error">Something went wrong. Try again later.</div>`;
+        });
+    });
+
+    // ✅ Clear input field
+    messageInput.value = "";
+}
+
+
+    // ✅ Mobile View: Back to AI list
+    document.getElementById("back-button")?.addEventListener("click", function () {
+    const mobileView = document.querySelector(".mobile-view");
+    const chatWindow = document.querySelector(".chat-window");
+    const chatbox = document.getElementById("chatbox");
+
+    // ✅ Reset mobile view so AI list is visible
+    if (mobileView) {
+        mobileView.classList.remove("chat-active");
+        mobileView.style.height = "auto";
+    }
+
+    // ✅ Hide chat window & reset its height
+    if (chatWindow) {
+        chatWindow.style.display = "none";
+        chatWindow.style.height = "auto"; // Reset height for dynamic resizing
+    }
+
+    // ✅ Show AI list & stories again
+    document.querySelector(".stories").style.display = "flex";
+    document.querySelector(".chat-list").style.display = "block";
+    document.querySelector(".header").style.display = "flex";
+
+    // ✅ Reset Chat Name
+    document.getElementById("chat-ai-name").innerText = "Select an AI";
+
+    // ✅ Clear chat history from UI to prevent partial chat display
+    chatbox.innerHTML = `<p class="placeholder">Select an AI to start chatting.</p>`;
+
+    // ✅ Ensure input field clears
+    document.getElementById("message-input").value = "";
+
+    console.log("🔙 Back to AI list");
+});
+
+
+});
+
+function toggleSettings() {
+    const settingsPanel = document.getElementById('bot_settings');
+    settingsPanel.classList.toggle('show');
+}
+
+
+function adjustViewportHeight() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Prevent keyboard from hiding input
+window.addEventListener('resize', () => {
+    document.body.style.height = `${window.innerHeight}px`;
+    document.body.style.overflow = 'hidden';
+});
+
+// Ensure input stays in view when typing
+document.addEventListener("DOMContentLoaded", function () {
+    const messageInput = document.getElementById("message-input");
+
+    messageInput.addEventListener("focus", function () {
+        setTimeout(() => {
+            this.scrollIntoView({ behavior: "smooth", block: "end" });
+        }, 300);
+    });
+});
+
+adjustViewportHeight();
+window.addEventListener('resize', adjustViewportHeight);
+
+
+
+</script>
+
+</body>
+</html>
+{% endblock %}

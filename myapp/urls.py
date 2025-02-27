@@ -210,6 +210,7 @@ urlpatterns = [
     path('api/chat/imagine/', views.get_echo_response, name='get_echo_response'),  # Imagine (was echo)
     path('api/chat/gideon/', views.get_pathfinder_response, name='get_pathfinder_response'),  # Gideon (same)
     path('api/chat/nexus/', views.get_bridge_response, name='get_bridge_response'),  # Nexus (was bridge)
+    path('api/chat/keystone/', views.get_fortify_response, name='get_fortify_response'),
     
     # ✅ Test Endpoint
     path('api/guest/chat/<str:bot_name>/', guest_views.guest_bot_response, name='guest_bot_response'),
@@ -222,5 +223,10 @@ urlpatterns = [
     path('chat/<str:bot_name>/', views.chat_view, name='chat_view'),
 
     path("terms/", views.terms_view, name="terms"),
+
+
+    path("test/", views.test, name="test"),
+    path('chat_home/', views.chat_home, name="chat_home"),
+    path('chat/<str:ai_name>/', views.test_chat_view, name="chat_view"),
      
 ]

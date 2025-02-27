@@ -101,12 +101,14 @@ body {
 }
 
 .message.user {
-    background: #007bff;
+    background: #2446b6;
     color: white;
-    text-align: right;
+    text-align: left;
     margin-left: auto;
     border-radius: 15px 15px 0 15px;
 }
+
+
 
 .message.bot {
     background: #f1f1f1;
@@ -115,41 +117,7 @@ body {
     border-radius: 15px 15px 15px 0;
 }
 
-/* 🔹 CHAT INPUT BAR */
-.chat-footer {
-    display: flex;
-    align-items: center;
-    background: #f8f9fa;
-    padding: 12px;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 750px;
-    margin: 15px auto;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
 
-.chat-footer input {
-    flex-grow: 1;
-    padding: 12px;
-    border-radius: 8px;
-    border: 2px solid #ddd;
-    font-size: 1rem;
-    outline: none;
-}
-
-.chat-footer button {
-    background: black;
-    color: white;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.chat-footer button:hover {
-    background: #333;
-}
 
 /* 🚀 Trial Limit Message */
 #trial-limit-message {
@@ -291,13 +259,6 @@ body {
     }
 }
 
-/* 🖊️ Typing Indicator */
-.typing-indicator {
-    display: none;
-    font-size: 1rem;
-    color: #777;
-    font-style: italic;
-}
 
 /* ✅ COMPACT AI SWITCHER FOR MOBILE (Prevents Overlapping) */
 @media (max-width: 768px) {
@@ -556,6 +517,99 @@ body {
 }
 
 
+
+.typing-indicator {
+    position: fixed;
+    bottom: 60px; /* Adjust this based on footer height */
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    font-style: italic;
+    color: #555;
+    font-size: 14px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+/* ✅ Typing Animation Dots */
+.typing-indicator span {
+    width: 6px;
+    height: 6px;
+    margin: 0 2px;
+    border-radius: 50%;
+    background-color: #555;
+    display: inline-block;
+    animation: typing 1s infinite;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.3s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes typing {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* 🔹 CHAT INPUT BAR */
+.chat-footer {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 750px;
+    margin: 15px auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* 🔹 Input Field */
+.chat-footer input {
+    flex-grow: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    font-size: 1rem;
+    outline: none;
+    margin-right: 8px; /* ✅ Adds space between input and mic button */
+}
+
+/* 🔹 Microphone Button */
+.mic-btn {
+    background: black;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 8px; /* ✅ Adds space between mic and send button */
+}
+
+/* 🔹 Send Button */
+.chat-footer button {
+    background: black;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* 🔹 Hover Effect */
+.chat-footer button:hover,
+.mic-btn:hover {
+    background: #333;
+}
+
+
 </style>
 
 
@@ -666,8 +720,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const titleSection = document.querySelector('.title'); // "What can I help with?" title
     const header = document.querySelector('.header');
     const headerTitle = document.querySelector('.header h1'); // iRiseUp AI logo
+    const micButton = document.createElement("button");
+    let recognition;
+    let isRecording = false;
+    let finalTranscript = "";
     let aiMoved = false;
     let chatExpanded = false;
+    
 
     const TRIAL_LIMIT = 10;
     let messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
@@ -675,6 +734,10 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("🔥 Initial messageCount:", messageCount);
 
     signupModal.style.display = "none";
+
+    micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+    micButton.classList.add("mic-btn");
+    messageInput.insertAdjacentElement("afterend", micButton);
 
     // ✅ Typing Indicator
     const typingIndicator = document.createElement('div');
@@ -718,6 +781,80 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+     // ✅ Speech Recognition Setup
+     if ("webkitSpeechRecognition" in window) {
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = true; // ✅ Allows long speech input
+        recognition.interimResults = true; // ✅ Captures partial results
+        recognition.lang = "en-US";
+
+        micButton.addEventListener("click", () => {
+            if (!isRecording) {
+                startRecognition();
+            } else {
+                stopRecognition();
+            }
+        });
+
+        function startRecognition() {
+            isRecording = true;
+            finalTranscript = ""; // ✅ Clear old transcript on start
+            micButton.style.backgroundColor = "#ff3b3b"; // Show active recording
+            recognition.start();
+            console.log("🎤 Voice recognition started...");
+        }
+
+        function stopRecognition() {
+            if (isRecording) {
+                isRecording = false;
+                micButton.style.backgroundColor = ""; // Reset color
+                recognition.stop();
+                console.log("🛑 Voice recognition stopped.");
+            }
+        }
+
+        recognition.onresult = (event) => {
+            let newTranscript = "";
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) {
+                    newTranscript += event.results[i][0].transcript + " ";
+                }
+            }
+
+            finalTranscript += newTranscript.trim(); // ✅ Keep adding to final transcript
+            messageInput.value = finalTranscript; // ✅ Show in input field
+
+            console.log("🎤 Full Recognized Speech:", finalTranscript);
+        };
+
+        recognition.onend = () => {
+            console.log("🎤 Speech recognition ended.");
+
+            if (isRecording && finalTranscript.length > 0) {
+                console.log("✅ Final speech transcript:", finalTranscript);
+                stopRecognition();
+                sendMessage(); // ✅ Send message when user stops speaking
+            } else if (isRecording) {
+                console.log("🔄 Restarting speech recognition...");
+                recognition.start(); // ✅ Auto-restart if user is still speaking
+            }
+        };
+
+        recognition.onerror = (event) => {
+            console.error("❌ Speech recognition error", event);
+            if (event.error === "no-speech") {
+                console.log("⏳ No speech detected, restarting recognition...");
+                setTimeout(() => {
+                    recognition.start(); // ✅ Auto-restart on no-speech
+                }, 1000);
+            } else {
+                stopRecognition();
+            }
+        };
+    } else {
+        console.error("❌ Speech recognition is not supported in this browser.");
+    }
+
 
     // ✅ Format AI Response
     function formatResponse(text) {
@@ -754,6 +891,7 @@ document.addEventListener('DOMContentLoaded', function () {
         chatbox.scrollTop = chatbox.scrollHeight;
     }
 
+    
     function showSignupModal() {
     const signupModal = document.getElementById("signup-modal");
     if (signupModal) {
@@ -786,6 +924,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ✅ **Send Message to AI**
     function sendMessage() {
+        stopRecognition();
         const message = messageInput.value.trim();
         if (!message) return;
 
@@ -793,6 +932,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         console.log("📨 Sending message:", message);
         console.log("📊 Current message count before increment:", messageCount);
+
+        messageInput.value = ''; // ✅ Immediately clear input after sending
+        messageInput.focus(); // ✅ Keeps the input field active
+        const userTypedValue = messageInput.value;
+
+        const floatingMenu = document.querySelector('.floating-menu-container');
+        if (floatingMenu) {
+            floatingMenu.style.display = "none";
+        }
 
         if (titleSection && titleSection.style.display !== "none") {
             titleSection.style.opacity = "0";
@@ -810,6 +958,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    const typingIndicator = document.getElementById('typing-indicator');
+    typingIndicator.style.display = "flex";
+
         fetch(`/api/guest/chat/${aiSelect.value}/`, {
             method: 'POST',
             headers: {
@@ -821,11 +972,13 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
+            typingIndicator.style.display = "none";
             if (!data.response) {
                 console.error("❌ No AI response received!");
                 addMessage('System', '⚠️ Oops! No response received.');
                 return;
             }
+            
 
             addMessage(aiNameDisplay.textContent, data.response);
             messageInput.value = '';
@@ -844,12 +997,16 @@ document.addEventListener('DOMContentLoaded', function () {
     messageInput.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             event.preventDefault();
+            stopRecognition();
             sendMessage();
         }
     });
 
     // ✅ **Handle Button Click Submission**
-    sendButton.addEventListener('click', sendMessage);
+    sendButton.addEventListener("click", function () {
+        stopRecognition(); // ✅ Stop recording before sending
+        sendMessage();
+    });
 });
 
 function toggleMenu() {  // ✅ This function is now globally accessible
@@ -866,6 +1023,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const aiSelect = document.getElementById('ai-select');
     const aiNameDisplay = document.getElementById('ai-name');
+
+    function refreshOnAISwitch() {
+        const selectedAI = aiSelect.value;
+        console.log(`🔄 Switching to AI: ${selectedAI}`);
+
+        // Store the selected AI in localStorage so it can be used after refresh
+        localStorage.setItem('selectedAI', selectedAI);
+        
+        // Reload the page to apply changes
+        location.reload();
+    }
+
+    // ✅ Event listener for AI selector changes
+    aiSelect.addEventListener('change', refreshOnAISwitch);
+
+    // ✅ Retain selected AI after refresh
+    const storedAI = localStorage.getItem('selectedAI');
+    if (storedAI) {
+        aiSelect.value = storedAI;
+        document.getElementById('ai-name').textContent = aiSelect.options[aiSelect.selectedIndex].text.split(" - ")[0].trim();
+    }
 
     // ✅ Function to update AI Name when dropdown is changed
     function updateAIName() {

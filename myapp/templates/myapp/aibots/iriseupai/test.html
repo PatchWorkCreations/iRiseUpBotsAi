@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messenger Web Clone</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<style>
+    /* ✅ General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* ✅ Messenger Container */
+.messenger-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ✅ Sidebar (Chat List) */
+.sidebar {
+    width: 25%;
+    background: white;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: #f0f2f5;
+    padding: 8px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    background: none;
+    outline: none;
+    padding: 5px;
+}
+
+.chat-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.chat-item:hover, .chat-item.active {
+    background: #e4e6eb;
+}
+
+.chat-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* ✅ Chat Window */
+.chat-window {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* ✅ Messages */
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.message {
+    max-width: 60%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.received {
+    background: #f0f2f5;
+    align-self: flex-start;
+}
+
+.sent {
+    background: #0084FF;
+    color: white;
+    align-self: flex-end;
+}
+
+.message img {
+    max-width: 150px;
+    border-radius: 10px;
+}
+
+/* ✅ Chat Input */
+.chat-input {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background: white;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+}
+
+/* ✅ Right Sidebar (Chat Details) */
+.chat-details {
+    width: 25%;
+    background: white;
+    padding: 20px;
+    border-left: 1px solid #ddd;
+}
+
+/* ✅ Mobile View */
+@media (max-width: 768px) {
+    .messenger-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        display: block;
+    }
+
+    .chat-window, .chat-details {
+        width: 100%;
+        display: none;
+    }
+
+    .chat-window.active, .chat-details.active {
+        display: flex;
+    }
+
+    .back-button {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        padding: 10px;
+        cursor: pointer;
+        color: #333;
+    }
+
+    .chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+</style>
+
+<body>
+
+    <!-- Main Container -->
+    <div class="messenger-container">
+
+        <!-- Left Sidebar (Chat List) -->
+        <aside class="sidebar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search Messenger">
+            </div>
+
+            <div class="chat-list">
+                <div class="chat-item active">
+                    <img src="https://via.placeholder.com/50" alt="User">
+                    <div class="chat-info">
+                        <h4>Angelo Tans</h4>
+                        <p>Nyay. haha dayuhin mo nlng sya dto</p>
+                    </div>
+                    <span class="unread-dot"></span>
+                </div>
+
+                <div class="chat-item">
+                    <img src="https://via.placeholder.com/50" alt="User">
+                    <div class="chat-info">
+                        <h4>RENT A CAR PH 🇵🇭</h4>
+                        <p>Claire sent a photo.</p>
+                    </div>
+                    <span class="chat-time">12:10 PM</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Chat Window -->
+        <main class="chat-window">
+            <header class="chat-header">
+                <div class="user-info">
+                    <img src="https://via.placeholder.com/50" alt="User">
+                    <div>
+                        <h4>Angelo Tans</h4>
+                        <p>Active 7m ago</p>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <i class="fas fa-phone"></i>
+                    <i class="fas fa-video"></i>
+                    <i class="fas fa-info-circle"></i>
+                </div>
+            </header>
+
+            <div class="chat-messages">
+                <div class="message received">
+                    <p>Gmgwa pako paraan dami ko babayaran sa graduation ni Lelai at AC</p>
+                    <span class="time">10:54 AM</span>
+                </div>
+
+                <div class="message sent">
+                    <p>Kuya Christmas gift ni AC andito parin.</p>
+                    <p>HAHAHAH</p>
+                    <p>Pakua nalang pag napadaan ka Antipolo</p>
+                    <span class="time">11:23 AM</span>
+                </div>
+
+                <div class="message sent">
+                    <img src="https://via.placeholder.com/100" alt="Sent Image">
+                    <span class="time">11:24 AM</span>
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <i class="fas fa-smile"></i>
+                <i class="fas fa-paperclip"></i>
+                <input type="text" placeholder="Type a message...">
+                <i class="fas fa-thumbs-up"></i>
+            </div>
+        </main>
+
+        <!-- Right Sidebar (Chat Details) -->
+        <aside class="chat-details">
+            <div class="profile">
+                <img src="https://via.placeholder.com/70" alt="User">
+                <h4>Angelo Tans</h4>
+                <p>Active 7m ago</p>
+                <span class="encrypted">🔒 End-to-end encrypted</span>
+            </div>
+
+            <div class="chat-options">
+                <p><i class="fas fa-user"></i> Profile</p>
+                <p><i class="fas fa-bell"></i> Mute</p>
+                <p><i class="fas fa-search"></i> Search</p>
+            </div>
+        </aside>
+
+    </div>
+
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const chatItems = document.querySelectorAll('.chat-item');
+    const chatWindow = document.querySelector('.chat-window');
+    const sidebar = document.querySelector('.sidebar');
+    const backButton = document.createElement('button');
+
+    // Create Back Button for Mobile
+    backButton.textContent = "← Back";
+    backButton.classList.add("back-button");
+    chatWindow.prepend(backButton);
+
+    chatItems.forEach(item => {
+        item.addEventListener('click', () => {
+            chatWindow.classList.add('active');
+            sidebar.style.display = 'none';
+        });
+    });
+
+    backButton.addEventListener('click', () => {
+        chatWindow.classList.remove('active');
+        sidebar.style.display = 'block';
+    });
+});
+
+</script>
+</html>
