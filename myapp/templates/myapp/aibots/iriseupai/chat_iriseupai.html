@@ -719,12 +719,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    
-
-
-
-
-
     // ✅ Format AI Response
     function formatResponse(text) {
         if (!text) return ""; // Prevent errors if response is undefined
@@ -866,6 +860,27 @@ function toggleMenu() {  // ✅ This function is now globally accessible
 document.addEventListener('DOMContentLoaded', function () {
     console.log("✅ Script Loaded!");
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("✅ Script Loaded!");
+
+    const aiSelect = document.getElementById('ai-select');
+    const aiNameDisplay = document.getElementById('ai-name');
+
+    // ✅ Function to update AI Name when dropdown is changed
+    function updateAIName() {
+        const selectedOption = aiSelect.options[aiSelect.selectedIndex].text; // Get selected option's text
+        aiNameDisplay.textContent = selectedOption.split(" - ")[0].trim(); // Extract AI name before "-"
+        console.log("🔄 AI Name Updated To:", aiNameDisplay.textContent); // Debugging
+    }
+
+    // ✅ Add event listener for AI selector changes
+    aiSelect.addEventListener('change', updateAIName);
+
+    // ✅ Initialize AI name on page load
+    updateAIName();
+});
+
 
 
 </script>
