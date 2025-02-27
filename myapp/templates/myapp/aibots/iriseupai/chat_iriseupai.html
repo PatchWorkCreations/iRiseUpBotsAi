@@ -494,15 +494,94 @@ body {
     }
 }
 
+/* Floating Menu Container */
+.floating-menu-container {
+    position: fixed;
+    bottom: 20px;
+    right: 10px; /* Ensure proper alignment */
+    z-index: 1000;
+}
+
+/* Floating Circular Button */
+.floating-button {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #c4c4c5, #9b9b9c);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover effect */
+.floating-button:hover {
+    background: linear-gradient(135deg, #a0a0a0, #565657);
+    transform: scale(1.1);
+}
+
+/* Floating Menu */
+.floating-menu {
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+    min-width: 180px;
+    transform: translateX(-50%); /* Ensure proper alignment */
+}
+
+/* Floating Menu Links */
+.floating-menu a {
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+    display: block;
+    transition: background 0.3s;
+}
+
+/* Hover effect on menu items */
+.floating-menu a:hover {
+    background: #f4f4f4;
+}
+
 
 </style>
+
 
 <header class="header">
     <h1>iRiseUp AI</h1>
     <a href="{% url 'sign_in' %}" class="login-btn">Log in</a>
 </header>
 
+
 <section class="chat-container">
+
+<!-- Floating Menu Button -->
+<div class="floating-menu-container">
+    <button class="floating-button" onclick="toggleMenu()">❔</button>
+    
+    <!-- Hidden Menu -->
+    <div class="floating-menu" id="floating-menu">
+        <a href="{% url 'iriseupai_landing' %}">About iRiseUp.AI</a>
+        <!--                   
+        <a href="#">Support</a>
+        <a href="#">FAQ</a>
+        -->
+    </div>
+</div>
+
+
     <h2 class="title">What can I help with?</h2>
 
     <div class="ai-switcher">
@@ -639,6 +718,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+
+    
+
+
+
+
+
     // ✅ Format AI Response
     function formatResponse(text) {
         if (!text) return ""; // Prevent errors if response is undefined
@@ -772,6 +858,14 @@ document.addEventListener('DOMContentLoaded', function () {
     sendButton.addEventListener('click', sendMessage);
 });
 
+function toggleMenu() {  // ✅ This function is now globally accessible
+    const menu = document.getElementById("floating-menu");
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("✅ Script Loaded!");
+});
 
 
 </script>
