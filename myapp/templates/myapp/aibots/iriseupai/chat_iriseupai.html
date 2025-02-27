@@ -919,6 +919,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    function addImageMessage(sender, imageUrl) {
+    const messageHTML = `
+        <div class="message bot">
+            <img src="${imageUrl}" alt="Generated Image" style="max-width: 100%; border-radius: 8px;">
+            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+        </div>
+    `;
+    chatbox.innerHTML += messageHTML;
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+
 
 
 
@@ -961,6 +972,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const typingIndicator = document.getElementById('typing-indicator');
     typingIndicator.style.display = "flex";
 
+    let apiUrl = `/api/guest/chat/${aiSelect.value}/`;
+    let requestBody = { message: message };
+
+    // 🚀 Check if Imagine AI is selected, trigger image generation instead
+    if (aiSelect.value === "imagine") {
+        console.log("🎨 Image generation triggered for Imagine AI!");
+        apiUrl = `/api/generate-image/`; // ✅ Endpoint for image generation
+        requestBody = { prompt: message }; // ✅ Send message as prompt for image generation
+    }
+
         fetch(`/api/guest/chat/${aiSelect.value}/`, {
             method: 'POST',
             headers: {
@@ -973,14 +994,12 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             typingIndicator.style.display = "none";
-            if (!data.response) {
-                console.error("❌ No AI response received!");
-                addMessage('System', '⚠️ Oops! No response received.');
-                return;
-            }
-            
-
+            if (data.image_url && aiSelect.value === "imagine") {
+            addImageMessage('Imagine', data.image_url);
+        } else {
             addMessage(aiNameDisplay.textContent, data.response);
+        }
+
             messageInput.value = '';
 
             messageCount++;

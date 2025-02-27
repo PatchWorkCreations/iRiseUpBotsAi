@@ -143,6 +143,32 @@ def guest_bot_response(request, bot_name):
     # ✅ Append user message
     conversation_history.append({"role": "user", "content": user_message})
 
+    if bot_name == "imagine":
+        try:
+            # ✅ Use GPT to determine if the user request is for an image
+            intent_response = openai_client.chat.completions.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "You determine if the user is requesting an image. Reply with 'yes' or 'no'."},
+                    {"role": "user", "content": f"Does this request require an image? Reply with 'yes' or 'no': {user_message}"}
+                ]
+            )
+            intent_reply = intent_response.choices[0].message.content.strip().lower()
+
+            if intent_reply == "yes":
+                structured_prompt = f"An image of {user_message}"
+                image_response = openai_client.images.generate(
+                    model="dall-e-3",
+                    prompt=structured_prompt,
+                    n=1,
+                    size="1024x1024"
+                )
+                image_url = image_response.data[0].url
+                return JsonResponse({'response': 'Here’s your generated image!', 'image_url': image_url})
+
+        except Exception as e:
+            logger.error(f"❌ OpenAI Intent Detection Error: {e}")
+
     try:
         # ✅ Call OpenAI API with reinforced identity
         response = openai_client.chat.completions.create(
@@ -161,3 +187,6 @@ def guest_bot_response(request, bot_name):
         return JsonResponse({'response': '⚠️ AI is currently unavailable. Please try again later.'}, status=500)
 
     return JsonResponse({'response': ai_message})
+
+
+
