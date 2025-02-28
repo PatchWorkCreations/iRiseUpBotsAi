@@ -517,45 +517,6 @@ body {
 }
 
 
-
-.typing-indicator {
-    position: fixed;
-    bottom: 80px; /* Adjust this based on footer height */
-    left: 50%;
-    transform: translateX(-50%);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 8px 12px;
-    font-style: italic;
-    color: #555;
-    font-size: 14px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-    z-index: 99999;
-}
-
-/* ✅ Typing Animation Dots */
-.typing-indicator span {
-    width: 6px;
-    height: 6px;
-    margin: 0 2px;
-    border-radius: 50%;
-    background-color: #555;
-    display: inline-block;
-    animation: typing 1s infinite;
-}
-
-.typing-indicator span:nth-child(1) { animation-delay: 0s; }
-.typing-indicator span:nth-child(2) { animation-delay: 0.3s; }
-.typing-indicator span:nth-child(3) { animation-delay: 0.6s; }
-
-@keyframes typing {
-    0%, 100% { opacity: 0.2; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.2); }
-}
-
 /* 🔹 CHAT INPUT BAR */
 .chat-footer {
     display: flex;
@@ -609,6 +570,38 @@ body {
     background: #333;
 }
 
+/* Typing indicator inside chat bubble */
+.typing-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.typing-indicator span {
+    width: 6px;
+    height: 6px;
+    margin: 0 3px;
+    border-radius: 50%;
+    background-color: #555;
+    display: inline-block;
+    animation: typing 1.5s infinite;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.3s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes typing {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+
+#typing-indicator {
+    display: none; /* Hide it by default */
+}
+
+
 
 </style>
 
@@ -621,8 +614,20 @@ body {
 
 <section class="chat-container">
 
-
-
+    
+<!-- Floating Menu Button -->
+<div class="floating-menu-container">
+    <button class="floating-button" onclick="toggleMenu()">❔</button>
+    
+    <!-- Hidden Menu -->
+    <div class="floating-menu" id="floating-menu">
+        <a href="{% url 'iriseupai_landing' %}">About iRiseUp.AI</a>
+        <!--                   
+        <a href="#">Support</a>
+        <a href="#">FAQ</a>
+        -->
+    </div>
+</div>
 
 
     <h2 class="title">What can I help with?</h2>
@@ -923,84 +928,121 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // ✅ **Send Message to AI**
-    function sendMessage() {
-        stopRecognition();
-        const message = messageInput.value.trim();
-        if (!message) return;
+    // ✅ **Send Message to AI**
+function sendMessage() {
+    stopRecognition();
+    const message = messageInput.value.trim();
+    if (!message) return;
 
-        addMessage('You', message);
+    // ✅ Ensure user's message appears instantly
+    const userMessageElement = document.createElement('div');
+    userMessageElement.classList.add('message', 'user');
+    userMessageElement.innerHTML = `
+        ${message}
+        <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+    `;
+    chatbox.appendChild(userMessageElement);
+    chatbox.scrollTop = chatbox.scrollHeight;
 
-        console.log("📨 Sending message:", message);
-        console.log("📊 Current message count before increment:", messageCount);
+    console.log("📨 Sending message:", message);
+    console.log("📊 Current message count before increment:", messageCount);
 
-        messageInput.value = ''; // ✅ Immediately clear input after sending
-        messageInput.focus(); // ✅ Keeps the input field active
-        
-        const userTypedValue = messageInput.value;
+    // Clear input field and focus
+    messageInput.value = '';
+    messageInput.focus();
 
-        const floatingMenu = document.querySelector('.floating-menu-container');
-        if (floatingMenu) {
-            floatingMenu.style.display = "none";
-        }
+    // Hide floating menu if visible
+    const floatingMenu = document.querySelector('.floating-menu-container');
+    if (floatingMenu) {
+        floatingMenu.style.display = "none";
+    }
 
-        if (titleSection && titleSection.style.display !== "none") {
-            titleSection.style.opacity = "0";
-            setTimeout(() => {
-                titleSection.style.display = 'none';
-            }, 300);
-        }
+    // Hide title section after first message
+    if (titleSection && titleSection.style.display !== "none") {
+        titleSection.style.opacity = "0";
+        setTimeout(() => {
+            titleSection.style.display = 'none';
+        }, 300);
+    }
 
-        moveAISelector();
-        expandChat();
+    moveAISelector();
+    expandChat();
 
-        if (messageCount >= TRIAL_LIMIT) {
+    // 🚨 Trial limit check
+    if (messageCount >= TRIAL_LIMIT) {
         console.log("🚨 Trial limit reached! Showing signup modal...");
-        showSignupModal();  // ✅ Ensure the modal appears
+        showSignupModal();
         return;
     }
 
-    const typingIndicator = document.getElementById('typing-indicator');
-    typingIndicator.style.display = "flex";
+    // ✅ Add Typing Indicator
+    const typingMessage = document.createElement('div');
+    typingMessage.classList.add('message', 'bot', 'typing');
+    typingMessage.innerHTML = `
+        <span class="typing-indicator">
+            Typing... <span></span><span></span><span></span>
+        </span>
+    `;
+    chatbox.appendChild(typingMessage);
+    chatbox.scrollTop = chatbox.scrollHeight;
 
     let apiUrl = `/api/guest/chat/${aiSelect.value}/`;
     let requestBody = { message: message };
 
-    // 🚀 Check if Imagine AI is selected, trigger image generation instead
+    // 🚀 Image Generation Logic
     if (aiSelect.value === "imagine") {
         console.log("🎨 Image generation triggered for Imagine AI!");
-        apiUrl = `/api/generate-image/`; // ✅ Endpoint for image generation
-        requestBody = { prompt: message }; // ✅ Send message as prompt for image generation
+        apiUrl = `/api/generate-image/`;
+        requestBody = { prompt: message };
     }
 
-        fetch(`/api/guest/chat/${aiSelect.value}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCSRFToken()
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify({ message: message })
-        })
-        .then(response => response.json())
-        .then(data => {
-            typingIndicator.style.display = "none";
-            if (data.image_url && aiSelect.value === "imagine") {
-            addImageMessage('Imagine', data.image_url);
-        } else {
-            addMessage(aiNameDisplay.textContent, data.response);
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(requestBody)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ AI Response Received:", data);
+
+        // ✅ Remove Typing Indicator Before Adding AI Response
+        const typingElement = document.querySelector('.typing');
+        if (typingElement) {
+            typingElement.remove();
         }
 
-            messageInput.value = '';
+        // ✅ Ensure AI response is added
+        if (data.image_url && aiSelect.value === "imagine") {
+            addImageMessage('Imagine', data.image_url);
+        } else if (data.response) {
+            addMessage(aiNameDisplay.textContent, data.response);
+        } else {
+            console.warn("⚠️ AI Response is empty or undefined.");
+            addMessage('System', '⚠️ AI did not return a response. Please try again.');
+        }
 
-            messageCount++;
-            localStorage.setItem('messageCount', messageCount);
-            console.log("✅ New messageCount after increment:", messageCount);
-        })
-        .catch(error => {
-            console.error('❌ Fetch Error:', error);
-            addMessage('System', '⚠️ Oops! Something went wrong. Please try again.');
-        });
-    }
+        // ✅ Update Message Count
+        messageCount++;
+        localStorage.setItem('messageCount', messageCount);
+        console.log("✅ New messageCount after increment:", messageCount);
+    })
+    .catch(error => {
+        console.error('❌ Fetch Error:', error);
+
+        // ✅ Remove Typing Indicator on Error
+        const typingElement = document.querySelector('.typing');
+        if (typingElement) {
+            typingElement.remove();
+        }
+
+        addMessage('System', '⚠️ Oops! Something went wrong. Please try again.');
+    });
+}
+
 
     // ✅ **Handle Enter Key Submission**
     messageInput.addEventListener('keydown', function (event) {
