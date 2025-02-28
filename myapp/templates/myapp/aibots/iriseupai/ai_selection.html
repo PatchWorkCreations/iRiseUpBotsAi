@@ -207,15 +207,87 @@ body {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: calc(100% - 320px); /* Adjust width dynamically based on sidebar */
+    margin-left: 320px; /* Keeps it aligned with the chat */
     background-color: #f1f1f1;
     padding: 10px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     border-top: 1px solid #ddd;
     height: 60px;
     z-index: 999;
 }
+
+/* ✅ Ensure Input Field Expands Properly */
+.chat-footer input {
+    flex-grow: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    font-size: 1rem;
+    outline: none;
+}
+
+/* ✅ Ensure Send Button Always Stays Visible */
+.chat-footer button {
+    background: black;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    white-space: nowrap; /* Prevents wrapping */
+    flex-shrink: 0; /* Prevents shrinking */
+    margin-left: 10px;
+}
+
+.chat-footer button:hover {
+    background: #333;
+}
+
+/* ✅ Adjustments for Medium Screens */
+@media (max-width: 1200px) {
+    .chat-footer {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+/* ✅ Adjustments for Small Screens (Tablets & Laptops) */
+@media (max-width: 1024px) {
+    .chat-footer {
+        width: 100%;
+        margin-left: 0;
+        padding: 8px;
+    }
+}
+
+/* ✅ Mobile View Adjustments */
+@media (max-width: 768px) {
+    .chat-footer {
+        width: 100%;
+        margin-left: 0;
+        padding: 10px;
+        height: auto;
+        position: relative;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .chat-footer input {
+        width: 80%;
+        padding: 10px;
+    }
+
+    .chat-footer button {
+        width: auto;
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
 
 
 /* ✅ CHAT INPUT */
@@ -290,10 +362,6 @@ body {
     .message {
         font-size: 16px;
         padding: 12px 18px;
-    }
-
-    .chat-footer {
-        padding: 20px;
     }
 
     #message-input {
@@ -611,6 +679,8 @@ body {
 .mobile-view .chat-window {
     display: none;
 }
+
+
 
 /* ✅ When chat is active, hide AI list & show chat */
 .mobile-view.chat-active .chat-list,
@@ -1157,7 +1227,7 @@ body {
     <div class="chat-window">
         <div class="chat-header">
             <button id="back-button">←</button> <!-- Move Back Button Here -->
-            <h2 id="chat-ai-name">Select an AI</h2>
+            <h2 id="chat-ai-name" style="color: whitesmoke; margin: 0px;">Select an AI</h2>
         </div>
 
         <div class="chat-messages" id="chatbox">
@@ -1198,7 +1268,7 @@ body {
     <!-- ✅ Chat Window (Now Ensures Dynamic Updates) -->
     <div class="chat-window">
         <div class="chat-header">
-            <h2 id="chat-ai-name">Select an AI</h2>
+            <h2 id="chat-ai-name" style="color: whitesmoke; margin: 0px;">Select an AI</h2>
         </div>
 
         <div class="chat-messages" id="chatbox">
@@ -1211,17 +1281,7 @@ body {
         </div>
 
         <!-- ✅ Chat Input Section -->
-        <div class="chat-footer" style=" display: flex;
-        align-items: center;
-        justify-content: space-between; /* Prevents input field from stretching */
-        width: 100%; /* Ensures it stays within the chat window */
-        max-width: 100%; /* Prevents unwanted stretching */
-        background-color: #f1f1f1;
-        padding: 10px;
-        border-top: 1px solid #ddd;
-        height: 60px;
-        box-sizing: border-box; /* Ensures padding is included in width */
-        overflow: hidden; /* Prevents content from overflowing */">
+        <div class="chat-footer">
             <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
             <button id="send">Send</button>
         </div>
@@ -1246,6 +1306,10 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         console.error("❌ ERROR: Chat window not found!");
     }
+
+    document.querySelector(".stories").style.display = "none";
+    document.querySelector(".chat-list").style.display = "none";
+    document.querySelector(".header").style.display = "none";
 
     // ✅ Update AI name in both full-screen and mobile chat headers
     document.querySelectorAll("#chat-ai-name").forEach(chatTitle => {
@@ -1279,6 +1343,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }, 200); // Increased timeout for better UI consistency
 
+    attachEventListeners();
     updateChatUI();
 }
 
