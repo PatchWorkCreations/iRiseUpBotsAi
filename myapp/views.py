@@ -110,32 +110,6 @@ DASHBOARD_ROUTES = {
     "414303": "keystone_dashboard",
 }
 
-from django.utils.timezone import now
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from myapp.models import AIUserSubscription
-
-@login_required
-def iriseupdashboard(request):
-    """
-    Determines if the user is on the Pro or One-Year plan and shows the course menu.
-    Ensures expired or canceled subscriptions are not counted.
-    """
-    user = request.user
-
-    # Check if the user has an active subscription (valid expiration & not canceled)
-    subscription = AIUserSubscription.objects.filter(
-        user=user,
-        expiration_date__gt=now()  # Must be in the future
-    ).exclude(canceled_at__isnull=False).first()
-
-    # Determine user's plan
-    user_plan = subscription.plan if subscription else "free"
-    is_pro_user = user_plan in ["pro", "one-year"]
-
-    # Render the course menu and pass the subscription status
-    return render(request, 'myapp/aibots/coursemenu.html', {"is_pro_user": is_pro_user})
-
 
 def test(request):
     return render(request, 'myapp/aibots/iriseupai/test.html')
@@ -3875,13 +3849,16 @@ def text_to_speech(request):
 
 
 from django.shortcuts import render
+from django.utils.timezone import now
+from django.contrib.auth.decorators import login_required
+from myapp.models import AIUserSubscription
 
 # AI List
 AIs = [
     {"id": "elevate", "name": "Elevate", "icon": "🌟", "description": "Let's work on your goals!", "image": "myapp/images/aiimages/elevate.png"},
     {"id": "thrive", "name": "Thrive", "icon": "🩺", "description": "Focus on health & well-being!", "image": "myapp/images/aiimages/thrive.png"},
     {"id": "lumos", "name": "Lumos", "icon": "🤗", "description": "Support & companionship!", "image": "myapp/images/aiimages/lumos.png"},
-    {"id": "mentor_iq", "name": "Mentor IQ", "icon": "📚", "description": "Educational & career guidance!", "image": "myapp/images/aiimages/mentor_iq.png"},
+    {"id": "mentoriq", "name": "Mentor IQ", "icon": "📚", "description": "Educational & career guidance!", "image": "myapp/images/aiimages/mentor_iq.png"},
     {"id": "nexus", "name": "Nexus", "icon": "💬🌐", "description": "Customer & accessibility support!", "image": "myapp/images/aiimages/nexus.png"},
     {"id": "keystone", "name": "Keystone", "icon": "💼⚖️", "description": "Finance & legal foundation!", "image": "myapp/images/aiimages/keystone.png"},
     {"id": "imagine", "name": "Imagine", "icon": "🎨", "description": "Creative inspiration & AI images!", "image": "myapp/images/aiimages/imagine.png"},
@@ -3892,5 +3869,33 @@ AIs = [
 def chat_home(request):
     return render(request, 'myapp/aibots/iriseupai/ai_selection.html', {"ai_list": AIs})
 
+# ✅ Chat View with AI Name Validation
 def test_chat_view(request, ai_name):
+    ai_exists = any(ai["id"] == ai_name for ai in AIs)
+    if not ai_exists:
+        return render(request, 'myapp/aibots/iriseupai/error.html', {"message": "Invalid AI Assistant!"})
+
     return render(request, 'myapp/aibots/iriseupai/chat_window.html', {'ai_name': ai_name})
+
+# ✅ Dashboard with Corrected Subscription Query
+@login_required
+def iriseupdashboard(request):
+    """
+    Determines if the user is on the Pro or One-Year plan and shows the course menu.
+    Ensures expired or canceled subscriptions are not counted.
+    """
+    user = request.user
+
+    # Check if the user has an active subscription (valid expiration & not canceled)
+    subscription = AIUserSubscription.objects.filter(
+        user=user,
+        expiration_date__gt=now(),  # Must be in the future
+        canceled_at__isnull=True  # Must not be canceled
+    ).first()
+
+    # Determine user's plan
+    user_plan = subscription.plan if subscription else "free"
+    is_pro_user = user_plan in ["pro", "one-year"]
+
+    # Render the course menu and pass the subscription status
+    return render(request, 'myapp/aibots/iriseupai/ai_selection.html', {"is_pro_user": is_pro_user, "ai_list": AIs})
