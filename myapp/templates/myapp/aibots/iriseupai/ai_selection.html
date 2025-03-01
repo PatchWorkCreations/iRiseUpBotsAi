@@ -1180,45 +1180,107 @@ body {
     color: #ff484d; /* Red hover color */
 }
 
-
+/* ✅ Fullscreen Settings Button - Positioned at the Top */
 #fullscreen-settings-btn {
+    position: absolute;
+    top: 15px; /* Move it to the top */
+    right: 15px; /* Positioned at the upper right */
+    
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 20px;
-    background: #2C2F33; /* Dark modern shade */
+    
+    padding: 8px 12px;
+    background: #2c2f339c; /* Dark modern shade */
     color: #ffffff;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
+    
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
+    
     transition: background 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: absolute;
-    bottom: 20px; /* Positioned at the bottom */
-    right: 20px; /* Positioned at the right */
-    width: calc(100% - 40px); /* Keeps it inside the sidebar */
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
 }
 
 #fullscreen-settings-btn:hover {
-    background: #23272A; /* Slightly darker on hover */
-    transform: translateY(-2px);
+    background: #23272A; /* Darker on hover */
+    transform: scale(1.05);
+}
+
+#fullscreen-settings-btn:active {
+    transform: scale(1);
+    background: #1E2124;
 }
 
 #fullscreen-settings-btn i {
     font-size: 18px;
 }
 
-#fullscreen-settings-btn:active {
-    transform: translateY(0);
-    background: #1E2124;
+/* 🏆 If you prefer it on the upper LEFT, just update this */
+.sidebar {
+    position: relative;
 }
 
-.sidebar {
-    position: relative; /* Ensures button positioning works inside it */
+#fullscreen-settings-btn.left {
+    left: 15px; /* Moves it to the upper left instead */
+    right: auto;
 }
+
+
+/* ✅ Minimal Upgrade Button (Same Position as Original) */
+/* ✅ Minimalist Upgrade Box */
+.sidebar-upgrade {
+    background: #ffffff; /* Clean white background */
+    border: 1px solid #d1d1d1; /* Subtle gray border */
+    border-radius: 8px;
+    padding: 12px 15px;
+    text-align: center;
+    margin-top: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Soft shadow for depth */
+}
+
+/* ✅ Upgrade Title */
+.pro-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* ✅ Upgrade Description */
+.sidebar-upgrade p {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* ✅ Upgrade Button */
+.upgrade-btn {
+    display: inline-block;
+    background: #f8f9fa; /* Subtle gray background */
+    color: #333;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border: 1px solid #d1d1d1;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.upgrade-btn:hover {
+    background: #eaeaea; /* Slightly darker on hover */
+    border-color: #bfbfbf;
+}
+
+.upgrade-btn:active {
+    background: #dcdcdc;
+}
+
+
 
 
 
@@ -1476,8 +1538,19 @@ body {
 
         <!-- ✅ Full-Screen Settings Button -->
         <button id="fullscreen-settings-btn" class="fullscreen-settings-toggle">
-            <i class="fas fa-cog"></i> Open Settings
+            <i class="fas fa-cog"></i>
         </button>
+
+        
+            <div class="sidebar-upgrade">
+                <h3 class="pro-title">🚀 Discover Exclusive Features!</h3>
+            <p>Enjoy unlimited chats and priority support.</p>
+            <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">Upgrade to Pro</a>
+            </div>
+        
+
+                
+        
 
     </div>
 
