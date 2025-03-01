@@ -1147,9 +1147,10 @@ square_client = Client(
 )
 
 PLAN_PRICES = {
-    'pro': 50,       # $20/month
-    'one-year': 50, # $127/year
+    'pro': 2000,       # $20/month
+    'one-year': 14700, # $127/year
 }
+
 
 """              
 PLAN_PRICES = {
@@ -3454,8 +3455,8 @@ square_client = Client(
 
 def determine_amount_based_on_plan(plan):
     plan_prices = {
-        'pro': 50,  # $20.00 in cents
-        'one-year': 50,  # $147.00 in cents
+        'pro': 2000,      # $20.00 in cents
+        'one-year': 14700 # $147.00 in cents
     }
     amount = plan_prices.get(plan, 0)
     
