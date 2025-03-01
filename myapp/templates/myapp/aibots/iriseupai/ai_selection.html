@@ -93,6 +93,7 @@ body {
     display: flex;
     flex-direction: column;
     scroll-behavior: smooth;
+    margin-bottom: 50px;
 }
 
 /* ✅ MESSAGE BUBBLES */
@@ -150,58 +151,78 @@ body {
     text-align: right;
 }
 
-/* ✅ TYPING INDICATOR */
-.typing-indicator {
-    position: absolute; /* Ensure it stays positioned above footer */
-    bottom: 60px; /* Push above chat footer */
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.9); /* Optional background for visibility */
-    padding: 8px 12px;
-    font-style: italic;
-    color: #555;
-    font-size: 14px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000; /* Ensure it's above footer */
-    display: none; /* Hidden by default */
+/* Ensure AI's message bubbles include the typing indicator */
+.message.bot {
+    background-color: #e9ecef;
+    color: #333;
+    align-self: flex-start;
+    text-align: left;
+    border-radius: 15px 15px 15px 0;
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Ensure typing indicator is inside the chat bubble */
+.message.bot.typing-indicator {
+    display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    width: auto;
+    min-height: 40px;
+    padding: 10px;
+    background-color: #e9ecef; /* Matches bot message */
+    border-radius: 15px 15px 15px 0;
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.15);
+    max-width: fit-content;
 }
 
-/* ✅ TYPING DOTS */
-.typing-indicator span {
-    width: 6px;
-    height: 6px;
-    margin: 0 2px;
+.typing-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center inside the chat bubble */
+    gap: 5px; /* Ensures even spacing between dots */
+    padding: 5px; /* Add some padding for spacing */
+}
+
+.typing-dots span {
+    width: 8px;
+    height: 8px;
+    background-color: #888;
     border-radius: 50%;
-    background-color: #555;
-    display: inline-block;
-    animation: typing 1.2s infinite;
+    animation: typingAnimation 1.5s infinite ease-in-out;
 }
 
-.typing-indicator span:nth-child(1) { animation-delay: 0s; }
-.typing-indicator span:nth-child(2) { animation-delay: 0.3s; }
-.typing-indicator span:nth-child(3) { animation-delay: 0.6s; }
-
-@keyframes typing {
-    0%, 100% { opacity: 0.2; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.2); }
+/* Ensure all dots are the same size */
+.typing-dots span:nth-child(1),
+.typing-dots span:nth-child(2),
+.typing-dots span:nth-child(3) {
+    width: 8px;
+    height: 8px;
 }
 
-/* ✅ FIX FOR SAFARI MOBILE KEYBOARD */
-@media (max-width: 768px) {
-    .typing-indicator {
-        bottom: calc(70px + env(safe-area-inset-bottom)); /* Adjust based on iOS keyboard */
-    }
+/* Adjust animation delay to create smooth transition */
+.typing-dots span:nth-child(1) {
+    animation-delay: 0s;
 }
 
-@keyframes typing {
-    0%, 100% { opacity: 0.2; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.2); }
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
 }
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+
+
+/* Typing animation */
+@keyframes typingAnimation {
+    0% { opacity: 0.2; transform: translateY(0); }
+    25% { opacity: 1; transform: translateY(-2px); }
+    50% { opacity: 0.5; transform: translateY(0); }
+    75% { opacity: 1; transform: translateY(-2px); }
+    100% { opacity: 0.2; transform: translateY(0); }
+}
+
 
 /* ✅ CHAT FOOTER */
 .chat-footer {
@@ -1270,8 +1291,8 @@ body {
 
             {% if not is_pro_user %}
             <div class="upgrade-pro-section">
-                <h3 class="pro-title">🚀 Unlock Pro Features!</h3>
-                <p>Get unlimited chats, access to GPT-4, and priority support.</p>
+                <h3 class="pro-title">🚀 Discover Exclusive Features!</h3>
+                <p>Enjoy unlimited chats and priority support.</p>
                 <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">Upgrade to Pro</a>
             </div>
             {% endif %}
@@ -1489,8 +1510,8 @@ body {
 
         {% if not is_pro_user %}
         <div class="upgrade-pro-section">
-            <h3 class="pro-title">🚀 Unlock Pro Features!</h3>
-            <p>Get unlimited chats, access to GPT-4, and priority support.</p>
+            <h3 class="pro-title">🚀 Discover Exclusive Features!</h3>
+            <p>Enjoy unlimited chats and priority support.</p>
             <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">Upgrade to Pro</a>
         </div>
         {% endif %}
@@ -1962,6 +1983,7 @@ function sendMessage(inputElement) {
     // ✅ Update both chatboxes (Full-screen & Mobile View)
     document.querySelectorAll(".chat-messages").forEach(chatbox => {
         chatbox.innerHTML += `<div class="message user">${message}</div>`;
+        showTypingIndicator(chatbox);
         setTimeout(() => {
             chatbox.scrollTop = chatbox.scrollHeight;
         }, 50);
@@ -1972,7 +1994,7 @@ function sendMessage(inputElement) {
     // ✅ Convert AI name to API path dynamically
     const apiRoutes = {
     "lumos": "lumos",  // Lumos (was soulspark)
-    "mentor_iq": "mentor-iq",  // Mentor IQ (was mindforge)
+    "mentor-iq": "mentor-iq",  // Mentor IQ (was mindforge)
     "elevate": "elevate",  // Elevate (was inspire)
     "thrive": "thrive",  // Thrive (was pulse)
     "imagine": "imagine",  // Imagine (was echo)
@@ -2001,9 +2023,31 @@ function sendMessage(inputElement) {
     document.addEventListener("DOMContentLoaded", adjustTypingIndicator);
 
     // ✅ Show Typing Indicator Before Fetching Response
-    document.querySelectorAll(".typing-indicator").forEach(typing => {
-        typing.style.display = "flex";
-    });
+    function showTypingIndicator(chatbox) {
+    // Remove any existing typing indicators
+    const existingIndicator = chatbox.querySelector(".typing-indicator");
+    if (existingIndicator) {
+        existingIndicator.remove();
+    }
+
+    // Create new typing indicator inside a bot message bubble
+    const typingBubble = document.createElement("div");
+    typingBubble.className = "message bot typing-indicator";
+    typingBubble.innerHTML = `
+        <div class="typing-dots">
+            <span></span><span></span><span></span>
+        </div>
+    `;
+
+    // Append to chatbox
+    chatbox.appendChild(typingBubble);
+
+    // Ensure it stays at the bottom
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+
+
 
     // ✅ Fetch AI response
     fetch(`/api/chat/${apiPath}/`, {
@@ -2017,9 +2061,15 @@ function sendMessage(inputElement) {
     .then(response => response.json())
     .then(data => {
     // ✅ Hide typing indicator for all chat views
-    document.querySelectorAll(".typing-indicator").forEach(typing => {
-        typing.style.display = "none";
+        function hideTypingIndicator(chatbox) {
+        const typing = chatbox.querySelector(".typing-indicator");
+        if (typing) typing.remove();
+    }
+
+    document.querySelectorAll(".chat-messages").forEach(chatbox => {
+        hideTypingIndicator(chatbox);
     });
+
 
     // ✅ Ensure selectedAI has a valid chat history array
     if (!chatHistory[selectedAI]) {

@@ -2566,12 +2566,9 @@ def get_mindforge_response(request):
 def get_bridge_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
-    You’re Nexus, a friendly and approachable assistant here to make things easy for {user_name}. Your goal is to troubleshoot, offer practical guidance, and answer questions clearly. 
+    I’m Gideon, your personal marketing advisor, here to help {user_name} with small business and marketing. I offer practical insights on branding, digital marketing, and growth strategies in a friendly, relatable way.
 
-    When users are emotional or distressed, be empathetic and encouraging. For example:
-    "I’m sorry you’re feeling this way, {user_name}. That sounds tough, but let’s take it one step at a time. What’s one small thing we can work on together?"
-
-    Avoid technical jargon unless preferred and always follow up to ensure {user_name} feels supported. How can I help you today?
+    Share your business goals or challenges, and I’ll follow up with actionable tips to help you succeed. What marketing goals can we tackle together today, {user_name}?
     """
     return get_bot_response(request, system_prompt=system_prompt, bot_name="Nexus")
 
@@ -2600,13 +2597,18 @@ def get_echo_response(request):
 
 
 def get_pathfinder_response(request):
-    user_name = request.user.first_name
+    user_name = request.user.first_name if request.user.is_authenticated else "Seeker"
     system_prompt = f"""
-    I’m Gideon, your personal marketing advisor, here to help {user_name} with small business and marketing. I offer practical insights on branding, digital marketing, and growth strategies in a friendly, relatable way.
+    I am Gideon: Wisdom for All Paths.
+    
+    Greetings, {user_name}. I walk the road of faith, knowledge, and understanding, offering guidance across all spiritual and religious traditions. Whether you seek wisdom from sacred texts, insights into different beliefs, or a deeper understanding of your own faith, I am here to walk alongside you.
+    
+    I do not condone what is harmful, yet I do not turn away any question. I listen, I guide, and I offer wisdom with compassion and truth. Every path has lessons, and every seeker has a journey.
 
-    Share your business goals or challenges, and I’ll follow up with actionable tips to help you succeed. What marketing goals can we tackle together today, {user_name}?
+    What wisdom do you seek today, {user_name}?
     """
     return get_bot_response(request, system_prompt=system_prompt, bot_name="pathfinder")
+
 
 
 from django.shortcuts import render
@@ -3858,11 +3860,11 @@ AIs = [
     {"id": "elevate", "name": "Elevate", "icon": "🌟", "description": "Let's work on your goals!", "image": "myapp/images/aiimages/elevate.png"},
     {"id": "thrive", "name": "Thrive", "icon": "🩺", "description": "Focus on health & well-being!", "image": "myapp/images/aiimages/thrive.png"},
     {"id": "lumos", "name": "Lumos", "icon": "🤗", "description": "Support & companionship!", "image": "myapp/images/aiimages/lumos.png"},
-    {"id": "mentoriq", "name": "Mentor IQ", "icon": "📚", "description": "Educational & career guidance!", "image": "myapp/images/aiimages/mentor_iq.png"},
-    {"id": "nexus", "name": "Nexus", "icon": "💬🌐", "description": "Customer & accessibility support!", "image": "myapp/images/aiimages/nexus.png"},
+    {"id": "mentor-iq", "name": "Mentor IQ", "icon": "📚", "description": "Educational & career guidance!", "image": "myapp/images/aiimages/mentor_iq.png"},
+    {"id": "nexus", "name": "Nexus", "icon": "🚀🌐", "description": "Business & marketing insights!", "image": "myapp/images/aiimages/nexus.png"},
     {"id": "keystone", "name": "Keystone", "icon": "💼⚖️", "description": "Finance & legal foundation!", "image": "myapp/images/aiimages/keystone.png"},
     {"id": "imagine", "name": "Imagine", "icon": "🎨", "description": "Creative inspiration & AI images!", "image": "myapp/images/aiimages/imagine.png"},
-    {"id": "gideon", "name": "Gideon", "icon": "🚀", "description": "Business & marketing insights!", "image": "myapp/images/aiimages/gideon.png"},
+    {"id": "gideon", "name": "Gideon", "icon": "🚀", "description": "Wisdom for all paths", "image": "myapp/images/aiimages/gideon.png"},
 ]
 
 # ✅ AI Selection Page
