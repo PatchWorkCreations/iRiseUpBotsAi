@@ -27,10 +27,13 @@ class AIUserSubscription(models.Model):
 
     def save(self, *args, **kwargs):
         """ Ensure expiration_date is correctly set for Pro and One-Year plans. """
+        if not self.start_date:  # If start_date is None, assign now()
+            self.start_date = now()
+
         if self.plan == "pro":
-            self.expiration_date = self.start_date + timedelta(days=30)  # 1-month subscription
+            self.expiration_date = self.start_date + timedelta(days=30)
         elif self.plan == "one-year":
-            self.expiration_date = self.start_date + timedelta(days=365)  # 1-year subscription
+            self.expiration_date = self.start_date + timedelta(days=365)
         elif self.plan == "free":
             self.expiration_date = None  # Free plan never expires
 
