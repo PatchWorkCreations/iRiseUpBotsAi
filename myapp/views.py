@@ -3452,6 +3452,19 @@ square_client = Client(
     environment='production'  # Change to 'sandbox' for testing
 )
 
+def determine_amount_based_on_plan(plan):
+    plan_prices = {
+        'pro': 50,  # $20.00 in cents
+        'one-year': 50,  # $147.00 in cents
+    }
+    amount = plan_prices.get(plan, 0)
+    
+    if amount <= 0:
+        logger.error(f"Invalid plan selected: {plan}")
+    
+    return amount
+
+
 
 @user_passes_test(lambda u: u.is_superuser or u.is_staff, login_url='/admin/login/')
 def process_renewals(request):
