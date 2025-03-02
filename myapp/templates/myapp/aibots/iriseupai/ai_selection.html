@@ -88,7 +88,7 @@ body {
 #chatbox {
     flex-grow: 1;
     overflow-y: auto;
-    padding: 15px;
+    padding-top: 80px;
     background-color: #fafafa;
     display: flex;
     flex-direction: column;
@@ -241,6 +241,8 @@ body {
     z-index: 999;
 }
 
+
+
 /* ✅ Ensure Input Field Expands Properly */
 .chat-footer input {
     flex-grow: 1;
@@ -316,15 +318,64 @@ body {
 
 /* ✅ Mobile View Adjustments */
 @media (max-width: 768px) {
-    .chat-footer {
-        width: 100%;
-        margin-left: 0;
-        padding: 10px;
-        height: auto;
-        position: relative;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-    }
+ /* Chat Container */
+.messenger-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Fullscreen */
+    overflow: hidden; /* Prevent scroll issues */
+}
+
+/* Keep Header Fixed */
+.chat-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #1F3A93;
+    color: white;
+    padding: 15px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    z-index: 1000;
+}
+
+/* Messages Area Adjusts Dynamically */
+.chat-messages {
+    flex: 1; /* Expand to available space */
+    overflow-y: auto;
+    padding: 75px 15px 65px; /* Space for header and footer */
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    scroll-behavior: smooth;
+}
+
+/* ✅ CHAT MESSAGES */
+#chatbox {
+    
+    margin-top: 80px;
+    
+}
+
+/* Footer Always Visible */
+.chat-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    height: 60px;
+    z-index: 1000;
+}
+
+
 
     /* ✅ Ensure input field and buttons align correctly */
     .chat-footer input {
@@ -1307,7 +1358,7 @@ body {
         {% endfor %}
     </div>
 
-    <div class="chat-list">
+    <div class="chat-list" style="padding-bottom: 80px;">
         {% for ai in ai_list %}
         <div class="chat-item" onclick="openChat('{{ ai.id }}')" data-ai-id="{{ ai.id }}">
             <img src="{% static ai.image %}" alt="{{ ai.name }}">
@@ -1880,14 +1931,59 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector(".header").style.display = "none";
 
     // ✅ Update AI name in both full-screen and mobile chat headers
-    document.querySelectorAll("#chat-ai-name").forEach(chatTitle => {
-        chatTitle.innerText = ai_name.toUpperCase();
-    });
+    // Function to get the properly formatted AI name
+    function getFormattedAIName(aiId, userName) {
+    const aiData = {
+        "elevate": { name: "Elevate", message: `What goal are you working on right now?` },
+        "thrive": { name: "Thrive", message: `How’s your health and well-being today?` },
+        "lumos": { name: "Lumos", message: `How can I support you today?` },
+        "mentor-iq": { name: "Mentor IQ", message: `What’s something new you’d like to learn?` },
+        "nexus": { name: "Nexus", message: `What’s your biggest business or marketing challenge?` },
+        "keystone": { name: "Keystone", message: `Do you have any finance or legal questions I can help with?` },
+        "imagine": { name: "Imagine", message: `What creative idea are you working on?` },
+        "gideon": { name: "Gideon", message: `What wisdom or guidance are you looking for today?` }
+    };
 
-    // ✅ Reset chatbox with initial message
-    document.querySelectorAll("#chatbox").forEach(chatbox => {
-        chatbox.innerHTML = `<div class="message bot">Hi, I'm ${ai_name}! How can I help you?</div>`;
-    });
+    if (aiData[aiId]) {
+        return aiData[aiId];
+    } else {
+        return {
+            name: aiId.charAt(0).toUpperCase() + aiId.slice(1),
+            message: `How can I assist you today?`
+        };
+    }
+}
+
+// ✅ Inject Django's user first name into JavaScript (with fallback to "friend")
+const userName = "{{ user.first_name|default:'friend' }}"; // Django ensures "friend" if empty
+
+// ✅ Apply AI name to header
+document.querySelectorAll("#chat-ai-name").forEach(chatTitle => {
+    if (typeof ai_name !== 'undefined' && ai_name) {
+        chatTitle.innerText = getFormattedAIName(ai_name, userName).name;
+    }
+});
+
+// ✅ Apply personalized AI message with a question to initiate response
+document.querySelectorAll("#chatbox").forEach(chatbox => {
+    if (typeof ai_name !== 'undefined' && ai_name) {
+        const ai = getFormattedAIName(ai_name, userName);
+        chatbox.innerHTML = `<div class="message bot">Hi ${userName}, I'm ${ai.name}! ${ai.message}</div>`;
+    }
+});
+
+// Apply capitalization when inserting AI name in the chat
+const formattedAIName = capitalizeAIName(ai_name);
+
+document.querySelectorAll("#chatbox").forEach(chatbox => {
+    chatbox.innerHTML = `<div class="message bot">Hi, I'm ${formattedAIName}! How can I help you?</div>`;
+});
+
+document.querySelectorAll("#chat-ai-name").forEach(chatTitle => {
+    chatTitle.innerText = formattedAIName;
+});
+
+
 
     // ✅ Ensure full-screen chat container is active
     const messengerContainer = document.querySelector(".messenger-container");
@@ -1973,12 +2069,14 @@ attachEventListeners();
 
     // ✅ Handle "Enter" key for sending message
     document.querySelectorAll("#message-input").forEach(inputField => {
-        inputField.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                sendMessage(this);
-            }
-        });
+    inputField.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && !event.shiftKey) { 
+            event.preventDefault(); // Prevents line break & unintended submission
+            sendMessage(this); // Ensure correct reference
+        }
     });
+});
+
 
     let chatHistory = {}; // Store chat history per AI bot
 
@@ -2263,6 +2361,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
 adjustViewportHeight();
 window.addEventListener('resize', adjustViewportHeight);
+
+document.addEventListener("DOMContentLoaded", function () {
+    const chatMessages = document.querySelector(".chat-messages");
+    const chatFooter = document.querySelector(".chat-footer");
+    const chatInput = document.querySelector("#message-input");
+
+    if (!chatMessages || !chatFooter || !chatInput) return;
+
+    function adjustLayout() {
+        const viewportHeight = window.innerHeight;
+
+        // Ensure the chat messages section resizes properly
+        chatMessages.style.height = `${viewportHeight - 120}px`;
+
+        // Always scroll to the latest message when input is focused
+        chatInput.addEventListener("focus", () => {
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 300);
+        });
+    }
+
+    // Adjust on page load
+    adjustLayout();
+
+    // Adjust when screen resizes (keyboard opens/closes)
+    window.addEventListener("resize", adjustLayout);
+});
 
 
 
