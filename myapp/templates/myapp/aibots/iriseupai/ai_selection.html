@@ -357,6 +357,7 @@ body {
 #chatbox {
     
     margin-top: 80px;
+    padding-top: 0px;
     
 }
 
@@ -436,7 +437,16 @@ body {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 20px;
-    font-size: 16px; /* ✅ Set to at least 16px */
+    font-size: 16px;
+    resize: none; /* Prevents manual resizing */
+    overflow-y: auto; /* Enables scrolling inside input */
+    height: 45px; /* Fixed height */
+    max-height: 150px; /* Prevents input from growing too much */
+    width: 100%; /* Ensures full width */
+    line-height: 22px; /* Adjusts text spacing for visibility */
+    word-wrap: break-word; /* Ensures proper wrapping */
+    white-space: pre-wrap; /* Keeps text formatted correctly */
+    scroll-padding-bottom: 10px; /* Prevents cut-off text */
 }
 
 
@@ -1556,7 +1566,8 @@ body {
         </div>
 
         <div class="chat-footer">
-            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+            <textarea id="message-input" placeholder="Type a message..." rows="1"></textarea>
+
             <button id="mic-button" class="mic-btn">
                 <i class="fas fa-microphone"></i> <!-- Mic Icon -->
             </button>
@@ -2388,6 +2399,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Adjust when screen resizes (keyboard opens/closes)
     window.addEventListener("resize", adjustLayout);
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const messageInput = document.getElementById("message-input");
+
+    messageInput.addEventListener("input", function () {
+        this.scrollTop = this.scrollHeight; // Always scroll to bottom as text is entered
+    });
+
+    messageInput.addEventListener("focus", function () {
+        setTimeout(() => {
+            this.scrollIntoView({ behavior: "smooth", block: "end" });
+        }, 300);
+    });
 });
 
 
