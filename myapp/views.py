@@ -767,12 +767,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .forms import SignInForm
-from .models import UserCourseAccess
 from django.conf import settings
 import logging
 from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
+
 def sign_in(request):
     if request.user.is_authenticated:
         logger.debug(f"User {request.user.username} tried to access the login page while already logged in.")
@@ -786,46 +786,43 @@ def sign_in(request):
             password = form.cleaned_data.get('password')
             logger.debug(f"Attempting login for identifier: {login_identifier}")
 
-            # Authenticate using username or email
-            user = authenticate(request, email=login_identifier, password=password)
+            user = None
 
-            if user is None:
-                # Try finding by email if username authentication fails
+            if "@" in login_identifier:  # 🔍 Check if the identifier is an email
                 try:
-                    user = User.objects.get(email=login_identifier)
-                    if user.check_password(password):
-                        if not user.is_active:
-                            user.is_active = True
-                            user.save()
-                            logger.info(f"Account reactivated for user: {user.username}")
-                            messages.info(request, 'Your account has been reactivated.')
-                        login(request, user)
-                        logger.debug(f"Redirecting to user AI for reactivated user: {user.username}")
-                        return redirect_to_user_ai(user)
+                    user = User.objects.get(email__iexact=login_identifier)  # 🔥 Case-insensitive email lookup
                 except User.DoesNotExist:
                     user = None
+            else:
+                # Assume it's a username (Django's username lookup is already case-insensitive)
+                user = authenticate(request, username=login_identifier, password=password)
 
-            if user is not None and user.is_active:
-                # Check if last_login is NULL
-                if user.last_login is None:
-                    logger.debug(f"First login detected for user: {user.username}")
-                    login(request, user)  # Log the user in before redirecting
+            if user and user.check_password(password):  # ✅ Ensure password is correct
+                if not user.is_active:
+                    user.is_active = True
+                    user.save()
+                    logger.info(f"Account reactivated for user: {user.username}")
+                    messages.info(request, 'Your account has been reactivated.')
+
+                login(request, user)
+                logger.debug(f"Redirecting to user AI for user: {user.username}")
+
+                if user.last_login is None:  # First-time login
                     messages.info(request, 'Please change your password to continue.')
                     return redirect('password_change')
-                else:
-                    login(request, user)
-                    logger.debug(f"Redirecting to user AI for user: {user.username}")
-                    messages.success(request, f'Welcome back, {user.first_name}!')
-                    return redirect_to_user_ai(user)
-            else:
-                logger.error(f"Authentication failed for identifier: {login_identifier}")
-                messages.error(request, 'Invalid username/email or password. Please try again.')
-                return redirect('sign_in')
+                
+                messages.success(request, f'Welcome back, {user.first_name}!')
+                return redirect_to_user_ai(user)
+
+            logger.error(f"Authentication failed for identifier: {login_identifier}")
+            messages.error(request, 'Invalid username/email or password. Please try again.')
+            return redirect('sign_in')
 
     else:
         form = SignInForm()
 
     return render(request, 'myapp/quiz/sign_in.html', {'form': form})
+
 
 from django.shortcuts import redirect
 from myapp.models import UserCourseAccess
