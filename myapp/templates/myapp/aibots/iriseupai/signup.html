@@ -34,15 +34,16 @@
 
         /* 🔵 Left Panel (Hero Branding) */
         .signup-info {
-            background: linear-gradient(135deg, #FDBF0A, #FB0A0B);
+            background: #025450; /* Dark teal to light teal */
             color: white;
             width: 40%;
             padding: 45px 30px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 84, 80, 0.3);
         }
-
         .signup-info h2 {
             font-size: 1.6rem;
             font-weight: 800;
@@ -136,15 +137,17 @@
             padding: 14px;
             font-size: 1.2rem;
             font-weight: bold;
-            color: white;
-            background: linear-gradient(90deg, #FDBF0A, #FB0A0B);
+            color: rgb(37, 37, 37);
+            background: #FF7A61; /* Coral to darker red */
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            transition: all 0.3s ease-in-out;
         }
 
         .signup-btn:hover {
-            background: linear-gradient(90deg, #FB0A0B, #C60E0F);
+            background: #d6604b; /* Darker shades on hover */
+            transform: scale(1.05);
         }
 
         /* 📱 Mobile Responsive */

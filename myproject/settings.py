@@ -193,6 +193,6 @@ AI_PRODUCTS = {
     "414223": "echo_chat.html",         # Imagine AI  1
     "414281": "gideon_chat.html",       # Gideon AI  1
     "414301": "mentor_iq_chat.html",    # Mentor IQ AI (New Product ID)
-    "414302": "nexus_chat.html",        # Nexus AI (New Product ID)
+    "414302": "nexus_chat.html",        # Nexara AI (New Product ID)
     "414303": "keystone_chat.html",     # Keystone AI (New Product ID)  1
 }

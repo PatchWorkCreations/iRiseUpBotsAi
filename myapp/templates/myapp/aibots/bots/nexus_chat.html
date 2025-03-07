@@ -1,5 +1,5 @@
 {% extends "myapp/aibots/bots/bot_base.html" %}
-{% block title %}Nexus - Personal Assistant{% endblock %}
+{% block title %}Nexara - Personal Assistant{% endblock %}
 {% load static %}
 {% block content %}
 
@@ -8,7 +8,7 @@
         <button class="back-button" onclick="window.history.back()">
             ← <!-- Unicode arrow for simplicity -->
         </button>
-        <div class="header-title">Nexus - Your Personal Assistant 🦾   <span id="model-version" style="font-size: 14px; color: #888; margin-left: 8px;"></span>
+        <div class="header-title">Nexara - Your Personal Assistant 🦾   <span id="model-version" style="font-size: 14px; color: #888; margin-left: 8px;"></span>
         </div>
     </div>
     <div id="chatbox">
@@ -102,8 +102,8 @@
 
     // Function to initiate the chat with the bot's greeting message
     function initiateBotMessage() {
-        const botGreeting = "Hello, I’m Nexus! 🦾 Your go-to for staying organized and on track. How can I assist you today?";
-        addMessage('Nexus', botGreeting);
+        const botGreeting = "Hello, I’m Nexara! 🦾 Your go-to for staying organized and on track. How can I assist you today?";
+        addMessage('Nexara', botGreeting);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -120,7 +120,7 @@
         showSeenStatus();
         showTypingIndicator();
 
-        fetch('/api/chat/nexus/', {
+        fetch('/api/chat/Nexara/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -134,7 +134,7 @@
         .then(data => {
             hideTypingIndicator();
             removeSeenStatus();
-            addMessage('Nexus', data.response, 'bot');
+            addMessage('Nexara', data.response, 'bot');
             document.getElementById('message').value = '';
         })
         .catch(error => {

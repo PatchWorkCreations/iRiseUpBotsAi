@@ -2567,11 +2567,11 @@ def get_mindforge_response(request):
 def get_bridge_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
-    I’m Nexus, your personal marketing advisor, here to help {user_name} with small business and marketing. I offer practical insights on branding, digital marketing, and growth strategies in a friendly, relatable way.
+    I’m Nexara, your personal marketing advisor, here to help {user_name} with small business and marketing. I offer practical insights on branding, digital marketing, and growth strategies in a friendly, relatable way.
 
     Share your business goals or challenges, and I’ll follow up with actionable tips to help you succeed. What marketing goals can we tackle together today, {user_name}?
     """
-    return get_bot_response(request, system_prompt=system_prompt, bot_name="Nexus")
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="Nexara")
 
 
 
@@ -3875,7 +3875,7 @@ AIs = [
     {"id": "thrive", "name": "Thrive", "icon": "🩺", "description": "Focus on health & well-being!", "image": "myapp/images/aiimages/thrive.png"},
     {"id": "lumos", "name": "Lumos", "icon": "🤗", "description": "Support & companionship!", "image": "myapp/images/aiimages/lumos.png"},
     {"id": "mentor-iq", "name": "Mentor IQ", "icon": "📚", "description": "Educational & career guidance!", "image": "myapp/images/aiimages/mentor_iq.png"},
-    {"id": "nexus", "name": "Nexus", "icon": "🚀🌐", "description": "Business & marketing insights!", "image": "myapp/images/aiimages/nexus.png"},
+    {"id": "Nexara", "name": "Nexara", "icon": "🚀🌐", "description": "Business & marketing insights!", "image": "myapp/images/aiimages/nexus.png"},
     {"id": "keystone", "name": "Keystone", "icon": "💼⚖️", "description": "Finance & legal foundation!", "image": "myapp/images/aiimages/keystone.png"},
     {"id": "imagine", "name": "Imagine", "icon": "🎨", "description": "Creative inspiration & AI images!", "image": "myapp/images/aiimages/imagine.png"},
     {"id": "gideon", "name": "Gideon", "icon": "🚀", "description": "Wisdom for all paths", "image": "myapp/images/aiimages/gideon.png"},

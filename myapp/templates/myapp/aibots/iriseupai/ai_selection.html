@@ -262,7 +262,7 @@ body {
 
 /* ✅ Send Button */
 #send {
-    background-color: #2141aa;
+    background-color: #024642;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -452,7 +452,7 @@ body {
 
 /* ✅ SEND BUTTON */
 #send {
-    background-color: #2141aa;
+    background-color: #024642;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -661,7 +661,7 @@ body {
 
 /* ✅ FOCUS EFFECT - Looks polished when clicked */
 .search-bar:focus {
-    border-color: #1F3A93; /* Highlight border */
+    border-color: #025450; /* Highlight border */
     box-shadow: 0 0 5px rgba(31, 58, 147, 0.2);
 }
 
@@ -787,7 +787,7 @@ body {
 
 /* ✅ ACTIVE BUTTON */
 .bottom-nav button.active {
-    color: #1F3A93;
+    color: #025450;
     font-weight: bold;
 }
 
@@ -806,7 +806,7 @@ body {
 /* ✅ ICON STYLING */
 .bottom-nav i {
     font-size: 20px;
-    color: #1F3A93;
+    color: #025450;
 }
 
 /* ✅ FIX ICON ALIGNMENT */
@@ -969,7 +969,7 @@ body {
 
 .option-icon {
     font-size: 1.25rem; /* Adjust icon size */
-    color: #1F3A93; /* Consistent color with brand */
+    color: #025450; /* Consistent color with brand */
 }
 
 .smith {
@@ -981,7 +981,7 @@ body {
 
 .new-chat {
     font-size: 1rem;
-    color: #1F3A93; /* Consistent with brand color */
+    color: #025450; /* Consistent with brand color */
     font-weight: 600;
 }
 
@@ -996,7 +996,7 @@ body {
 
 .setting-opestion-main {
     font-size: 1.1rem; /* Larger font size for the text */
-    color: #1F3A93; /* Ensure text color is clear */
+    color: #025450; /* Ensure text color is clear */
     font-weight: 600;
     margin: 0;
 }
@@ -1005,7 +1005,7 @@ body {
 /* Additional styling for the angle-right icon */
 .setting-opestion-main i.fa-angle-right {
     font-size: 1.2rem; /* Adjusted size for the right arrow icon */
-    color: #1F3A93;
+    color: #025450;
 }
 
 .setting-opestion-main:hover {
@@ -1101,14 +1101,14 @@ body {
         .menu-girl-img {
     width: 50px;
     height: 50px;
-    fill: #1F3A93; /* Adjust color */
+    fill: #025450; /* Adjust color */
 }
 
 
 
 /* BUTTON - START CHAT */
 .upgrades-btn {
-    background: #1F3A93;
+    background: #025450;
     color: white;
     font-size: 1.1rem;
     padding: 0.7rem 1.4rem;
@@ -1164,12 +1164,12 @@ body {
 
 /* Button Hover */
 .upgrade-btn:hover {
-    background: #1F3A93;
+    background: #025450;
     color: white;
 }
 
 .send-btn {
-    background-color: #2141aa;
+    background-color: #024642;
     color: white;
     border: none;
     padding: 10px;
@@ -1292,55 +1292,57 @@ body {
 
 
 /* ✅ Minimal Upgrade Button (Same Position as Original) */
-/* ✅ Minimalist Upgrade Box */
+/* ✅ Minimalist Upgrade Box (On-Brand) */
 .sidebar-upgrade {
     background: #ffffff; /* Clean white background */
-    border: 1px solid #d1d1d1; /* Subtle gray border */
-    border-radius: 8px;
-    padding: 12px 15px;
+    border: 1px solid #42BFB7; /* Light teal border for branding */
+    border-radius: 10px;
+    padding: 15px;
     text-align: center;
     margin-top: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Soft shadow for depth */
+    box-shadow: 0 4px 8px rgba(2, 84, 80, 0.1); /* Soft teal shadow for branding depth */
 }
 
 /* ✅ Upgrade Title */
 .pro-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 5px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #025450; /* Dark teal for a premium feel */
+    margin-bottom: 6px;
 }
 
 /* ✅ Upgrade Description */
 .sidebar-upgrade p {
-    font-size: 12px;
+    font-size: 13px;
     color: #666;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    line-height: 1.4;
 }
 
-/* ✅ Upgrade Button */
+/* ✅ Upgrade Button (On-Brand) */
 .upgrade-btn {
     display: inline-block;
-    background: #f8f9fa; /* Subtle gray background */
-    color: #333;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 8px 12px;
-    border: 1px solid #d1d1d1;
-    border-radius: 6px;
+    background: #FF7A61; /* Coral gradient for a strong CTA */
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
     text-decoration: none;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(255, 122, 97, 0.3);
 }
 
 .upgrade-btn:hover {
-    background: #eaeaea; /* Slightly darker on hover */
-    border-color: #bfbfbf;
+    background: #C60E0F; /* Darker coral on hover */
+    transform: scale(1.05);
 }
 
 .upgrade-btn:active {
-    background: #dcdcdc;
+    background: #A50C0E;
+    box-shadow: none;
 }
-
 
 
 
@@ -1400,7 +1402,7 @@ body {
             <div>
                 <a href="{% url 'personal_info_update' %}">
                     <div class="settings-main-sub">
-                        <svg class="menu-girl-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1F3A93" width="50px" height="50px">
+                        <svg class="menu-girl-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#025450" width="50px" height="50px">
                             <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
                         </svg>
                         
@@ -1608,13 +1610,13 @@ body {
             <i class="fas fa-cog"></i>
         </button>
 
-        
+        {% if not is_pro_user %} 
             <div class="sidebar-upgrade">
                 <h3 class="pro-title">🚀 Discover Exclusive Features!</h3>
             <p>Enjoy unlimited chats and priority support.</p>
             <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">Upgrade to Pro</a>
             </div>
-        
+            {% endif %}
 
                 
         
@@ -1636,7 +1638,7 @@ body {
         <div>
             <a href="{% url 'personal_info_update' %}">
                 <div class="settings-main-sub">
-                    <svg class="menu-girl-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1F3A93" width="50px" height="50px">
+                    <svg class="menu-girl-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#025450" width="50px" height="50px">
                         <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
                     </svg>
 
@@ -1954,7 +1956,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "thrive": { name: "Thrive", message: `How’s your health and well-being today?` },
         "lumos": { name: "Lumos", message: `How can I support you today?` },
         "mentor-iq": { name: "Mentor IQ", message: `What’s something new you’d like to learn?` },
-        "nexus": { name: "Nexus", message: `What’s your biggest business or marketing challenge?` },
+        "Nexara": { name: "Nexara", message: `What’s your biggest business or marketing challenge?` },
         "keystone": { name: "Keystone", message: `Do you have any finance or legal questions I can help with?` },
         "imagine": { name: "Imagine", message: `What creative idea are you working on?` },
         "gideon": { name: "Gideon", message: `What wisdom or guidance are you looking for today?` }
@@ -2186,7 +2188,7 @@ function sendMessage(inputElement) {
     "thrive": "thrive",  // Thrive (was pulse)
     "imagine": "imagine",  // Imagine (was echo)
     "gideon": "gideon",  // Gideon (unchanged)
-    "nexus": "nexus",  // Nexus (was bridge)
+    "Nexara": "Nexara",  // Nexara (was bridge)
     "keystone": "keystone",
 };
 

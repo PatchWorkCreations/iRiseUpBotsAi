@@ -7,12 +7,14 @@
 
 <style>
 /* 🚀 Hero Section */
+/* 🚀 Hero Section */
 .hero-upgrade {
-    background: linear-gradient(135deg, #1F3A93, #4A69BD);
+    background: linear-gradient(135deg, #025450, #42BFB7); /* Dark teal to light teal */
     color: white;
     text-align: center;
     padding: 80px 20px;
     border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(2, 84, 80, 0.3); /* Soft branding glow */
 }
 
 .hero-upgrade h1 {
@@ -43,21 +45,20 @@
 
 .hero-bullet-points li i {
     margin-right: 10px;
-    color: #FFD700;
+    color: #FF7A61; /* Coral for branding */
 }
 
-/* 🎯 Pricing Section */
 /* 🎯 Pricing Section */
 .pricing-section {
     text-align: center;
     padding: 80px 20px;
-    background: #f8f9fa;
+    background: #F8FAFB; /* Soft neutral background */
 }
 
 .pricing-title {
     font-size: 2.8rem;
     font-weight: bold;
-    color: #222;
+    color: #025450; /* Primary branding color */
     margin-bottom: 10px;
 }
 
@@ -84,7 +85,7 @@
     width: 340px;
     text-align: center;
     transition: all 0.3s ease-in-out;
-    border-top: 5px solid transparent;
+    border-top: 5px solid #42BFB7; /* Light teal accent */
 }
 
 .pricing-card:hover {
@@ -94,15 +95,15 @@
 
 /* Free Plan */
 .free-plan {
-    border-top: 5px solid #bbb;
+    border-top: 5px solid #BBB;
 }
 
 /* Standout (Most Popular Plan) */
 .pricing-card.standout {
-    background: #1F3A93;
+    background: #025450;
     color: white;
     position: relative;
-    border-top: 5px solid #FFD700;
+    border-top: 5px solid #FF7A61; /* Coral accent */
 }
 
 .standout h3,
@@ -112,8 +113,8 @@
 }
 
 .standout .highlighted-badge {
-    background: #FFD700;
-    color: #222;
+    background: #FF7A61;
+    color: white;
     font-weight: bold;
     padding: 6px 14px;
     border-radius: 12px;
@@ -123,13 +124,13 @@
 
 /* Yearly Plan */
 .yearly-plan {
-    border-top: 5px solid #28a745;
+    border-top: 5px solid #42BFB7;
 }
 
 /* Most Popular Badge */
 .badge.most-popular {
-    background-color: #FFD700;
-    color: #222;
+    background-color: #FF7A61;
+    color: white;
     font-weight: bold;
     padding: 6px 14px;
     font-size: 0.9rem;
@@ -143,6 +144,7 @@
     font-size: 2.4rem;
     font-weight: bold;
     margin-bottom: 10px;
+    color: #025450;
 }
 
 .price-month {
@@ -157,18 +159,6 @@
     text-decoration: line-through;
     color: #888;
     margin-left: 8px;
-}
-
-/* Savings Badge */
-.highlighted-badge {
-    background-color: #28a745;
-    color: white;
-    font-size: 0.9rem;
-    font-weight: bold;
-    padding: 6px 14px;
-    border-radius: 12px;
-    display: inline-block;
-    margin-bottom: 15px;
 }
 
 /* Features List */
@@ -188,12 +178,12 @@
 }
 
 .pricing-features li i {
-    color: #28a745;
+    color: #42BFB7; /* Light teal for consistency */
     margin-right: 10px;
     font-size: 1.2rem;
 }
 
-/* CTA Button */
+/* 🎯 CTA Button */
 .btn {
     display: inline-block;
     padding: 14px 22px;
@@ -208,15 +198,52 @@
 }
 
 .btn-primary {
-    background-color: #007bff;
+    background: linear-gradient(90deg, #FF7A61, #C60E0F);
     color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 10px rgba(255, 122, 97, 0.3);
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+    background: linear-gradient(90deg, #C60E0F, #A50C0E);
     transform: translateY(-3px);
 }
+
+/* 💳 Checkout Modal */
+.modal-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(2, 84, 80, 0.2);
+    position: relative;
+    animation: fadeInUp 0.4s ease-in-out;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+/* 💳 Payment Button */
+.btn-submit {
+    background: linear-gradient(90deg, #42BFB7, #025450);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    box-shadow: 0 5px 15px rgba(2, 84, 80, 0.2);
+}
+
+.btn-submit:hover {
+    background: linear-gradient(90deg, #025450, #023B3A);
+    transform: translateY(-2px);
+}
+
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
@@ -246,14 +273,30 @@
 }
 
 .btn-primary {
-    background: linear-gradient(90deg, #007bff, #0056b3);
-    color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    background: #FF7A61; /* Coral gradient for a bold CTA */
+    color: black;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(255, 122, 97, 0.3); /* Soft coral shadow */
 }
 
 .btn-primary:hover {
-    background: linear-gradient(90deg, #0056b3, #003f80);
+    background:  #C60E0F; /* Darker coral for hover */
     transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(198, 14, 15, 0.4);
+}
+
+.btn-primary:active {
+    background: #A50C0E;
+    box-shadow: none;
+    transform: scale(0.98);
 }
 
 /* 💳 Checkout Modal */
@@ -456,7 +499,7 @@
 }
 
 .header {
-        background-color: #1F3A93; /* Primary Navy Blue */
+        background-color: #025450; /* Primary Navy Blue */
         color: #ffffff;
         padding: 1rem;
     }

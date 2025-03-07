@@ -158,7 +158,7 @@ urlpatterns = [
     path('thrive/', views.rudy_view, name='rudy'),
     path('lumos/', views.aria_view, name='aria'),
     path('mentor-iq/', views.einstein_view, name='einstein'),
-    path('nexus/', views.kash_view, name='kash'),
+    path('Nexara/', views.kash_view, name='kash'),
     path('imagine/', views.echo_view, name='echo'),
     path('gideon/', views.gideon_view, name='gideon'),
     path('keystone/', views.keystone_view, name='keystone'),
@@ -178,7 +178,7 @@ urlpatterns = [
     path('thankyou/thrive/', views.rudy_thank_you, name='thankyou-rudy'),
     path('thankyou/lumos/', views.aria_thank_you, name='thankyou-aria'),
     path('thankyou/mentor-iq/', views.einstein_thank_you, name='thankyou-einstein'),
-    path('thankyou/nexus/', views.kash_thank_you, name='thankyou-kash'),
+    path('thankyou/Nexara/', views.kash_thank_you, name='thankyou-kash'),
     path('thankyou/iamgine/', views.echo_thank_you, name='thankyou-echo'),
     path('thankyou/gideon/', views.gideon_thank_you, name='thankyou-gideon'),
     path('thankyou/keystone/', views.keystone_thank_you, name='thankyou-keystone'),
@@ -195,7 +195,7 @@ urlpatterns = [
     path('dashboard/imagine/', views.imagine_dashboard, name='imagine_dashboard'),
     path('dashboard/gideon/', views.gideon_dashboard, name='gideon_dashboard'),
     path('dashboard/mentor-iq/', views.mentor_iq_dashboard, name='mentor_iq_dashboard'),
-    path('dashboard/nexus/', views.nexus_dashboard, name='nexus_dashboard'),
+    path('dashboard/Nexara/', views.nexus_dashboard, name='nexus_dashboard'),
     path('dashboard/keystone/', views.keystone_dashboard, name='keystone_dashboard'),
     path('validate-user-input/', views.validate_user_input, name='validate_user_input'),
 
@@ -209,7 +209,7 @@ urlpatterns = [
     path('api/chat/thrive/', views.get_pulse_response, name='get_pulse_response'),  # Thrive (was pulse)
     path('api/chat/imagine/', views.get_echo_response, name='get_echo_response'),  # Imagine (was echo)
     path('api/chat/gideon/', views.get_pathfinder_response, name='get_pathfinder_response'),  # Gideon (same)
-    path('api/chat/nexus/', views.get_bridge_response, name='get_bridge_response'),  # Nexus (was bridge)
+    path('api/chat/Nexara/', views.get_bridge_response, name='get_bridge_response'),  # Nexara (was bridge)
     path('api/chat/keystone/', views.get_fortify_response, name='get_fortify_response'),
     
     # ✅ Test Endpoint
