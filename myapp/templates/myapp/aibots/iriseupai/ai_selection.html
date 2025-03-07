@@ -1344,11 +1344,144 @@ body {
     box-shadow: none;
 }
 
+/* 🌟 Background Overlay */
+.upgrade-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Dark overlay */
+    backdrop-filter: blur(6px); /* Smooth blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 💎 Modal Content Box */
+.upgrade-modal-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: slideIn 0.4s ease-in-out;
+}
+
+/* ❌ Close Button */
+.upgrade-close-button {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    font-size: 22px;
+    color: #555;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.upgrade-close-button:hover {
+    color: #ff4757;
+    transform: scale(1.2);
+}
+
+/* 🚀 Title Styling */
+.upgrade-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+/* 📌 Text */
+.upgrade-text {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* ✅ Primary CTA Button */
+.upgrade-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #D83A56, #BF2441);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    width: 100%;
+    text-align: center;
+}
+
+.upgrade-btn:hover {
+    background: linear-gradient(90deg, #BF2441, #8F1C30);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255, 56, 96, 0.4);
+}
+
+/* 👀 Secondary Option */
+.upgrade-secondary {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 12px;
+}
+
+.upgrade-secondary a {
+    color: #D83A56;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.upgrade-secondary a:hover {
+    text-decoration: underline;
+}
+
+/* 🌟 Animation Effects */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* 📱 Mobile Optimization */
+@media (max-width: 480px) {
+    .upgrade-modal-content {
+        max-width: 90%;
+        padding: 20px;
+    }
+    
+    .upgrade-title {
+        font-size: 1.6rem;
+    }
+
+    .upgrade-text {
+        font-size: 1rem;
+    }
+
+    .upgrade-btn {
+        font-size: 1.1rem;
+        padding: 10px 20px;
+    }
+}
+
 
 
 
 </style>
-<body>
+<body data-is-pro="{{ is_pro_user }}">
 
 <!-- ✅ MOBILE VIEW -->
 <div class="mobile-view">
@@ -1790,8 +1923,54 @@ body {
     </div>
 </div>
 
+<!-- Upgrade Modal -->
+<!-- 🚀 Upgrade to Pro Modal -->
+<div class="upgrade-modal" id="upgrade-modal">
+    <div class="upgrade-modal-content">
+        <span class="upgrade-close-button" onclick="closeUpgradeModal()">&times;</span>
+        
+        <!-- 🚀 Strong Headline -->
+        <h2 class="upgrade-title">🚀 Free Chat Access is Limited Right Now!</h2>
+
+        <!-- 🔥 Upgrade Message -->
+        <p class="upgrade-text">
+            Due to high demand, we're temporarily limiting free chats to ensure  priority access  for Pro users.  
+            <br><br>
+            Your chat will be re-enabled in  45 minutes . Want to skip the wait?  
+        </p>
+
+
+        <!-- ✅ Action-Oriented CTA -->
+        <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">🎟️ Upgrade to Pro & Always Get Priority</a>
+
+
+        <!-- 👀 Subtle Secondary Option -->
+        <p class="upgrade-secondary">
+            Need more info? <a href="{% url 'upgrade_to_pro' %}" onclick="closeUpgradeModal(); return false;">Check Pricing</a>
+        </p>
+        <p>Your chat will be re-enabled in <span id="countdown-timer">45:00</span></p>
+
+    </div>
+</div>
+
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    console.log("🟢 Checking Pro User Status on Load...");
+
+    if (isProUser) {
+        console.log("✅ Pro user detected! Resetting chat limit data...");
+        
+        // Clear stored chat limit and cooldown for Pro users
+        localStorage.removeItem("chatCount");
+        localStorage.removeItem("cooldownEndTime");
+
+        // Ensure chat is enabled instantly
+        enableChat();
+    }
+});
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
     
@@ -1904,7 +2083,7 @@ document.addEventListener("DOMContentLoaded", function () {
         micButtons.forEach(micButton => micButton.style.display = "none");
     }
 
-    // ✅ **STOP RECORDING AND CLEAR INPUT WHEN CLICKING SEND**
+    // ✅  STOP RECORDING AND CLEAR INPUT WHEN CLICKING SEND 
     sendButtons.forEach(sendButton => {
         sendButton.addEventListener("click", () => {
             micButtons.forEach(micButton => stopRecognition(micButton));
@@ -1912,7 +2091,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ✅ **STOP RECORDING AND CLEAR INPUT WHEN PRESSING ENTER**
+    // ✅  STOP RECORDING AND CLEAR INPUT WHEN PRESSING ENTER 
     messageInputs.forEach(messageInput => {
         messageInput.addEventListener("keydown", function (event) {
             if (event.key === "Enter") {
@@ -2105,7 +2284,7 @@ attachEventListeners();
     // Bold section headers like "Warm-up", "Circuit", etc.
     text = text.replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:');
 
-    // Make text within double asterisks bold (**text** → <strong>text</strong>)
+    // Make text within double asterisks bold ( text  → <strong>text</strong>)
     text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
     // Convert hyphenated or asterisk bullets into unordered list items
@@ -2158,10 +2337,39 @@ function sendMessage(inputElement) {
     
     if (message === "" || !selectedAI) return;
 
+
+    // 🚀 Retrieve existing message count
+    let isProUser = JSON.parse("{{ is_pro_user|lower }}");  // Ensure we get `true` or `false`
+
+    // 🚀 Retrieve existing message count for free users
+    let messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
+    const TRIAL_LIMIT = 10; // Adjust as needed
+
+    console.log("👑 Pro User Status:", isProUser);
+    console.log("📊 Current message count:", messageCount);
+
+    // 🚨 If the user is NOT a Pro user, enforce the trial limit
+    if (!isProUser && messageCount >= TRIAL_LIMIT) {
+    console.log("🚨 Trial limit reached! Showing upgrade modal...");
+    showUpgradeModal();
+    return;
+}
+
+
+    // ✅ If user is not Pro, increment and save message count
+    if (!isProUser) {
+        messageCount++;
+        localStorage.setItem('messageCount', messageCount);
+        console.log("✅ Updated message count:", messageCount);
+    }
+
+
     // Ensure chat history exists for the selected AI
     if (!chatHistory[selectedAI]) {
         chatHistory[selectedAI] = [];
     }
+
+    
 
     messageInput.value = "";
     finalTranscript = "";
@@ -2361,6 +2569,153 @@ function sendMessage(inputElement) {
 
 });
 
+
+function showUpgradeModal() {
+    if (isProUser) {
+        console.log("🛑 Pro user detected – No modal shown.");
+        return; // ✅ Exit function immediately for Pro users
+    }
+
+    const upgradeModal = document.getElementById("upgrade-modal");
+
+    if (upgradeModal) {
+        console.log("📢 Showing upgrade modal...");
+        upgradeModal.style.display = "flex";  // ✅ Show modal for non-pro users
+
+        // ✅ Ensure cooldown time is set before starting countdown
+        if (!cooldownEndTime || cooldownEndTime < new Date().getTime()) {
+            setCooldown(); // Set cooldown if it hasn’t been properly set
+        }
+
+        startCountdown(); // ✅ Start countdown immediately when modal is shown
+    } else {
+        console.error("❌ Upgrade modal element not found!");
+    }
+}
+
+
+function closeUpgradeModal() {
+    const upgradeModal = document.getElementById("upgrade-modal");
+    if (upgradeModal) {
+        upgradeModal.style.display = "none";
+    } else {
+        console.error("❌ Upgrade modal element not found!");
+    }
+}
+
+// ✅ Ensure modal closes when clicking outside
+document.addEventListener("click", function (event) {
+    const upgradeModal = document.getElementById("upgrade-modal");
+    if (upgradeModal && event.target === upgradeModal) {
+        closeUpgradeModal();
+    }
+});
+
+console.log("✅ Chat restriction logic loaded!");
+
+const CHAT_LIMIT = 10; // Adjust as needed
+const COOLDOWN_TIME = 45 * 60 * 1000; // 45 minutes in milliseconds
+const messageInput = document.getElementById("message-input");
+const sendButton = document.getElementById("send");
+const chatbox = document.getElementById("chatbox");
+const countdownElement = document.getElementById("countdown-timer"); // Timer display
+const upgradeModal = document.getElementById("upgrade-modal"); // Modal for upgrade prompt
+
+let messageCount = parseInt(localStorage.getItem("chatCount")) || 0;
+let cooldownEndTime = parseInt(localStorage.getItem("cooldownEndTime")) || 0;
+let isProUser = JSON.parse("{{ is_pro_user|yesno:'true,false' }}"); // Django variable
+
+console.log("🟢 Pro User Status:", isProUser);
+console.log("🔥 Initial chatCount:", messageCount);
+
+// ✅ Function to check cooldown and update UI
+function checkCooldown() {
+    const currentTime = new Date().getTime();
+    
+    if (cooldownEndTime && cooldownEndTime > currentTime) {
+        disableChat(); // Cooldown active
+        startCountdown(); // Start the live countdown
+    } else {
+        enableChat(); // Cooldown expired
+    }
+}
+
+// ✅ Disable chat input & show modal
+function disableChat() {
+    if (isProUser) {
+        console.log("🛑 Pro user detected – Chat should not be disabled.");
+        return; // ✅ Skip disabling chat for Pro users
+    }
+
+    messageInput.disabled = true;
+    sendButton.disabled = true;
+
+    // Show modal only for free users
+    showUpgradeModal();
+
+    console.log("⏳ User has reached the chat limit. Cooldown active.");
+}
+
+
+// ✅ Enable chat when cooldown expires
+function enableChat() {
+    messageInput.disabled = false;
+    sendButton.disabled = false;
+    
+    if (upgradeModal) upgradeModal.style.display = "none";
+
+    // Reset message count and cooldown
+    localStorage.setItem("chatCount", 0);
+    localStorage.removeItem("cooldownEndTime");
+
+    console.log("✅ Chat is re-enabled.");
+}
+
+// ✅ Start countdown in modal
+function startCountdown() {
+    if (!countdownElement) {
+        console.error("❌ ERROR: Countdown timer element not found!");
+        return;
+    }
+
+    function updateCountdown() {
+        const currentTime = new Date().getTime();
+        const remainingTime = cooldownEndTime - currentTime;
+
+        if (remainingTime <= 0) {
+            countdownElement.innerHTML = "00:00";
+            enableChat(); // Re-enable chat when timer hits 0
+            clearInterval(countdownInterval);
+        } else {
+            const minutes = Math.floor((remainingTime / 1000) / 60);
+            const seconds = Math.floor((remainingTime / 1000) % 60);
+            countdownElement.innerHTML = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        }
+    }
+
+    // Ensure countdown starts immediately and updates every second
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+// ✅ Set cooldown when user reaches limit
+function setCooldown() {
+    const currentTime = new Date().getTime();
+    const newCooldownEndTime = currentTime + COOLDOWN_TIME;
+
+    // Store cooldown end time in localStorage
+    localStorage.setItem("cooldownEndTime", newCooldownEndTime);
+    cooldownEndTime = newCooldownEndTime; // Update variable
+
+    console.log(`⏳ Cooldown started. Chat will be unlocked at: ${new Date(newCooldownEndTime).toLocaleTimeString()}`);
+
+    startCountdown(); // Start the countdown timer
+}
+
+// ✅ Check cooldown on page load
+checkCooldown();
+
+
 function toggleSettings() {
     const settingsPanel = document.getElementById('bot_settings');
     settingsPanel.classList.toggle('show');
@@ -2432,11 +2787,16 @@ document.addEventListener("DOMContentLoaded", function () {
             this.scrollIntoView({ behavior: "smooth", block: "end" });
         }, 300);
     });
+
+
 });
 
 
 
+
+
 </script>
+
 
 </body>
 </html>
