@@ -916,6 +916,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function addImageMessage(sender, imageUrl) {
     const messageHTML = `
         <div class="message bot">
+            <p>Here’s your generated image!</p>
             <img src="${imageUrl}" alt="Generated Image" style="max-width: 100%; border-radius: 8px;">
             <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
         </div>
@@ -991,10 +992,11 @@ function sendMessage() {
 
     // 🚀 Image Generation Logic
     if (aiSelect.value === "imagine") {
-        console.log("🎨 Image generation triggered for Imagine AI!");
-        apiUrl = `/api/generate-image/`;
-        requestBody = { prompt: message };
-    }
+    console.log("🎨 Image generation triggered for Imagine AI!");
+    apiUrl = `/api/guest/chat/imagine/`;  // ✅ Use the existing guest chat endpoint
+    requestBody = { message: message };  // ✅ Maintain correct JSON format
+}
+
 
     fetch(apiUrl, {
         method: 'POST',
@@ -1024,6 +1026,7 @@ function sendMessage() {
             console.warn("⚠️ AI Response is empty or undefined.");
             addMessage('System', '⚠️ AI did not return a response. Please try again.');
         }
+
 
         // ✅ Update Message Count
         messageCount++;

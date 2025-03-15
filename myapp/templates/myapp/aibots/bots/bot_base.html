@@ -406,7 +406,22 @@
  
  
   
+<script>
+    function loadChat(chatId) {
+    fetch(`/api/chat_history/${chatId}/`) // Replace with your actual API endpoint
+    .then(response => response.json())
+    .then(data => {
+        document.querySelector("#chatbox").innerHTML = "";
+        data.full_conversation.forEach(msg => {
+            const messageClass = msg.sender === "user" ? "user" : "bot";
+            document.querySelector("#chatbox").innerHTML += `<div class="message ${messageClass}">${msg.text}</div>`;
+        });
+        document.querySelector("#chatbox").scrollTop = document.querySelector("#chatbox").scrollHeight;
+    })
+    .catch(error => console.error("Error loading chat history:", error));
+}
 
+</script>
     <!-- JavaScript Files -->
     <script src="{% static 'myapp/js/jquery-3.5.1.min.js' %}"></script>
     <script src="{% static 'myapp/js/bootstrap.bundle.min.js' %}"></script>

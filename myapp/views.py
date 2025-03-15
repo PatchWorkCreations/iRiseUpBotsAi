@@ -3912,3 +3912,69 @@ def iriseupdashboard(request):
 
     # Render the course menu and pass the subscription status
     return render(request, 'myapp/aibots/iriseupai/ai_selection.html', {"is_pro_user": is_pro_user, "ai_list": AIs})
+
+
+from django.shortcuts import render
+from .models import ChatHistory
+
+def chat_view(request):
+    chat_history = ChatHistory.objects.filter(user=request.user).order_by('-date')
+
+    return render(request, "myapp/aibots/bots/bot_base.html", {
+        "chat_history": chat_history,
+    })
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from myapp.models import AIChat, AIMessage
+
+@csrf_exempt
+def chat_with_ai(request, ai_id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user_message = data.get("message", "").strip()
+
+        # 🔥 If no chat session exists, create a new one
+        chat, created = AIChat.objects.get_or_create(user=request.user, ai_id=ai_id, title="New Chat")
+
+        # ✅ Save the user message
+        AIMessage.objects.create(chat=chat, sender="user", text=user_message)
+
+        # 🔥 AI Response Logic (Your existing logic)
+        ai_response = f"Hello! You said: {user_message}"
+
+        # ✅ Save the AI response
+        AIMessage.objects.create(chat=chat, sender="bot", text=ai_response)
+
+        return JsonResponse({"response": ai_response})
+    
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def get_chat_titles(request, ai_id):
+    """Return chat history titles for a selected AI."""
+    chats = AIChat.objects.filter(user=request.user, ai_id=ai_id).order_by("-created_at")
+    
+    chat_data = [{"chat_id": chat.id, "title": chat.title} for chat in chats]
+    
+    return JsonResponse({"chats": chat_data})
+
+
+@login_required
+def get_chat_messages(request, chat_id):
+    """Return messages of a selected chat session."""
+    chat = get_object_or_404(AIChat, id=chat_id, user=request.user)
+    messages = AIMessage.objects.filter(chat=chat).order_by("timestamp")
+    
+    messages_data = [
+        {"sender": msg.sender, "text": msg.text, "timestamp": msg.timestamp.strftime("%H:%M")}
+        for msg in messages
+    ]
+    
+    return JsonResponse({"messages": messages_data})

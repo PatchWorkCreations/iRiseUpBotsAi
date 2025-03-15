@@ -98,6 +98,45 @@ class SquareCustomer(models.Model):
 
 
 from django.db import models
+from django.contrib.auth.models import User
+
+class ChatHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ai_bot = models.CharField(max_length=100)  # AI bot name
+    date = models.DateTimeField(auto_now_add=True)
+    summary = models.TextField()  # Short summary of the chat
+    full_conversation = models.JSONField()  # Store entire chat history as JSON
+
+    def __str__(self):
+        return f"{self.user.username} - {self.ai_bot} - {self.date.strftime('%Y-%m-%d')}"
+
+
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils.timezone import now
+
+class AIChat(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ai_id = models.CharField(max_length=50)  
+    title = models.CharField(max_length=255, default="Untitled Chat")  
+    created_at = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.ai_id} - {self.title}"
+
+class AIMessage(models.Model):
+    chat = models.ForeignKey(AIChat, on_delete=models.CASCADE, related_name="messages")
+    sender = models.CharField(max_length=10, choices=[("user", "User"), ("bot", "Bot")])
+    text = models.TextField(blank=True, null=True)
+    timestamp = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return f"{self.sender} - {self.chat.title} - {self.timestamp.strftime('%H:%M')}"
+
+
+
+
+from django.db import models
 
 class Course(models.Model):
     title = models.CharField(max_length=250)

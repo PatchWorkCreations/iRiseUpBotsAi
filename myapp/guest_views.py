@@ -97,11 +97,10 @@ def limit_guest_chats(request):
     return None  # ✅ Allows the request to proceed if limit is not reached
 
 
-# ✅ AI Chatbot Function with Enforced Identity
 @csrf_exempt
 def guest_bot_response(request, bot_name):
     if request.method != 'POST':
-        return JsonResponse({'error': '❌ Invalid request method.'}, status=400)
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
 
     # ✅ Check guest chat limit
     limit_check = limit_guest_chats(request)
@@ -113,7 +112,6 @@ def guest_bot_response(request, bot_name):
         return JsonResponse({'response': '❌ Error: Expected JSON request.'}, status=400)
 
     try:
-        # ✅ Extract user message
         data = json.loads(request.body.decode('utf-8'))
         user_message = data.get('message', '').strip()
     except json.JSONDecodeError:
@@ -122,7 +120,7 @@ def guest_bot_response(request, bot_name):
     if not user_message:
         return JsonResponse({'response': '⚠️ Error: Message cannot be empty.'}, status=400)
 
-    # ✅ Enforce AI identity & specialty
+    # ✅ Enforce AI Identity & Specialty
     identity_prompt = AI_IDENTITIES.get(bot_name, "You are an AI assistant.")
     
     system_prompt = f"""
@@ -130,32 +128,33 @@ def guest_bot_response(request, bot_name):
     Always respond in a warm and conversational manner. If asked about your specialty, always give a confident and clear answer.
     """
 
-    # ✅ Maintain conversation history in session
     conversation_key = f"{bot_name}_chat_history"
     conversation_history = request.session.get(conversation_key, [])
 
-    # ✅ Ensure system prompt is always reinforced
     if not conversation_history:
         conversation_history.append({"role": "system", "content": system_prompt})
 
-    # ✅ Append user message
     conversation_history.append({"role": "user", "content": user_message})
 
+    # ✅ Special Handling for Imagine AI – Image Generation
     if bot_name == "imagine":
         try:
-            # ✅ Use GPT to determine if the user request is for an image
-            intent_response = openai_client.chat.completions.create(
+            client = openai.OpenAI(api_key=OPENAI_API_KEY)
+
+            # ✅ Determine if request requires an image
+            intent_response = client.chat.completions.create(
                 model="gpt-4",
                 messages=[
-                    {"role": "system", "content": "You determine if the user is requesting an image. Reply with 'yes' or 'no'."},
+                    {"role": "system", "content": "Determine if the user request is for an image. Reply with 'yes' or 'no'."},
                     {"role": "user", "content": f"Does this request require an image? Reply with 'yes' or 'no': {user_message}"}
                 ]
             )
+
             intent_reply = intent_response.choices[0].message.content.strip().lower()
 
             if intent_reply == "yes":
                 structured_prompt = f"An image of {user_message}"
-                image_response = openai_client.images.generate(
+                image_response = client.images.generate(
                     model="dall-e-3",
                     prompt=structured_prompt,
                     n=1,
@@ -165,26 +164,22 @@ def guest_bot_response(request, bot_name):
                 return JsonResponse({'response': 'Here’s your generated image!', 'image_url': image_url})
 
         except Exception as e:
-            logger.error(f"❌ OpenAI Intent Detection Error: {e}")
+            logger.error(f"OpenAI Intent Detection Error: {e}")
 
     try:
-        # ✅ Call OpenAI API with reinforced identity
         response = openai_client.chat.completions.create(
             model="gpt-4",
             messages=[{"role": "system", "content": system_prompt}] + conversation_history
         )
-        ai_message = response.choices[0].message.content
 
-        # ✅ Store AI response in session
+        ai_message = response.choices[0].message.content
         conversation_history.append({"role": "assistant", "content": ai_message})
+
         request.session[conversation_key] = conversation_history
         request.session.modified = True
 
     except Exception as e:
-        logger.error(f"❌ OpenAI API Error: {e}")
+        logger.error(f"OpenAI API Error: {e}")
         return JsonResponse({'response': '⚠️ AI is currently unavailable. Please try again later.'}, status=500)
 
     return JsonResponse({'response': ai_message})
-
-
-

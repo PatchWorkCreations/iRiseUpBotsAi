@@ -1477,6 +1477,84 @@ body {
     }
 }
 
+/* ✅ CHAT HISTORY SIDEBAR (RIGHT SIDE) */
+.chat-history-sidebar {
+    position: fixed;
+    right: 0; /* Stick to the right side */
+    top: 0;
+    height: 100vh; /* Full height */
+    width: 280px; /* Sidebar width */
+    background: #ffffff; /* White background */
+    border-left: 1px solid #ddd; /* Subtle left border */
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    padding: 20px;
+    overflow-y: auto; /* Enable scrolling */
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(100%); /* Initially hidden */
+    z-index: 999; /* Ensure it stays on top */
+}
+
+/* ✅ Show Sidebar When Active */
+.chat-history-sidebar.show {
+    transform: translateX(0);
+}
+
+/* ✅ Sidebar Title */
+.chat-history-sidebar h2 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #025450; /* Brand color */
+    padding-bottom: 8px;
+}
+
+/* ✅ Chat History List */
+#chat-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ✅ Individual Chat History Title */
+.chat-history-title {
+    background: transparent;
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+
+/* ✅ Hover Effect */
+.chat-history-title:hover {
+    background: #f4f4f4; /* Light hover effect */
+}
+
+/* ✅ Active (Selected) Chat Title */
+.chat-history-title.active {
+    background: #025450; /* Darker brand color */
+    color: white;
+    border: 1px solid #024642;
+}
+
+/* ✅ Responsive Adjustments for Smaller Screens */
+@media (max-width: 768px) {
+    .chat-history-sidebar {
+        width: 100%; /* Full width on mobile */
+        height: 50vh; /* Half screen height */
+        bottom: 0; /* Stick to bottom */
+        right: 0;
+        transform: translateY(100%); /* Hide initially */
+    }
+
+    .chat-history-sidebar.show {
+        transform: translateY(0);
+    }
+}
 
 
 
@@ -1717,7 +1795,10 @@ body {
 
 <!-- ✅ FULL-SCREEN VIEW -->
 <div class="messenger-container">
-    <!-- ✅ Sidebar with AI Selection -->
+    
+
+    
+    
     <div class="sidebar">
         <h2 style="font-size: 2rem; /* Adjust size as needed */
         font-weight: 700; /* Bold but not too heavy */
@@ -1750,6 +1831,8 @@ body {
             <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">Upgrade to Pro</a>
             </div>
             {% endif %}
+
+    
 
                 
         
@@ -2790,11 +2873,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 });
-
-
-
-
-
 </script>
 
 

@@ -228,5 +228,10 @@ urlpatterns = [
     path("test/", views.test, name="test"),
     path('chat_home/', views.chat_home, name="chat_home"),
     path('chat/<str:ai_name>/', views.test_chat_view, name="chat_view"),
-     
+
+    path('api/guest/chat/<str:bot_name>/', guest_views.guest_bot_response, name='guest_chat'),
+
+    
+    path('api/generate-image/', guest_views.guest_bot_response, name='generate_image'),
+
 ]
