@@ -99,16 +99,147 @@ class SquareCustomer(models.Model):
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 
 class ChatHistory(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    ai_bot = models.CharField(max_length=100)  # AI bot name
-    date = models.DateTimeField(auto_now_add=True)
-    summary = models.TextField()  # Short summary of the chat
-    full_conversation = models.JSONField()  # Store entire chat history as JSON
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats")
+    ai_bot = models.CharField(max_length=50)  # e.g., 'Nexara', 'Thrive'
+    title = models.CharField(max_length=255, blank=True, null=True)  # AI-generated title
+    messages = models.JSONField(default=list)  # Stores chat messages
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        # ✅ If no title exists, generate a title based on the first message
+        if not self.title and self.messages:
+            first_message = self.messages[0].get("content", "New Chat")
+            self.title = first_message[:50]  # Limit title length
+
+        super().save(*args, **kwargs)
+
+from django.db import models
+
+from django.db import models
+from django.utils.text import slugify
+from django.utils.timezone import now
+
+from cloudinary.models import CloudinaryField  # if you're using Cloudinary
+# OR
+# from django.db.models import ImageField  # for local/media storage
+
+class AIBot(models.Model):
+    AI_TYPE_CHOICES = [
+        ('text', 'Text-Based AI'),
+        ('image', 'Image Generator AI'),
+    ]
+
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(unique=True, blank=True, null=True)
+    specialty = models.TextField(help_text="What this AI specializes in.")
+    description = models.TextField(help_text="Brief description of this AI.")
+    bio = models.TextField(help_text="Brief info of this AI.", blank=True, null=True)
+    ai_type = models.CharField(max_length=10, choices=AI_TYPE_CHOICES, default="text")
+    image = CloudinaryField(
+    'image',
+    folder='iriseup/ai/icon',  # 👈 Folder path inside your Cloudinary account
+    blank=True,
+    null=True
+    )
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=now, editable=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def generate_prompt(self):
+        return f"""You are {self.name}, a specialized AI in {self.specialty}.
+
+{self.description}
+
+Your goal is to provide engaging, informative, and valuable responses while always aligning with user intent. 
+Be concise yet insightful. If unsure, ask clarifying questions.
+"""
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_active_bots(cls):
+        return cls.objects.filter(is_active=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.ai_bot} - {self.date.strftime('%Y-%m-%d')}"
+        return f"{self.name} ({'Active' if self.is_active else 'Inactive'})"
+
+
+from django.db import models
+from django.contrib.auth.models import User
+import openai
+
+class AIChatSession(models.Model):
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('archived', 'Archived'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="ai_chats")
+    ai_bot = models.ForeignKey("AIBot", on_delete=models.CASCADE)  # AI bot used
+    title = models.CharField(max_length=255, blank=True, null=True)  # AI-generated or user-renamed title
+    messages = models.JSONField(default=list)  # ✅ Store chat messages
+    created_at = models.DateTimeField(auto_now_add=True)  # When chat started
+    last_updated = models.DateTimeField(auto_now=True)  # When chat was last modified
+    session_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="active")  # ✅ Track chat session status
+    manually_renamed = models.BooleanField(default=False)  # ✅ Tracks if user manually renamed the chat
+
+    def generate_chat_title(self, force_update=False):
+        """Use AI to generate a meaningful chat title based on the conversation."""
+        if self.manually_renamed:  # ✅ If user renamed it, AI should NOT overwrite it
+            return
+
+        messages = self.messages[:5]  # ✅ Consider the first 5 messages for better context
+        if not messages:
+            return  # No messages yet, skip
+
+        # ✅ Fix: Use "content" instead of "message"
+        conversation_text = "\n".join([msg.get("content", "") for msg in messages if msg.get("role") == "user"]).strip()
+
+        if not conversation_text:
+            self.title = f"Chat with {self.ai_bot.name}"  # ✅ Default title if no user messages
+            return
+
+        try:
+            client = openai.OpenAI()
+            response = client.chat.completions.create(
+                model="gpt-4-turbo",
+                messages=[
+                    {"role": "system", "content": "Generate a short, meaningful title (max 6 words) summarizing this conversation."},
+                    {"role": "user", "content": conversation_text}
+                ]
+            )
+
+            generated_title = response.choices[0].message.content.strip()
+            if len(generated_title.split()) > 6:  # ✅ Keep it short
+                generated_title = f"Chat with {self.ai_bot.name}"
+
+            if force_update or not self.title:  # ✅ Update title dynamically unless manually renamed
+                self.title = generated_title
+                self.save()
+
+        except Exception as e:
+            if not self.title:
+                self.title = f"Chat with {self.ai_bot.name}"  # ✅ Fallback title
+                self.save()
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)  # Save first to get the ID
+
+        if not self.manually_renamed and (is_new or not self.title):
+            self.generate_chat_title(force_update=True)
+
+
+    def __str__(self):
+        return f"Chat with {self.ai_bot.name} - {self.user.username} ({self.created_at.strftime('%Y-%m-%d')})"
+
 
 
 from django.db import models

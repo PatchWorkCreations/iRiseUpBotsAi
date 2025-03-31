@@ -22,7 +22,7 @@ urlpatterns = [
     path('blogs/category/<int:category_id>/', views.blog_category, name='blog_category'),
     path('blogs/search/', views.blog_search, name='blog_search'),
     path('email-collection/', views.email_collection, name='email_collection'),
-    path('iriseupdashboard/', views.iriseupdashboard, name='iriseupdashboard'),
+    path('iriseupdashboard/', views.chat_iriseupai_sandbox, name='iriseupdashboard'),
     path('courses/', views.course_list, name='course_list'),
     path('course/continue/<int:course_id>/', views.course_continue, name='course_continue'),
 
@@ -103,25 +103,25 @@ urlpatterns = [
     path('index', views.index, name='index'),
     path('index2', views.index2, name='index2'),
     
-    path('api/chat/inspire/', views.get_inspire_response, name='get_inspire_response'),  # Ezra
-    path('api/chat/pulse/', views.get_pulse_response, name='get_pulse_response'),        # Caleb
-    path('api/chat/soulspark/', views.get_soulspark_response, name='get_soulspark_response'),  # Harper
+    path('api/chat/inspire/', views.get_elevate_response, name='get_elevate_response'),  # Ezra
+    path('api/chat/pulse/', views.get_thrive_response, name='get_thrive_response'),        # Caleb
+    path('api/chat/soulspark/', views.get_lumos_response, name='get_lumos_response'),  # Harper
 
      
 
     # Additional API Endpoints for Renamed Bots
      
-    path('api/chat/mindforge/', views.get_mindforge_response, name='get_mindforge_response'),  # Einstein
+    path('api/chat/mindforge/', views.get_mentor_iq_response, name='get_mentor_iq_response'),  # Einstein
     
     
 
     # Echo and Maven Chat API Endpoints and Views
-    path('api/chat/echo/', views.get_echo_response, name='get_echo_response'),        # Echo
-    path('api/chat/pathfinder/', views.get_pathfinder_response, name='get_pathfinder_response'),  # Maven
+    path('api/chat/echo/', views.get_imagine_response, name='get_imagine_response'),        # Echo
+    path('api/chat/pathfinder/', views.get_gideon_response, name='get_gideon_response'),  # Maven
   
 
  
-    path('api/chat/fortify/', views.get_fortify_response, name='get_fortify_response'),  
+    path('api/chat/fortify/', views.get_keystone_response, name='get_keystone_response'),  
 
     
     path('personal_info_update/', views.personal_info_update, name='personal_info_update'),
@@ -203,15 +203,16 @@ urlpatterns = [
     path('', views.chat_iriseupai, name='chat_iriseupai'),
     path('chat-iriseupai', views.chat_iriseupai, name='chat_iriseupai'),
     
-    path('api/chat/lumos/', views.get_soulspark_response, name='get_soulspark_response'),  # Lumos (was soulspark)
-    path('api/chat/mentor-iq/', views.get_mindforge_response, name='get_mindforge_response'),  # Mentor IQ (was mindforge)
-    path('api/chat/elevate/', views.get_inspire_response, name='get_inspire_response'),  # Elevate (was inspire)
-    path('api/chat/thrive/', views.get_pulse_response, name='get_pulse_response'),  # Thrive (was pulse)
-    path('api/chat/imagine/', views.get_echo_response, name='get_echo_response'),  # Imagine (was echo)
-    path('api/chat/gideon/', views.get_pathfinder_response, name='get_pathfinder_response'),  # Gideon (same)
-    path('api/chat/Nexara/', views.get_bridge_response, name='get_bridge_response'),  # Nexara (was bridge)
-    path('api/chat/keystone/', views.get_fortify_response, name='get_fortify_response'),
-    
+    path('api/chat/lumos/', views.get_lumos_response, name='get_lumos_response'),  # Lumos (was soulspark)
+    path('api/chat/mentor-iq/', views.get_mentor_iq_response, name='get_mentor_iq_response'),  # Mentor IQ (was mindforge)
+    path('api/chat/elevate/', views.get_elevate_response, name='get_elevate_response'),  # Elevate (was inspire)
+    path('api/chat/thrive/', views.get_thrive_response, name='get_thrive_response'),  # Thrive (was pulse)
+    path('api/chat/imagine/', views.get_imagine_response, name='get_imagine_response'),  # Imagine (was echo)
+    path('api/chat/gideon/', views.get_gideon_response, name='get_gideon_response'),  # Gideon (same)
+    path('api/chat/Nexara/', views.get_nexara_response, name='get_nexara_response'),  # Nexara (was bridge)
+    path('api/chat/keystone/', views.get_keystone_response, name='get_keystone_response'),
+    path('api/chat/nexara/', views.get_nexara_response, name='get_nexara_response'),  # Nexara (was bridge)
+
     # ✅ Test Endpoint
     path('api/guest/chat/<str:bot_name>/', guest_views.guest_bot_response, name='guest_bot_response'),
     path('signup/', views.signup_view, name='signup'),
@@ -220,18 +221,52 @@ urlpatterns = [
     path("api/get-user-plan/", views.get_user_plan, name="get-user-plan"),
     path("upgrade-to-pro/", views.upgrade_to_pro, name="upgrade_to_pro"),
 
-    path('chat/<str:bot_name>/', views.chat_view, name='chat_view'),
+    
 
     path("terms/", views.terms_view, name="terms"),
 
 
     path("test/", views.test, name="test"),
     path('chat_home/', views.chat_home, name="chat_home"),
-    path('chat/<str:ai_name>/', views.test_chat_view, name="chat_view"),
+    
 
     path('api/guest/chat/<str:bot_name>/', guest_views.guest_bot_response, name='guest_chat'),
 
     
     path('api/generate-image/', guest_views.guest_bot_response, name='generate_image'),
+    path('sandbox_ai/', views.chat_home, name="chat_home"),
+
+
+    path("api/chat-history/", views.get_chat_history, name="chat-history-list"),
+
+
+    path("api/chat-history/<int:chat_id>/", views.get_chat_history, name="chat-history-detail"),
+
+    path("api/chat/send-message/", views.send_message, name="send_message"),
+
+
+    #######################################################################################
+
+    path("api/ai_list/", views.ai_list, name="ai_list"),
+
+    # ✅ Get All Chat History (Right Sidebar)
+    path("api/get_chat_history/", views.get_chat_history, name="get_chat_history"),
+
+    # ✅ Get Specific Chat by ID (Clicking on a chat)
+    path('api/get_chat/<int:chat_id>/', views.get_chat, name='get_chat'),
+
+    # ✅ Send Message to AI (Middle Chat Box)
+    path("api/chat/stream_message/", views.stream_chat_message, name="stream_chat_message"),
+
+    path("api/chat/message/", views.simple_chat_message, name="simple_chat_message"),
+
+    # ✅ Rename Chat Title (Manual User Edit)
+    path("api/chat/<int:chat_id>/rename/", views.rename_chat_title, name="rename_chat_title"),
+
+    # ✅ Reset Chat Title (Re-enable AI Naming)
+    path("api/chat/<int:chat_id>/reset_title/", views.reset_chat_title, name="reset_chat_title"),
+
+    path("sandbox/", views.iriseupdashboard, name="chat_iriseupai_sandbox"),
+    path("looks/", views.look, name="look"),
 
 ]

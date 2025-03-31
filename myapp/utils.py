@@ -537,3 +537,20 @@ def send_ezra_welcome_email(user_email, random_password):
     email = EmailMultiAlternatives(subject, text_content, from_email, to_email)
     email.attach_alternative(html_content, "text/html")
     email.send()
+
+
+
+import openai
+
+def generate_title_from_ai(ai_response):
+    """Generate a short and relevant chat title based on AI's first response."""
+    client = openai.OpenAI()
+    title_response = client.chat.completions.create(
+        model="gpt-3.5-turbo",  # You can use GPT-4 if available
+        messages=[
+            {"role": "system", "content": "Create a very short title summarizing this conversation."},
+            {"role": "user", "content": f"Summarize this in a title: {ai_response}"}
+        ]
+    )
+
+    return title_response.choices[0].message.content.strip()

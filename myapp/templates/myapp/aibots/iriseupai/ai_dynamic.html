@@ -1,0 +1,2124 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% block title %}AI Bots Menu{% endblock %}
+{% load static %}
+{% block content %}
+ 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+<style>
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background: #f8f8f8;
+}
+
+.top-icons {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.top-icons i {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.chat-layout {
+    display: flex;
+    height: calc(100vh - 50px);
+    gap: 20px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.left-panel, .right-panel {
+    width: 20%;
+    background: white;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}
+
+.panel-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #025450;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    margin-bottom: 12px;
+    border-left: 4px solid #FF7A61;
+    padding-left: 10px;
+}
+
+
+
+.left-panel .bot-btn,
+.history-item {
+    padding: 12px;
+    background: #eaeaea;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.chat-container {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    background: white;
+}
+
+.chat-header {
+    background: #003c2f;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.message {
+    max-width: 60%;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.message.user {
+    align-self: flex-end;
+    background-color: #2446b6;
+    color: white;
+    text-align: left;
+    border-radius: 15px 15px 0 15px;
+}
+
+.message.bot {
+    max-width: 80%;
+    background-color: #e5e5e5;
+    color: #333;
+    padding: 10px 14px;
+    border-radius: 18px 18px 18px 0;
+    margin-right: auto;
+    margin-left: 0;
+    word-wrap: break-word;
+    font-size: 0.95em;
+    white-space: pre-wrap; /* 💡 Ensures line breaks */
+}
+
+
+#ai-list li,
+    #chat-history li {
+        cursor: pointer;
+        padding: 10px;
+        background: #fff;
+        border-radius: 5px;
+        margin-bottom: 5px;
+    }
+
+    #ai-list li:hover,
+    #chat-history li:hover {
+        background: #ddd;
+    }
+
+
+
+
+.chat-footer {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.typing-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding: 10px 20px;
+    background: #e9ecef;
+    border-radius: 15px 15px 15px 0;
+    max-width: 60%;
+}
+
+
+#message-input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+.typing-dots span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 0 2px;
+    background: #666;
+    border-radius: 50%;
+    animation: blink 1.4s infinite ease-in-out both;
+}
+
+.typing-dots span:nth-child(1) { animation-delay: 0s; }
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+    0%, 80%, 100% { opacity: 0; }
+    40% { opacity: 1; }
+}
+
+#send {
+    background: #025450;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.sidebar-upgrade {
+    background: #ffffff; /* Clean white background */
+    border: 1px solid #42BFB7; /* Light teal border for branding */
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    margin-top: 16px;
+    box-shadow: 0 4px 8px rgba(2, 84, 80, 0.1); /* Soft teal shadow for branding depth */
+}
+
+/* ✅ Upgrade Title */
+.pro-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #025450; /* Dark teal for a premium feel */
+    margin-bottom: 6px;
+}
+
+/* ✅ Upgrade Description */
+.sidebar-upgrade p {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+/* ✅ Upgrade Button (On-Brand) */
+.upgrade-btn {
+    display: inline-block;
+    background: #FF7A61; /* Coral gradient for a strong CTA */
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(255, 122, 97, 0.3);
+}
+
+.upgrade-btn:hover {
+    background: #C60E0F; /* Darker coral on hover */
+    transform: scale(1.05);
+}
+
+.upgrade-btn:active {
+    background: #A50C0E;
+    box-shadow: none;
+}
+
+/* modal */
+.upgrade-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Dark overlay */
+    backdrop-filter: blur(6px); /* Smooth blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 💎 Modal Content Box */
+.upgrade-modal-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: slideIn 0.4s ease-in-out;
+}
+
+/* ❌ Close Button */
+.upgrade-close-button {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    font-size: 22px;
+    color: #555;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.upgrade-close-button:hover {
+    color: #ff4757;
+    transform: scale(1.2);
+}
+
+/* 🚀 Title Styling */
+.upgrade-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+/* 📌 Text */
+.upgrade-text {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* ✅ Primary CTA Button */
+.upgrade-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #D83A56, #BF2441);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    width: 100%;
+    text-align: center;
+}
+
+.upgrade-btn:hover {
+    background: linear-gradient(90deg, #BF2441, #8F1C30);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255, 56, 96, 0.4);
+}
+
+/* 👀 Secondary Option */
+.upgrade-secondary {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 12px;
+}
+
+.upgrade-secondary a {
+    color: #D83A56;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.upgrade-secondary a:hover {
+    text-decoration: underline;
+}
+
+/* 🌟 Animation Effects */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* 📱 Mobile Optimization */
+@media (max-width: 480px) {
+    .upgrade-modal-content {
+        max-width: 90%;
+        padding: 20px;
+    }
+    
+    .upgrade-title {
+        font-size: 1.6rem;
+    }
+
+    .upgrade-text {
+        font-size: 1rem;
+    }
+
+    .upgrade-btn {
+        font-size: 1.1rem;
+        padding: 10px 20px;
+    }
+}
+
+/*settings*/
+
+
+.settings-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-main a {
+    text-decoration: none;
+    color: inherit; /* Keeps the text color consistent */
+}
+
+/* Profile Section */
+.settings-main-sub {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    background-color: #f5f5f5; /* Light gray background for each item */
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 0.5rem;
+}
+
+.settings-main-sub:hover {
+    background-color: #e0e0e0; /* Darker gray on hover */
+}
+
+.settings-main-sub img.menu-girl-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.smith {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+    color: #333; /* Dark gray for strong readability */
+}
+
+.smith-email {
+    font-size: 0.85rem;
+    color: #666; /* Softer gray for email text */
+}
+
+/* Individual Setting Options */
+.setting-opestion-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1rem; /* Increased top and bottom padding */
+    border-bottom: 1px solid #c0c0c0 !important; /* Black border line with !important */
+    font-size: 1.1rem; /* Larger font size for better readability */
+    transition: background-color 0.2s;
+}
+
+.setting-opestion-main:last-child {
+    border-bottom: none; /* Remove bottom border for the last item */
+}
+
+.setting-opestion-main:hover {
+    background-color: #f8f8f8; /* Lighter hover effect */
+}
+
+.setting-opestion-main-sub {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem; /* Space between icon and text */
+}
+
+.option-icon {
+    font-size: 1.25rem; /* Adjust icon size */
+    color: #025450; /* Consistent color with brand */
+}
+
+.smith {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.new-chat {
+    font-size: 1rem;
+    color: #025450; /* Consistent with brand color */
+    font-weight: 600;
+}
+
+.setting-opestion-main h2,
+.setting-opestion-main .smith {
+    font-size: 1.1rem; /* Larger font size for the text */
+    color: #615f5f; /* Ensure text color is clear */
+    font-weight: 600;
+    margin: 0;
+}
+
+
+.setting-opestion-main {
+    font-size: 1.1rem; /* Larger font size for the text */
+    color: #025450; /* Ensure text color is clear */
+    font-weight: 600;
+    margin: 0;
+}
+
+
+/* Additional styling for the angle-right icon */
+.setting-opestion-main i.fa-angle-right {
+    font-size: 1.2rem; /* Adjusted size for the right arrow icon */
+    color: #025450;
+}
+
+.setting-opestion-main:hover {
+    background-color: #f8f8f8; /* Slightly lighter background on hover */
+}
+
+.version {
+    font-size: 0.85rem;
+    color: #999;
+    margin-top: 0.3rem;
+    font-weight: 400;
+}
+
+
+.close-settings-btn:hover {
+    color: #ff484d; /* Changes color on hover */
+}
+
+/* Optional: Icon color adjustment for specific items */
+.setting-opestion-main .fa-sign-out-alt {
+    color: #ff484d; /* Red for logout icon */
+}
+
+/* ✅ Fullscreen Settings Panel */
+.fullscreen-settings-panel {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Hidden by default */
+    width: 400px;
+    height: 100vh;
+    background-color: #ffffff;
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    padding: 20px;
+    z-index: 2000; /* Ensure it appears above everything */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ✅ Show settings panel when the 'show' class is applied */
+.fullscreen-settings-panel.show {
+    right: 0;
+}
+
+
+/* ✅ Overlay when settings panel is open */
+.settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+    display: none; /* Hidden by default */
+    transition: opacity 0.3s ease-in-out;
+}
+
+.settings-overlay.show {
+    display: block;
+    opacity: 1;
+}
+
+/* ✅ Mobile Responsiveness */
+@media (max-width: 480px) {
+    .fullscreen-settings-panel {
+        width: 100%;
+        right: -100%;
+    }
+    .fullscreen-settings-panel.show {
+        right: 0;
+    }
+}
+
+#loading-history {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.close-fullscreen-settings-btn,
+.close-settings-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-fullscreen-settings-btn:hover,
+.close-settings-btn:hover {
+    color: #ff484d; /* Red hover color */
+}
+
+.upgrade-pro-section {
+    background: linear-gradient(135deg, #FFD700, #FFA500); /* Gold-Orange Gradient */
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    margin: 1rem auto;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    z-index: 3000;
+    display: none;
+    width: 200px;
+}
+
+.user-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-dropdown li {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px; /* 🔧 Increased spacing between icon and text */
+    font-size: 14px;
+}
+
+
+.user-dropdown li:hover {
+    background-color: #f4f4f4;
+}
+
+.user-dropdown a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Hide mobile layout on desktop */
+.full-layout {
+  display: block;
+}
+.mobile-layout {
+  display: none;
+}
+
+/* On mobile: hide full view, show mobile */
+@media (max-width: 480px) {
+    .message {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 18px;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    font-size: 0.95em;
+    }
+
+    .message.user {
+        max-width: 80%;
+        background-color: #2446b6;
+        color: white;
+        padding: 10px 14px;
+        border-radius: 18px 18px 0 18px;
+        margin-left: auto; /* Push to right */
+        margin-right: 0;   /* Align flush right */
+        box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.2);
+        word-wrap: break-word;
+        font-size: 0.95em;
+        
+    }
+
+    .message.bot {
+        max-width: 95%;
+        background-color: #e5e5e5;
+        color: #333;
+        padding: 10px 14px;
+        border-radius: 18px 18px 18px 0;
+        margin-right: auto; /* Push to left */
+        margin-left: 0;
+        word-wrap: break-word;
+        font-size: 0.95em;
+        white-space: pre-wrap;  
+        overflow-wrap: break-word;   /* 🛡️ Break long words safely */
+        word-wrap: break-word;
+        line-height: 1.4;    
+        
+    }
+
+
+    .full-layout {
+        display: none;
+    }
+    .mobile-layout {
+        display: block;
+    }
+
+    
+    
+    .mobile-container {
+    max-width: 414px;
+    margin: auto;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+
+    mobile-chatbox
+
+    .mobile-header {
+        position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    background-color: #0A4B3D;
+    color: white;
+    text-align: center;
+    padding: 20px 15px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    }
+
+    .mobile-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    }
+
+    .mobile-header p {
+    margin: 5px 0 0;
+    font-size: 0.9em;
+    }
+
+    .settings-icon {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    }
+
+    .mobile-ai-list {
+    padding: 20px;
+    flex-grow: 1;
+    overflow-y: auto;
+    }
+
+    .mobile-ai-card {
+    background-color: #e5e5e5;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    }
+
+    .mobile-ai-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px; /* 👈 spacing like .mobile-ai-icon */
+    }
+
+
+    .bot-info p {
+    margin: 0;
+    font-size: 0.85em;
+    color: #333;
+    }
+
+    .mobile-footer {
+    padding: 20px;
+    text-align: center;
+    }
+
+    .premium-box {
+    border: 2px solid #0A4B3D;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    }
+
+    .history-btn {
+    background-color: #0A4B3D;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1em;
+    cursor: pointer;
+    width: 100%;
+    }
+
+    #mobile-ai-list, 
+    #mobile-ai-list li {
+    list-style: none;
+    padding: 0;
+    margin-top: 110px;
+    }
+
+   
+    html {
+    -webkit-text-size-adjust: 100%;
+    }
+
+    .mobile-body-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 140px); /* 80px header + 60px input */
+    }
+
+    #mobile-chatbox {
+  flex: 1;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+  padding: 20px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* for iOS smooth scroll */
+}
+
+html, body {
+  height: 100%;
+  overflow: auto;
+}
+
+
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: #0A4B3D;
+  color: white;
+  text-align: center;
+  padding: 20px 15px;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+#mobile-header-chat {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+#mobile-header-chat i {
+  font-size: 1.5em;
+}
+
+
+#mobile-message-input-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-top: 1px solid #ccc;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.mobile-input-wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+#mobile-message-input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+#mobile-message-input::placeholder {
+  color: #888;
+}
+
+#mobile-message-input-container button {
+  background: #025450;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2em;
+  box-shadow: 0 3px 8px rgba(2, 84, 80, 0.3);
+  transition: all 0.2s ease;
+}
+
+#mobile-message-input-container button:hover {
+  background: #01332c;
+}
+}
+
+@media (max-width: 480px) {
+  #mobile-message-input-container {
+    bottom: env(safe-area-inset-bottom); /* iOS notch support */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  #mobile-footer {
+  position: sticky;
+  bottom: 0;
+  background-color: #ffffff;
+  z-index: 999;
+  padding: 15px 20px;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+  
+}
+
+@media (max-width: 480px) {
+    .fullscreen-settings-panel {
+        width: 100%;
+        right: -100%;
+    }
+    .fullscreen-settings-panel.show {
+        right: 0;
+    }
+}
+
+
+
+</style>
+<div class="full-layout">   
+    <div id="fullscreen-settings-panel" class="fullscreen-settings-panel">
+        <button class="close-fullscreen-settings-btn">
+            <i class="fas fa-times"></i> <!-- Close icon -->
+        </button>
+
+        <h2>Settings</h2>
+        <p>Manage your preferences here.</p>
+
+        <div class="settings-main">
+            <!-- Profile Section -->
+            <div>
+                <a href="{% url 'personal_info_update' %}">
+                    <div class="settings-main-sub">
+                        <svg class="menu-girl-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#025450" width="50px" height="50px">
+                            <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
+                        </svg>
+
+                        <div>
+                            <h2 class="smith">{{ user.first_name }} {{ user.last_name }}</h2>
+                            <p class="smith-email">{{ user.email }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {% if not is_pro_user %}
+            <div class="upgrade-pro-section">
+                <h3 class="pro-title">🚀 Discover Exclusive Features!</h3>
+                <p>Enjoy unlimited chats and priority support.</p>
+                <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">Upgrade to Pro</a>
+            </div>
+            {% endif %}
+
+            <a href="{% url 'personal_information' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-user"></i> <!-- Personal Info icon -->
+                        <h2 class="smith new-chat">Personal Info</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+
+            <a href="{% url 'faq' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-question-circle"></i> <!-- FAQ icon -->
+                        <h2 class="smith new-chat">FAQs</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+
+            <a href="{% url 'data_privacy' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-shield-alt"></i> <!-- Data & Privacy icon -->
+                        <h2 class="smith new-chat">Data & Privacy Policy</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+
+            <a href="{% url 'about_amigo' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-info-circle"></i> <!-- About icon -->
+                        <h2 class="smith new-chat">About iRiseUp.Ai</h2>
+                    </div>
+                    <p class="version">v1.0.0</p>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+
+            <a href="{% url 'feedback' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-comment-dots"></i> <!-- Feedback icon -->
+                        <h2 class="smith new-chat">Send Feedback</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+
+            <a href="{% url 'contact_us' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-envelope"></i> <!-- Contact Us icon -->
+                        <h2 class="smith new-chat">Contact Us</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+
+            <a href="{% url 'delete_deactivate' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-user-slash" style="color: #FF4848;"></i> <!-- Delete Account icon -->
+                        <h2 class="smith new-chat">Delete or Deactivate Account</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+
+            <a href="{% url 'sign_out' %}">
+                <div class="setting-opestion-main setting-opestion-space border-bottom-0">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-sign-out-alt" style="color: #FF4848;"></i> <!-- Logout icon in red -->
+                        <h2 class="smith new-chat">Logout</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+
+            {% if user.is_staff %}
+            <a href="{% url 'custom_admin:dashboard' %}">
+                <div class="setting-opestion-main setting-opestion-space">
+                    <div class="setting-opestion-main-sub">
+                        <i class="fa-solid fa-user-shield"></i> <!-- Staff Dashboard icon -->
+                        <h2 class="smith new-chat">Staff Dashboard</h2>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </a>
+            {% endif %}
+
+        </div>
+
+        <!-- Check if Access is Expired -->
+        {% if is_expired %}
+        <div class="alert alert-warning">
+            Your access has expired. Please renew your subscription to continue using the AI Bots.
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="top-icons">
+        <i class="fas fa-cog" id="fullscreen-settings-btn"></i>
+        <i class="fas fa-user-circle"></i>
+    </div>
+
+    <div class="user-dropdown" id="user-dropdown">
+        <ul>
+            <li onclick="document.getElementById('fullscreen-settings-btn').click()">
+                <i class="fa-solid fa-cog"></i> Settings
+            </li>
+            <li>
+                <a href="{% url 'personal_information' %}">
+                    <i class="fa-solid fa-user"></i> Personal Info
+                </a>
+            </li>
+            {% if user.is_staff %}
+            <li>
+                <a href="{% url 'custom_admin:dashboard' %}">
+                    <i class="fa-solid fa-user-shield"></i> Staff Dashboard
+                </a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="{% url 'sign_out' %}">
+                    <i class="fa-solid fa-sign-out-alt" style="color: #FF4848;"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+    <div class="chat-layout">
+        <!-- Left Sidebar: AI List -->
+        <aside class="left-panel">
+            <h3 class="panel-title">AI STRATEGIST</h3>
+            <ul id="ai-list">
+                <!-- AI Bots will load here -->
+            </ul>
+            
+
+            {% if not is_pro_user %} 
+                <div class="sidebar-upgrade">
+                    <h3 class="pro-title">🚀 Discover Exclusive Features!</h3>
+                <p>Enjoy unlimited chats and priority support.</p>
+                <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">Upgrade to Pro</a>
+                </div>
+            {% endif %}
+        </aside>
+
+        
+
+        <!-- Middle Column: Chat Interface -->
+        <section class="chat-container">
+            <div class="chat-header">
+                <span id="selected-ai">Select an AI</span>
+            </div>
+            <div id="chatbox" class="chat-messages"></div>
+
+
+            <div class="chat-footer">
+                <input type="text" id="message-input" placeholder="Type a message..." />
+                
+                <button id="send"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </section>
+
+        <!-- Right Sidebar: Chat History -->
+        <aside class="right-panel">
+            <h3 class="panel-title">Chat History</h3>
+            <ul id="chat-history">
+                <!-- Past conversations will load here -->
+            </ul>
+        </aside>
+    </div>
+</div>
+
+
+<div class="upgrade-modal" id="upgrade-modal" >
+    <div class="upgrade-modal-content">
+        <span class="upgrade-close-button" onclick="closeUpgradeModal()">&times;</span>
+        
+        <!-- 🚀 Strong Headline -->
+        <h2 class="upgrade-title">🚀 Free Chat Access is Limited Right Now!</h2>
+
+        <!-- 🔥 Upgrade Message -->
+        <p class="upgrade-text">
+            Due to high demand, we're temporarily limiting free chats to ensure  priority access  for Pro users.  
+            <br><br>
+            Your chat will be re-enabled in  45 minutes . Want to skip the wait?  
+        </p>
+
+
+        <!-- ✅ Action-Oriented CTA -->
+        <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">🎟️ Upgrade to Pro & Always Get Priority</a>
+
+
+        <!-- 👀 Subtle Secondary Option -->
+        <p class="upgrade-secondary">
+            Need more info? <a href="{% url 'upgrade_to_pro' %}" onclick="closeUpgradeModal(); return false;">Check Pricing</a>
+        </p>
+        <p>Your chat will be re-enabled in <span id="countdown-timer">45:00</span></p>
+
+    </div>
+</div>
+
+<!-- 📱 Mobile Layout -->
+<div class="mobile-layout">
+    <div class="mobile-container">
+  
+      <!-- 🔝 Header -->
+      <div id="mobile-header-default" class="mobile-header">
+        <h2 style="color: whitesmoke;">Hello!</h2>
+        <p style="color: whitesmoke;">Choose an AI Strategist Below</p>
+        <div class="settings-icon" id="mobile-settings-icon" onclick="toggleSettings()">⚙️</div>
+      </div>
+  
+      <!-- 🤖 AI List -->
+      <div class="mobile-ai-list" id="mobile-ai-list">
+        <!-- Dynamically filled by loadAIList() -->
+      </div>
+  
+      <div id="mobile-header-chat" class="mobile-header" style="display: none;">
+        <button onclick="resetMobileView()" style="background: none; border: none; color: white; font-size: 1.2em;">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <span id="mobile-ai-name" style="color: white; font-weight: bold; margin-left: 12px;"></span>
+      </div>
+      
+      <div class="mobile-body-content">
+        <div id="mobile-chatbox" class="chat-messages" style="margin-top: 70px; margin-bottom: 50px;">
+          <!-- Messages will show here -->
+        </div>
+      
+        <div id="mobile-message-input-container">
+          <div style="display: flex; gap: 10px;">
+            <input type="text" id="mobile-message-input" placeholder="Type a message..." />
+            <button onclick="sendMessage()">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+        
+  
+      <!-- 🔚 Footer -->
+      <div class="mobile-footer" id="mobile-footer">
+        {% if not is_pro_user %}
+        <div class="premium-box">
+          ✨ Discover Exclusive Features!<br>
+          <small>Enjoy unlimited chats and priority support.</small>
+        </div>
+        {% endif %}
+        <button class="history-btn" onclick="showMobileHistory()">History</button>
+      </div>
+    </div>
+  
+    <!-- 📜 Chat History Modal -->
+    <div id="mobile-history-modal" style="display: none;">
+      <div style="
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #fff;
+          border-top-left-radius: 20px;
+          border-top-right-radius: 20px;
+          max-height: 70vh;
+          overflow-y: auto;
+          box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+          padding: 20px;
+          z-index: 9999;
+      ">
+        <h3 style="text-align: center; color: #025450;">Chat History</h3>
+        <ul id="mobile-chat-history" class="mobile-ai-list">
+          <!-- Filled dynamically by loadFullChatHistorySidebar() -->
+        </ul>
+        <button onclick="closeMobileHistory()" style="
+            background: #FF7A61;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            margin: 15px auto 0;
+            display: block;
+            font-weight: bold;
+        ">Close</button>
+      </div>
+  
+      <!-- 🔲 Overlay -->
+      <div onclick="closeMobileHistory()" style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.4);
+          z-index: 9998;
+      "></div>
+    </div>
+  </div>
+  
+  
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    loadAIList();                     // Left sidebar
+    loadFullChatHistorySidebar();   
+    attachMessageEvents();  
+});
+
+function toggleSettings() {
+    document.getElementById("fullscreen-settings-btn").click();
+}
+
+
+let selectedAI = null;
+let selectedChatId = null;
+
+// ✅ Load AI Bot List (Left Sidebar)
+function loadAIList() {
+    fetch("/api/ai_list/")
+        .then(response => response.json())
+        .then(data => {
+            let aiList = document.querySelector("#ai-list");
+            aiList.innerHTML = "";
+
+            let mobileAIList = document.getElementById("mobile-ai-list");
+            if (mobileAIList) mobileAIList.innerHTML = "";
+
+            data.bots.forEach(bot => {
+                // 💻 Desktop List (Sidebar)
+                let li = document.createElement("li");
+                li.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="${bot.image || '/static/default-ai.png'}" alt="${bot.name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" />
+                        <div>
+                            <strong>${bot.name}</strong><br />
+                            <small style="color: gray;">${bot.bio}</small>
+                        </div>
+                    </div>
+                `;
+                li.onclick = () => startChat(bot);
+                aiList.appendChild(li);
+
+                // 📱 Mobile Version
+                if (mobileAIList) {
+                    let mobileDiv = document.createElement("div");
+                    mobileDiv.className = "mobile-ai-card";
+                    mobileDiv.innerHTML = `
+                        <img src="${bot.image || '/static/default-ai.png'}" alt="${bot.name}" class="mobile-ai-avatar" />
+                        <div>
+                            <strong>${bot.name}</strong><br />
+                            <small>${bot.bio}</small>
+                        </div>
+                    `;
+                    mobileDiv.onclick = () => {
+                        startChat(bot);
+                        showMobileChat(bot.name);
+                    };
+                    mobileAIList.appendChild(mobileDiv);
+                }
+            });
+
+            showMobileLanding();
+        })
+        .catch(error => console.error("❌ Error loading AI bots:", error));
+}
+
+
+
+// ✅ Load Chat History (Right Sidebar)
+function loadFullChatHistorySidebar() {
+    const historyList = document.getElementById("chat-history");            // Desktop history
+    const mobileList = document.getElementById("mobile-chat-history");      // Mobile modal
+
+    // 🟢 STEP 1: Loading states
+    if (historyList) {
+        historyList.innerHTML = `
+            <li id="loading-history" style="color: #025450; font-weight: bold; padding: 12px;">
+                👋 Welcome back! Fetching your past conversations…
+            </li>`;
+    }
+
+    if (mobileList) {
+        mobileList.innerHTML = `
+            <li id="loading-history" style="color: #025450; font-weight: bold; padding: 12px;">
+                ⏳ Loading mobile chat history…
+            </li>`;
+    }
+
+    fetch("/api/get_chat_history/")
+        .then(response => response.json())
+        .then(data => {
+            const groupedHistory = data.history || {};
+
+            // STEP 2: Clear loaders
+            if (historyList) historyList.innerHTML = "";
+            if (mobileList) mobileList.innerHTML = "";
+
+            // STEP 3: Handle no history
+            if (Object.keys(groupedHistory).length === 0) {
+                if (historyList) historyList.innerHTML = `<li>⚠️ No chat history available.</li>`;
+                if (mobileList) mobileList.innerHTML = `<li>⚠️ No mobile history found.</li>`;
+                return;
+            }
+
+            // STEP 4: Render both desktop & mobile history
+            for (const group in groupedHistory) {
+                const chats = groupedHistory[group];
+
+                // 💻 Desktop Group Header
+                if (historyList) {
+                    const headerItem = document.createElement("li");
+                    headerItem.textContent = group;
+                    headerItem.style.fontWeight = "bold";
+                    headerItem.style.color = "#025450";
+                    headerItem.style.marginTop = "15px";
+                    historyList.appendChild(headerItem);
+                }
+
+                chats.forEach(chat => {
+                    // 💻 Desktop Item
+                    if (historyList) {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = `${chat.title} (${chat.ai_bot})`;
+                        listItem.style.cursor = "pointer";
+                        listItem.onclick = () => {
+                            selectedChatId = chat.chat_id;
+                            selectedAI = chat.ai_bot;
+                            document.getElementById("selected-ai").innerText = chat.ai_bot;
+                            loadSingleChatMessages();
+                        };
+                        historyList.appendChild(listItem);
+                    }
+
+                    // 📱 Mobile Item
+                    if (mobileList) {
+                        const mobileItem = document.createElement("li");
+                        mobileItem.textContent = `${chat.title} (${chat.ai_bot})`;
+                        mobileItem.style.cursor = "pointer";
+                        mobileItem.style.padding = "10px";
+                        mobileItem.onclick = () => {
+                            selectedChatId = chat.chat_id;
+                            selectedAI = chat.ai_bot;
+                            showMobileChat(chat.ai_bot);
+                            loadSingleChatMessages();
+                            closeMobileHistory(); // Auto close modal after selecting
+                        };
+                        mobileList.appendChild(mobileItem);
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error("❌ Error loading chat history sidebar:", error);
+            if (historyList) historyList.innerHTML = `<li style="color:red;">⚠️ Failed to load chat history</li>`;
+            if (mobileList) mobileList.innerHTML = `<li style="color:red;">⚠️ Mobile history load failed</li>`;
+        });
+}
+
+
+function loadSingleChatMessages() {
+    if (!selectedChatId) {
+        console.warn("⚠️ No chat ID selected. Cannot load single chat messages.");
+        return;
+    }
+
+    // 🟡 Show a loading placeholder for mobile (and desktop too if you like)
+    const desktopChat = document.getElementById("chatbox");
+    const mobileChat = document.getElementById("mobile-chatbox");
+
+    desktopChat.innerHTML = `<div class="message bot">⏳ Loading conversation...</div>`;
+    mobileChat.innerHTML = `<div class="message bot">⏳ Loading conversation...</div>`;
+
+    fetch(`/api/get_chat/${selectedChatId}/`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("📜 Loaded Chat Messages:", data);
+
+            if (data.error) {
+                desktopChat.innerHTML = `<div class="message bot" style="color:red;">⚠️ ${data.error}</div>`;
+                mobileChat.innerHTML = `<div class="message bot" style="color:red;">⚠️ ${data.error}</div>`;
+                return;
+            }
+
+            // Clear both chat areas
+            desktopChat.innerHTML = "";
+            mobileChat.innerHTML = "";
+
+            if (data.messages && data.messages.length > 0) {
+                data.messages.forEach(msg => {
+                    const div = document.createElement("div");
+                    div.className = msg.role === "assistant" ? "message bot" : "message user";
+                    div.textContent = msg.content || "⚠️ Message missing content";
+                    desktopChat.appendChild(div.cloneNode(true));
+                    mobileChat.appendChild(div.cloneNode(true));
+                });
+
+                desktopChat.scrollTop = desktopChat.scrollHeight;
+                mobileChat.scrollTop = mobileChat.scrollHeight;
+            } else {
+                const noMsg = `<div class="message bot">⚠️ No messages in this chat.</div>`;
+                desktopChat.innerHTML = noMsg;
+                mobileChat.innerHTML = noMsg;
+            }
+        })
+        .catch(error => {
+            console.error("❌ Error fetching single chat messages:", error);
+            const errorMsg = `<div class="message bot" style="color:red;">⚠️ Could not load chat messages.</div>`;
+            desktopChat.innerHTML = errorMsg;
+            mobileChat.innerHTML = errorMsg;
+        });
+}
+
+
+function formatResponse(text, keywords = []) {
+        // Convert newline characters to HTML line breaks for paragraph separation
+        text = text.replace(/\n/g, '<br>');
+
+        // Bold section headers like "Warm-up", "Circuit", etc.
+        text = text.replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:');
+
+        // Make text within double asterisks bold ( text  → <strong>text</strong>)
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        // Convert hyphenated or asterisk bullets into unordered list items
+        text = text.replace(/<br>-\s/g, '<ul><li>'); // Start unordered list for bullet points
+        text = text.replace(/<\/li><br>-\s/g, '</li><li>'); // Continue unordered list
+        text = text.replace(/<\/li><br>/g, '</li></ul>'); // Close unordered list
+
+        // Convert numbered items into an ordered list (1. Item, 2. Item)
+        text = text.replace(/<br>(\d+)\.\s/g, (match, p1) => {
+            return p1 === "1" ? '<ol><li>' : '</li><li>';
+        });
+        text = text.replace(/<\/li><br>(?!\d+\.)/g, '</li></ol>'); // Close ordered list at end
+
+        // Handle optional keywords to dynamically bold
+        keywords.forEach(keyword => {
+            const regex = new RegExp(`\\b(${keyword})\\b`, 'gi');
+            text = text.replace(regex, '<strong>$1</strong>');
+        });
+
+        // Ensure any open lists are closed at the end
+        if (!text.endsWith('</ul>')) text += '</ul>';
+        if (!text.endsWith('</ol>')) text += '</ol>';
+
+        return text;
+    }
+
+
+    function startChat(bot) {
+    if (!bot || !bot.name) {
+        console.error("❌ Bot object invalid:", bot);
+        return;
+    }
+
+    selectedAI = bot.name;
+    selectedChatId = null;
+
+    // ✅ Update AI name visually (Desktop)
+    const desktopHeader = document.querySelector("#selected-ai");
+    if (desktopHeader) {
+        desktopHeader.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="${bot.image || '/static/default-ai.png'}" alt="${bot.name}" 
+                     style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" />
+                <span>${bot.name}</span>
+            </div>
+        `;
+    }
+
+    // ✅ Update AI name visually (Mobile)
+    const mobileName = document.querySelector("#mobile-ai-name");
+    if (mobileName) {
+        mobileName.textContent = bot.name;
+    }
+
+    // ✅ Clear both chatboxes
+    const desktopChat = document.querySelector("#chatbox");
+    const mobileChat = document.querySelector("#mobile-chatbox");
+
+    if (desktopChat) desktopChat.innerHTML = "";
+    if (mobileChat) mobileChat.innerHTML = "";
+
+    // ✅ Create shared intro message
+    const greetings = [
+        `Hey! I'm ${bot.name}. What can I help you with today? 👋`,
+        `Hi there! ${bot.name} here — got something on your mind? 💭`,
+        `Yo! I'm ${bot.name}. Ask me anything or just say hi! 😄`,
+        `Let's do this! I'm ${bot.name}. How can I assist you today? 🚀`,
+        `Hey! I'm ${bot.name}, ready when you are. What are we working on? ✨`,
+        `Hello! ${bot.name} here — ready to jump in whenever you are! 🧠`,
+    ];
+    const introMessage = greetings[Math.floor(Math.random() * greetings.length)];
+
+    // ✅ Create a reusable typing effect for both views
+    function typeEffect(container) {
+        const bubble = document.createElement("div");
+        bubble.className = "message bot";
+        container.appendChild(bubble);
+
+        let i = 0;
+        function typeNextChar() {
+            if (i < introMessage.length) {
+                bubble.textContent += introMessage.charAt(i);
+                i++;
+                container.scrollTop = container.scrollHeight;
+                setTimeout(typeNextChar, 20);
+            }
+        }
+        typeNextChar();
+    }
+
+    if (desktopChat) typeEffect(desktopChat);
+    if (mobileChat) typeEffect(mobileChat);
+
+    // ✅ Clear inputs
+    const desktopInput = document.querySelector("#message-input");
+    const mobileInput = document.querySelector("#mobile-message-input");
+
+    if (desktopInput) {
+        desktopInput.value = "";
+        desktopInput.focus();
+    }
+    if (mobileInput) mobileInput.value = "";
+
+    // ✅ Reset message counter for trial limit
+    localStorage.setItem("messageCount", 0);
+
+    console.log(`🤖 Started new chat with ${bot.name}`);
+}
+
+
+let activeTypingBubble = null;
+
+function showTypingIndicator() {
+    hideTypingIndicator(); // Clean any existing one first
+
+    const containers = [
+        document.getElementById("chatbox"),
+        document.getElementById("mobile-chatbox")
+    ];
+
+    containers.forEach(container => {
+        const bubble = document.createElement("div");
+        bubble.className = "message bot typing-indicator";
+        bubble.innerHTML = `
+            <div style="margin-bottom: 5px;">
+                ${getThinkingPhrase()}
+            </div>
+            <div class="typing-dots">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+        container.appendChild(bubble);
+        container.scrollTop = container.scrollHeight;
+
+        // ✅ Only save the one matching current screen size
+        if (window.innerWidth <= 480 && container.id === "mobile-chatbox") {
+            activeTypingBubble = bubble;
+        } else if (window.innerWidth > 480 && container.id === "chatbox") {
+            activeTypingBubble = bubble;
+        }
+    });
+
+    console.log("💬 Typing indicator shown");
+}
+
+function getThinkingPhrase() {
+    const thinkingPhrases = [
+        "Just a moment while I think this through... 🧠",
+        "Let me process that... ⏳",
+        "Analyzing what you said... 🤖",
+        "Thinking it over... give me a sec. 🤔",
+        "One moment... reviewing your message carefully. 📝",
+        "Reflecting on that... hang tight. 🔍"
+    ];
+    return thinkingPhrases[Math.floor(Math.random() * thinkingPhrases.length)];
+}
+
+
+function hideTypingIndicator() {
+    if (activeTypingBubble) {
+        console.log("🧹 Removing typing indicator...");
+        activeTypingBubble.remove();
+        activeTypingBubble = null;
+    } else {
+        console.log("ℹ️ No active typing bubble to remove.");
+    }
+}
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const userIcon = document.querySelector(".fa-user-circle");
+    const dropdown = document.getElementById("user-dropdown");
+
+    userIcon.addEventListener("click", function () {
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    });
+
+    document.addEventListener("click", function (e) {
+        if (!userIcon.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.style.display = "none";
+        }
+    });
+});
+
+function appendMessage(content, role = "bot") {
+    const trimmed = content.trim();
+    if (role === "bot" && trimmed === lastAssistantMessage) {
+        console.warn("⚠️ Duplicate bot response skipped.");
+        return;
+    }
+
+    if (role === "bot") lastAssistantMessage = trimmed;
+
+    const containers = [document.getElementById("chatbox"), document.getElementById("mobile-chatbox")];
+    containers.forEach(container => {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${role}`;
+        messageDiv.innerHTML = content;
+        container.appendChild(messageDiv);
+        container.scrollTop = container.scrollHeight;
+    });
+}
+
+function typeHTMLWithEffect(target, formattedHTML, speed = 15, callback = null) {
+    const dummy = document.createElement("div");
+    dummy.innerHTML = formattedHTML;
+
+    const walker = document.createTreeWalker(dummy, NodeFilter.SHOW_TEXT, null, false);
+    let node = walker.nextNode();
+    let currentNode = null;
+    let charIndex = 0;
+
+    target.innerHTML = ""; // Clear previous content
+
+    function typeNext() {
+        if (!currentNode && !node) {
+            if (callback) callback();
+            return;
+        }
+
+        // Start with new text node
+        if (!currentNode && node) {
+            currentNode = document.createTextNode("");
+            const parent = node.parentNode.cloneNode(false);
+            parent.appendChild(currentNode);
+            target.appendChild(parent);
+        }
+
+        const fullText = node.nodeValue;
+        if (charIndex < fullText.length) {
+            currentNode.nodeValue += fullText[charIndex++];
+            target.scrollTop = target.scrollHeight;
+            setTimeout(typeNext, speed);
+        } else {
+            node = walker.nextNode();
+            currentNode = null;
+            charIndex = 0;
+            setTimeout(typeNext, speed);
+        }
+    }
+
+    typeNext();
+}
+
+let lastAssistantMessage = null;
+
+function sendMessage() {
+    const isMobile = window.innerWidth <= 480;
+    const inputEl = isMobile ? document.querySelector("#mobile-message-input") : document.querySelector("#message-input");
+    const chatbox = isMobile ? document.getElementById("mobile-chatbox") : document.getElementById("chatbox");
+
+    const message = inputEl.value.trim();
+    if (!selectedAI || !message) return;
+
+    inputEl.value = "";
+    appendMessage(message, "user");
+    showTypingIndicator();
+
+    const isProUser = JSON.parse("{{ is_pro_user|lower }}");
+    let messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
+    const TRIAL_LIMIT = 10;
+
+    if (!isProUser && messageCount >= TRIAL_LIMIT) {
+        showUpgradeModal();
+        return;
+    }
+    if (!isProUser) localStorage.setItem('messageCount', ++messageCount);
+
+    const payload = {
+        ai_bot: selectedAI,
+        message,
+        chat_id: selectedChatId || null
+    };
+
+    fetch("/api/chat/message/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken()
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        hideTypingIndicator();
+
+        if (data.response && data.response.trim() !== lastAssistantMessage) {
+            const raw = data.response.trim();
+            const formatted = formatResponse(raw);
+
+            const botBubble = document.createElement("div");
+            botBubble.className = "message bot";
+            chatbox.appendChild(botBubble);
+            chatbox.scrollTop = chatbox.scrollHeight;
+
+            typeHTMLWithEffect(botBubble, formatted, 15);
+
+            lastAssistantMessage = raw;
+            selectedChatId = data.chat_id || selectedChatId;
+            if (selectedChatId) loadFullChatHistorySidebar();
+        } else {
+            console.warn("⚠️ Empty or duplicate response. Skipped rendering.");
+        }
+    })
+    .catch(err => {
+        hideTypingIndicator();
+        console.error("❌ Error fetching AI response:", err);
+        appendMessage("⚠️ Something went wrong. Please try again later.", "bot");
+    });
+}
+
+
+
+
+
+function attachMessageEvents() {
+    console.log("🟢 Re-attaching message event listeners for both views...");
+
+    const inputs = [
+        document.getElementById("message-input"),          // Desktop
+        document.getElementById("mobile-message-input")    // Mobile
+    ];
+
+    const buttons = [
+        document.getElementById("send"),                    // Desktop
+        document.querySelector("#mobile-message-input-container button") // Mobile Send
+    ];
+
+    inputs.forEach(input => {
+        if (!input) return;
+
+        const newInput = input.cloneNode(true);
+        input.parentNode.replaceChild(newInput, input);
+
+        newInput.addEventListener("keypress", event => {
+            if (event.key === "Enter") {
+                event.preventDefault(); // ✅ THIS is essential
+                sendMessage();
+            }
+        });
+    });
+
+    buttons.forEach(button => {
+        if (!button) return;
+
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+
+        newButton.addEventListener("click", () => sendMessage());
+    });
+
+    console.log("✅ Listeners reattached for desktop and mobile.");
+}
+
+
+
+function scrollToBottom() {
+    setTimeout(() => {
+        document.querySelectorAll(".chat-messages").forEach(chatbox => {
+            chatbox.scrollTo({
+                top: chatbox.scrollHeight,
+                behavior: "smooth"
+            });
+        });
+    }, 200);
+}
+
+
+/* Modal Function*/
+
+function showUpgradeModal() {
+    if (isProUser) {
+        console.log("🛑 Pro user detected – No modal shown.");
+        return; // ✅ Exit function immediately for Pro users
+    }
+
+    const upgradeModal = document.getElementById("upgrade-modal");
+
+    if (upgradeModal) {
+        console.log("📢 Showing upgrade modal...");
+        upgradeModal.style.display = "flex";  // ✅ Show modal for non-pro users
+
+        // ✅ Ensure cooldown time is set before starting countdown
+        if (!cooldownEndTime || cooldownEndTime < new Date().getTime()) {
+            setCooldown(); // Set cooldown if it hasn’t been properly set
+        }
+
+        startCountdown(); // ✅ Start countdown immediately when modal is shown
+    } else {
+        console.error("❌ Upgrade modal element not found!");
+    }
+}
+
+
+
+function closeUpgradeModal() {
+    const upgradeModal = document.getElementById("upgrade-modal");
+    if (upgradeModal) {
+        upgradeModal.style.display = "none";
+    } else {
+        console.error("❌ Upgrade modal element not found!");
+    }
+}
+
+// ✅ Ensure modal closes when clicking outside
+document.addEventListener("click", function (event) {
+    const upgradeModal = document.getElementById("upgrade-modal");
+    if (upgradeModal && event.target === upgradeModal) {
+        closeUpgradeModal();
+    }
+});
+
+console.log("✅ Chat restriction logic loaded!");
+
+const CHAT_LIMIT = 10; // Adjust as needed
+const COOLDOWN_TIME = 45 * 60 * 1000; // 45 minutes in milliseconds
+const messageInput = document.getElementById("message-input");
+const sendButton = document.getElementById("send");
+const chatbox = document.getElementById("chatbox");
+const countdownElement = document.getElementById("countdown-timer"); // Timer display
+const upgradeModal = document.getElementById("upgrade-modal"); // Modal for upgrade prompt
+
+let messageCount = parseInt(localStorage.getItem("chatCount")) || 0;
+let cooldownEndTime = parseInt(localStorage.getItem("cooldownEndTime")) || 0;
+let isProUser = JSON.parse("{{ is_pro_user|yesno:'true,false' }}"); // Django variable
+
+console.log("🟢 Pro User Status:", isProUser);
+console.log("🔥 Initial chatCount:", messageCount);
+
+// ✅ Function to check cooldown and update UI
+function checkCooldown() {
+    const currentTime = new Date().getTime();
+    
+    if (cooldownEndTime && cooldownEndTime > currentTime) {
+        disableChat(); // Cooldown active
+        startCountdown(); // Start the live countdown
+    } else {
+        enableChat(); // Cooldown expired
+    }
+}
+
+// ✅ Disable chat input & show modal
+function disableChat() {
+    if (isProUser) {
+        console.log("🛑 Pro user detected – Chat should not be disabled.");
+        return; // ✅ Skip disabling chat for Pro users
+    }
+
+    messageInput.disabled = true;
+    sendButton.disabled = true;
+
+    // Show modal only for free users
+    showUpgradeModal();
+
+    console.log("⏳ User has reached the chat limit. Cooldown active.");
+}
+
+
+// ✅ Enable chat when cooldown expires
+function enableChat() {
+    const messageInput = document.getElementById("message-input");
+    const sendButton = document.getElementById("send");
+
+    if (!messageInput || !sendButton) {
+        console.error("❌ ERROR: Chat input or send button not found!");
+        return;
+    }
+
+    messageInput.disabled = false;
+    sendButton.disabled = false;
+
+    const upgradeModal = document.getElementById("upgrade-modal");
+    if (upgradeModal) upgradeModal.style.display = "none";
+
+    localStorage.setItem("chatCount", 0);
+    localStorage.removeItem("cooldownEndTime");
+
+    console.log("✅ Chat is re-enabled.");
+}
+
+
+// ✅ Start countdown in modal
+function startCountdown() {
+    if (!countdownElement) {
+        console.error("❌ ERROR: Countdown timer element not found!");
+        return;
+    }
+
+    function updateCountdown() {
+        const currentTime = new Date().getTime();
+        const remainingTime = cooldownEndTime - currentTime;
+
+        if (remainingTime <= 0) {
+            countdownElement.innerHTML = "00:00";
+            enableChat(); // Re-enable chat when timer hits 0
+            clearInterval(countdownInterval);
+        } else {
+            const minutes = Math.floor((remainingTime / 1000) / 60);
+            const seconds = Math.floor((remainingTime / 1000) % 60);
+            countdownElement.innerHTML = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        }
+    }
+
+    // Ensure countdown starts immediately and updates every second
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+// ✅ Set cooldown when user reaches limit
+function setCooldown() {
+    const currentTime = new Date().getTime();
+    const newCooldownEndTime = currentTime + COOLDOWN_TIME;
+
+    // Store cooldown end time in localStorage
+    localStorage.setItem("cooldownEndTime", newCooldownEndTime);
+    cooldownEndTime = newCooldownEndTime; // Update variable
+
+    console.log(`⏳ Cooldown started. Chat will be unlocked at: ${new Date(newCooldownEndTime).toLocaleTimeString()}`);
+
+    startCountdown(); // Start the countdown timer
+}
+
+// ✅ Check cooldown on page load
+checkCooldown();
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ Settings script loaded!");
+
+    const settingsButton = document.getElementById("fullscreen-settings-btn");
+    const settingsPanel = document.getElementById("fullscreen-settings-panel");
+    const closeSettingsButton = document.querySelector(".close-fullscreen-settings-btn");
+    const overlay = document.createElement("div"); // Create overlay
+    overlay.classList.add("settings-overlay");
+    document.body.appendChild(overlay);
+
+    function openSettingsPanel() {
+        settingsPanel.classList.add("show");
+        overlay.classList.add("show");
+        console.log("⚡ Settings panel opened!");
+    }
+
+    function closeSettingsPanel() {
+        settingsPanel.classList.remove("show");
+        overlay.classList.remove("show");
+        console.log("🚀 Settings panel closed!");
+    }
+
+    if (settingsButton && settingsPanel) {
+        settingsButton.addEventListener("click", openSettingsPanel);
+    } else {
+        console.error("❌ ERROR: Settings button or panel not found!");
+    }
+
+    if (closeSettingsButton) {
+        closeSettingsButton.addEventListener("click", closeSettingsPanel);
+    } else {
+        console.error("❌ ERROR: Close settings button not found!");
+    }
+
+    overlay.addEventListener("click", closeSettingsPanel);
+});
+
+function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
+function showMobileLanding() {
+    console.log("📱 Showing mobile landing view...");
+    document.getElementById("mobile-header-default").style.display = "block";
+    document.getElementById("mobile-header-chat").style.display = "none";
+    document.getElementById("mobile-footer").style.display = "block";
+    document.getElementById("mobile-ai-list").style.display = "block";
+    document.getElementById("mobile-chatbox").style.display = "none";
+    document.getElementById("mobile-message-input-container").style.display = "none";
+}
+
+function showMobileChat(botName = "") {
+    console.log("💬 Switching to mobile chat view...");
+    document.getElementById("mobile-header-default").style.display = "none";
+    document.getElementById("mobile-footer").style.display = "none";
+    document.getElementById("mobile-header-chat").style.display = "flex";
+    document.getElementById("mobile-ai-list").style.display = "none";
+    document.getElementById("mobile-chatbox").style.display = "block";
+    document.getElementById("mobile-message-input-container").style.display = "block";
+
+    if (botName) {
+        document.getElementById("mobile-ai-name").textContent = botName;
+    }
+}
+
+function resetMobileView() {
+    showMobileLanding();
+    document.getElementById("mobile-chatbox").innerHTML = ""; // Optional clear
+    document.getElementById("mobile-message-input").value = "";
+}
+
+function showMobileHistory() {
+    document.getElementById("mobile-history-modal").style.display = "block";
+}
+
+function closeMobileHistory() {
+    document.getElementById("mobile-history-modal").style.display = "none";
+}
+
+
+
+</script>
+
+{% endblock %}

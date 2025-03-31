@@ -2,14 +2,20 @@ import os
 from pathlib import Path
 import environ
 from dotenv import load_dotenv
+import dj_database_url
 
-# Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables
-env = environ.Env()
-load_dotenv(os.path.join(BASE_DIR, '.env'))  # Load .env if available
-environ.Env.read_env()  # Optional if you're using django-environ only
+# Initialize django-environ
+env = environ.Env(DEBUG=(bool, False))
+env_file = os.path.join(BASE_DIR, ".env")  # This resolves to E:/Downloads/iRiseUpBotsAi/.env
+
+if os.path.exists(env_file):
+    env.read_env(env_file)
+    print(f"✅ Loaded environment from: {env_file}")
+else:
+    print("⚠️ .env file not found, falling back to system environment variables.")
+
 
 # Secret key
 SECRET_KEY = env('DJANGO_SECRET_KEY', default="pqu__%t3x2e$+%lk9d#vg-7d=s7$m+b1&u91tfk8#gt*di$xkn")
@@ -30,6 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp.apps.MyAppConfig',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 # Middleware
@@ -196,3 +204,17 @@ AI_PRODUCTS = {
     "414302": "nexus_chat.html",        # Nexara AI (New Product ID)
     "414303": "keystone_chat.html",     # Keystone AI (New Product ID)  1
 }
+
+
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+import os
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
+}
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"

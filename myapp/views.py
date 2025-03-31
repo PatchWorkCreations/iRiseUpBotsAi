@@ -2283,7 +2283,7 @@ def summarize_history(conversation_history):
         response = openai_client.chat.completions.create(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": "Summarize the following conversation briefly for context retention:"},
+                {"role": "system", "content": "Retain and summarize this conversation so the assistant remembers the user context in the next message."},
                 {"role": "user", "content": summary_prompt}
             ],
             max_tokens=150  # Limit tokens for a concise summary
@@ -2322,7 +2322,7 @@ def summarize_history(conversation_history):
     try:
         response = openai_client.chat.completions.create(
             model="gpt-4",
-            messages=[{"role": "system", "content": "Summarize the following conversation briefly for context retention:"},
+            messages=[{"role": "system", "content": "Retain and summarize this conversation so the assistant remembers the user context in the next message."},
                       {"role": "user", "content": summary_prompt}],
             max_tokens=150
         )
@@ -2385,102 +2385,140 @@ def limit_chats(request):
     # Pro & One-Year users: No chat restrictions
     return None
 
+
 import re
+import logging
+import openai
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
+from myapp.models import ChatHistory, AIUserSubscription
+from myapp.utils import generate_title_from_ai  # ✅ Import AI title generator function
+
+logger = logging.getLogger(__name__)  # ✅ Setup logger for debugging
+
 @login_required
 def get_bot_response(request, system_prompt, bot_name):
-    if request.method == 'POST':
-        user_message = request.POST.get('message', '').strip()
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
 
-        if not user_message:
-            return JsonResponse({'response': 'Error: Message cannot be empty.'})
+    # ✅ Get necessary data from the POST request
+    user_message = request.POST.get('message', '').strip()
+    chat_id = request.POST.get("chat_id")
+    selected_ai = request.POST.get("ai_bot", bot_name)  # ✅ Default to `bot_name` if not provided
 
-        # 🔹 Check user's subscription plan correctly
-        user_subscription = AIUserSubscription.objects.filter(
-            user=request.user
-        ).exclude(
-            canceled_at__isnull=False  # Exclude canceled subscriptions
-        ).filter(
-            expiration_date__gt=now()  # Ensure the subscription is active
-        ).first()
+    if not user_message:
+        return JsonResponse({'response': 'Error: Message cannot be empty.'}, status=400)
 
-        user_plan = user_subscription.plan if user_subscription else "free"
+    # ✅ Retrieve existing chat session or create a new one
+    if chat_id:
+        chat_history = get_object_or_404(ChatHistory, id=chat_id, user=request.user)
 
-        # 🔹 Select OpenAI Model Based on Subscription Plan
-        model_version = "gpt-3.5-turbo" if user_plan == "free" else "gpt-4-turbo"
+        # 🔹 If the user switches AI bots, create a new session
+        if chat_history.ai_bot != selected_ai:
+            chat_history = ChatHistory.objects.create(user=request.user, ai_bot=selected_ai, messages=[])
+            chat_id = chat_history.id  
+    else:
+        # ✅ Start a new chat session if no chat_id exists
+        chat_history = ChatHistory.objects.create(user=request.user, ai_bot=selected_ai, messages=[])
+        chat_id = chat_history.id  
 
-        # Use a bot-specific session key for conversation history
-        conversation_key = f"{bot_name}_conversation_history"
-        conversation_history = request.session.get(conversation_key, [])
+    # ✅ Append user's message to chat history
+    chat_history.messages.append({"role": "user", "content": user_message})
 
-        # Apply the system prompt if this is the start of a new session for this bot
-        if not conversation_history:
-            conversation_history.append({"role": "system", "content": system_prompt})
-            logger.info(f"System prompt applied for bot {bot_name}: {system_prompt}")
+    # 🔹 Check user's subscription plan
+    user_subscription = AIUserSubscription.objects.filter(
+        user=request.user
+    ).exclude(
+        canceled_at__isnull=False  # Exclude canceled subscriptions
+    ).filter(
+        expiration_date__gt=now()  # Ensure the subscription is active
+    ).first()
 
-        # Append the user's message
-        conversation_history.append({"role": "user", "content": user_message})
+    user_plan = user_subscription.plan if user_subscription else "free"
 
-        # Check if the history needs summarizing to manage token limits
-        max_history_length = 10
-        if len(conversation_history) > max_history_length:
-            summary = summarize_history(conversation_history)
-            conversation_history = [{"role": "system", "content": f"Summary of previous conversation: {summary}"}] + conversation_history[-5:]
+    # 🔹 Select OpenAI Model Based on Subscription Plan
+    model_version = "gpt-3.5-turbo" if user_plan == "free" else "gpt-4-turbo"
 
-        # 🔹 Special Handling for Imagine – Generate Images
-        if bot_name == "Imagine":
-            try:
-                # Ask GPT if the user is requesting an image
-                client = openai.OpenAI()
-                intent_response = client.chat.completions.create(
-                    model=model_version,
-                    messages=[
-                        {"role": "system", "content": "You are an AI that determines if a user is requesting a visual representation."},
-                        {"role": "user", "content": f"Does this request require an image? Reply with 'yes' or 'no': {user_message}"}
-                    ]
-                )
+    # Use a bot-specific session key for conversation history
+    conversation_key = f"{bot_name}_conversation_history"
+    conversation_history = request.session.get(conversation_key, [])
 
-                intent_reply = intent_response.choices[0].message.content.strip().lower()
+    # Apply the system prompt if this is the start of a new session for this bot
+    if not conversation_history:
+        conversation_history.append({"role": "system", "content": system_prompt})
+        logger.info(f"System prompt applied for bot {bot_name}: {system_prompt}")
 
-                # If AI confirms it's an image request, generate an image
-                if intent_reply == "yes":
-                    structured_prompt = f"An image of {user_message}"
-                    image_response = client.images.generate(
-                        model="dall-e-3",
-                        prompt=structured_prompt,
-                        n=1,
-                        size="1024x1024"
-                    )
-                    image_url = image_response.data[0].url
-                    return JsonResponse({'response': 'Here’s your generated image!', 'image_url': image_url})
+    # Append the user's message
+    conversation_history.append({"role": "user", "content": user_message})
 
-            except Exception as e:
-                logger.error(f"OpenAI Intent Detection Error: {e}")
-
+    # 🔹 Special Handling for Image Requests (Imagine Bot)
+    if bot_name == "Imagine":
         try:
-            # 🔹 FIXED OpenAI API CALL for openai>=1.0.0
-            client = openai.OpenAI()  # This is the new way to call OpenAI
-            response = client.chat.completions.create(
+            client = openai.OpenAI()
+            intent_response = client.chat.completions.create(
                 model=model_version,
-                messages=conversation_history
+                messages=[
+                    {"role": "system", "content": "You are an AI that determines if a user is requesting a visual representation."},
+                    {"role": "user", "content": f"Does this request require an image? Reply with 'yes' or 'no': {user_message}"}
+                ]
             )
 
-            message = response.choices[0].message.content  # Extract response text
-            conversation_history.append({"role": "assistant", "content": message})
+            intent_reply = intent_response.choices[0].message.content.strip().lower()
 
-            # Update the session with the bot-specific conversation history
-            request.session[conversation_key] = conversation_history
+            # If AI confirms it's an image request, generate an image
+            if intent_reply == "yes":
+                structured_prompt = f"An image of {user_message}"
+                image_response = client.images.generate(
+                    model="dall-e-3",
+                    prompt=structured_prompt,
+                    n=1,
+                    size="1024x1024"
+                )
+                image_url = image_response.data[0].url
+                return JsonResponse({'response': 'Here’s your generated image!', 'image_url': image_url})
 
         except Exception as e:
-            logger.error(f"OpenAI API Error: {e}")
-            return JsonResponse({'response': f'Error: Unable to get a response from ChatGPT. {str(e)}'})
+            logger.error(f"OpenAI Intent Detection Error: {e}")
 
-        return JsonResponse({'response': message})
+    try:
+        # 🔹 FIXED OpenAI API CALL for openai>=1.0.0
+        client = openai.OpenAI()  # This is the new way to call OpenAI
+        response = client.chat.completions.create(
+            model=model_version,
+            messages=conversation_history
+        )
 
-    return JsonResponse({'error': 'Invalid request method.'}, status=400)
+        ai_response = response.choices[0].message.content.strip()
+        chat_history.messages.append({"role": "assistant", "content": ai_response})
+
+        # ✅ Generate a title for the conversation (if not set)
+        if not chat_history.title:
+            title_prompt = (
+                f"Generate a short and relevant title summarizing this conversation:\n"
+                f"User: {user_message}\n"
+                f"AI: {ai_response}"
+            )
+
+            title_response = client.chat.completions.create(
+                model="gpt-4-turbo",
+                messages=[{"role": "user", "content": title_prompt}]
+            )
+
+            chat_history.title = title_response.choices[0].message.content.strip()
+            chat_history.save()
+
+        # ✅ Update the session with the bot-specific conversation history
+        request.session[conversation_key] = conversation_history
+
+    except Exception as e:
+        logger.error(f"OpenAI API Error: {e}")
+        return JsonResponse({'response': f'Error: Unable to get a response from ChatGPT. {str(e)}'})
+
+    return JsonResponse({'response': ai_response, 'chat_id': chat_id, 'title': chat_history.title})
 
 
-
-# Define each bot response view with unique bot_name and system_prompt
  
 
 from django.http import JsonResponse
@@ -2503,7 +2541,7 @@ def limit_guest_chats(request):
     return None  # Allow the request to continue
 
 
-def get_inspire_response(request):
+def get_elevate_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
     Hi, I'm Elevate, your partner for business insights and personal motivation. {user_name}, I’m here to support you with advice, 
@@ -2515,11 +2553,11 @@ def get_inspire_response(request):
 
     Let’s inspire confidence and action, no matter what’s on {user_name}’s mind.
     """
-    return get_bot_response(request, system_prompt=system_prompt, bot_name="elevate")
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="Elevate")
 
 
 
-def get_pulse_response(request):
+def get_thrive_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
     I’m Thrive, your compassionate wellness companion, here to support {user_name}'s health journey with caring, practical advice. I focus on 
@@ -2534,11 +2572,11 @@ def get_pulse_response(request):
 
     Keep it warm, supportive, and practical. How’s your health journey going today, {user_name}?
     """
-    return get_bot_response(request, system_prompt=system_prompt, bot_name="pulse")
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="Thrive")
 
 
 
-def get_soulspark_response(request):
+def get_lumos_response(request):
      
     user_name = request.user.first_name
     system_prompt = f"""
@@ -2547,21 +2585,21 @@ def get_soulspark_response(request):
     any formal or clinical tone. Always ask follow-up questions that show care and invite {user_name} to continue expressing their thoughts or 
     feelings. Start with a gentle question: What's on your mind, {user_name}?
     """
-    return get_bot_response(request, system_prompt=system_prompt, bot_name="soulspark")
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="Lumos")
 
 
-def get_mindforge_response(request):
+def get_mentor_iq_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
     I’m Mentor IQ, your guide to learning and professional growth, {user_name}. I offer friendly advice on education, skill-building, and career planning. My focus is on making learning accessible, fun, and motivating.
 
     Let’s keep it simple and relatable—no dense explanations. Share your goals, and I’ll provide tips and resources to spark curiosity. What’s something new you’d like to explore, {user_name}?
     """
-    return get_bot_response(request, system_prompt=system_prompt, bot_name="mindforge")
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="Mentor IQ")
 
 
 
-def get_bridge_response(request):
+def get_nexara_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
     I’m Nexara, your personal marketing advisor, here to help {user_name} with small business and marketing. I offer practical insights on branding, digital marketing, and growth strategies in a friendly, relatable way.
@@ -2572,18 +2610,18 @@ def get_bridge_response(request):
 
 
 
-def get_fortify_response(request):
+def get_keystone_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
     I’m Keystone, your friendly advisor for finance and legal questions. I simplify budgeting, savings, and legal basics for {user_name}, keeping it conversational and easy to follow. 
 
     Avoid dense terminology unless {user_name} requests it, and ask clear, supportive follow-ups to build confidence. What finance or legal topics can I help with today?
     """
-    return get_bot_response(request, system_prompt=system_prompt, bot_name="fortify")
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="Keystone")
 
 
 
-def get_echo_response(request):
+def get_imagine_response(request):
     user_name = request.user.first_name
     system_prompt = f"""
     You’re Imagine, a fun and imaginative companion for {user_name} who is here to inspire creativity. Offer supportive, idea-generating responses for
@@ -2594,7 +2632,7 @@ def get_echo_response(request):
     return get_bot_response(request, system_prompt=system_prompt, bot_name="Imagine")
 
 
-def get_pathfinder_response(request):
+def get_gideon_response(request):
     user_name = request.user.first_name if request.user.is_authenticated else "Seeker"
     system_prompt = f"""
     I am Gideon: Wisdom for All Paths.
@@ -2605,7 +2643,7 @@ def get_pathfinder_response(request):
 
     What wisdom do you seek today, {user_name}?
     """
-    return get_bot_response(request, system_prompt=system_prompt, bot_name="pathfinder")
+    return get_bot_response(request, system_prompt=system_prompt, bot_name="Gideon")
 
 
 
@@ -3865,8 +3903,18 @@ from django.shortcuts import render
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from myapp.models import AIUserSubscription
+from django.shortcuts import render, get_object_or_404
+from django.utils.timezone import now
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from myapp.models import AIUserSubscription, ChatHistory
+import json
+import openai
+import logging
 
-# AI List
+logger = logging.getLogger(__name__)
+
+# ✅ AI Bot List
 AIs = [
     {"id": "elevate", "name": "Elevate", "icon": "🌟", "description": "Let's work on your goals!", "image": "myapp/images/aiimages/elevate.png"},
     {"id": "thrive", "name": "Thrive", "icon": "🩺", "description": "Focus on health & well-being!", "image": "myapp/images/aiimages/thrive.png"},
@@ -3878,103 +3926,619 @@ AIs = [
     {"id": "gideon", "name": "Gideon", "icon": "🚀", "description": "Wisdom for all paths", "image": "myapp/images/aiimages/gideon.png"},
 ]
 
-# ✅ AI Selection Page
-def chat_home(request):
-    return render(request, 'myapp/aibots/iriseupai/ai_selection.html', {"ai_list": AIs})
+# ✅ Check if the user has an active subscription
+def get_user_subscription_status(user):
+    active_subscription = AIUserSubscription.objects.filter(
+        user=user,
+        expiration_date__gt=now(),
+        canceled_at__isnull=True
+    ).values_list("plan", flat=True).first()
 
-# ✅ Chat View with AI Name Validation
-def test_chat_view(request, ai_name):
-    ai_exists = any(ai["id"] == ai_name for ai in AIs)
-    if not ai_exists:
-        return render(request, 'myapp/aibots/iriseupai/error.html', {"message": "Invalid AI Assistant!"})
+    return active_subscription in ["pro", "one-year"]  # ✅ Pro users only
 
-    return render(request, 'myapp/aibots/iriseupai/chat_window.html', {'ai_name': ai_name})
-
-# ✅ Dashboard with Corrected Subscription Query
+# ✅ AI Selection View
 @login_required
 def iriseupdashboard(request):
-    """
-    Determines if the user is on the Pro or One-Year plan and shows the course menu.
-    Ensures expired or canceled subscriptions are not counted.
-    """
-    user = request.user
+    is_pro_user = get_user_subscription_status(request.user)
+    return render(request, 'myapp/aibots/iriseupai/ai_selection.html', {
+        "is_pro_user": is_pro_user,
+        "ai_list": AIs
+    })
 
-    # Check if the user has an active subscription (valid expiration & not canceled)
-    subscription = AIUserSubscription.objects.filter(
-        user=user,
-        expiration_date__gt=now(),  # Must be in the future
-        canceled_at__isnull=True  # Must not be canceled
-    ).first()
+# ✅ Chat Home (No Subscription Check)
+@login_required
+def chat_home(request):
+    is_pro_user = get_user_subscription_status(request.user)
+    return render(request, 'myapp/aibots/iriseupai/ai_selection.html', {
+        "is_pro_user": is_pro_user,
+        "ai_list": AIs
+    })
 
-    # Determine user's plan
-    user_plan = subscription.plan if subscription else "free"
-    is_pro_user = user_plan in ["pro", "one-year"]
-
-    # Render the course menu and pass the subscription status
-    return render(request, 'myapp/aibots/iriseupai/ai_selection.html', {"is_pro_user": is_pro_user, "ai_list": AIs})
-
-
-from django.shortcuts import render
+# ✅ List Chat Histories
+@login_required
+def list_chat_histories(request):
+    try:
+        chat_histories = ChatHistory.objects.filter(user=request.user).order_by('-created_at')
+        history_data = [
+            {
+                "chat_id": chat.id,
+                "ai_bot": chat.ai_bot,
+                "title": chat.title or f"Chat with {chat.ai_bot}",
+                "created_at": chat.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            for chat in chat_histories
+        ]
+        return JsonResponse({"chats": history_data})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+    
+import logging
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .models import ChatHistory
 
-def chat_view(request):
-    chat_history = ChatHistory.objects.filter(user=request.user).order_by('-date')
+logger = logging.getLogger(__name__)
 
-    return render(request, "myapp/aibots/bots/bot_base.html", {
-        "chat_history": chat_history,
+# ✅ Retrieve Chat History
+@login_required
+def get_chat_history(request, chat_id=None):
+    try:
+        if chat_id:
+            chat_history = get_object_or_404(ChatHistory, id=chat_id, user=request.user)
+
+            return JsonResponse({
+                "chat_id": chat_history.id,
+                "title": chat_history.title or "Untitled Chat",
+                "ai_bot": chat_history.ai_bot,
+                "messages": chat_history.messages,  # ✅ No need for json.loads(), it's already a list
+                "created_at": chat_history.created_at.isoformat(),
+                "last_updated": chat_history.last_updated.isoformat(),
+            })
+
+        # ✅ List all chats if no chat_id is given
+        chat_histories = ChatHistory.objects.filter(user=request.user).order_by('-created_at')
+        history_data = [
+            {
+                "chat_id": chat.id,
+                "ai_bot": chat.ai_bot,
+                "title": chat.title or "Untitled Chat",
+                "created_at": chat.created_at.isoformat(),
+                "last_updated": chat.last_updated.isoformat(),
+            }
+            for chat in chat_histories
+        ]
+
+        return JsonResponse({"chats": history_data})
+    
+    except Exception as e:
+        logger.error(f"❌ ERROR in get_chat_history: {str(e)}")
+        return JsonResponse({"error": "An error occurred while fetching chat history."}, status=500)
+
+
+@login_required
+def send_message(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request method."}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        ai_bot = data.get("ai_bot")
+        user_message = data.get("message")
+        chat_id = data.get("chat_id")
+
+        if not ai_bot or not user_message:
+            return JsonResponse({"error": "Missing AI bot or message."}, status=400)
+
+        # ✅ Retrieve or create chat history
+        if chat_id:
+            chat_history = get_object_or_404(ChatHistory, id=chat_id, user=request.user)
+        else:
+            # ✅ Ensure the same conversation continues instead of creating multiple chat IDs
+            chat_history = ChatHistory.objects.filter(
+                user=request.user, ai_bot=ai_bot
+            ).order_by('-created_at').first()
+
+        # ✅ If no chat exists, create a new one
+        if not chat_history:
+            chat_history = ChatHistory.objects.create(
+                user=request.user,
+                ai_bot=ai_bot,
+                title="",  # Will be updated later
+                messages=json.dumps([])
+            )
+
+        # ✅ Append User Message
+        existing_messages = json.loads(chat_history.messages) if chat_history.messages else []
+        existing_messages.append({"role": "user", "message": user_message})
+
+        # ✅ Generate AI Response using OpenAI API
+        client = openai.OpenAI()
+        ai_response_data = client.chat.completions.create(
+            model="gpt-4-turbo",
+            messages=[{"role": "user", "content": user_message}]
+        )
+
+        if (
+            ai_response_data.choices and
+            hasattr(ai_response_data.choices[0], "message") and
+            hasattr(ai_response_data.choices[0].message, "content")
+        ):
+            ai_response = ai_response_data.choices[0].message.content.strip()
+        else:
+            ai_response = "⚠️ AI response unavailable. Please try again."
+
+        existing_messages.append({"role": "assistant", "content": ai_response})
+
+        # ✅ Update chat messages
+        chat_history.messages = json.dumps(existing_messages)
+
+        # ✅ Title Generation (Only If It’s a New Chat)
+        if not chat_history.title:
+            title_prompt = (
+                "Generate a **short and meaningful** title (max 6 words) summarizing this conversation:\n"
+                f"User: {user_message}\n"
+                f"AI: {ai_response}"
+            )
+
+            title_response = client.chat.completions.create(
+                model="gpt-4-turbo",
+                messages=[{"role": "user", "content": title_prompt}]
+            )
+
+            chat_history.title = title_response.choices[0].message.content.strip()
+            chat_history.title = chat_history.title if chat_history.title and len(chat_history.title.split()) <= 6 else f"Chat with {ai_bot}"
+
+        chat_history.save()
+
+        return JsonResponse({
+            "chat_id": chat_history.id,  # ✅ Ensures that frontend keeps using the same chat session
+            "title": chat_history.title,
+            "messages": json.loads(chat_history.messages)
+        })
+
+    except Exception as e:
+        logger.error(f"❌ ERROR in send_message: {str(e)}")
+        return JsonResponse({"error": "An error occurred while processing your message."}, status=500)
+
+
+######################################################################################
+
+import json
+import logging
+import openai
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from myapp.models import AIBot, AIChatSession
+
+logger = logging.getLogger(__name__)
+
+### **✅ Fetch AI Bot List (LEFT SIDEBAR)**
+from django.utils.text import Truncator
+
+@login_required
+def ai_list(request):
+    bots = AIBot.objects.filter(is_active=True)
+    bot_data = [{
+        "id": bot.id,
+        "name": bot.name,
+        "specialty": bot.specialty,
+        "bio": Truncator(bot.bio).chars(100) if bot.bio else "This AI is ready to help you!",  # ✅ Safe fallback
+        "image": bot.image.url if bot.image else None  # ✅ Include image URL
+    } for bot in bots]
+    return JsonResponse({"bots": bot_data})
+
+
+
+from collections import defaultdict
+from datetime import timedelta
+from django.utils.timezone import localtime, is_naive, make_aware, now
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import AIChatSession  # Adjust if your model is elsewhere
+
+@login_required
+def get_chat_history(request):
+    sessions = AIChatSession.objects.filter(user=request.user).order_by('-last_updated')
+    grouped = defaultdict(list)
+
+    aware_now = now()
+    if is_naive(aware_now):
+        aware_now = make_aware(aware_now)
+
+    today = localtime(aware_now).date()
+    yesterday = today - timedelta(days=1)
+
+    for session in sessions:
+        # Safely pick a timestamp to group by
+        timestamp = session.last_updated or session.created_at
+
+        # Make sure it's timezone-aware
+        if is_naive(timestamp):
+            timestamp = make_aware(timestamp)
+
+        timestamp = localtime(timestamp)
+
+        # Determine group label
+        if timestamp.date() == today:
+            group_key = "Today"
+        elif timestamp.date() == yesterday:
+            group_key = "Yesterday"
+        else:
+            group_key = timestamp.strftime("%B %d, %Y")  # Example: March 26, 2025
+
+        grouped[group_key].append({
+            "chat_id": session.id,
+            "title": session.title or f"Chat with {session.ai_bot.name}",
+            "ai_bot": session.ai_bot.name,
+            "last_updated": timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        })
+
+    return JsonResponse({"history": grouped})
+
+
+### **✅ Load Single Chat (WHEN CLICKING HISTORY)**
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import AIChatSession
+@login_required
+def get_chat(request, chat_id):
+    """Retrieve a single chat session by ID."""
+    chat_session = get_object_or_404(AIChatSession, id=chat_id, user=request.user)
+
+    # ✅ Ensure messages are returned with correct keys
+    formatted_messages = []
+    for msg in chat_session.messages:
+        if "role" in msg and "content" in msg:
+            formatted_messages.append(msg)
+        else:
+            logger.warning(f"⚠️ Skipping malformed message in chat {chat_id}: {msg}")
+
+    return JsonResponse({
+        "chat_id": chat_session.id,
+        "title": chat_session.title,
+        "ai_bot": chat_session.ai_bot.name,
+        "messages": formatted_messages
     })
 
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+
+# Initialize logger
+logger = logging.getLogger(__name__)
+
 import json
-from myapp.models import AIChat, AIMessage
+import logging
+import openai
+from datetime import timedelta
+from django.http import JsonResponse
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from myapp.models import AIBot, AIChatSession  # ✅ Correct Model Name
+
+def summarize_history(chat_id):
+    """
+    Summarizes the conversation history only for the given chat session.
+    """
+    chat_session = AIChatSession.objects.filter(id=chat_id).first()
+    if not chat_session or len(chat_session.messages) < 10:
+        return chat_session.messages if chat_session else []
+
+    # ✅ Get only the last 10 messages from the specific chat session
+    last_messages = chat_session.messages[-10:]
+
+    # ✅ Normalize structure (convert `message` to `content`)
+    normalized_history = []
+    for msg in last_messages:
+        if "content" not in msg and "message" in msg:
+            msg["content"] = msg.pop("message")
+
+        if "role" in msg and "content" in msg:  # Only keep valid messages
+            normalized_history.append(f"{msg['role']}: {msg['content']}")
+        else:
+            logger.warning(f"⚠️ Skipping malformed message: {msg}")
+
+    summary_prompt = "\n".join(normalized_history)
+
+    try:
+        client = openai.OpenAI()
+        response = client.chat.completions.create(
+            model="gpt-4-turbo",
+            messages=[
+                {"role": "system", "content": "Summarize the following conversation for better context retention:"},
+                {"role": "user", "content": summary_prompt}
+            ],
+            max_tokens=150
+        )
+        summary = response.choices[0].message.content.strip()
+        return [{"role": "system", "content": f"Summary: {summary}"}]  # ✅ Store summary as system message
+    except Exception as e:
+        logger.error(f"Error summarizing history: {e}")
+        return [{"role": "system", "content": "Summary unavailable due to an error."}] 
+    
+     # ✅ Fallback summary
+from django.http import StreamingHttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now
+from django.shortcuts import get_object_or_404
+from myapp.models import AIBot, AIChatSession, AIUserSubscription
+import openai
+import json
+import logging
+
+logger = logging.getLogger(__name__)
+
+def get_model_version(user):
+    """Returns GPT model based on user's plan."""
+    user_subscription = AIUserSubscription.objects.filter(
+        user=user
+    ).exclude(
+        canceled_at__isnull=False
+    ).filter(
+        expiration_date__gt=now()
+    ).first()
+
+    user_plan = user_subscription.plan if user_subscription else "free"
+    return "gpt-3.5-turbo" if user_plan == "free" else "gpt-4-turbo"
 
 @csrf_exempt
-def chat_with_ai(request, ai_id):
-    if request.method == "POST":
+@login_required
+def stream_chat_message(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request method."}, status=405)
+
+    try:
         data = json.loads(request.body)
-        user_message = data.get("message", "").strip()
+        ai_bot_name = data.get("ai_bot")
+        user_message = data.get("message")
+        chat_id = data.get("chat_id")
 
-        # 🔥 If no chat session exists, create a new one
-        chat, created = AIChat.objects.get_or_create(user=request.user, ai_id=ai_id, title="New Chat")
+        if not ai_bot_name or not user_message:
+            return JsonResponse({"error": "Missing AI bot or message."}, status=400)
 
-        # ✅ Save the user message
-        AIMessage.objects.create(chat=chat, sender="user", text=user_message)
+        ai_bot = get_object_or_404(AIBot, name=ai_bot_name)
+        system_prompt = ai_bot.generate_prompt()
 
-        # 🔥 AI Response Logic (Your existing logic)
-        ai_response = f"Hello! You said: {user_message}"
+        # 🧠 Determine the right OpenAI model
+        model_version = get_model_version(request.user)
 
-        # ✅ Save the AI response
-        AIMessage.objects.create(chat=chat, sender="bot", text=ai_response)
+        # 🔁 Resume or start a chat
 
-        return JsonResponse({"response": ai_response})
-    
-    return JsonResponse({"error": "Invalid request"}, status=400)
+        if user_message == "__INIT__":
+            user_message = f"Hello! Please introduce yourself based on your specialty:\n\n{system_prompt}"
+
+        chat_session = None
+        if chat_id:
+            try:
+                chat_session = AIChatSession.objects.get(id=chat_id, user=request.user)
+                if chat_session.ai_bot != ai_bot:
+                    return JsonResponse({"error": "Chat session does not match selected AI bot."}, status=403)
+            except AIChatSession.DoesNotExist:
+                logger.warning(f"⚠️ Chat ID {chat_id} not found, creating a new one.")
+
+        if not chat_session:
+            chat_session = AIChatSession.objects.create(
+                user=request.user,
+                ai_bot=ai_bot,
+                title="",  # Let OpenAI generate the actual title
+                messages=[]
+            )
 
 
+        # 🧾 Append user's message
+        existing_messages = chat_session.messages or []
+        existing_messages.append({"role": "user", "content": user_message})
+        chat_session.messages = existing_messages
+        chat_session.save()
+
+        # 💬 Format for OpenAI API
+        summary_messages = summarize_history(chat_session.id)
+        full_messages = [{"role": "system", "content": system_prompt}] + summary_messages + existing_messages
+
+        def generate_stream():
+            client = openai.OpenAI()
+            response = client.chat.completions.create(
+                model=model_version,
+                messages=full_messages,
+                stream=True
+            )
+
+            # ✅ Send chat ID marker FIRST
+            yield f"[[[chat_id:{chat_session.id}]]]"
+
+            collected = ""
+            for chunk in response:
+                delta = chunk.choices[0].delta
+                if delta and delta.content:
+                    collected += delta.content
+                    yield delta.content
+
+            # 🧠 Save full assistant message when done
+            chat_session.messages.append({"role": "assistant", "content": collected})
+            chat_session.last_updated = now()
+            chat_session.save()
+
+            if not chat_session.manually_renamed:
+                chat_session.generate_chat_title(force_update=True)
+
+
+
+        return StreamingHttpResponse(generate_stream(), content_type='text/plain')
+
+    except Exception as e:
+        logger.error(f"Streaming error: {e}", exc_info=True)
+        return JsonResponse({"error": "Streaming failed."}, status=500)
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.http import JsonResponse
+from django.utils.timezone import now
 from django.shortcuts import get_object_or_404
+import json
+import openai
+import logging
+from myapp.models import AIBot, AIChatSession, AIUserSubscription
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+@login_required
+def simple_chat_message(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request method."}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        ai_bot_name = data.get("ai_bot")
+        user_message = data.get("message")
+        chat_id = data.get("chat_id")
+
+        if not ai_bot_name or not user_message:
+            return JsonResponse({"error": "Missing AI bot or message."}, status=400)
+
+        ai_bot = get_object_or_404(AIBot, name=ai_bot_name)
+        system_prompt = ai_bot.generate_prompt()
+        model_version = get_model_version(request.user)
+
+        # 📦 Retrieve or create chat session
+        chat_session = None
+        if chat_id:
+            chat_session = AIChatSession.objects.filter(id=chat_id, user=request.user).first()
+            if chat_session and chat_session.ai_bot != ai_bot:
+                return JsonResponse({"error": "Chat session does not match selected AI bot."}, status=403)
+        if not chat_session:
+            chat_session = AIChatSession.objects.create(
+                user=request.user,
+                ai_bot=ai_bot,
+                title="",
+                messages=[]
+            )
+
+        # ✍️ Add user's message to session
+        messages = chat_session.messages or []
+        messages.append({"role": "user", "content": user_message})
+        chat_session.messages = messages
+        chat_session.save()
+
+        # 🔁 Summarize history + full prompt
+        summary_messages = summarize_history(chat_session.id)
+        full_messages = [{"role": "system", "content": system_prompt}] + summary_messages + messages
+
+        # 🎯 Get OpenAI response
+        client = openai.OpenAI()
+        response = client.chat.completions.create(
+            model=model_version,
+            messages=full_messages
+        )
+
+        assistant_reply = response.choices[0].message.content.strip()
+
+        # 💾 Append assistant reply and update session
+        messages.append({"role": "assistant", "content": assistant_reply})
+        chat_session.messages = messages
+        chat_session.last_updated = now()
+        chat_session.save()
+
+        # 🧠 Auto-generate title (if needed)
+        if not chat_session.manually_renamed:
+            chat_session.generate_chat_title(force_update=True)
+
+        return JsonResponse({
+            "chat_id": chat_session.id,
+            "response": assistant_reply,
+            "title": chat_session.title
+        })
+
+    except Exception as e:
+        logger.error(f"Error in simple_chat_message: {e}", exc_info=True)
+        return JsonResponse({"error": "Failed to get AI response."}, status=500)
+
+
+def generate_chat_title(self, force_update=False):
+    if self.manually_renamed and not force_update:
+        return  # Respect user's manual override
+
+    try:
+        last_few = self.messages[-6:]  # Use last few messages for context
+        context = "\n".join(f"{m['role']}: {m['content']}" for m in last_few if 'role' in m and 'content' in m)
+
+        client = openai.OpenAI()
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Summarize this chat into a short, smart title (max 5 words)."},
+                {"role": "user", "content": context}
+            ],
+            max_tokens=20
+        )
+        title = response.choices[0].message.content.strip().replace('"', '')
+        self.title = title
+        self.save()
+
+    except Exception as e:
+        logger.warning(f"⚠️ Title generation failed: {e}")
+
+
+
+### **✅ Manually Rename Chat Title**
+@login_required
+def rename_chat_title(request, chat_id):
+    """Allow user to manually rename a chat title (stops AI from auto-updating it)."""
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request method."}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        new_title = data.get("title", "").strip()
+
+        if not new_title or len(new_title) > 100:
+            return JsonResponse({"error": "Title must be between 1 and 100 characters."}, status=400)
+
+        chat = get_object_or_404(AIChatSession, id=chat_id, user=request.user)
+        chat.title = new_title
+        chat.manually_renamed = True  # ✅ Stops AI from changing the title
+        chat.save()
+
+        return JsonResponse({"success": True, "new_title": new_title})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+### **✅ Reset Chat Title (Re-enable AI Title Updates)**
+@login_required
+def reset_chat_title(request, chat_id):
+    """Allows users to reset the title so AI can generate a new one."""
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request method."}, status=405)
+
+    chat = get_object_or_404(AIChatSession, id=chat_id, user=request.user)
+    chat.manually_renamed = False  # ✅ Allow AI to rename it again
+    chat.generate_chat_title(force_update=True)
+
+    return JsonResponse({"success": True, "new_title": chat.title})
+
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 @login_required
-def get_chat_titles(request, ai_id):
-    """Return chat history titles for a selected AI."""
-    chats = AIChat.objects.filter(user=request.user, ai_id=ai_id).order_by("-created_at")
-    
-    chat_data = [{"chat_id": chat.id, "title": chat.title} for chat in chats]
-    
-    return JsonResponse({"chats": chat_data})
+def chat_iriseupai_sandbox(request):
+    """Render AI chat interface with user info."""
+    is_pro_user = get_user_subscription_status(request.user)
+    is_expired = False  # ✅ Add this line to prevent template errors
+
+    return render(request, 'myapp/aibots/iriseupai/ai_dynamic.html', {
+        "is_pro_user": is_pro_user,
+        "is_expired": is_expired  # ✅ Now the template won't break
+    })
 
 
-@login_required
-def get_chat_messages(request, chat_id):
-    """Return messages of a selected chat session."""
-    chat = get_object_or_404(AIChat, id=chat_id, user=request.user)
-    messages = AIMessage.objects.filter(chat=chat).order_by("timestamp")
-    
-    messages_data = [
-        {"sender": msg.sender, "text": msg.text, "timestamp": msg.timestamp.strftime("%H:%M")}
-        for msg in messages
-    ]
-    
-    return JsonResponse({"messages": messages_data})
+def look(request):
+    return render(request, 'myapp/aibots/iriseupai/look.html')
+

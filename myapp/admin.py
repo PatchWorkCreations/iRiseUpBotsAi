@@ -1,6 +1,11 @@
 from django.contrib import admin
-from .models import Course, SubCourse, Lesson, UserCourseAccess, UserSubCourseAccess
+from .models import (
+    Course, SubCourse, Lesson, UserCourseAccess, UserSubCourseAccess, 
+    EmailCollection, ForumCategory, ForumPost, ForumComment, 
+    BlogPost, BlogComment, Category, Tag, AIBot
+)
 
+# ✅ Course Admins
 class LessonAdmin(admin.ModelAdmin):
     list_display = ('title', 'get_course', 'parent_sub_course')
     search_fields = ('title', 'parent_sub_course__title', 'parent_sub_course__parent_course__title')
@@ -24,9 +29,7 @@ admin.site.register(UserCourseAccess)
 admin.site.register(UserSubCourseAccess)
 
 
-from django.contrib import admin
-from .models import EmailCollection
-
+# ✅ Email Collection Admin
 class EmailCollectionAdmin(admin.ModelAdmin):
     list_display = ['user_email', 'receive_offers', 'created_at']  # Updated field name
 
@@ -37,25 +40,15 @@ class EmailCollectionAdmin(admin.ModelAdmin):
 admin.site.register(EmailCollection, EmailCollectionAdmin)
 
 
-from django.contrib import admin
-from .models import ForumCategory
-
-# Register the ForumCategory model
+# ✅ Forum Category Admin
 admin.site.register(ForumCategory)
 
-# Registering the Blog model in the admin
-from django.contrib import admin
-from .models import BlogPost  # Import your BlogPost model
 
-from django.contrib import admin
-from .models import BlogPost, BlogComment, Category, Tag  # Import the models
-
-# Define the inline for comments
-class BlogCommentInline(admin.TabularInline):  # or use admin.StackedInline for a different layout
+# ✅ Blog Admin
+class BlogCommentInline(admin.TabularInline):  # Inline for comments
     model = BlogComment
-    extra = 1  # How many empty comment forms to display by default
+    extra = 1  
 
-# Register the BlogPost model with the inline comments
 @admin.register(BlogPost)
 class BlogAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
@@ -64,9 +57,8 @@ class BlogAdmin(admin.ModelAdmin):
     list_filter = ('publish_date', 'author')
     date_hierarchy = 'publish_date'
     ordering = ('-publish_date',)
-    inlines = [BlogCommentInline]  # This will add the inline for comments
+    inlines = [BlogCommentInline]  
 
-# Register Category and Tag models to make them available in admin
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['name']
@@ -76,14 +68,12 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
-from django.contrib import admin
-from .models import ForumPost, ForumComment
-
-# Admin for Forum-related models
+# ✅ Forum Post Admin
 class ForumPostAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'category', 'created_at', 'updated_at')
     search_fields = ('title', 'content', 'author__username')
     list_filter = ('category', 'created_at', 'updated_at')
+
     actions = ['delete_selected_posts']
 
     def delete_selected_posts(self, request, queryset):
@@ -97,3 +87,33 @@ class ForumCommentAdmin(admin.ModelAdmin):
 
 admin.site.register(ForumPost, ForumPostAdmin)
 admin.site.register(ForumComment, ForumCommentAdmin)
+
+
+# ✅ AIBot Admin (Fixed)
+from django.utils.html import format_html
+from django.contrib import admin
+from .models import AIBot
+
+@admin.register(AIBot)
+class AIBotAdmin(admin.ModelAdmin):
+    list_display = ('name', 'ai_type', 'is_active', 'preview_image')  # Added image preview
+    search_fields = ('name', 'specialty', 'description')
+    list_filter = ('is_active', 'ai_type')
+    readonly_fields = ('preview_image',)  # Optional: show preview on edit page
+    fields = (
+        'name',
+        'slug',
+        'specialty',
+        'description',
+        'bio',
+        'ai_type',
+        'image',
+        'preview_image',
+        'is_active',
+    )
+
+    def preview_image(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="80" style="border-radius:8px;" />', obj.image.url)
+        return "No image"
+    preview_image.short_description = 'AI Image'

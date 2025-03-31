@@ -1,0 +1,23 @@
+{% extends "myapp/aibots/bots/bot_base.html" %}
+{% block title %}Chat Conversation{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ chat.title }}</h2>
+    <p><strong>Chat with:</strong> {{ chat.ai_id }}</p>
+    <p><strong>Date:</strong> {{ chat.created_at|date:"F d, Y H:i" }}</p>
+
+    <div class="chat-history">
+        {% for message in chat.aimessage_set.all %}
+            <div class="message {% if message.sender == 'user' %}user-message{% else %}bot-message{% endif %}">
+                <strong>{{ message.sender|title }}:</strong> {{ message.text }}
+                <span class="timestamp">{{ message.timestamp|date:"H:i" }}</span>
+            </div>
+        {% empty %}
+            <p>No messages found in this conversation.</p>
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'chat_history' %}" class="btn btn-secondary">Back to Chat History</a>
+</div>
+{% endblock %}

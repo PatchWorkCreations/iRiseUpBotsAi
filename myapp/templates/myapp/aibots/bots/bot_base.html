@@ -351,77 +351,11 @@
     <!-- Page-specific content will go here -->
     {% endblock %}
 
-   {% if chat_limit_reached %}
-<!-- 🚀 Chat Limit Modal -->
-<div id="chat-limit-modal" class="modal">
-    <div class="modal-content">
-        <span id="close-chat-limit-modal" class="close-button">&times;</span>
-        <h2>🚀 Upgrade to Pro for Unlimited Chat</h2>
-        <p>You've reached your <strong>free chat limit</strong>.</p>
-        <p>⚠️ <strong>Don't lose your chat history!</strong> Upgrade now to continue chatting.</p>
-        <button onclick="location.href='{{ upgrade_url }}'" class="upgrade-button">Upgrade to Pro</button>
-        <p class="countdown-text">New chats available in <span id="countdown-timer"></span></p>
-    </div>
-</div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const modal = document.getElementById("chat-limit-modal");
-        const closeModal = document.getElementById("close-chat-limit-modal");
-        const countdownTimer = document.getElementById("countdown-timer");
-
-        const resetTime = new Date("{{ chat_reset_time }}").getTime();
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const timeLeft = resetTime - now;
-
-            if (timeLeft <= 0) {
-                countdownTimer.innerHTML = "Now!";
-                location.reload(); // Reload page when countdown finishes
-                return;
-            }
-
-            const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-            const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
-            const seconds = Math.floor((timeLeft / 1000) % 60);
-
-            countdownTimer.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
-        }
-
-        if (modal) {
-            modal.style.display = "block";
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-        }
-
-        closeModal.addEventListener("click", function () {
-            modal.style.display = "none";
-        });
-    });
-</script>
-{% endif %}
 
 
  
  
   
-<script>
-    function loadChat(chatId) {
-    fetch(`/api/chat_history/${chatId}/`) // Replace with your actual API endpoint
-    .then(response => response.json())
-    .then(data => {
-        document.querySelector("#chatbox").innerHTML = "";
-        data.full_conversation.forEach(msg => {
-            const messageClass = msg.sender === "user" ? "user" : "bot";
-            document.querySelector("#chatbox").innerHTML += `<div class="message ${messageClass}">${msg.text}</div>`;
-        });
-        document.querySelector("#chatbox").scrollTop = document.querySelector("#chatbox").scrollHeight;
-    })
-    .catch(error => console.error("Error loading chat history:", error));
-}
-
-</script>
     <!-- JavaScript Files -->
     <script src="{% static 'myapp/js/jquery-3.5.1.min.js' %}"></script>
     <script src="{% static 'myapp/js/bootstrap.bundle.min.js' %}"></script>
