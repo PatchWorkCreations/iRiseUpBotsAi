@@ -25,7 +25,8 @@ DEBUG = env.bool('DEBUG', default=True)
 
 # Allowed hosts and trusted origins
 ALLOWED_HOSTS = ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[' www.iriseup.ai', 'localhost', '127.0.0.1', '0.0.0.0'])
-CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host != 'localhost']
+CSRF_TRUSTED_ORIGINS = ["https://www.iriseup.ai"]
+
 
 # Installed apps
 INSTALLED_APPS = [
