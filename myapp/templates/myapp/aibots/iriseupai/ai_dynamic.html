@@ -946,6 +946,37 @@ html, body {
     }
 }
 
+.image-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.image-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    background: #025450;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.image-btn:hover {
+    background: #025450;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.image-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 
 
 </style>
@@ -1758,16 +1789,19 @@ function typeHTMLWithEffect(target, formattedHTML, speed = 15, callback = null) 
 
 let lastAssistantMessage = null;
 
-function sendMessage() {
+function sendMessage(customPrompt = null) {
     const isMobile = window.innerWidth <= 480;
     const inputEl = isMobile ? document.querySelector("#mobile-message-input") : document.querySelector("#message-input");
     const chatbox = isMobile ? document.getElementById("mobile-chatbox") : document.getElementById("chatbox");
 
-    const message = inputEl.value.trim();
+    const message = customPrompt || inputEl.value.trim();
     if (!selectedAI || !message) return;
 
-    inputEl.value = "";
-    appendMessage(message, "user");
+    if (!customPrompt) {
+        inputEl.value = "";
+        appendMessage(message, "user");
+    }
+
     showTypingIndicator();
 
     const isProUser = JSON.parse("{{ is_pro_user|lower }}");
@@ -1798,6 +1832,30 @@ function sendMessage() {
     .then(data => {
         hideTypingIndicator();
 
+        if (data.image_url) {
+            const imageBubble = document.createElement("div");
+            imageBubble.className = "message bot image-response";
+            imageBubble.dataset.description = data.image_description || message;
+
+            imageBubble.innerHTML = `
+                <p>${data.response || "Here’s what I came up with!"}</p>
+                <img src="${data.image_url}" alt="Generated Image" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">
+                <p class="image-description">${data.image_description || "AI-generated image."}</p>
+                <div class="image-actions" style="margin-top: 10px; display: flex; gap: 10px;">
+                    <button class="image-btn" data-action="tweak">Tweak</button>
+                    <button class="image-btn" data-action="regenerate">Regenerate</button>
+                    <button class="image-btn" data-action="new">Try a New Idea</button>
+                </div>
+            `;
+            chatbox.appendChild(imageBubble);
+            chatbox.scrollTop = chatbox.scrollHeight;
+
+            lastAssistantMessage = `[IMAGE: ${data.image_url}]`;
+            selectedChatId = data.chat_id || selectedChatId;
+            if (selectedChatId) loadFullChatHistorySidebar();
+            return;
+        }
+
         if (data.response && data.response.trim() !== lastAssistantMessage) {
             const raw = data.response.trim();
             const formatted = formatResponse(raw);
@@ -1824,7 +1882,24 @@ function sendMessage() {
 }
 
 
+document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("image-btn")) {
+        const action = e.target.dataset.action;
+        const parent = e.target.closest(".image-response");
+        const description = parent?.dataset.description || "";
 
+        let prompt = "";
+        if (action === "regenerate") {
+            prompt = `Regenerate an image based on this idea: ${description}`;
+        } else if (action === "tweak") {
+            prompt = `Tweak the image to enhance or change it slightly. Original idea: ${description}`;
+        } else if (action === "new") {
+            prompt = `Give me a completely fresh image idea, inspired by: ${description}`;
+        }
+
+        sendMessage(prompt);
+    }
+});
 
 
 function attachMessageEvents() {

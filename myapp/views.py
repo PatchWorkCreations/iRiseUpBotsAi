@@ -4372,7 +4372,6 @@ def stream_chat_message(request):
         logger.error(f"Streaming error: {e}", exc_info=True)
         return JsonResponse({"error": "Streaming failed."}, status=500)
 
-
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -4384,6 +4383,7 @@ import json
 import openai
 import logging
 from myapp.models import AIBot, AIChatSession, AIUserSubscription
+
 
 logger = logging.getLogger(__name__)
 
@@ -4404,9 +4404,15 @@ def simple_chat_message(request):
 
         ai_bot = get_object_or_404(AIBot, name=ai_bot_name)
         system_prompt = ai_bot.generate_prompt()
-        model_version = get_model_version(request.user)
 
-        # 📦 Retrieve or create chat session
+        user_subscription = AIUserSubscription.objects.filter(
+            user=request.user,
+            expiration_date__gt=now(),
+            canceled_at__isnull=True
+        ).first()
+        user_plan = user_subscription.plan if user_subscription else "free"
+        model_version = "gpt-3.5-turbo" if user_plan == "free" else "gpt-4-turbo"
+
         chat_session = None
         if chat_id:
             chat_session = AIChatSession.objects.filter(id=chat_id, user=request.user).first()
@@ -4420,18 +4426,63 @@ def simple_chat_message(request):
                 messages=[]
             )
 
-        # ✍️ Add user's message to session
         messages = chat_session.messages or []
         messages.append({"role": "user", "content": user_message})
-        chat_session.messages = messages
-        chat_session.save()
 
-        # 🔁 Summarize history + full prompt
-        summary_messages = summarize_history(chat_session.id)
+        client = openai.OpenAI()
+
+        if ai_bot.ai_type == "image":
+            try:
+                # Smart image handling: allow refinement
+                previous_image_msg = next((m for m in reversed(messages) if m.get("image_url")), None)
+                refinement_requested = any(word in user_message.lower() for word in ["adjust", "tweak", "refine", "improve", "make it"])
+
+                if refinement_requested and previous_image_msg:
+                    prompt = f"Refine this image based on: '{user_message}'. Original: '{previous_image_msg.get('description')}'"
+                else:
+                    prompt = f"Create a vivid image of: {user_message}"
+
+                description_response = client.chat.completions.create(
+                    model=model_version,
+                    messages=[{"role": "user", "content": prompt}]
+                )
+
+                refined_prompt = description_response.choices[0].message.content.strip()
+
+                image_response = client.images.generate(
+                    model="dall-e-3",
+                    prompt=refined_prompt,
+                    n=1,
+                    size="1024x1024"
+                )
+
+                image_url = image_response.data[0].url
+
+                messages.append({
+                    "role": "assistant",
+                    "image_url": image_url,
+                    "description": refined_prompt
+                })
+                chat_session.messages = messages
+                chat_session.last_updated = now()
+                chat_session.save()
+
+                return JsonResponse({
+                    "chat_id": chat_session.id,
+                    "response": "Here’s what I came up with!",
+                    "image_url": image_url,
+                    "image_description": refined_prompt,
+                    "title": chat_session.title
+                })
+
+            except Exception as e:
+                logger.error(f"Image generation failed: {e}", exc_info=True)
+                return JsonResponse({"error": "Image generation failed."}, status=500)
+
+        # TEXT MODE
+        summary_messages = summarize_history(chat_session.id) if callable(summarize_history) else []
         full_messages = [{"role": "system", "content": system_prompt}] + summary_messages + messages
 
-        # 🎯 Get OpenAI response
-        client = openai.OpenAI()
         response = client.chat.completions.create(
             model=model_version,
             messages=full_messages
@@ -4439,13 +4490,11 @@ def simple_chat_message(request):
 
         assistant_reply = response.choices[0].message.content.strip()
 
-        # 💾 Append assistant reply and update session
         messages.append({"role": "assistant", "content": assistant_reply})
         chat_session.messages = messages
         chat_session.last_updated = now()
         chat_session.save()
 
-        # 🧠 Auto-generate title (if needed)
         if not chat_session.manually_renamed:
             chat_session.generate_chat_title(force_update=True)
 
