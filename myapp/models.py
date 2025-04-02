@@ -150,13 +150,14 @@ class AIBot(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def generate_prompt(self):
-        return f"""You are {self.name}, a specialized AI in {self.specialty}.
+        return f"""
+    You are {self.name}, a specialized AI in {self.specialty}.
 
-{self.description}
+    {self.description}
 
-Your goal is to provide engaging, informative, and valuable responses while always aligning with user intent. 
-Be concise yet insightful. If unsure, ask clarifying questions.
-"""
+    Stick to your expertise, but stay flexible to the user's needs.
+    If you're not sure what they mean, kindly ask questions.
+    """
 
     def save(self, *args, **kwargs):
         if not self.slug:

@@ -4383,6 +4383,7 @@ import json
 import openai
 import logging
 from myapp.models import AIBot, AIChatSession, AIUserSubscription
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
@@ -4481,7 +4482,11 @@ def simple_chat_message(request):
 
         # TEXT MODE
         summary_messages = summarize_history(chat_session.id) if callable(summarize_history) else []
-        full_messages = [{"role": "system", "content": system_prompt}] + summary_messages + messages
+        global_tone_prompt = getattr(settings, "AI_TONE_PROMPT", "")
+        full_messages = [
+            {"role": "system", "content": global_tone_prompt.strip()},
+            {"role": "system", "content": system_prompt.strip()},
+        ] + summary_messages + messages
 
         response = client.chat.completions.create(
             model=model_version,
