@@ -9,29 +9,13 @@ urlpatterns = [
     path('sign_in', views.sign_in, name='sign_in'),
     path('sign_out/', views.sign_out, name='sign_out'),
 
-    path('about/', views.about, name='about'),
-    path('blog-classic/', views.blogclassic, name='blogclassic'),
-    path('blog/', views.blog, name='blog'),
-    
-    path('faq/', views.faq, name='faq'),
 
-    path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
-    path('like/<int:post_id>/', views.blog_like_post, name='blog_like_post'),
-    path('dislike/<int:post_id>/', views.blog_dislike_post, name='blog_dislike_post'),
-    path('blogs/<int:post_id>/comment/', views.blog_add_comment, name='blog_add_comment'),
-    path('blogs/category/<int:category_id>/', views.blog_category, name='blog_category'),
-    path('blogs/search/', views.blog_search, name='blog_search'),
-    path('email-collection/', views.email_collection, name='email_collection'),
+   
+
+ 
+
     path('iriseupdashboard/', views.chat_iriseupai_sandbox, name='iriseupdashboard'),
-    path('courses/', views.course_list, name='course_list'),
-    path('course/continue/<int:course_id>/', views.course_continue, name='course_continue'),
 
-    path('profile/', views.profile_view, name='profile'),
-    path('profile/settings/', views.profile_settings, name='profile_settings'),
-    path('quiz-results/', views.quiz_results, name='quiz_results'),
-    path('no-quiz-results/', views.no_quiz_results, name='no_quiz_results'),
-
-    
     
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
 
@@ -69,39 +53,12 @@ urlpatterns = [
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('profile/edit-avatar/', views.edit_avatar, name='edit_avatar'),
 
-    path('course/<int:course_id>/toggle-favorite/', views.toggle_favorite, name='toggle_favorite'),
-    path('course/<int:course_id>/toggle-save/', views.toggle_save, name='toggle_save'),
-
-    # Heritage Quiz
-    path('heritage/question-1/', views.heritage_question_1, name='heritage_question_1'),
-    path('heritage/question-2/', views.heritage_question_2, name='heritage_question_2'),
-    path('heritage/question-3/', views.heritage_question_3, name='heritage_question_3'),
-    path('heritage/question-4/', views.heritage_question_4, name='heritage_question_4'),
-    path('heritage/question-5/', views.heritage_question_5, name='heritage_question_5'),
-    path('heritage/question-6/', views.heritage_question_6, name='heritage_question_6'),
-    path('heritage/question-7/', views.heritage_question_7, name='heritage_question_7'),
-    path('heritage/question-8/', views.heritage_question_8, name='heritage_question_8'),
-    path('heritage/question-9/', views.heritage_question_9, name='heritage_question_9'),
-    path('heritage/question-10/', views.heritage_question_10, name='heritage_question_10'),
-    path('heritage/question-11/', views.heritage_question_11, name='heritage_question_11'),
-    path('heritage/question-12/', views.heritage_question_12, name='heritage_question_12'),
-    path('heritage/question-13/', views.heritage_question_13, name='heritage_question_13'),
-    path('heritage/question-14/', views.heritage_question_14, name='heritage_question_14'),
-    path('heritage/question-15/', views.heritage_question_15, name='heritage_question_15'),
-    path('heritage/question-16/', views.heritage_question_16, name='heritage_question_16'),
-    path('heritage/question-17/', views.heritage_question_17, name='heritage_question_17'),
-    path('heritage/question-18/', views.heritage_question_18, name='heritage_question_18'),
-    path('heritage/question-19/', views.heritage_question_19, name='heritage_question_19'),
-    path('heritage/heritage-summary/', views.heritage_summary, name='heritage_summary'),
-    path('heritage/question-20/', views.heritage_question_20, name='heritage_question_20'),
-    path('heritage/heritage-results/', views.heritage_results, name='heritage_results'),
 
     path('chat/', views.chat_interface, name='chat_interface'),
     path('api/chat/', views.get_response, name='get_response'),
 
     path('subscribe/', views.subscribe_newsletter, name='subscribe_newsletter'),
-    path('index', views.index, name='index'),
-    path('index2', views.index2, name='index2'),
+ 
     
     path('api/chat/inspire/', views.get_elevate_response, name='get_elevate_response'),  # Ezra
     path('api/chat/pulse/', views.get_thrive_response, name='get_thrive_response'),        # Caleb
@@ -247,7 +204,7 @@ urlpatterns = [
 
     #######################################################################################
 
-    path("api/ai_list/", views.ai_list, name="ai_list"),
+   
 
     # ✅ Get All Chat History (Right Sidebar)
     path("api/get_chat_history/", views.get_chat_history, name="get_chat_history"),
@@ -269,4 +226,8 @@ urlpatterns = [
     path("sandbox/", views.iriseupdashboard, name="chat_iriseupai_sandbox"),
     path("looks/", views.look, name="look"),
 
+
+    path("api/toggle_favorite/<int:bot_id>/", views.toggle_favorite_ai_bot, name="toggle_favorite_ai_bot"),
+    path("api/delete_ai_bot/<int:bot_id>/", views.delete_ai_bot, name="delete_ai_bot"),
+    path("api/ai_list/", views.get_ai_bots, name="get_ai_bots"),
 ]

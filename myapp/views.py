@@ -43,49 +43,6 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 
-def about(request):
-    return render(request, 'myapp/about.html')
-
-def index(request):
-    return render(request, 'myapp/index.html')
-
-def index2(request):
-    return render(request, 'myapp/index2.html')
-
-def index3(request):
-    return render(request, 'myapp/index3.html')
-
-def blogclassic(request):
-    return render(request, 'myapp/blog-classic.html')
-
-def blog(request):
-    return render(request, 'myapp/blog.html')
-
-
-
-def faq(request):
-    return render(request, 'myapp/faq.html')
-
-from myapp.models import BlogPost
-
-def index2(request):
-    recent_blogs = BlogPost.objects.all().order_by('-publish_date')[:3]  # Fetch 3 most recent
-    return render(request, 'myapp/index-2.html', {'recent_blogs': recent_blogs})
-
-@login_required
-def profile_view(request):
-    user = request.user
-
-    context = {
-        'username': user.username if user.is_authenticated else "Guest",
-        'email': user.email if user.is_authenticated else "Not available",
-    }
-
-    return render(request, 'myapp/course_list/profile.html', context)
-
-def course_list(request):
-    courses = Course.objects.all()
-    return render(request, 'myapp/course_list/course_list.html', {'courses': courses})
 
 
 from django.shortcuts import render
@@ -3020,7 +2977,7 @@ def subscribe_newsletter(request):
     # Optional: Check if email is already subscribed
     if Subscriber.objects.filter(email=email).exists():
         messages.warning(request, 'You are already subscribed!')
-        return redirect('myapp/index-2.html')  # Redirect to an appropriate page
+        return redirect('myapp/aibots/iriseupai/iriseupai_landing.html')  # Redirect to an appropriate page
 
     # Create a new subscriber
     Subscriber.objects.create(email=email)
@@ -3028,7 +2985,7 @@ def subscribe_newsletter(request):
     # Optional: Send a welcome email (you can implement this with Django's email functionality)
 
     messages.success(request, 'Thank you for subscribing!')
-    return redirect('myapp/index-2.html')  # Redirect to an appropriate page
+    return redirect('myapp/aibots/iriseupai/iriseupai_landing.html')  # Redirect to an appropriate page
 
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -4114,20 +4071,8 @@ from myapp.models import AIBot, AIChatSession
 
 logger = logging.getLogger(__name__)
 
-### **✅ Fetch AI Bot List (LEFT SIDEBAR)**
-from django.utils.text import Truncator
 
-@login_required
-def ai_list(request):
-    bots = AIBot.objects.filter(is_active=True)
-    bot_data = [{
-        "id": bot.id,
-        "name": bot.name,
-        "specialty": bot.specialty,
-        "bio": Truncator(bot.bio).chars(100) if bot.bio else "This AI is ready to help you!",  # ✅ Safe fallback
-        "image": bot.image.url if bot.image else None  # ✅ Include image URL
-    } for bot in bots]
-    return JsonResponse({"bots": bot_data})
+from django.utils.text import Truncator
 
 
 
@@ -4596,3 +4541,118 @@ def chat_iriseupai_sandbox(request):
 def look(request):
     return render(request, 'myapp/aibots/iriseupai/look.html')
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from .models import AIBot
+import json
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import AIBot
+
+
+@csrf_exempt
+@login_required
+def create_ai_bot(request):
+    if request.method != "POST":
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+    if not get_user_subscription_status(request.user):
+        return JsonResponse({'success': False, 'error': 'Upgrade to Pro to create your own strategist.'})
+
+    try:
+        name = request.POST.get("name")
+        specialty = request.POST.get("specialty")
+        description = request.POST.get("description")
+        image = request.FILES.get("image")  # ✅ Optional
+
+        bot = AIBot.objects.create(
+            name=name,
+            specialty=specialty,
+            description=description,
+            owner=request.user,
+            image=image,  # ✅ Only if your AIBot model includes this field
+            is_public=False
+        )
+
+        return JsonResponse({'success': True, 'bot_id': bot.id})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import AIBot
+from django.db.models import Q
+from django.utils.text import Truncator
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import AIBot, Favorite
+from django.utils.text import Truncator
+
+@csrf_exempt
+@login_required
+def toggle_favorite_ai_bot(request, bot_id):
+    try:
+        bot = AIBot.objects.get(id=bot_id, is_active=True)
+        # Prevent favoriting private bots not owned by user
+        if not bot.is_public and bot.owner != request.user:
+            return JsonResponse({"success": False, "error": "Access denied to private bot."})
+    except AIBot.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Bot not found"})
+
+    favorite, created = Favorite.objects.get_or_create(user=request.user, bot=bot)
+
+    if not created:
+        favorite.delete()
+        is_favorite = False
+    else:
+        is_favorite = True
+
+    return JsonResponse({"success": True, "is_favorite": is_favorite})
+
+
+@csrf_exempt
+@login_required
+def delete_ai_bot(request, bot_id):
+    try:
+        bot = AIBot.objects.get(id=bot_id, owner=request.user)
+        bot.delete()
+        return JsonResponse({"success": True})
+    except AIBot.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Bot not found or access denied"})
+
+from django.db.models import Q
+
+
+@login_required
+def get_ai_bots(request):
+    user = request.user
+    bots = AIBot.objects.filter(is_active=True).filter(Q(is_public=True) | Q(owner=user)).distinct()
+    favorite_ids = set(Favorite.objects.filter(user=user).values_list('bot_id', flat=True))
+
+    def serialize(bot):
+        return {
+            "id": bot.id,
+            "name": bot.name,
+            "specialty": bot.specialty,
+            "bio": Truncator(bot.bio).chars(100) if bot.bio else "This AI is ready to help you!",
+            "image": bot.image.url if bot.image else None,
+            "is_favorite": bot.id in favorite_ids,
+            "is_owner": bot.owner == user
+        }
+
+    favorites = [serialize(bot) for bot in bots if bot.id in favorite_ids]
+    non_favorites = [serialize(bot) for bot in bots if bot.id not in favorite_ids]
+
+    return JsonResponse({
+        "success": True,
+        "favorites": favorites,
+        "others": non_favorites
+    })

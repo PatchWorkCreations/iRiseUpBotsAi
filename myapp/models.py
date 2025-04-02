@@ -117,15 +117,11 @@ class ChatHistory(models.Model):
 
         super().save(*args, **kwargs)
 
-from django.db import models
-
+from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 from django.utils.timezone import now
-
-from cloudinary.models import CloudinaryField  # if you're using Cloudinary
-# OR
-# from django.db.models import ImageField  # for local/media storage
+from cloudinary.models import CloudinaryField
 
 class AIBot(models.Model):
     AI_TYPE_CHOICES = [
@@ -133,35 +129,63 @@ class AIBot(models.Model):
         ('image', 'Image Generator AI'),
     ]
 
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True, blank=True, null=True)
     specialty = models.TextField(help_text="What this AI specializes in.")
     description = models.TextField(help_text="Brief description of this AI.")
     bio = models.TextField(help_text="Brief info of this AI.", blank=True, null=True)
     ai_type = models.CharField(max_length=10, choices=AI_TYPE_CHOICES, default="text")
     image = CloudinaryField(
-    'image',
-    folder='iriseup/ai/icon',  # 👈 Folder path inside your Cloudinary account
-    blank=True,
-    null=True
+        'image',
+        folder='iriseup/ai/icon',
+        blank=True,
+        null=True
     )
+    
     is_active = models.BooleanField(default=True)
+    is_public = models.BooleanField(default=False, help_text="If true, other users can see and clone this bot.")
+    is_favorite = models.BooleanField(default=False)
+
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='custom_bots',
+        null=True,
+        blank=True,
+        help_text="The user who created this bot. Null for admin/system bots."
+    )
+
+    cloned_from = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='clones',
+        help_text="If this bot was cloned, reference the original bot here."
+    )
+
     created_at = models.DateTimeField(default=now, editable=False)
     updated_at = models.DateTimeField(auto_now=True)
 
     def generate_prompt(self):
         return f"""
-    You are {self.name}, a specialized AI in {self.specialty}.
+        You are {self.name}, a specialized AI in {self.specialty}.
 
-    {self.description}
+        {self.description}
 
-    Stick to your expertise, but stay flexible to the user's needs.
-    If you're not sure what they mean, kindly ask questions.
-    """
+        Stick to your expertise, but stay flexible to the user's needs.
+        If you're not sure what they mean, kindly ask questions.
+        """
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            while AIBot.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
         super().save(*args, **kwargs)
 
     @classmethod
@@ -169,7 +193,20 @@ class AIBot(models.Model):
         return cls.objects.filter(is_active=True)
 
     def __str__(self):
-        return f"{self.name} ({'Active' if self.is_active else 'Inactive'})"
+        status = "Active" if self.is_active else "Inactive"
+        visibility = "Public" if self.is_public else "Private"
+        return f"{self.name} ({status}, {visibility})"
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    bot = models.ForeignKey(AIBot, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'bot')
+
+    def __str__(self):
+        return f"{self.user.username} ❤️ {self.bot.name}"
 
 
 from django.db import models

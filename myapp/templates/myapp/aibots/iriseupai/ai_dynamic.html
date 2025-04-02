@@ -977,7 +977,189 @@ html, body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.create-bot-btn {
+    display: block;
+    text-align: center;
+    margin-bottom: 16px;
+    padding: 12px;
+    font-weight: 600;
+    background: #FF7A61;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(255, 122, 97, 0.3);
+    border: none;                /* ✅ Removes any default border */
+    outline: none;               /* ✅ Removes browser focus outline */
+}
 
+.create-bot-btn:focus {
+    outline: none;               /* ✅ Also prevent outline on keyboard focus */
+    box-shadow: 0 0 0 3px rgba(255, 122, 97, 0.3); /* Optional: subtle glow */
+}
+
+}
+
+.create-bot-btn:hover {
+    background: #eb6e58;
+    transform: scale(1.03);
+}
+
+.create-bot-btn.disabled {
+    background: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+    position: relative;
+}
+
+.create-bot-btn.disabled i {
+    color: #999;
+}
+
+.create-lock-caption {
+    font-size: 0.8rem;
+    margin-top: 4px;
+    color: #555;
+}
+
+.create-lock-caption a {
+    color: #025450;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.create-lock-caption a:hover {
+    text-decoration: underline;
+}
+
+
+
+.strategist-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 20, 30, 0.6);
+    backdrop-filter: blur(8px);
+    justify-content: center;
+    align-items: center;
+    animation: strategistFadeIn 0.3s ease-in-out;
+}
+
+.strategist-modal-content {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 18px;
+    max-width: 520px;
+    width: 90%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    animation: strategistSlideUp 0.4s ease;
+    position: relative;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.strategist-close-button {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 1.5rem;
+    color: #888;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.strategist-close-button:hover {
+    color: #FF7A61;
+    transform: rotate(90deg);
+}
+
+.strategist-step h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #025450;
+    margin-bottom: 12px;
+}
+
+.strategist-step p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.strategist-step input,
+.strategist-step textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+}
+
+.strategist-step input:focus,
+.strategist-step textarea:focus {
+    border-color: #42BFB7;
+    box-shadow: 0 0 0 3px rgba(66, 191, 183, 0.2);
+    outline: none;
+}
+
+.strategist-btn {
+    background: linear-gradient(to right, #FF7A61, #FF5061);
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+    width: 100%;
+}
+
+.strategist-btn:hover {
+    background: linear-gradient(to right, #d44c45, #bf3045);
+    transform: scale(1.03);
+}
+
+#step-indicator {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #999;
+    margin-bottom: 15px;
+}
+
+@keyframes strategistFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes strategistSlideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+.strategist-step {
+    animation: strategistSlideUp 0.3s ease;
+    display: none;
+}
+
+.strategist-step.active {
+    display: block;
+}
 
 </style>
 <div class="full-layout">   
@@ -1151,10 +1333,31 @@ html, body {
     <div class="chat-layout">
         <!-- Left Sidebar: AI List -->
         <aside class="left-panel">
+            
+            
             <h3 class="panel-title">AI STRATEGIST</h3>
+
+           
+            {% if is_pro_user %}
+            <!-- ✅ Active Button for Pro Users -->
+            <button class="create-bot-btn" onclick="openCreateStrategistModal()">
+                <i class="fas fa-plus-circle"></i> Create Your Own Strategist
+            </button>
+
+            {% else %}
+                <!-- 🔒 Grayed Out for Free Users with Upgrade Prompt -->
+                <div class="create-bot-btn disabled">
+                    <i class="fas fa-lock"></i> Create Your Own Strategist
+                    <div class="create-lock-caption">
+                        <a href="{% url 'upgrade_to_pro' %}">Upgrade to Pro</a> to unlock this feature
+                    </div>
+                </div>
+            {% endif %}
+            
             <ul id="ai-list">
                 <!-- AI Bots will load here -->
             </ul>
+
             
 
             {% if not is_pro_user %} 
@@ -1221,6 +1424,58 @@ html, body {
 
     </div>
 </div>
+
+<div id="create-strategist-modal" class="strategist-modal">
+    <div class="strategist-modal-content">
+        <span class="strategist-close-button" onclick="closeCreateStrategistModal()">&times;</span>
+  
+      <!-- Progress Step -->
+      <p style="font-size: 0.9rem; color: #777; text-align: right; margin: 0 0 10px;">
+        <span id="step-indicator">Step 1 of 5</span>
+      </p>
+  
+      <!-- Step Cards -->
+      <div class="strategist-step" id="step-1">
+        <h2 class="upgrade-title">👋 What’s your strategist’s name?</h2>
+        <input type="text" id="strategist-name" class="form-field" placeholder="e.g. Visionary Vance" />
+        <button class="upgrade-btn" onclick="goToStep(2)">Next</button>
+      </div>
+  
+      <div class="strategist-step" id="step-2" style="display: none;">
+        <h2 class="upgrade-title">Hi, I'm <span id="preview-name">...</span> 👋</h2>
+        <p class="upgrade-text">I'm missing a specialty 😢 and I really want to help. What's my specialty?</p>
+        <input type="text" id="strategist-specialty" class="form-field" placeholder="e.g. Marketing, Mindset, Finance" />
+        <button class="upgrade-btn" onclick="goToStep(3)">Next</button>
+      </div>
+  
+      <div class="strategist-step" id="step-3" style="display: none;">
+        <h2 class="upgrade-title">Awesome! ✨</h2>
+        <p class="upgrade-text">Describe what I do best in one paragraph.</p>
+        <textarea id="strategist-description" class="form-field" rows="4" placeholder="I help you clarify your vision, create weekly strategies, and stay accountable..."></textarea>
+        <button class="upgrade-btn" onclick="goToStep(4)">Next</button>
+      </div>
+  
+      <div class="strategist-step" id="step-4" style="display: none;">
+        <h2 class="upgrade-title">How should I look? 😊</h2>
+        <p class="upgrade-text">You can upload an avatar, or skip and use the default.</p>
+      
+        <input type="file" id="strategist-image" accept="image/*" onchange="previewAndResizeImage(event)" style="margin-bottom: 12px;" />
+      
+        <!-- 🔍 Live Preview -->
+        <img id="strategist-preview" src="" alt="Preview" style="max-width: 100px; border-radius: 50%; display: none; margin-bottom: 10px;" />
+      
+        <button class="upgrade-btn" onclick="goToStep(5)">Next</button>
+      </div>
+      
+      
+  
+      <div class="strategist-step" id="step-5" style="display: none;">
+        <h2 class="upgrade-title">Ready to launch <span id="final-name"></span>?</h2>
+        <p class="upgrade-text">Specialist in <span id="final-specialty"></span><br>Description: <span id="final-description"></span></p>
+        <button class="upgrade-btn" onclick="submitStrategistForm()">🌟 Create Strategist</button>
+      </div>
+    </div>
+  </div>
 
 <!-- 📱 Mobile Layout -->
 <div class="mobile-layout">
@@ -1337,56 +1592,82 @@ function toggleSettings() {
 let selectedAI = null;
 let selectedChatId = null;
 
-// ✅ Load AI Bot List (Left Sidebar)
 function loadAIList() {
     fetch("/api/ai_list/")
         .then(response => response.json())
         .then(data => {
-            let aiList = document.querySelector("#ai-list");
-            aiList.innerHTML = "";
+            const aiList = document.getElementById("ai-list");
+            const mobileAIList = document.getElementById("mobile-ai-list");
 
-            let mobileAIList = document.getElementById("mobile-ai-list");
+            aiList.innerHTML = "";
             if (mobileAIList) mobileAIList.innerHTML = "";
 
-            data.bots.forEach(bot => {
-                // 💻 Desktop List (Sidebar)
-                let li = document.createElement("li");
-                li.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <img src="${bot.image || '/static/default-ai.png'}" alt="${bot.name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" />
-                        <div>
-                            <strong>${bot.name}</strong><br />
-                            <small style="color: gray;">${bot.bio}</small>
-                        </div>
-                    </div>
-                `;
-                li.onclick = () => startChat(bot);
-                aiList.appendChild(li);
+            const renderGroupHeader = (label) => {
+                const header = document.createElement("li");
+                header.innerHTML = `<strong style="color: #025450; text-transform: uppercase;">${label}</strong>`;
+                header.style.margin = "15px 0 8px";
+                return header;
+            };
 
-                // 📱 Mobile Version
-                if (mobileAIList) {
-                    let mobileDiv = document.createElement("div");
-                    mobileDiv.className = "mobile-ai-card";
-                    mobileDiv.innerHTML = `
-                        <img src="${bot.image || '/static/default-ai.png'}" alt="${bot.name}" class="mobile-ai-avatar" />
-                        <div>
-                            <strong>${bot.name}</strong><br />
-                            <small>${bot.bio}</small>
+            const renderBots = (bots) => {
+                return bots.map(bot => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <img src="${bot.image || '/static/default-ai.png'}" alt="${bot.name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" />
+                                <div>
+                                    <strong>${bot.name}</strong><br />
+                                    <small style="color: gray;">${bot.bio}</small>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                ${bot.is_owner ? `<i class="fa fa-trash" style="color: #FF7A61; cursor: pointer;" onclick="event.stopPropagation(); deleteBot(${bot.id})"></i>` : ""}
+                                <i class="${bot.is_favorite ? 'fa-solid' : 'fa-regular'} fa-star" 
+                                   style="color: ${bot.is_favorite ? '#FFD700' : '#999'}; cursor: pointer;" 
+                                   onclick="event.stopPropagation(); toggleFavorite(${bot.id}, this)"></i>
+                            </div>
                         </div>
                     `;
-                    mobileDiv.onclick = () => {
-                        startChat(bot);
-                        showMobileChat(bot.name);
-                    };
-                    mobileAIList.appendChild(mobileDiv);
-                }
+                    li.onclick = () => startChat(bot);
+                    return li;
+                });
+            };
+
+            // 🔥 Desktop Favorites
+            if (data.favorites.length) {
+                aiList.appendChild(renderGroupHeader("⭐ Favorite Strategists"));
+                renderBots(data.favorites).forEach(el => aiList.appendChild(el));
+            }
+
+            // 🔥 Desktop Others
+            if (data.others.length) {
+                aiList.appendChild(renderGroupHeader("AI Strategists"));
+                renderBots(data.others).forEach(el => aiList.appendChild(el));
+            }
+
+            // 📱 Mobile version: no need for headers (optional)
+            [...data.favorites, ...data.others].forEach(bot => {
+                const mobileDiv = document.createElement("div");
+                mobileDiv.className = "mobile-ai-card";
+                mobileDiv.innerHTML = `
+                    <img src="${bot.image || '/static/default-ai.png'}" alt="${bot.name}" class="mobile-ai-avatar" />
+                    <div>
+                        <strong>${bot.name}</strong><br />
+                        <small>${bot.bio}</small>
+                    </div>
+                `;
+                mobileDiv.onclick = () => {
+                    startChat(bot);
+                    showMobileChat(bot.name);
+                };
+                mobileAIList?.appendChild(mobileDiv);
             });
 
             showMobileLanding();
         })
         .catch(error => console.error("❌ Error loading AI bots:", error));
 }
-
 
 
 // ✅ Load Chat History (Right Sidebar)
@@ -2190,6 +2471,152 @@ function showMobileHistory() {
 
 function closeMobileHistory() {
     document.getElementById("mobile-history-modal").style.display = "none";
+}
+
+let strategistData = {
+    name: '',
+    specialty: '',
+    description: ''
+  };
+
+  function goToStep(step) {
+    document.querySelectorAll('.strategist-step').forEach(el => el.style.display = 'none');
+    document.getElementById(`step-${step}`).style.display = 'block';
+    document.getElementById("step-indicator").innerText = `Step ${step} of 5`;
+
+    if (step === 2) {
+      strategistData.name = document.getElementById("strategist-name").value.trim();
+      document.getElementById("preview-name").innerText = strategistData.name || "...";
+    }
+    if (step === 3) {
+      strategistData.specialty = document.getElementById("strategist-specialty").value.trim();
+    }
+    if (step === 4) {
+      strategistData.description = document.getElementById("strategist-description").value.trim();
+    }
+    if (step === 5) {
+      document.getElementById("final-name").innerText = strategistData.name;
+      document.getElementById("final-specialty").innerText = strategistData.specialty;
+      document.getElementById("final-description").innerText = strategistData.description;
+    }
+  }
+
+  function closeCreateStrategistModal() {
+    document.getElementById("create-strategist-modal").style.display = "none";
+  }
+
+  function openCreateStrategistModal() {
+    document.getElementById("create-strategist-modal").style.display = "flex";
+    goToStep(1);
+  }
+
+  function submitStrategistForm() {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+        const formData = new FormData();
+        formData.append("name", strategistData.name);
+        formData.append("specialty", strategistData.specialty);
+        formData.append("description", strategistData.description);
+
+        // ✅ Attach resized image if available
+        if (resizedImageBlob) {
+            formData.append("image", resizedImageBlob, "avatar.jpg");
+        } else {
+            const fileInput = document.getElementById("strategist-image");
+            if (fileInput && fileInput.files.length > 0) {
+                formData.append("image", fileInput.files[0]);
+            }
+        }
+
+        fetch("/api/create_ai_bot/", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("🎉 Strategist created successfully!");
+                closeCreateStrategistModal();
+                loadAIList(); // 🔄 Refresh AI sidebar
+            } else {
+                alert("❌ Failed: " + (data.error || "Something went wrong"));
+            }
+        })
+        .catch(err => {
+            console.error("❌ API Error:", err);
+            alert("⚠️ Something went wrong while creating your strategist.");
+        });
+    }
+
+let resizedImageBlob = null;  // ✅ Global variable to hold resized image
+
+function previewAndResizeImage(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+            const canvas = document.createElement("canvas");
+            const size = 300;  // 🔧 Adjust target size as needed
+            canvas.width = size;
+            canvas.height = size;
+
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, size, size);
+
+            canvas.toBlob(function (blob) {
+                resizedImageBlob = blob;
+
+                // 💡 Show preview
+                const preview = document.getElementById("strategist-preview");
+                preview.src = URL.createObjectURL(blob);
+                preview.style.display = "block";
+            }, "image/jpeg", 0.9); // Compression quality
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function toggleFavorite(botId, icon) {
+    fetch(`/api/toggle_favorite/${botId}/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCSRFToken() }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // ✅ Visually update the star
+            icon.classList.toggle("fa-regular");
+            icon.classList.toggle("fa-solid");
+            icon.style.color = data.is_favorite ? "#FFD700" : "#999";
+
+            // 🔄 Re-fetch the entire AI list so favorites are re-sorted
+            loadAIList();
+        }
+    });
+}
+
+
+function deleteBot(botId) {
+    if (!confirm("Are you sure you want to delete this bot?")) return;
+
+    fetch(`/api/delete_ai_bot/${botId}/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCSRFToken() }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Strategist deleted!");
+            loadAIList();
+        }
+    });
 }
 
 

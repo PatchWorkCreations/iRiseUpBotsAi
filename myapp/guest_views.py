@@ -97,12 +97,21 @@ def limit_guest_chats(request):
     return None  # ✅ Allows the request to proceed if limit is not reached
 
 
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+import logging
+import openai
+
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
 def guest_bot_response(request, bot_name):
     if request.method != 'POST':
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
 
-    # ✅ Check guest chat limit
+    # ✅ Guest chat limit
     limit_check = limit_guest_chats(request)
     if limit_check:
         return limit_check
@@ -120,66 +129,85 @@ def guest_bot_response(request, bot_name):
     if not user_message:
         return JsonResponse({'response': '⚠️ Error: Message cannot be empty.'}, status=400)
 
-    # ✅ Enforce AI Identity & Specialty
-    identity_prompt = AI_IDENTITIES.get(bot_name, "You are an AI assistant.")
-    
-    system_prompt = f"""
-    {identity_prompt}
-    Always respond in a warm and conversational manner. If asked about your specialty, always give a confident and clear answer.
-    """
+    # ✅ Load global tone
+    global_tone_prompt = getattr(settings, "AI_TONE_PROMPT", "").strip()
 
+    # ✅ Load bot-specific identity
+    identity_prompt = AI_IDENTITIES.get(bot_name, "You are a helpful AI assistant.")
+
+    system_prompt = f"{identity_prompt}\n{global_tone_prompt}"
+
+    # ✅ Get conversation history
     conversation_key = f"{bot_name}_chat_history"
     conversation_history = request.session.get(conversation_key, [])
 
-    if not conversation_history:
-        conversation_history.append({"role": "system", "content": system_prompt})
+    if not conversation_history or conversation_history[0].get("role") != "system":
+        conversation_history.insert(0, {"role": "system", "content": system_prompt})
 
     conversation_history.append({"role": "user", "content": user_message})
 
-    # ✅ Special Handling for Imagine AI – Image Generation
-    if bot_name == "imagine":
+    # ✅ Image Generation for Imagine AI
+    if bot_name.lower() == "imagine":
         try:
-            client = openai.OpenAI(api_key=OPENAI_API_KEY)
+            client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
 
-            # ✅ Determine if request requires an image
             intent_response = client.chat.completions.create(
                 model="gpt-4",
                 messages=[
                     {"role": "system", "content": "Determine if the user request is for an image. Reply with 'yes' or 'no'."},
-                    {"role": "user", "content": f"Does this request require an image? Reply with 'yes' or 'no': {user_message}"}
+                    {"role": "user", "content": f"Does this request require an image? {user_message}"}
                 ]
             )
 
             intent_reply = intent_response.choices[0].message.content.strip().lower()
-
-            if intent_reply == "yes":
-                structured_prompt = f"An image of {user_message}"
+            if "yes" in intent_reply:
+                image_prompt = f"Create a vivid image of: {user_message}"
                 image_response = client.images.generate(
                     model="dall-e-3",
-                    prompt=structured_prompt,
+                    prompt=image_prompt,
                     n=1,
                     size="1024x1024"
                 )
                 image_url = image_response.data[0].url
-                return JsonResponse({'response': 'Here’s your generated image!', 'image_url': image_url})
+                return JsonResponse({
+                    'response': "Here’s your generated image! 🎨",
+                    'image_url': image_url,
+                    'image_prompt': image_prompt
+                })
 
         except Exception as e:
-            logger.error(f"OpenAI Intent Detection Error: {e}")
+            logger.error(f"OpenAI Intent/Image Generation Error: {e}", exc_info=True)
+            return JsonResponse({'response': '⚠️ Failed to generate image.'}, status=500)
 
+    # ✅ Regular text response
     try:
-        response = openai_client.chat.completions.create(
+        client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+
+        response = client.chat.completions.create(
             model="gpt-4",
-            messages=[{"role": "system", "content": system_prompt}] + conversation_history
+            messages=conversation_history
         )
 
-        ai_message = response.choices[0].message.content
-        conversation_history.append({"role": "assistant", "content": ai_message})
+        ai_message = response.choices[0].message.content.strip()
 
+        # ✅ Track token usage
+        usage = response.usage
+        logger.info(f"🧠 Guest AI Token Usage → Total: {usage.total_tokens}, Prompt: {usage.prompt_tokens}, Completion: {usage.completion_tokens}")
+
+        # ✅ Store updated chat history
+        conversation_history.append({"role": "assistant", "content": ai_message})
         request.session[conversation_key] = conversation_history
         request.session.modified = True
 
-    except Exception as e:
-        logger.error(f"OpenAI API Error: {e}")
-        return JsonResponse({'response': '⚠️ AI is currently unavailable. Please try again later.'}, status=500)
+        return JsonResponse({
+            'response': ai_message,
+            'token_usage': {
+                'total': usage.total_tokens,
+                'prompt': usage.prompt_tokens,
+                'completion': usage.completion_tokens
+            }
+        })
 
-    return JsonResponse({'response': ai_message})
+    except Exception as e:
+        logger.error(f"OpenAI API Error: {e}", exc_info=True)
+        return JsonResponse({'response': '⚠️ AI is currently unavailable. Please try again later.'}, status=500)
