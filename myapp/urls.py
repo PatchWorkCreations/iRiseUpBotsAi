@@ -226,7 +226,6 @@ urlpatterns = [
     path("sandbox/", views.iriseupdashboard, name="chat_iriseupai_sandbox"),
     path("looks/", views.look, name="look"),
 
-    api/create_ai_bot
     path("api/create_ai_bot", views.create_ai_bot, name="create_ai_bot"),
     path("api/toggle_favorite/<int:bot_id>/", views.toggle_favorite_ai_bot, name="toggle_favorite_ai_bot"),
     path("api/delete_ai_bot/<int:bot_id>/", views.delete_ai_bot, name="delete_ai_bot"),
