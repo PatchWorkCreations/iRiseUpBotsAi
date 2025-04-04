@@ -919,11 +919,12 @@ def get_first_ai(user):
         return access.product_id
     return None
 
-
+from django.conf import settings
 
 def sign_out(request):
     logout(request)  # This logs the user out
     return redirect('sign_in')  # Redirect to the sign-in page after logging out
+
 def send_welcome_email(user_email, first_name):
     """
     Sends a professional and warm welcome email to new iRiseUp AI users.
@@ -932,7 +933,7 @@ def send_welcome_email(user_email, first_name):
     from django.core.mail.backends.smtp import SMTPException
 
     subject = "🚀 Welcome to iRiseUp AI – Your Future Starts Here!"
-    from_email = 'iRiseUp AI Team <iriseupgroupofcompanies@gmail.com>'
+    from_email = settings.DEFAULT_FROM_EMAIL  # ✅ use plain email like iriseupgroupofcompanies@gmail.com
     to_email = [user_email]
 
     # Plain text fallback content
