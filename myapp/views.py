@@ -1289,12 +1289,11 @@ class CustomPasswordResetView(PasswordResetView):
         return super().form_valid(form)
 
 
+from django.conf import settings
+
 def send_resetpassword_email(user_email, token, uid):
-    """
-    Sends a password reset email with HTML design to users.
-    """
     subject = 'Reset Your Password - iRiseUp.ai'
-    from_email = 'iriseupgroupofcompanies@gmail.com'
+    from_email = settings.DEFAULT_FROM_EMAIL  # ✅ use plain email like iriseupgroupofcompanies@gmail.com
     to_email = [user_email]
 
     # Plain text content for fallback
