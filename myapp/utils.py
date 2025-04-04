@@ -284,7 +284,7 @@ def send_failure_email(user_email, error_message):
     Sends a failure notification email to the user when their renewal payment fails.
     """
     subject = 'Payment Renewal Failed – Action Required'
-    from_email = 'hello@iriseupacademy.com'
+    from_email = 'iriseupgroupofcompanies@gmail.com'
     to_email = [user_email]
 
     # Plain text content for fallback

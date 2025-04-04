@@ -254,7 +254,7 @@ def email_collection(request):
         subject = 'Welcome to iRiseUp.ai!'
         html_message = render_to_string('welcome_email.html', {'email': email})
         plain_message = strip_tags(html_message)
-        from_email = 'hello@iriseupacademy.com'  # Replace with your actual sender email
+        from_email = 'iriseupgroupofcompanies@gmail.com'  # Replace with your actual sender email
         send_mail(subject, plain_message, from_email, [email], html_message=html_message)
 
         # Store the email in the session for later use during payment
@@ -274,7 +274,7 @@ def send_welcomepassword_email(user_email, random_password):
     Sends a personalized welcome email with HTML design to new users.
     """
     subject = 'Welcome to iRiseUp.AI – Your Intelligent Assistant is Ready!'
-    from_email = 'hello@iriseupacademy.com'
+    from_email = 'iriseupgroupofcompanies@gmail.com'
     to_email = [user_email]
 
     # Plain text content for fallback
@@ -1294,7 +1294,7 @@ def send_resetpassword_email(user_email, token, uid):
     Sends a password reset email with HTML design to users.
     """
     subject = 'Reset Your Password - iRiseUp.ai'
-    from_email = 'hello@iriseupacademy.com'
+    from_email = 'iriseupgroupofcompanies@gmail.com'
     to_email = [user_email]
 
     # Plain text content for fallback
@@ -1473,8 +1473,8 @@ def submit_request(request):
                 'email': email,
             })
             plain_message = strip_tags(html_message)
-            from_email = 'hello@iriseupacademy.com'  # Replace with your email
-            to = 'hello@iriseupacademy.com'  # Send to yourself
+            from_email = 'iriseupgroupofcompanies@gmail.com'  # Replace with your email
+            to = 'iriseupgroupofcompanies@gmail.com'  # Send to yourself
 
             # Send the email
             send_mail(
@@ -2792,58 +2792,6 @@ def gideon_thank_you(request):
 def keystone_thank_you(request):
     return render(request, 'myapp/aibots/landingpage/thankyou/keystone.html')
 
-from django.conf import settings
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
-from django.utils.crypto import get_random_string
-from .models import UserCourseAccess
-import json
-
-
-@csrf_exempt
-def jvzoo_ipn(request):
-    if request.method == "POST":
-        try:
-            # Parse incoming JVZoo data
-            data = json.loads(request.body.decode('utf-8'))
-            email = data.get('payer_email')
-            product_id = data.get('product_id')
-            payment_status = data.get('payment_status')  # Example field to validate payment
-
-            # Validate Payment
-            if payment_status != "Completed":
-                return JsonResponse({"status": "error", "message": "Payment not completed"}, status=400)
-
-            # Get product name from settings
-            ai_name = settings.AI_PRODUCTS.get(product_id)
-            if not ai_name:
-                return JsonResponse({"status": "error", "message": "Invalid product ID"}, status=400)
-
-            # Create user account if it doesn't exist
-            if not User.objects.filter(email=email).exists():
-                temp_password = get_random_string(10)
-                user = User.objects.create_user(username=email, email=email, password=temp_password)
-                user.save()
-
-                # Assign course access
-                UserCourseAccess.objects.create(
-                    user=user,
-                    selected_plan="lifetime",
-                    is_active=True,
-                    has_paid=True,
-                    product_id=product_id  # Store product ID dynamically
-                )
-
-                # Send HTML email with credentials
-                send_ezra_welcome_email(user_email=email, random_password=temp_password)
-                return JsonResponse({"status": "success", "message": f"User created for {ai_name} and email sent."}, status=200)
-
-            return JsonResponse({"status": "info", "message": "User already exists."}, status=200)
-
-        except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)}, status=500)
-    return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
 
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
@@ -3190,7 +3138,7 @@ def contact_us(request):
                 'email': email,
             })
             plain_message = strip_tags(html_message)
-            from_email = 'hello@iriseupacademy.com'  # Replace with your email
+            from_email = 'iriseupgroupofcompanies@gmail.com'  # Replace with your email
             to = 'email'  # Send to yourself
 
             # Send the email
@@ -3239,7 +3187,7 @@ def contactus(request):
                 'email': email,
             })
             plain_message = strip_tags(html_message)
-            from_email = 'hello@iriseupacademy.com'  # Replace with your email
+            from_email = 'iriseupgroupofcompanies@gmail.com'  # Replace with your email
             to = 'email'  # Send to yourself
 
             # Send the email
