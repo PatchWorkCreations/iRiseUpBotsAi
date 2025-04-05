@@ -230,4 +230,7 @@ urlpatterns = [
     path("api/toggle_favorite/<int:bot_id>/", views.toggle_favorite_ai_bot, name="toggle_favorite_ai_bot"),
     path("api/delete_ai_bot/<int:bot_id>/", views.delete_ai_bot, name="delete_ai_bot"),
     path("api/ai_list/", views.get_ai_bots, name="get_ai_bots"),
+
+
+    path('zoho-domain-verification.html', views.zoho_verification, name='zoho_verify'),
 ]

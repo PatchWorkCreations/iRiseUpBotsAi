@@ -67,6 +67,11 @@ DASHBOARD_ROUTES = {
     "414303": "keystone_dashboard",
 }
 
+from django.shortcuts import render
+
+def zoho_verification(request):
+    return render(request, 'zoho-domain-verification.html')
+
 
 def test(request):
     return render(request, 'myapp/aibots/iriseupai/test.html')
