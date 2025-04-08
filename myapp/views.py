@@ -4521,20 +4521,25 @@ def create_ai_bot(request):
         name = request.POST.get("name")
         specialty = request.POST.get("specialty")
         description = request.POST.get("description")
-        image = request.FILES.get("image")  # ✅ Optional
+        image = request.FILES.get("image")
+
+        # ✅ Auto-generate a smart bio
+        bio = generate_smart_bio(specialty, description)
 
         bot = AIBot.objects.create(
             name=name,
             specialty=specialty,
+            bio=bio,
             description=description,
             owner=request.user,
-            image=image,  # ✅ Only if your AIBot model includes this field
+            image=image,
             is_public=False
         )
 
         return JsonResponse({'success': True, 'bot_id': bot.id})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+
 
 
 from django.views.decorators.csrf import csrf_exempt
@@ -4596,10 +4601,12 @@ def get_ai_bots(request):
             "name": bot.name,
             "specialty": bot.specialty,
             "bio": Truncator(bot.bio).chars(100) if bot.bio else "This AI is ready to help you!",
+            "description": bot.description,  # ✅ Add this
             "image": bot.image.url if bot.image else None,
             "is_favorite": bot.id in favorite_ids,
             "is_owner": bot.owner == user
         }
+
 
     favorites = [serialize(bot) for bot in bots if bot.id in favorite_ids]
     non_favorites = [serialize(bot) for bot in bots if bot.id not in favorite_ids]
@@ -4609,3 +4616,62 @@ def get_ai_bots(request):
         "favorites": favorites,
         "others": non_favorites
     })
+
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import AIBot
+
+@csrf_exempt
+@login_required
+def update_ai_bot(request, bot_id):
+    if request.method in ["POST", "PUT"]:  # 🔄 Accept both for flexibility
+        bot = get_object_or_404(AIBot, id=bot_id, owner=request.user)
+
+        # 🌟 Update fields (use existing value as fallback)
+        bot.name = request.POST.get("name", bot.name)
+        bot.specialty = request.POST.get("specialty", bot.specialty)
+        bot.description = request.POST.get("description", bot.description)
+        bot.bio = request.POST.get("bio", bot.bio)  # ✅ Now correctly receives bio
+
+
+        if 'image' in request.FILES:
+            bot.image = request.FILES['image']
+
+        bot.save()
+
+        return JsonResponse({"success": True})
+    
+    return JsonResponse({"success": False, "error": "Invalid request method."})
+
+import openai
+import logging
+
+logger = logging.getLogger(__name__)
+
+def generate_smart_bio(specialty, description):
+    try:
+        prompt = (
+            f"Specialty: {specialty}\n"
+            f"Description: {description}\n\n"
+            f"Write a short, motivational tagline (max 15 words) that this AI can use as its bio. "
+            f"It should feel like a helpful call to action."
+        )
+
+        client = openai.OpenAI()
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a branding expert for AI tools."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=30
+        )
+
+        tagline = response.choices[0].message.content.strip()
+        return tagline
+
+    except Exception as e:
+        logger.warning(f"Failed to generate smart bio: {e}")
+        return "This AI is ready to help you!"  # fallback

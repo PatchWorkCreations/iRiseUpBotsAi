@@ -1653,11 +1653,136 @@ html, body {
   </div>
   
   
+  <div id="edit-strategist-modal" class="strategist-modal">
+    <div class="strategist-modal-content">
+      <span class="strategist-close-button" onclick="closeEditStrategistModal()">&times;</span>
+  
+      <!-- Header -->
+      <p style="font-size: 0.9rem; color: #777; text-align: right; margin: 0 0 10px;">
+        Editing Strategist
+      </p>
+  
+      <div class="strategist-step active">
+        <h2 class="upgrade-title">✏️ Edit Your Strategist</h2>
+        <input type="text" id="edit-strategist-name" class="form-field" placeholder="Strategist Name" />
+        <input type="text" id="edit-strategist-specialty" class="form-field" placeholder="Specialty" />
+        <textarea id="edit-strategist-description" class="form-field" rows="4" placeholder="What does your strategist do?"></textarea>
+        <textarea id="edit-strategist-bio" class="form-field" rows="2" placeholder="Short tagline or bio..."></textarea>
+        <input type="file" id="edit-strategist-image" accept="image/*" onchange="previewEditImage(event)" />
+  
+        <!-- Optional: Preview Image -->
+        <img id="edit-strategist-preview" src="" alt="Preview" style="max-width: 100px; border-radius: 50%; display: none; margin: 10px auto;" />
+  
+        <button class="strategist-btn" onclick="submitEditStrategistForm()">💾 Save Changes</button>
+      </div>
+    </div>
+  </div>
 
 
 <script>
 let justSentViaVoice = false;
 
+let editingBotId = null;
+let editImageBlob = null;
+
+
+function closeEditStrategistModal() {
+  document.getElementById("edit-strategist-modal").style.display = "none";
+  editImageBlob = null;
+  editingBotId = null;
+}
+
+function previewEditImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const img = new Image();
+    img.onload = function () {
+      const canvas = document.createElement("canvas");
+      const size = 300;
+      canvas.width = size;
+      canvas.height = size;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, size, size);
+
+      canvas.toBlob(function (blob) {
+        editImageBlob = blob;
+        const preview = document.getElementById("edit-strategist-preview");
+        preview.src = URL.createObjectURL(blob);
+        preview.style.display = "block";
+      }, "image/jpeg", 0.9);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function openEditStrategistModal(id, name, specialty, description, imageUrl = "", bio = "") {
+  editingBotId = id;
+  document.getElementById("edit-strategist-name").value = name;
+  document.getElementById("edit-strategist-specialty").value = specialty;
+  document.getElementById("edit-strategist-description").value = description;
+  document.getElementById("edit-strategist-bio").value = bio;
+
+  const preview = document.getElementById("edit-strategist-preview");
+  if (imageUrl) {
+    preview.src = imageUrl;
+    preview.style.display = "block";
+  } else {
+    preview.style.display = "none";
+  }
+
+  document.getElementById("edit-strategist-modal").style.display = "flex";
+}
+
+// ✅ Submit Edit Strategist Form
+function submitEditStrategistForm() {
+  if (!editingBotId) {
+    alert("Missing strategist ID");
+    return;
+  }
+
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+  const formData = new FormData();
+  formData.append("name", document.getElementById("edit-strategist-name").value.trim());
+  formData.append("specialty", document.getElementById("edit-strategist-specialty").value.trim());
+  formData.append("description", document.getElementById("edit-strategist-description").value.trim());
+  formData.append("bio", document.getElementById("edit-strategist-bio").value.trim());
+
+  if (editImageBlob) {
+    formData.append("image", editImageBlob, "edited.jpg");
+  } else {
+    const fileInput = document.getElementById("edit-strategist-image");
+    if (fileInput && fileInput.files.length > 0) {
+      formData.append("image", fileInput.files[0]);
+    }
+  }
+
+  fetch(`/api/update_ai_bot/${editingBotId}/`, {
+    method: "PUT",
+    headers: {
+      "X-CSRFToken": csrfToken
+    },
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert("✅ Strategist updated successfully!");
+        closeEditStrategistModal();
+        loadAIList();
+      } else {
+        alert("❌ Failed to update strategist.");
+      }
+    })
+    .catch(err => {
+      console.error("❌ Edit error:", err);
+      alert("Something went wrong. Please try again.");
+    });
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     loadAIList();                     // Left sidebar
@@ -1705,11 +1830,34 @@ function loadAIList() {
 
                             </div>
                             <div style="display: flex; gap: 8px; align-items: center;">
-                                ${bot.is_owner ? `<i class="fa fa-trash" style="color: #FF7A61; cursor: pointer;" onclick="event.stopPropagation(); deleteBot(${bot.id})"></i>` : ""}
-                                <i class="${bot.is_favorite ? 'fa-solid' : 'fa-regular'} fa-star" 
-                                   style="color: ${bot.is_favorite ? '#FFD700' : '#999'}; cursor: pointer;" 
-                                   onclick="event.stopPropagation(); toggleFavorite(${bot.id}, this)"></i>
-                            </div>
+                            ${bot.is_owner ? `
+                                <i class="fa fa-pencil-alt" 
+                                title="Edit Strategist"
+                                style="color: #42BFB7; cursor: pointer;" 
+                                onclick="event.stopPropagation(); openEditStrategistModal(
+                                    ${bot.id},
+                                    \`${bot.name?.replace(/`/g, "\\`") || ''}\`,
+                                    \`${bot.specialty?.replace(/`/g, "\\`") || ''}\`,
+                                    \`${bot.description?.replace(/`/g, "\\`") || ''}\`,
+                                    \`${bot.image || ''}\`,
+                                    \`${bot.bio?.replace(/`/g, "\\`") || ''}\`
+                                )"
+
+                                ></i>
+
+                                <i class="fa fa-trash" 
+                                title="Delete Strategist"
+                                style="color: #FF7A61; cursor: pointer;" 
+                                onclick="event.stopPropagation(); deleteBot(${bot.id})"></i>
+                            ` : ""}
+
+                            <i class="${bot.is_favorite ? 'fa-solid' : 'fa-regular'} fa-star" 
+                            title="${bot.is_favorite ? 'Unfavorite' : 'Mark as Favorite'}"
+                            style="color: ${bot.is_favorite ? '#FFD700' : '#999'}; cursor: pointer;" 
+                            onclick="event.stopPropagation(); toggleFavorite(${bot.id}, this)">
+                            </i>
+                        </div>
+
                         </div>
                     `;
                     li.onclick = () => startChat(bot);
