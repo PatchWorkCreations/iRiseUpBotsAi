@@ -10,10 +10,6 @@ urlpatterns = [
     path('sign_out/', views.sign_out, name='sign_out'),
 
 
-   
-
- 
-
     path('iriseupdashboard/', views.chat_iriseupai_sandbox, name='iriseupdashboard'),
 
     

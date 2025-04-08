@@ -45,6 +45,27 @@ body {
     border: 1px solid #ddd;
 }
 
+.left-panel::after {
+    content: '';
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(to top, #f8f8f8, transparent);
+    pointer-events: none;
+}
+
+.left-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.left-panel::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 6px;
+}
+
+
 .panel-title {
     font-size: 1.3rem;
     font-weight: 700;
@@ -164,24 +185,61 @@ body {
     margin-right: 10px;
 }
 
-.typing-dots span {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    margin: 0 2px;
-    background: #666;
-    border-radius: 50%;
-    animation: blink 1.4s infinite ease-in-out both;
+.analyzing-text {
+    font-style: italic;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 5px;
+    animation: pulse 1.5s infinite ease-in-out;
+    text-align: left;
 }
 
-.typing-dots span:nth-child(1) { animation-delay: 0s; }
-.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+.analyzing-text {
+    font-style: italic;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 5px;
+    animation: pulse 1.5s infinite ease-in-out;
+    text-align: left;
+}
+
+.typing-dots {
+    display: flex;
+    justify-content: flex-start;
+    gap: 4px;
+}
+
+.typing-dots span {
+    width: 6px;
+    height: 6px;
+    background-color: #555;
+    border-radius: 50%;
+    animation: blink 1.4s infinite both;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
 
 @keyframes blink {
-    0%, 80%, 100% { opacity: 0; }
-    40% { opacity: 1; }
+    0%, 80%, 100% {
+        opacity: 0;
+    }
+    40% {
+        opacity: 1;
+    }
 }
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
 
 #send {
     background: #025450;
@@ -620,8 +678,8 @@ body {
 
 .user-dropdown ul {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .user-dropdown li {
@@ -644,6 +702,7 @@ body {
     display: flex;
     align-items: center;
     width: 100%;
+    gap: 10px;
 }
 
 /* Hide mobile layout on desktop */
@@ -998,7 +1057,7 @@ html, body {
     box-shadow: 0 0 0 3px rgba(255, 122, 97, 0.3); /* Optional: subtle glow */
 }
 
-}
+
 
 .create-bot-btn:hover {
     background: #eb6e58;
@@ -1159,6 +1218,15 @@ html, body {
 
 .strategist-step.active {
     display: block;
+}
+
+.mic-btn {
+    background: black;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
 }
 
 </style>
@@ -1333,6 +1401,8 @@ html, body {
     <div class="chat-layout">
         <!-- Left Sidebar: AI List -->
         <aside class="left-panel">
+
+
             
             
             <h3 class="panel-title">AI STRATEGIST</h3>
@@ -1356,7 +1426,10 @@ html, body {
             
             <ul id="ai-list">
                 <!-- AI Bots will load here -->
+                 
             </ul>
+            
+            
 
             
 
@@ -1381,7 +1454,9 @@ html, body {
 
             <div class="chat-footer">
                 <input type="text" id="message-input" placeholder="Type a message..." />
-                
+                <button id="mic-btn" class="mic-btn" style="margin-right: 10px;">
+                    <i class="fas fa-microphone"></i>
+                  </button>                  
                 <button id="send"><i class="fas fa-paper-plane"></i></button>
             </div>
         </section>
@@ -1508,9 +1583,12 @@ html, body {
         <div id="mobile-message-input-container">
           <div style="display: flex; gap: 10px;">
             <input type="text" id="mobile-message-input" placeholder="Type a message..." />
-            <button onclick="sendMessage()">
-              <i class="fas fa-paper-plane"></i>
-            </button>
+            <button id="mobile-mic-btn" class="mic-btn">
+                <i class="fas fa-microphone"></i>
+              </button>              
+              <button id="mobile-send">
+                <i class="fas fa-paper-plane"></i>
+              </button>              
           </div>
         </div>
       </div>
@@ -1578,6 +1656,9 @@ html, body {
 
 
 <script>
+let justSentViaVoice = false;
+
+
 document.addEventListener("DOMContentLoaded", function () {
     loadAIList();                     // Left sidebar
     loadFullChatHistorySidebar();   
@@ -1618,8 +1699,10 @@ function loadAIList() {
                                 <img src="${bot.image || '/static/default-ai.png'}" alt="${bot.name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" />
                                 <div>
                                     <strong>${bot.name}</strong><br />
+                                    <small style="color: #242424;">[${bot.specialty}]</small> <br />
                                     <small style="color: gray;">${bot.bio}</small>
                                 </div>
+
                             </div>
                             <div style="display: flex; gap: 8px; align-items: center;">
                                 ${bot.is_owner ? `<i class="fa fa-trash" style="color: #FF7A61; cursor: pointer;" onclick="event.stopPropagation(); deleteBot(${bot.id})"></i>` : ""}
@@ -1885,14 +1968,12 @@ function formatResponse(text, keywords = []) {
     if (mobileChat) mobileChat.innerHTML = "";
 
     // ✅ Create shared intro message
-    const greetings = [
-        `Hey! I'm ${bot.name}. What can I help you with today? 👋`,
-        `Hi there! ${bot.name} here — got something on your mind? 💭`,
-        `Yo! I'm ${bot.name}. Ask me anything or just say hi! 😄`,
-        `Let's do this! I'm ${bot.name}. How can I assist you today? 🚀`,
-        `Hey! I'm ${bot.name}, ready when you are. What are we working on? ✨`,
-        `Hello! ${bot.name} here — ready to jump in whenever you are! 🧠`,
+        const greetings = [
+        `Hi! I'm ${bot.name}. How can I assist you today!`,
+        `Hi! What are we working on?`,
+        `Hi! What can I help you with today!`
     ];
+
     const introMessage = greetings[Math.floor(Math.random() * greetings.length)];
 
     // ✅ Create a reusable typing effect for both views
@@ -1947,9 +2028,7 @@ function showTypingIndicator() {
         const bubble = document.createElement("div");
         bubble.className = "message bot typing-indicator";
         bubble.innerHTML = `
-            <div style="margin-bottom: 5px;">
-                ${getThinkingPhrase()}
-            </div>
+            <div class="analyzing-text">Analyzing...</div>
             <div class="typing-dots">
                 <span></span><span></span><span></span>
             </div>
@@ -1968,17 +2047,6 @@ function showTypingIndicator() {
     console.log("💬 Typing indicator shown");
 }
 
-function getThinkingPhrase() {
-    const thinkingPhrases = [
-        "Just a moment while I think this through... 🧠",
-        "Let me process that... ⏳",
-        "Analyzing what you said... 🤖",
-        "Thinking it over... give me a sec. 🤔",
-        "One moment... reviewing your message carefully. 📝",
-        "Reflecting on that... hang tight. 🔍"
-    ];
-    return thinkingPhrases[Math.floor(Math.random() * thinkingPhrases.length)];
-}
 
 
 function hideTypingIndicator() {
@@ -2079,9 +2147,16 @@ function sendMessage(customPrompt = null) {
     if (!selectedAI || !message) return;
 
     if (!customPrompt) {
-        inputEl.value = "";
+    inputEl.value = "";
+
+    // 🧠 Only append if it wasn't from speech recognition
+    if (!justSentViaVoice) {
         appendMessage(message, "user");
     }
+
+    justSentViaVoice = false; // reset it right away
+}
+
 
     showTypingIndicator();
 
@@ -2141,12 +2216,16 @@ function sendMessage(customPrompt = null) {
             const raw = data.response.trim();
             const formatted = formatResponse(raw);
 
-            const botBubble = document.createElement("div");
-            botBubble.className = "message bot";
-            chatbox.appendChild(botBubble);
-            chatbox.scrollTop = chatbox.scrollHeight;
+            const containers = [document.getElementById("chatbox"), document.getElementById("mobile-chatbox")];
 
-            typeHTMLWithEffect(botBubble, formatted, 15);
+            containers.forEach(container => {
+                const botBubble = document.createElement("div");
+                botBubble.className = "message bot";
+                container.appendChild(botBubble);
+                container.scrollTop = container.scrollHeight;
+                typeHTMLWithEffect(botBubble, formatted, 15);
+            });
+
 
             lastAssistantMessage = raw;
             selectedChatId = data.chat_id || selectedChatId;
@@ -2182,7 +2261,6 @@ document.addEventListener("click", function (e) {
     }
 });
 
-
 function attachMessageEvents() {
     console.log("🟢 Re-attaching message event listeners for both views...");
 
@@ -2192,8 +2270,8 @@ function attachMessageEvents() {
     ];
 
     const buttons = [
-        document.getElementById("send"),                    // Desktop
-        document.querySelector("#mobile-message-input-container button") // Mobile Send
+        document.getElementById("send"),                   // Desktop
+        document.getElementById("mobile-send")             // ✅ Now a unique ID
     ];
 
     inputs.forEach(input => {
@@ -2204,23 +2282,27 @@ function attachMessageEvents() {
 
         newInput.addEventListener("keypress", event => {
             if (event.key === "Enter") {
-                event.preventDefault(); // ✅ THIS is essential
+                event.preventDefault();
+                stopRecognitionForActiveMic();
                 sendMessage();
             }
         });
     });
 
     buttons.forEach(button => {
-        if (!button) return;
+        if (!button.dataset.listenerAttached) {
+            button.addEventListener("click", () => {
+                stopRecognitionForActiveMic();
+                sendMessage();
+            });
+            button.dataset.listenerAttached = "true";
+        }
 
-        const newButton = button.cloneNode(true);
-        button.parentNode.replaceChild(newButton, button);
-
-        newButton.addEventListener("click", () => sendMessage());
     });
 
     console.log("✅ Listeners reattached for desktop and mobile.");
 }
+
 
 
 
@@ -2619,6 +2701,106 @@ function deleteBot(botId) {
     });
 }
 
+let recognition;
+let isRecording = false;
+let finalTranscript = "";
+
+function stopRecognition(micElement) {
+    isRecording = false;
+    if (micElement) micElement.style.backgroundColor = "";
+    if (recognition) recognition.stop();
+}
+
+function stopRecognitionForActiveMic() {
+    const micBtn = window.innerWidth <= 480 ? document.getElementById("mobile-mic-btn") : document.getElementById("mic-btn");
+    stopRecognition(micBtn);
+}
+
+function startRecognition(inputField, micElement) {
+    finalTranscript = "";
+    isRecording = true;
+
+    if (!recognition) return;
+
+    micElement.style.backgroundColor = "#ff3b3b";
+    recognition.start();
+}
+
+function initSpeechToText() {
+    const micBtn = document.getElementById("mic-btn");
+    const mobileMicBtn = document.getElementById("mobile-mic-btn");
+    const desktopInput = document.getElementById("message-input");
+    const mobileInput = document.getElementById("mobile-message-input");
+
+    if (!('webkitSpeechRecognition' in window)) {
+        console.warn("🎙️ Speech recognition not supported.");
+        if (micBtn) micBtn.style.display = "none";
+        if (mobileMicBtn) mobileMicBtn.style.display = "none";
+        return;
+    }
+
+    recognition = new webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+
+    recognition.onresult = function (event) {
+        let interim = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+                finalTranscript += event.results[i][0].transcript + " ";
+            } else {
+                interim += event.results[i][0].transcript;
+            }
+        }
+        const activeInput = window.innerWidth <= 480 ? mobileInput : desktopInput;
+        activeInput.value = finalTranscript + interim;
+    };
+
+        recognition.onend = function () {
+        const activeInput = window.innerWidth <= 480 ? mobileInput : desktopInput;
+
+        if (finalTranscript.trim()) {
+            stopRecognitionForActiveMic();
+            justSentViaVoice = true;
+            sendMessage();
+
+            // ✅ Clear input field after sending
+            activeInput.value = "";
+
+            // ⏳ Reset the flag after a brief delay to prevent duplicate send
+            setTimeout(() => {
+                justSentViaVoice = false;
+            }, 1000);
+        }
+    };
+
+
+
+    recognition.onerror = function (event) {
+        console.error("❌ Speech recognition error:", event.error);
+        stopRecognitionForActiveMic();
+    };
+
+    if (micBtn) {
+        micBtn.addEventListener("click", () => {
+            if (!isRecording) startRecognition(desktopInput, micBtn);
+            else stopRecognition(micBtn);
+        });
+    }
+
+    if (mobileMicBtn) {
+        mobileMicBtn.addEventListener("click", () => {
+            if (!isRecording) startRecognition(mobileInput, mobileMicBtn);
+            else stopRecognition(mobileMicBtn);
+        });
+    }
+
+    console.log("🎤 Speech-to-text ready!");
+}
+
+// 🔁 Initialize after DOM is loaded
+document.addEventListener("DOMContentLoaded", initSpeechToText);
 
 
 </script>
