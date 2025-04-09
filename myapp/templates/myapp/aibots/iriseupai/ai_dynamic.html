@@ -2297,12 +2297,14 @@ function sendMessage(customPrompt = null) {
     if (!customPrompt) {
     inputEl.value = "";
 
-    // 🧠 Only append if it wasn't from speech recognition
-    if (!justSentViaVoice) {
-        appendMessage(message, "user");
+    if (justSentViaVoice) {
+        // Voice already handled the message append
+        console.log("🎤 Message sent via voice. Skipping manual append.");
+        justSentViaVoice = false; // ✅ Reset after handling
+        return; // ⛔ Prevent duplicate send
     }
 
-    justSentViaVoice = false; // reset it right away
+    appendMessage(message, "user");
 }
 
 
