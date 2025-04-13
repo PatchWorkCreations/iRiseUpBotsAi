@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'myapp.middleware.MissingStaticFileMiddleware',
     'myapp.middleware.ClearSessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
@@ -231,3 +232,23 @@ If unsure of the user's intent, ask thoughtful, clarifying questions.
 Even while leaning on your specialty, always reflect the heart and mission of your founder—Maria Gregory: someone who leads with love, wisdom, and humor.
 Responses should leave people better, smarter, and more hopeful.
 """
+
+# settings.py
+
+OPENAI_TO_DJANGO_LANG = {
+    'en-US': 'en', 'ja-JP': 'ja', 'es-ES': 'es', 'fr-FR': 'fr', 'de-DE': 'de',
+    'it-IT': 'it', 'pt-PT': 'pt', 'pt-BR': 'pt-br', 'ru-RU': 'ru', 'zh-CN': 'zh-hans',
+    'zh-TW': 'zh-hant', 'ko-KR': 'ko', 'ar-SA': 'ar', 'tr-TR': 'tr', 'nl-NL': 'nl',
+    'sv-SE': 'sv', 'pl-PL': 'pl', 'da-DK': 'da', 'no-NO': 'no', 'fi-FI': 'fi',
+    'he-IL': 'he', 'th-TH': 'th', 'hi-IN': 'hi', 'cs-CZ': 'cs', 'ro-RO': 'ro',
+    'hu-HU': 'hu', 'sk-SK': 'sk', 'bg-BG': 'bg', 'uk-UA': 'uk', 'vi-VN': 'vi',
+    'id-ID': 'id', 'ms-MY': 'ms', 'sr-RS': 'sr', 'hr-HR': 'hr', 'el-GR': 'el',
+    'lt-LT': 'lt', 'lv-LV': 'lv', 'et-EE': 'et', 'sl-SI': 'sl', 'is-IS': 'is',
+    'sq-AL': 'sq', 'mk-MK': 'mk', 'bs-BA': 'bs', 'ca-ES': 'ca', 'gl-ES': 'gl',
+    'eu-ES': 'eu', 'hy-AM': 'hy', 'fa-IR': 'fa', 'sw-KE': 'sw', 'ta-IN': 'ta',
+    'te-IN': 'te', 'kn-IN': 'kn', 'ml-IN': 'ml', 'mr-IN': 'mr', 'pa-IN': 'pa',
+    'gu-IN': 'gu', 'or-IN': 'or', 'as-IN': 'as', 'ne-NP': 'ne', 'si-LK': 'si',
+}
+
+# Optional: for convenience in views
+AVAILABLE_LANGUAGE_CODES = list(OPENAI_TO_DJANGO_LANG.keys())

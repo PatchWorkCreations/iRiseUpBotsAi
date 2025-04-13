@@ -554,3 +554,90 @@ def generate_title_from_ai(ai_response):
     )
 
     return title_response.choices[0].message.content.strip()
+
+
+def detect_and_translate(message, target_lang="en"):
+    """
+    If the user requests translation (e.g., "Translate this to English"), this will handle that.
+    Otherwise, the system will assume the language is as preferred.
+    """
+    try:
+        # If the user does not explicitly ask for translation, just return the message
+        if "translate" not in message.lower():
+            return (target_lang, message)
+
+        # For explicit translation requests, use OpenAI
+        client = openai.OpenAI()
+        system_msg = f"Translate the following message to {target_lang}:"
+        prompt = f"{message}"
+
+        # Request OpenAI to translate the message
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=150
+        )
+
+        translated = response.choices[0].message.content.strip()
+        return (target_lang, translated)
+
+    except Exception as e:
+        logger.error(f"Translation error: {e}")
+        return ("unknown", message)  # Fallback
+
+
+# myapp/utils.py
+from django.utils.translation import activate, get_language
+
+def set_user_language(request, language_code):
+    """
+    Sets the user's language preference and stores it in the session.
+    """
+    # Activate the user's preferred language
+    activate(language_code)
+    # Store the language code in the session
+    request.session['django_language'] = language_code
+
+def get_user_language(request):
+    """
+    Retrieves the currently active language.
+    """
+    # Retrieve the current active language
+    return get_language()
+
+
+import openai
+import logging
+
+logger = logging.getLogger(__name__)
+
+def is_translation_intended(message):
+    """
+    Uses OpenAI to determine if the user is asking for a translation.
+    Returns True if translation is likely intended, False otherwise.
+    """
+    try:
+        client = openai.OpenAI()
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are an intent detector. Reply with 'yes' if the user is "
+                        "asking for a translation of a word, phrase, or message. Reply with 'no' otherwise. "
+                        "Only say 'yes' or 'no'."
+                    )
+                },
+                {"role": "user", "content": message}
+            ],
+            max_tokens=3
+        )
+        decision = response.choices[0].message.content.strip().lower()
+        return "yes" in decision
+    except Exception as e:
+        logger.error(f"Intent detection failed: {e}")
+        return False

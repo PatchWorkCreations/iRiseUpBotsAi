@@ -209,7 +209,7 @@ urlpatterns = [
     path('api/get_chat/<int:chat_id>/', views.get_chat, name='get_chat'),
 
     # ✅ Send Message to AI (Middle Chat Box)
-    path("api/chat/stream_message/", views.stream_chat_message, name="stream_chat_message"),
+    path("api/chat/stream_message/", views.simple_chat_message, name="stream_chat_message"),
 
     path("api/chat/message/", views.simple_chat_message, name="simple_chat_message"),
 
@@ -227,6 +227,6 @@ urlpatterns = [
     path("api/delete_ai_bot/<int:bot_id>/", views.delete_ai_bot, name="delete_ai_bot"),
     path("api/ai_list/", views.get_ai_bots, name="get_ai_bots"),
     path('api/update_ai_bot/<int:bot_id>/', views.update_ai_bot, name='update_ai_bot'),
-
+    path("set-language/", views.set_language, name="set_language"),
     path('zoho-domain-verification.html', views.zoho_verification, name='zoho_verify'),
 ]

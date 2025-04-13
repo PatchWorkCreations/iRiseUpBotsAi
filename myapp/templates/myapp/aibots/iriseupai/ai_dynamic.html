@@ -22,6 +22,49 @@ body {
     padding: 10px 20px;
 }
 
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: max-content;
+  background-color: #025450;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: -125%; /* Position above the element */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+.user-lang-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* spacing between dropdown and user icon */
+}
+
+.language-select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+}
+
 .top-icons i {
     font-size: 24px;
     cursor: pointer;
@@ -1369,8 +1412,27 @@ html, body {
 
     <div class="top-icons">
         <i class="fas fa-cog" id="fullscreen-settings-btn"></i>
-        <i class="fas fa-user-circle"></i>
+    
+        <div class="user-lang-wrapper">
+            <!-- Tooltip Icon -->
+            <div class="tooltip-container">
+                <i class="fas fa-info-circle" style="color: #025450; cursor: pointer;"></i>
+                <span class="tooltip-text">🌍 This sets your Strategist’s language</span>
+            </div>
+            <select id="language-dropdown" name="language" class="language-select">
+                {% for code, name in LANGUAGE_CHOICES %}
+                    <option value="{{ code }}" {% if code == user_language %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+    
+            
+    
+            <i class="fas fa-user-circle"></i>
+        </div>
     </div>
+    
+    
+    
 
     <div class="user-dropdown" id="user-dropdown">
         <ul>
@@ -1679,7 +1741,62 @@ html, body {
   </div>
 
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+
 <script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  // Get CSRF token from meta tag or cookie fallback
+  const csrfToken = document.querySelector('[name=csrf-token]')?.content || getCookie('csrftoken');
+
+  // Bind event to language selector
+  document.addEventListener("DOMContentLoaded", function () {
+    const langSelect = document.getElementById("language-dropdown");
+
+
+    if (langSelect) {
+      langSelect.addEventListener("change", function () {
+        const selectedLangCode = langSelect.value;
+
+        fetch("/set-language/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken  // 🔐 Here’s the important line!
+          },
+          body: JSON.stringify({ language: selectedLangCode })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert("❌ Language update failed: " + (data.error || "Unknown error"));
+          }
+        })
+        .catch(err => {
+          console.error("Fetch error:", err);
+        });
+      });
+    }
+  });
+
 let justSentViaVoice = false;
 
 let editingBotId = null;
@@ -1719,23 +1836,30 @@ function previewEditImage(event) {
   };
   reader.readAsDataURL(file);
 }
-function openEditStrategistModal(id, name, specialty, description, imageUrl = "", bio = "") {
-  editingBotId = id;
+
+function openEditStrategistModal(id, name, specialty, description, image, bio) {
+  console.log("📝 Edit clicked for ID:", id);
+  console.log("🛠️ Opening Edit Modal:", { id, name, specialty, description, image, bio });
+
+  document.getElementById("edit-strategist-modal").style.display = "flex";
   document.getElementById("edit-strategist-name").value = name;
   document.getElementById("edit-strategist-specialty").value = specialty;
   document.getElementById("edit-strategist-description").value = description;
   document.getElementById("edit-strategist-bio").value = bio;
 
-  const preview = document.getElementById("edit-strategist-preview");
-  if (imageUrl) {
-    preview.src = imageUrl;
-    preview.style.display = "block";
-  } else {
-    preview.style.display = "none";
+  const previewImg = document.getElementById("edit-strategist-preview");
+  if (image && previewImg) {
+    previewImg.src = image;
+    previewImg.style.display = "block";
+  } else if (previewImg) {
+    previewImg.style.display = "none";
   }
 
-  document.getElementById("edit-strategist-modal").style.display = "flex";
+  // Save editing bot ID globally if needed
+  editingBotId = id;
 }
+ 
+
 
 // ✅ Submit Edit Strategist Form
 function submitEditStrategistForm() {
@@ -1762,7 +1886,7 @@ function submitEditStrategistForm() {
   }
 
   fetch(`/api/update_ai_bot/${editingBotId}/`, {
-    method: "PUT",
+    method: "POST",
     headers: {
       "X-CSRFToken": csrfToken
     },
@@ -1834,14 +1958,17 @@ function loadAIList() {
                                 <i class="fa fa-pencil-alt" 
                                 title="Edit Strategist"
                                 style="color: #42BFB7; cursor: pointer;" 
-                                onclick="event.stopPropagation(); openEditStrategistModal(
-                                    ${bot.id},
-                                    \`${bot.name?.replace(/`/g, "\\`") || ''}\`,
-                                    \`${bot.specialty?.replace(/`/g, "\\`") || ''}\`,
-                                    \`${bot.description?.replace(/`/g, "\\`") || ''}\`,
-                                    \`${bot.image || ''}\`,
-                                    \`${bot.bio?.replace(/`/g, "\\`") || ''}\`
-                                )"
+                                onclick="event.stopPropagation(); 
+                                    console.log('📝 Edit clicked for ID:', ${bot.id}); 
+                                    openEditStrategistModal(
+                                        ${bot.id},
+                                        \`${bot.name?.replace(/`/g, "\\`") || ''}\`,
+                                        \`${bot.specialty?.replace(/`/g, "\\`") || ''}\`,
+                                        \`${bot.description?.replace(/`/g, "\\`") || ''}\`,
+                                        \`${bot.image || ''}\`,
+                                        \`${bot.bio?.replace(/`/g, "\\`") || ''}\`
+                                    )"
+
 
                                 ></i>
 
@@ -2770,16 +2897,13 @@ let strategistData = {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
+                console.log("✅ Strategist created with ID:", data.bot_id); // 🔍 Now you can use this!
                 alert("🎉 Strategist created successfully!");
                 closeCreateStrategistModal();
                 loadAIList(); // 🔄 Refresh AI sidebar
             } else {
                 alert("❌ Failed: " + (data.error || "Something went wrong"));
             }
-        })
-        .catch(err => {
-            console.error("❌ API Error:", err);
-            alert("⚠️ Something went wrong while creating your strategist.");
         });
     }
 
@@ -2881,6 +3005,7 @@ function initSpeechToText() {
     const mobileMicBtn = document.getElementById("mobile-mic-btn");
     const desktopInput = document.getElementById("message-input");
     const mobileInput = document.getElementById("mobile-message-input");
+    const selectedLang = "{{ user_language|default:'en-US' }}";
 
     if (!('webkitSpeechRecognition' in window)) {
         console.warn("🎙️ Speech recognition not supported.");
@@ -2892,7 +3017,7 @@ function initSpeechToText() {
     recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = "en-US";
+    recognition.lang = selectedLang;
 
     recognition.onresult = function (event) {
         let interim = "";

@@ -1,10 +1,6 @@
-
 from django.contrib.auth.models import User
 from django.db import models
-from django.db import models
-from django.contrib.auth.models import User
 from django.utils.timezone import now, timedelta
-
 
 class AIUserSubscription(models.Model):
     PLAN_CHOICES = [
@@ -13,17 +9,83 @@ class AIUserSubscription(models.Model):
         ('one-year', 'One-Year Access')
     ]
 
+    LANGUAGE_CHOICES = [
+        ('en-US', 'English'),
+        ('ja-JP', 'Japanese'),
+        ('es-ES', 'Spanish'),
+        ('fr-FR', 'French'),
+        ('de-DE', 'German'),
+        ('it-IT', 'Italian'),
+        ('pt-PT', 'Portuguese (Portugal)'),
+        ('pt-BR', 'Portuguese (Brazil)'),
+        ('ru-RU', 'Russian'),
+        ('zh-CN', 'Chinese (Simplified)'),
+        ('zh-TW', 'Chinese (Traditional)'),
+        ('ko-KR', 'Korean'),
+        ('ar-SA', 'Arabic (Saudi Arabia)'),
+        ('tr-TR', 'Turkish'),
+        ('nl-NL', 'Dutch'),
+        ('sv-SE', 'Swedish'),
+        ('pl-PL', 'Polish'),
+        ('da-DK', 'Danish'),
+        ('no-NO', 'Norwegian'),
+        ('fi-FI', 'Finnish'),
+        ('he-IL', 'Hebrew'),
+        ('th-TH', 'Thai'),
+        ('hi-IN', 'Hindi'),
+        ('cs-CZ', 'Czech'),
+        ('ro-RO', 'Romanian'),
+        ('hu-HU', 'Hungarian'),
+        ('sk-SK', 'Slovak'),
+        ('bg-BG', 'Bulgarian'),
+        ('uk-UA', 'Ukrainian'),
+        ('vi-VN', 'Vietnamese'),
+        ('id-ID', 'Indonesian'),
+        ('ms-MY', 'Malay'),
+        ('sr-RS', 'Serbian'),
+        ('hr-HR', 'Croatian'),
+        ('el-GR', 'Greek'),
+        ('lt-LT', 'Lithuanian'),
+        ('lv-LV', 'Latvian'),
+        ('et-EE', 'Estonian'),
+        ('sl-SI', 'Slovenian'),
+        ('is-IS', 'Icelandic'),
+        ('sq-AL', 'Albanian'),
+        ('mk-MK', 'Macedonian'),
+        ('bs-BA', 'Bosnian'),
+        ('ca-ES', 'Catalan'),
+        ('gl-ES', 'Galician'),
+        ('eu-ES', 'Basque'),
+        ('hy-AM', 'Armenian'),
+        ('fa-IR', 'Persian'),
+        ('sw-KE', 'Swahili'),
+        ('ta-IN', 'Tamil'),
+        ('te-IN', 'Telugu'),
+        ('kn-IN', 'Kannada'),
+        ('ml-IN', 'Malayalam'),
+        ('mr-IN', 'Marathi'),
+        ('pa-IN', 'Punjabi'),
+        ('gu-IN', 'Gujarati'),
+        ('or-IN', 'Odia'),
+        ('as-IN', 'Assamese'),
+        ('ne-NP', 'Nepali'),
+        ('si-LK', 'Sinhala'),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     plan = models.CharField(max_length=50, choices=PLAN_CHOICES, default="free")
     start_date = models.DateTimeField(auto_now_add=True)
     expiration_date = models.DateTimeField(null=True, blank=True)
-    
+
     is_auto_renew = models.BooleanField(default=True)  # Auto-renewal flag
     canceled_at = models.DateTimeField(null=True, blank=True)  # Stores when the user cancels
 
     # New Fields for Chat Tracking
     chat_count = models.IntegerField(default=0)
     chat_last_used = models.DateTimeField(null=True, blank=True)
+
+    # New field for Language Preference
+    preferred_language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES, default='en-US')
 
     def save(self, *args, **kwargs):
         """ Ensure expiration_date is correctly set for Pro and One-Year plans. """

@@ -3781,32 +3781,6 @@ def chat_iriseupai(request):
     return render(request, 'myapp/aibots/iriseupai/chat_iriseupai.html')
 
 
-from gtts import gTTS
-import os
-from django.http import JsonResponse
-from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
-
-@csrf_exempt
-def text_to_speech(request):
-    text = request.GET.get('text', '').strip()
-
-    if not text:
-        return JsonResponse({"error": "No text provided"}, status=400)
-
-    try:
-        tts = gTTS(text, lang='en')
-        audio_filename = "response.mp3"
-        audio_path = os.path.join(settings.MEDIA_ROOT, audio_filename)
-
-        os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
-
-        tts.save(audio_path)
-
-        return JsonResponse({"audio_url": settings.MEDIA_URL + audio_filename})
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
-
 
 
 from django.shortcuts import render
@@ -3837,14 +3811,33 @@ AIs = [
 ]
 
 # ✅ Check if the user has an active subscription
-def get_user_subscription_status(user):
-    active_subscription = AIUserSubscription.objects.filter(
-        user=user,
-        expiration_date__gt=now(),
-        canceled_at__isnull=True
-    ).values_list("plan", flat=True).first()
+import logging
+logger = logging.getLogger(__name__)
 
-    return active_subscription in ["pro", "one-year"]  # ✅ Pro users only
+from django.utils.timezone import now
+
+def get_user_subscription_status(user):
+    # 👑 Admins are always Pro
+    if user.is_superuser or user.is_staff:
+        return True
+
+    # 🎫 Fetch the latest valid subscription (if any)
+    subscription = AIUserSubscription.objects.filter(
+        user=user,
+        expiration_date__gt=now()
+    ).order_by('-expiration_date').first()
+
+    if not subscription:
+        return False
+
+    plan = (subscription.plan or "").lower()
+
+    # ⛔ If they canceled AND their cancellation date has passed, block access
+    if subscription.canceled_at and subscription.canceled_at < now():
+        return False
+
+    # ✅ Allow if plan is in Pro-tier plans
+    return plan in ["pro", "one-year"]
 
 # ✅ AI Selection View
 @login_required
@@ -4102,9 +4095,6 @@ def get_chat(request, chat_id):
 
 
 
-# Initialize logger
-logger = logging.getLogger(__name__)
-
 import json
 import logging
 import openai
@@ -4114,7 +4104,12 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-from myapp.models import AIBot, AIChatSession  # ✅ Correct Model Name
+from myapp.models import AIBot, AIChatSession, AIUserSubscription  # ✅ Correct Model Name
+from django.conf import settings
+from myapp.utils import detect_and_translate  # ✅ New import
+
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 def summarize_history(chat_id):
     """
@@ -4124,10 +4119,10 @@ def summarize_history(chat_id):
     if not chat_session or len(chat_session.messages) < 10:
         return chat_session.messages if chat_session else []
 
-    # ✅ Get only the last 10 messages from the specific chat session
+    # Get only the last 10 messages from the specific chat session
     last_messages = chat_session.messages[-10:]
 
-    # ✅ Normalize structure (convert `message` to `content`)
+    # Normalize structure (convert `message` to `content`)
     normalized_history = []
     for msg in last_messages:
         if "content" not in msg and "message" in msg:
@@ -4143,32 +4138,18 @@ def summarize_history(chat_id):
     try:
         client = openai.OpenAI()
         response = client.chat.completions.create(
-            model="gpt-4-turbo",
-            messages=[
-                {"role": "system", "content": "Summarize the following conversation for better context retention:"},
-                {"role": "user", "content": summary_prompt}
-            ],
+            model="gpt-4-turbo",  # Use appropriate model
+            messages=[{"role": "system", "content": "Summarize the following conversation for better context retention:"},
+                      {"role": "user", "content": summary_prompt}],
             max_tokens=150
         )
         summary = response.choices[0].message.content.strip()
-        return [{"role": "system", "content": f"Summary: {summary}"}]  # ✅ Store summary as system message
+        return [{"role": "system", "content": f"Summary: {summary}"}]  # Store summary as system message
     except Exception as e:
         logger.error(f"Error summarizing history: {e}")
-        return [{"role": "system", "content": "Summary unavailable due to an error."}] 
-    
-     # ✅ Fallback summary
-from django.http import StreamingHttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-from django.utils.timezone import now
-from django.shortcuts import get_object_or_404
-from myapp.models import AIBot, AIChatSession, AIUserSubscription
-import openai
-import json
-import logging
+        return [{"role": "system", "content": "Summary unavailable due to an error."}]
 
-logger = logging.getLogger(__name__)
-
+# Model selection based on user's subscription plan
 def get_model_version(user):
     """Returns GPT model based on user's plan."""
     user_subscription = AIUserSubscription.objects.filter(
@@ -4176,116 +4157,48 @@ def get_model_version(user):
     ).exclude(
         canceled_at__isnull=False
     ).filter(
-        expiration_date__gt=now()
+        expiration_date__gt=timezone.now()
     ).first()
 
     user_plan = user_subscription.plan if user_subscription else "free"
     return "gpt-3.5-turbo" if user_plan == "free" else "gpt-4-turbo"
 
-@csrf_exempt
-@login_required
-def stream_chat_message(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "Invalid request method."}, status=405)
-
-    try:
-        data = json.loads(request.body)
-        ai_bot_name = data.get("ai_bot")
-        user_message = data.get("message")
-        chat_id = data.get("chat_id")
-
-        if not ai_bot_name or not user_message:
-            return JsonResponse({"error": "Missing AI bot or message."}, status=400)
-
-        ai_bot = get_object_or_404(AIBot, name=ai_bot_name)
-        system_prompt = ai_bot.generate_prompt()
-
-        # 🧠 Determine the right OpenAI model
-        model_version = get_model_version(request.user)
-
-        # 🔁 Resume or start a chat
-
-        if user_message == "__INIT__":
-            user_message = f"Hello! Please introduce yourself based on your specialty:\n\n{system_prompt}"
-
-        chat_session = None
-        if chat_id:
-            try:
-                chat_session = AIChatSession.objects.get(id=chat_id, user=request.user)
-                if chat_session.ai_bot != ai_bot:
-                    return JsonResponse({"error": "Chat session does not match selected AI bot."}, status=403)
-            except AIChatSession.DoesNotExist:
-                logger.warning(f"⚠️ Chat ID {chat_id} not found, creating a new one.")
-
-        if not chat_session:
-            chat_session = AIChatSession.objects.create(
-                user=request.user,
-                ai_bot=ai_bot,
-                title="",  # Let OpenAI generate the actual title
-                messages=[]
-            )
-
-
-        # 🧾 Append user's message
-        existing_messages = chat_session.messages or []
-        existing_messages.append({"role": "user", "content": user_message})
-        chat_session.messages = existing_messages
-        chat_session.save()
-
-        # 💬 Format for OpenAI API
-        summary_messages = summarize_history(chat_session.id)
-        full_messages = [{"role": "system", "content": system_prompt}] + summary_messages + existing_messages
-
-        def generate_stream():
-            client = openai.OpenAI()
-            response = client.chat.completions.create(
-                model=model_version,
-                messages=full_messages,
-                stream=True
-            )
-
-            # ✅ Send chat ID marker FIRST
-            yield f"[[[chat_id:{chat_session.id}]]]"
-
-            collected = ""
-            for chunk in response:
-                delta = chunk.choices[0].delta
-                if delta and delta.content:
-                    collected += delta.content
-                    yield delta.content
-
-            # 🧠 Save full assistant message when done
-            chat_session.messages.append({"role": "assistant", "content": collected})
-            chat_session.last_updated = now()
-            chat_session.save()
-
-            if not chat_session.manually_renamed:
-                chat_session.generate_chat_title(force_update=True)
-
-
-
-        return StreamingHttpResponse(generate_stream(), content_type='text/plain')
-
-    except Exception as e:
-        logger.error(f"Streaming error: {e}", exc_info=True)
-        return JsonResponse({"error": "Streaming failed."}, status=500)
-
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views import View
-from django.http import JsonResponse
-from django.utils.timezone import now
-from django.shortcuts import get_object_or_404
 import json
-import openai
 import logging
-from myapp.models import AIBot, AIChatSession, AIUserSubscription
+import openai
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from myapp.models import AIBot, AIChatSession, AIUserSubscription
+from django.utils import timezone
+from myapp.utils import detect_and_translate  # New utility function for language detection and translation
+from myapp.utils import is_translation_intended
+# Initialize OpenAI API key
+openai.api_key = settings.OPENAI_API_KEY
 
-
+# Logging setup
 logger = logging.getLogger(__name__)
 
+# Language Translation via OpenAI
+def detect_and_translate(text):
+    """Detect and translate text using OpenAI."""
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You're a translation assistant."},
+                {"role": "user", "content": f"Detect the language and translate the following text to English:\n\n{text}"}
+            ],
+            max_tokens=100
+        )
+        translated_text = response.choices[0].message.content.strip()
+        return {"translated": translated_text}
+    except Exception as e:
+        logger.error(f"Error in translation: {e}")
+        return {"error": "Translation failed"}
+
+# Main function to handle simple chat messages
 @csrf_exempt
 @login_required
 def simple_chat_message(request):
@@ -4301,12 +4214,20 @@ def simple_chat_message(request):
         if not ai_bot_name or not user_message:
             return JsonResponse({"error": "Missing AI bot or message."}, status=400)
 
+        # Detect and translate message if needed
+        user_lang = request.session.get(settings.LANGUAGE_COOKIE_NAME, 'en')
+
+        if user_lang == 'en' and is_translation_intended(user_message):
+            translation_result = detect_and_translate(user_message)
+            if isinstance(translation_result, dict):
+                user_message = translation_result.get("translated", user_message)
+
         ai_bot = get_object_or_404(AIBot, name=ai_bot_name)
         system_prompt = ai_bot.generate_prompt()
 
         user_subscription = AIUserSubscription.objects.filter(
             user=request.user,
-            expiration_date__gt=now(),
+            expiration_date__gt=timezone.now(),
             canceled_at__isnull=True
         ).first()
         user_plan = user_subscription.plan if user_subscription else "free"
@@ -4332,7 +4253,6 @@ def simple_chat_message(request):
 
         if ai_bot.ai_type == "image":
             try:
-                # Smart image handling: allow refinement
                 previous_image_msg = next((m for m in reversed(messages) if m.get("image_url")), None)
                 refinement_requested = any(word in user_message.lower() for word in ["adjust", "tweak", "refine", "improve", "make it"])
 
@@ -4363,7 +4283,7 @@ def simple_chat_message(request):
                     "description": refined_prompt
                 })
                 chat_session.messages = messages
-                chat_session.last_updated = now()
+                chat_session.last_updated = timezone.now()
                 chat_session.save()
 
                 return JsonResponse({
@@ -4378,13 +4298,23 @@ def simple_chat_message(request):
                 logger.error(f"Image generation failed: {e}", exc_info=True)
                 return JsonResponse({"error": "Image generation failed."}, status=500)
 
+        language_prompt = {
+            "role": "system",
+            "content": f"Please reply in {user_lang}. Never explain your translation unless asked."
+        }
+
         # TEXT MODE
         summary_messages = summarize_history(chat_session.id) if callable(summarize_history) else []
         global_tone_prompt = getattr(settings, "AI_TONE_PROMPT", "")
         full_messages = [
+            language_prompt,
             {"role": "system", "content": global_tone_prompt.strip()},
             {"role": "system", "content": system_prompt.strip()},
         ] + summary_messages + messages
+
+        for msg in full_messages:
+            if not isinstance(msg.get("content"), str):
+                raise ValueError(f"Invalid message format: {msg}")
 
         response = client.chat.completions.create(
             model=model_version,
@@ -4395,7 +4325,7 @@ def simple_chat_message(request):
 
         messages.append({"role": "assistant", "content": assistant_reply})
         chat_session.messages = messages
-        chat_session.last_updated = now()
+        chat_session.last_updated = timezone.now()
         chat_session.save()
 
         if not chat_session.manually_renamed:
@@ -4410,6 +4340,47 @@ def simple_chat_message(request):
     except Exception as e:
         logger.error(f"Error in simple_chat_message: {e}", exc_info=True)
         return JsonResponse({"error": "Failed to get AI response."}, status=500)
+
+from django.conf import settings
+from django.utils.translation import activate
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+import json
+
+from myapp.models import AIUserSubscription
+
+@login_required
+def set_language(request):
+    """Set the user's preferred language and activate it."""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            openai_lang = data.get('language')
+
+            if not openai_lang:
+                return JsonResponse({"success": False, "error": "No language provided"})
+
+            # Map to Django language code
+            django_lang = settings.OPENAI_TO_DJANGO_LANG.get(openai_lang)
+
+            if not django_lang:
+                return JsonResponse({"success": False, "error": f"Unsupported language: {openai_lang}"})
+
+            # Update subscription
+            subscription = AIUserSubscription.objects.filter(user=request.user).first()
+            if subscription:
+                subscription.preferred_language = openai_lang
+                subscription.save()
+
+            # Activate immediately for current session
+            activate(django_lang)
+            request.session[settings.LANGUAGE_COOKIE_NAME] = django_lang
+
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    
+    return JsonResponse({"success": False, "error": "Invalid request method"})
 
 
 def generate_chat_title(self, force_update=False):
@@ -4476,19 +4447,64 @@ def reset_chat_title(request, chat_id):
 
     return JsonResponse({"success": True, "new_title": chat.title})
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.utils.translation import get_language_info
+from myapp.models import AIUserSubscription
 
 @login_required
 def chat_iriseupai_sandbox(request):
-    """Render AI chat interface with user info."""
     is_pro_user = get_user_subscription_status(request.user)
-    is_expired = False  # ✅ Add this line to prevent template errors
+    is_expired = False
+
+    OPENAI_TO_DJANGO_LANG = getattr(settings, 'OPENAI_TO_DJANGO_LANG', {
+        'en-US': 'en', 'ja-JP': 'ja', 'es-ES': 'es', 'fr-FR': 'fr', 'de-DE': 'de',
+        'it-IT': 'it', 'pt-PT': 'pt', 'pt-BR': 'pt-br', 'ru-RU': 'ru', 'zh-CN': 'zh-hans',
+        'zh-TW': 'zh-hant', 'ko-KR': 'ko', 'ar-SA': 'ar', 'tr-TR': 'tr', 'nl-NL': 'nl',
+        'sv-SE': 'sv', 'pl-PL': 'pl', 'da-DK': 'da', 'no-NO': 'no', 'fi-FI': 'fi',
+        'he-IL': 'he', 'th-TH': 'th', 'hi-IN': 'hi', 'cs-CZ': 'cs', 'ro-RO': 'ro',
+        'hu-HU': 'hu', 'sk-SK': 'sk', 'bg-BG': 'bg', 'uk-UA': 'uk', 'vi-VN': 'vi',
+        'id-ID': 'id', 'ms-MY': 'ms', 'sr-RS': 'sr', 'hr-HR': 'hr', 'el-GR': 'el',
+        'lt-LT': 'lt', 'lv-LV': 'lv', 'et-EE': 'et', 'sl-SI': 'sl', 'is-IS': 'is',
+        'sq-AL': 'sq', 'mk-MK': 'mk', 'bs-BA': 'bs', 'ca-ES': 'ca', 'gl-ES': 'gl',
+        'eu-ES': 'eu', 'hy-AM': 'hy', 'fa-IR': 'fa', 'sw-KE': 'sw', 'ta-IN': 'ta',
+        'te-IN': 'te', 'kn-IN': 'kn', 'ml-IN': 'ml', 'mr-IN': 'mr', 'pa-IN': 'pa',
+        'gu-IN': 'gu', 'or-IN': 'or', 'as-IN': 'as', 'ne-NP': 'ne', 'si-LK': 'si',
+    })
+
+    # Get user language preference from subscription
+    subscription = AIUserSubscription.objects.filter(user=request.user).first()
+    openai_lang = subscription.preferred_language if subscription else 'en-US'
+    django_lang = OPENAI_TO_DJANGO_LANG.get(openai_lang, 'en')  # fallback to 'en'
+
+    request.session[settings.LANGUAGE_COOKIE_NAME] = django_lang
+    activate(django_lang)
+
+    LANGUAGE_CHOICES = []
+    for code, name in AIUserSubscription.LANGUAGE_CHOICES:
+        django_code = OPENAI_TO_DJANGO_LANG.get(code)
+        if django_code:
+            try:
+                language_name = get_language_info(django_code)["name_local"]
+                LANGUAGE_CHOICES.append((code, language_name))
+            except Exception:
+                continue  # skip languages Django doesn't recognize
 
     return render(request, 'myapp/aibots/iriseupai/ai_dynamic.html', {
         "is_pro_user": is_pro_user,
-        "is_expired": is_expired  # ✅ Now the template won't break
+        "is_expired": is_expired,
+        "user_language": openai_lang,  # retain full code for frontend
+        "LANGUAGE_CHOICES": LANGUAGE_CHOICES
     })
+
+
+from django.conf import settings
+from django.utils.translation import get_language_info
+
+# Get available language choices
+LANGUAGE_CHOICES = [
+    (lang_code, get_language_info(lang_code)['name']) 
+    for lang_code, _ in settings.LANGUAGES  # Adjusted to only extract lang_code
+]
+
 
 
 def look(request):
@@ -4539,6 +4555,32 @@ def create_ai_bot(request):
         return JsonResponse({'success': True, 'bot_id': bot.id})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+
+from gtts import gTTS
+import os
+from django.http import JsonResponse
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def text_to_speech(request):
+    text = request.GET.get('text', '').strip()
+
+    if not text:
+        return JsonResponse({"error": "No text provided"}, status=400)
+
+    try:
+        tts = gTTS(text, lang='en')
+        audio_filename = "response.mp3"
+        audio_path = os.path.join(settings.MEDIA_ROOT, audio_filename)
+
+        os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+
+        tts.save(audio_path)
+
+        return JsonResponse({"audio_url": settings.MEDIA_URL + audio_filename})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 
 
@@ -4675,3 +4717,5 @@ def generate_smart_bio(specialty, description):
     except Exception as e:
         logger.warning(f"Failed to generate smart bio: {e}")
         return "This AI is ready to help you!"  # fallback
+
+

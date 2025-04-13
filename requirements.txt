@@ -57,3 +57,9 @@ click==8.1.8
 
 cloudinary==1.43.0 
 django-cloudinary-storage==0.3.0
+
+
+beautifulsoup4==4.13.3 
+deep-translator==1.11.4 
+langdetect==1.0.9 
+soupsieve==2.6
