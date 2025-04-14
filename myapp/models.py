@@ -341,6 +341,16 @@ class AIChatSession(models.Model):
         return f"Chat with {self.ai_bot.name} - {self.user.username} ({self.created_at.strftime('%Y-%m-%d')})"
 
 
+from django.db import models
+from django.contrib.auth.models import User
+
+class UserLanguagePreference(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    language_code = models.CharField(max_length=10, default='en-US')  # OpenAI-style language code
+
+    def __str__(self):
+        return f"{self.user.username} - {self.language_code}"
+
 
 from django.db import models
 from django.contrib.auth.models import User

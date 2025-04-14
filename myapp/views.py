@@ -4341,17 +4341,12 @@ def simple_chat_message(request):
         logger.error(f"Error in simple_chat_message: {e}", exc_info=True)
         return JsonResponse({"error": "Failed to get AI response."}, status=500)
 
-from django.conf import settings
+from myapp.models import UserLanguagePreference
 from django.utils.translation import activate
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-import json
 
-from myapp.models import AIUserSubscription
 
 @login_required
 def set_language(request):
-    """Set the user's preferred language and activate it."""
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -4360,28 +4355,23 @@ def set_language(request):
             if not openai_lang:
                 return JsonResponse({"success": False, "error": "No language provided"})
 
-            # Map to Django language code
             django_lang = settings.OPENAI_TO_DJANGO_LANG.get(openai_lang)
-
             if not django_lang:
                 return JsonResponse({"success": False, "error": f"Unsupported language: {openai_lang}"})
 
-            # Update subscription
-            subscription = AIUserSubscription.objects.filter(user=request.user).first()
-            if subscription:
-                subscription.preferred_language = openai_lang
-                subscription.save()
+            pref, _ = UserLanguagePreference.objects.get_or_create(user=request.user)
+            pref.language_code = openai_lang
+            pref.save()
 
-            # Activate immediately for current session
             activate(django_lang)
             request.session[settings.LANGUAGE_COOKIE_NAME] = django_lang
 
             return JsonResponse({"success": True})
+
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
-    
-    return JsonResponse({"success": False, "error": "Invalid request method"})
 
+    return JsonResponse({"success": False, "error": "Invalid request method"})
 
 def generate_chat_title(self, force_update=False):
     if self.manually_renamed and not force_update:
@@ -4447,51 +4437,40 @@ def reset_chat_title(request, chat_id):
 
     return JsonResponse({"success": True, "new_title": chat.title})
 
-from django.utils.translation import get_language_info
-from myapp.models import AIUserSubscription
+from django.utils.translation import get_language_info, activate
+from django.conf import settings
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from myapp.models import UserLanguagePreference
+
 
 @login_required
 def chat_iriseupai_sandbox(request):
     is_pro_user = get_user_subscription_status(request.user)
     is_expired = False
 
-    OPENAI_TO_DJANGO_LANG = getattr(settings, 'OPENAI_TO_DJANGO_LANG', {
-        'en-US': 'en', 'ja-JP': 'ja', 'es-ES': 'es', 'fr-FR': 'fr', 'de-DE': 'de',
-        'it-IT': 'it', 'pt-PT': 'pt', 'pt-BR': 'pt-br', 'ru-RU': 'ru', 'zh-CN': 'zh-hans',
-        'zh-TW': 'zh-hant', 'ko-KR': 'ko', 'ar-SA': 'ar', 'tr-TR': 'tr', 'nl-NL': 'nl',
-        'sv-SE': 'sv', 'pl-PL': 'pl', 'da-DK': 'da', 'no-NO': 'no', 'fi-FI': 'fi',
-        'he-IL': 'he', 'th-TH': 'th', 'hi-IN': 'hi', 'cs-CZ': 'cs', 'ro-RO': 'ro',
-        'hu-HU': 'hu', 'sk-SK': 'sk', 'bg-BG': 'bg', 'uk-UA': 'uk', 'vi-VN': 'vi',
-        'id-ID': 'id', 'ms-MY': 'ms', 'sr-RS': 'sr', 'hr-HR': 'hr', 'el-GR': 'el',
-        'lt-LT': 'lt', 'lv-LV': 'lv', 'et-EE': 'et', 'sl-SI': 'sl', 'is-IS': 'is',
-        'sq-AL': 'sq', 'mk-MK': 'mk', 'bs-BA': 'bs', 'ca-ES': 'ca', 'gl-ES': 'gl',
-        'eu-ES': 'eu', 'hy-AM': 'hy', 'fa-IR': 'fa', 'sw-KE': 'sw', 'ta-IN': 'ta',
-        'te-IN': 'te', 'kn-IN': 'kn', 'ml-IN': 'ml', 'mr-IN': 'mr', 'pa-IN': 'pa',
-        'gu-IN': 'gu', 'or-IN': 'or', 'as-IN': 'as', 'ne-NP': 'ne', 'si-LK': 'si',
-    })
+    # Get preferred language from the user's language preference model
+    preference = UserLanguagePreference.objects.filter(user=request.user).first()
+    openai_lang = preference.language_code if preference else 'en-US'
 
-    # Get user language preference from subscription
-    subscription = AIUserSubscription.objects.filter(user=request.user).first()
-    openai_lang = subscription.preferred_language if subscription else 'en-US'
-    django_lang = OPENAI_TO_DJANGO_LANG.get(openai_lang, 'en')  # fallback to 'en'
-
-    request.session[settings.LANGUAGE_COOKIE_NAME] = django_lang
+    # Map to Django language code
+    django_lang = settings.OPENAI_TO_DJANGO_LANG.get(openai_lang, 'en')
     activate(django_lang)
+    request.session[settings.LANGUAGE_COOKIE_NAME] = django_lang
 
+    # Prepare language choices with localized names
     LANGUAGE_CHOICES = []
-    for code, name in AIUserSubscription.LANGUAGE_CHOICES:
-        django_code = OPENAI_TO_DJANGO_LANG.get(code)
-        if django_code:
-            try:
-                language_name = get_language_info(django_code)["name_local"]
-                LANGUAGE_CHOICES.append((code, language_name))
-            except Exception:
-                continue  # skip languages Django doesn't recognize
+    for openai_code, django_code in settings.OPENAI_TO_DJANGO_LANG.items():
+        try:
+            language_name = get_language_info(django_code)["name_local"]
+            LANGUAGE_CHOICES.append((openai_code, language_name))
+        except Exception:
+            continue  # Skip if Django doesn't recognize the language code
 
     return render(request, 'myapp/aibots/iriseupai/ai_dynamic.html', {
         "is_pro_user": is_pro_user,
         "is_expired": is_expired,
-        "user_language": openai_lang,  # retain full code for frontend
+        "user_language": openai_lang,
         "LANGUAGE_CHOICES": LANGUAGE_CHOICES
     })
 

@@ -248,6 +248,8 @@ OPENAI_TO_DJANGO_LANG = {
     'eu-ES': 'eu', 'hy-AM': 'hy', 'fa-IR': 'fa', 'sw-KE': 'sw', 'ta-IN': 'ta',
     'te-IN': 'te', 'kn-IN': 'kn', 'ml-IN': 'ml', 'mr-IN': 'mr', 'pa-IN': 'pa',
     'gu-IN': 'gu', 'or-IN': 'or', 'as-IN': 'as', 'ne-NP': 'ne', 'si-LK': 'si',
+    'af-ZA': 'af', 'bn-IN': 'bn', 'my-MM': 'my', 'zh-HK': 'zh-hk', 'zh-MO': 'zh-mo',
+    'tl-PH': 'tl', 'ka-GE': 'ka', 'de-AT': 'de-at', 'de-CH': 'de-ch', 'lo-LA': 'lo'
 }
 
 # Optional: for convenience in views
