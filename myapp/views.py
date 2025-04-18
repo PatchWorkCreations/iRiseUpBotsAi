@@ -4698,3 +4698,125 @@ def generate_smart_bio(specialty, description):
         return "This AI is ready to help you!"  # fallback
 
 
+from django.shortcuts import render
+from bs4 import BeautifulSoup
+
+def html_to_django_view(request):
+    html_input = request.POST.get("html_input", "")
+    django_output = ""
+
+    if html_input:
+        soup = BeautifulSoup(html_input, "html.parser")
+
+        # Convert static files
+        for tag in soup.find_all(["link", "script", "img"]):
+            if tag.name == "link" and tag.get("href") and not tag["href"].startswith("http"):
+                tag["href"] = "{% static '" + tag['href'].lstrip('./') + "' %}"
+            elif tag.name == "script" and tag.get("src") and not tag["src"].startswith("http"):
+                tag["src"] = "{% static '" + tag['src'].lstrip('./') + "' %}"
+            elif tag.name == "img" and tag.get("src") and not tag["src"].startswith("http"):
+                tag["src"] = "{% static '" + tag['src'].lstrip('./') + "' %}"
+
+        # Replace internal page links (e.g., about.html, contact.html) with "#"
+        for tag in soup.find_all("a", href=True):
+            href = tag["href"]
+            if href.endswith(".html") or href.startswith("./"):
+                tag["href"] = "#"
+
+        # Final HTML output with {% load static %}
+        django_output = "{% load static %}\n\n" + soup.prettify()
+
+    return render(request, "myapp/django_converter/converter.html", {
+        "html_input": html_input,
+        "django_output": django_output,
+    })
+
+
+
+def generate_views_py(request):
+    views_py = '''from django.shortcuts import render
+
+def sample_view(request):
+    return render(request, 'home.html')
+'''
+    return HttpResponse(views_py, content_type='text/plain')
+
+
+def generate_urls_py(request):
+    urls_py = '''from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.sample_view, name='home'),
+]
+'''
+    return HttpResponse(urls_py, content_type='text/plain')
+
+
+import logging
+from django.shortcuts import render
+from .forms import SubmitRequestForm
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+# 🔍 Initialize logger
+logger = logging.getLogger(__name__)
+
+def landing_for_iriseup(request):
+    form = SubmitRequestForm()
+
+    if request.method == 'POST':
+        form = SubmitRequestForm(request.POST)
+        if form.is_valid():
+            try:
+                requester = form.cleaned_data['requester']
+                subject = form.cleaned_data['subject']
+                description = form.cleaned_data['description']
+                email = form.cleaned_data['email']
+
+                logger.info(f"📨 New Contact Form Submitted by {requester} ({email})")
+
+                # Email content
+                email_subject = f"New Contact: {subject}"
+                html_message = render_to_string('myapp/quiz/support/submit_request_email.html', {
+                    'requester': requester,
+                    'subject': subject,
+                    'description': description,
+                    'email': email,
+                })
+                plain_message = strip_tags(html_message)
+                from_email = 'iriseupgroupofcompanies@gmail.com'
+                to = 'juliavictorio16@gmail.com'
+
+                logger.debug(f"Sending email:\nSubject: {email_subject}\nTo: {to}")
+
+                send_mail(
+                    email_subject,
+                    plain_message,
+                    from_email,
+                    [to],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+
+                logger.info("✅ Contact email sent successfully.")
+
+                return render(request, 'myapp/aibots/settings/submit_request_success.html', {
+                    'requester': requester,
+                    'subject': subject,
+                    'description': description,
+                })
+
+            except Exception as e:
+                logger.error(f"❌ Error sending contact email: {e}", exc_info=True)
+                # Optional: show a message or fallback error template
+                return render(request, 'myapp/aibots/settings/email_error.html', {
+                    'error': str(e),
+                    'form': form
+                })
+
+        else:
+            logger.warning("⚠️ Form is invalid.")
+    
+    return render(request, 'myapp/aibots/iriseupai/landing_page.html', {'form': form})

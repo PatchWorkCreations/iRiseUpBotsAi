@@ -166,7 +166,7 @@
 
 <div class="contact-us-container mt-5">
     <h2 class="text-center mt-4">Submit a Request</h2>
-    
+
     <form method="post" enctype="multipart/form-data" class="contact-us-form mt-4">
         {% csrf_token %}
 
@@ -186,24 +186,8 @@
         </div>
 
         <div class="form-group">
-            <label for="query_type">Query Type</label>
-            <select class="form-control" id="query_type" name="query_type" required>
-                <option value="">Choose...</option>
-                {% for key, value in form.query_type.field.choices %}
-                    <option value="{{ key }}">{{ value }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea class="form-control" id="description" name="description" rows="6" placeholder="Describe your issue" required></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="attachment">Attachment</label>
-            <input type="file" class="form-control-file" id="attachment" name="attachment">
-            <p class="small text-muted mt-2">You can attach relevant documents or screenshots (optional).</p>
+            <label for="description">Message</label>
+            <textarea class="form-control" id="description" name="description" rows="6" placeholder="Describe your message..." required></textarea>
         </div>
 
         <div class="form-group text-center mt-4">
@@ -212,6 +196,7 @@
         </div>
     </form>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>

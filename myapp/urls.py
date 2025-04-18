@@ -229,4 +229,13 @@ urlpatterns = [
     path('api/update_ai_bot/<int:bot_id>/', views.update_ai_bot, name='update_ai_bot'),
     path("set-language/", views.set_language, name="set_language"),
     path('zoho-domain-verification.html', views.zoho_verification, name='zoho_verify'),
+
+
+
+
+    path('converter/', views.html_to_django_view, name='html_to_django'),
+    path('generate-views/', views.generate_views_py, name='generate_views'),
+    path('generate-urls/', views.generate_urls_py, name='generate_urls'),
+
+    path('iriseup/', views.landing_for_iriseup, name='landing_for_iriseup'),
 ]

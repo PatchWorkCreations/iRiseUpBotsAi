@@ -21,7 +21,13 @@ body {
     min-height: 100vh;
 }
 
-/* 🔹 HEADER */
+
+
+.header h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
 .header {
     position: fixed;
     top: 0;
@@ -35,9 +41,9 @@ body {
     z-index: 1000;
 }
 
-.header h1 {
-    font-size: 1.3rem;
-    font-weight: 600;
+.auth-buttons {
+    display: flex;
+    gap: 10px;
 }
 
 .login-btn {
@@ -48,7 +54,21 @@ body {
     border-radius: 20px;
     text-decoration: none;
     font-weight: 500;
+    transition: background 0.3s ease;
 }
+
+.login-btn:hover {
+    background: #333;
+}
+
+
+@media (max-width: 480px) {
+    .auth-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
 
 /* 🔹 MAIN CONTAINER */
 .chat-container {
@@ -250,14 +270,6 @@ body {
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-
-    /* ✅ Ensure login button stays on the right */
-    .login-btn {
-        position: absolute;
-        right: 15px;
-        top: 8px;
-        z-index: 1003;
-    }
 }
 
 
@@ -322,6 +334,16 @@ body {
         font-size: 0.85rem;
     }
 }
+
+.signup{
+    background-color: #164922; /* Bootstrap-style green */
+    color: white;
+}
+
+.signup-btn {
+    background-color: #13441d; /* Darker green on hover */
+}
+
 
 /* 🎨 General Modal Styling */
 .signup-modal {
@@ -602,15 +624,36 @@ body {
     display: none; /* Hide it by default */
 }
 
+.typewriter #dynamic-word::after {
+    content: "|";
+    animation: blink 0.7s infinite;
+    color: #333;
+}
 
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.message-time {
+    font-size: 12px;
+    margin-top: 5px;
+    opacity: 0.6;
+    text-align: right;
+}
 
 </style>
 
 
 <header class="header">
     <h1>iRiseUp AI</h1>
-    <a href="{% url 'sign_in' %}" class="login-btn">Log in</a>
+    <div class="auth-buttons">
+        <a href="{% url 'signup' %}" class="login-btn signup">Sign up</a>
+        <a href="{% url 'sign_in' %}" class="login-btn">Log in</a>
+    </div>
 </header>
+
 
 
 <section class="chat-container">
@@ -631,7 +674,8 @@ body {
 </div>
 
 
-    <h2 class="title">Can I help you with anything?</h2>
+    <h2 class="title typewriter">Can I help you <span id="dynamic-word"></span></h2>
+
 
     <div class="ai-switcher">
         <label for="ai-select">Choose Your Strategist:</label>
@@ -1112,6 +1156,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ✅ Initialize AI name on page load
     updateAIName();
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const words = ["Discover?", "Empower?", "Create?", "Transform?", "Lead?", "Rise?", "Belong?"];
+    const wordElement = document.getElementById("dynamic-word");
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function typeEffect() {
+        const currentWord = words[wordIndex];
+        const displayedText = isDeleting
+            ? currentWord.substring(0, charIndex--)
+            : currentWord.substring(0, charIndex++);
+
+        wordElement.textContent = displayedText;
+
+        let typingSpeed = isDeleting ? 50 : 120;
+
+        if (!isDeleting && charIndex === currentWord.length + 1) {
+            typingSpeed = 1500; // Pause before deleting
+            isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+            typingSpeed = 300;
+        }
+
+        setTimeout(typeEffect, typingSpeed);
+    }
+
+    typeEffect();
 });
 
 

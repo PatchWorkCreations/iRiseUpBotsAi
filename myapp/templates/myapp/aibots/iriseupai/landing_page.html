@@ -1,0 +1,966 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="zxx">
+ <head>
+  <title>
+   Home | Artelligence
+  </title>
+  <!-- /SEO Ultimate -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport"/>
+  <meta charset="utf-8"/>
+  <link href="{% static 'important/images/favicon/apple-icon-57x57.png' %}" rel="apple-touch-icon" sizes="57x57"/>
+  <link href="{% static 'important/images/favicon/apple-icon-60x60.png' %}" rel="apple-touch-icon" sizes="60x60"/>
+  <link href="{% static 'important/images/favicon/apple-icon-72x72.png' %}" rel="apple-touch-icon" sizes="72x72"/>
+  <link href="{% static 'important/images/favicon/apple-icon-76x76.png' %}" rel="apple-touch-icon" sizes="76x76"/>
+  <link href="{% static 'important/images/favicon/apple-icon-114x114.png' %}" rel="apple-touch-icon" sizes="114x114"/>
+  <link href="{% static 'important/images/favicon/apple-icon-120x120.png' %}" rel="apple-touch-icon" sizes="120x120"/>
+  <link href="{% static 'important/images/favicon/apple-icon-144x144.png' %}" rel="apple-touch-icon" sizes="144x144"/>
+  <link href="{% static 'important/images/favicon/apple-icon-152x152.png' %}" rel="apple-touch-icon" sizes="152x152"/>
+  <link href="{% static 'important/images/favicon/apple-icon-180x180.png' %}" rel="apple-touch-icon" sizes="180x180"/>
+  <link href="{% static 'important/images/favicon/android-icon-192x192.png' %}" rel="icon" sizes="192x192" type="image/png"/>
+  <link href="{% static 'important/images/favicon/favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png"/>
+  <link href="{% static 'important/images/favicon/favicon-96x96.png' %}" rel="icon" sizes="96x96" type="image/png"/>
+  <link href="{% static 'important/images/favicon/favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png"/>
+  <link href="{% static 'important/images/favicon/manifest.json' %}" rel="manifest"/>
+  <meta content="#ffffff" name="msapplication-TileColor"/>
+  <meta content="/ms-icon-144x144.png" name="msapplication-TileImage"/>
+  <meta content="#ffffff" name="theme-color"/>
+  <!-- Latest compiled and minified CSS -->
+  <link href="{% static 'important/bootstrap/bootstrap.min.css' %}" rel="stylesheet"/>
+  <link href="{% static 'important/js/bootstrap.min.js' %}" rel="stylesheet"/>
+  <!-- Font Awesome link -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet"/>
+  <!-- StyleSheet link CSS -->
+  <link href="{% static 'important/css/style.css' %}" rel="stylesheet" type="text/css"/>
+  <link href="{% static 'important/css/responsive.css' %}" rel="stylesheet" type="text/css"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" rel="stylesheet"/>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <!--Header  -->
+  <div class="banner_outer">
+    <header class="header">
+        <div class="container-fluid">
+          <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="{% url 'iriseupai_landing' %}">
+              <figure class="mb-0 banner-logo">
+                <img alt="Logo" class="img-fluid" src="{% static 'assets/images/logo2.png' %}"/>
+              </figure>
+            </a>
+            <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
+              <span class="navbar-toggler-icon"></span>
+              <span class="navbar-toggler-icon"></span>
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'iriseupai_landing' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'iriseupai_landing' %}#about">About</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'iriseupai_landing' %}#pricing">Services</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'iriseupai_landing' %}#portfolio">Projects</a>
+                </li>
+                <li class="nav-space nav-item dropdown">
+                  <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle dropdown-color navbar-text-color" data-toggle="dropdown" href="#" id="navbarDropdown" role="button">
+                    Pages
+                  </a>
+                  <div class="dropdown-menu drop-down-content">
+                    <ul class="list-unstyled drop-down-pages">
+                      <li class="nav-item">
+                        <a class="dropdown-item nav-link" href="{% url 'iriseupai_landing' %}#team">Teams</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="dropdown-item nav-link" href="{% url 'iriseupai_landing' %}#faq">Faq's</a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="nav-space nav-item">
+                  <a class="nav-link" href="{% url 'contactus' %}">Contact us</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link lets_talk" href="{% url 'iriseupai_landing' %}#free-trial-chat">
+                    Let's Talk
+                    <i class="circle fa-regular fa-angle-right"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </header>
+      
+   <figure class="banner-sideshape mb-0">
+    <img alt="" class="img-fluid" src="{% static 'important/images/banner-sideshape.png' %}"/>
+   </figure>
+   <!-- Banner -->
+   <section class="banner-section">
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+            <div class="banner_content">
+              <h1 class="text-white">
+                🚀 Real AI Help—Without the Hype
+              </h1>
+              <p class="text-white">
+                Meet <strong>iRiseUp.ai</strong>: Your on-demand AI assistant for business, wellness, and everything in between. No jargon. No fluff. Just results.
+              </p>
+              <ul class="text-white text-size-18 pl-4">
+                <li>✅ Expert insights on tap—no PhD required</li>
+                <li>⏳ Save time by letting AI do the thinking</li>
+                <li>💸 No subscriptions. One-time access. Zero stress.</li>
+              </ul>
+              <div class="banner-button mt-4">
+                <a class="button1 lets_talk text-decoration-none" href="#free-trial-chat">
+                  Try It Free
+                  <i class="circle fa-regular fa-angle-right"></i>
+                </a>
+                <a class="lets_talk text-decoration-none" href="#about">
+                  Learn More
+                  <i class="circle fa-regular fa-angle-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+            <div class="banner_wrapper" data-aos="fade-right">
+              <figure class="mb-0 banner-image">
+                <img alt="AI assistant illustration" class="img-fluid" src="{% static 'important/images/banner-image.png' %}" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    <figure class="banner-sideshape2 mb-0">
+     <img alt="" class="img-fluid" src="{% static 'important/images/banner-sideshape2.png' %}"/>
+    </figure>
+   </section>
+  </div>
+  <!-- About us -->
+  <section class="about-section">
+   <div class="container">
+    <div class="row">
+     <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+      <div class="about_wrapper">
+       <figure class="mb-0 about-image1">
+        <img alt="" class="img-fluid" src="{% static 'important/images/about-image1.png' %}"/>
+       </figure>
+       <figure class="mb-0 about-image2">
+        <img alt="" class="img-fluid" src="{% static 'important/images/about-image2.png' %}"/>
+       </figure>
+      </div>
+     </div>
+     <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+      <div class="about_content" data-aos="fade-right">
+       <h5>
+        About us
+       </h5>
+       <h2>
+        Empowering People By Keeping Them Well
+       </h2>
+       <p class="text-size-18">
+        Repellendus autem ruibusdam et aut officiis debitis aut re necessitatibus saepe eveniet ut et voluptates repudianda sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.
+       </p>
+       <div class="about-lowercontent">
+        <div class="image">
+         <figure class="mb-0 icon">
+          <img alt="" class="img-fluid" src="{% static 'important/images/about-customer.png' %}"/>
+         </figure>
+        </div>
+        <div class="content">
+         <h4>
+          100% Customers Satisfaction
+         </h4>
+         <p class="text-size-18">
+          Amet minim mollit non deserunt ullamco est sit aliua dolor do amet sint.
+         </p>
+        </div>
+        <div class="image">
+         <figure class="mb-0 icon">
+          <img alt="" class="img-fluid" src="{% static 'important/images/about-quality.png' %}"/>
+         </figure>
+        </div>
+        <div class="content">
+         <h4>
+          Quality Assurance Guarantee
+         </h4>
+         <p class="text-size-18 text">
+          Velit officia consequat duis enim velit mollie assu omnis dolor repellendus.
+         </p>
+        </div>
+       </div>
+       <a class="read_more text-decoration-none" href="#">
+        Read More
+        <i class="circle fa-regular fa-angle-right">
+        </i>
+       </a>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+  <!-- Services -->
+  <section class="service-section position-relative" id="about">
+  <div class="container">
+    <figure class="service-image mb-0">
+      <img alt="Why iRiseUp AI" class="img-fluid" src="{% static 'important/images/service-image.png' %}" />
+    </figure>
+    <div class="row">
+      <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="service_content" data-aos="fade-right">
+          <h5>Why Choose Us</h5>
+          <h2>🚀 Why iRiseUp AI is Built Different</h2>
+          <p class="text-size-18">
+            Your AI-powered team is designed to work smarter, automate tasks, and bring expert insights right to your fingertips—so you can focus on what really matters.
+          </p>
+          <a class="read_more text-decoration-none" href="#free-trial-chat">
+            Try It Free
+            <i class="circle fa-regular fa-angle-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="service_contentbox">
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="service-box box-mb">
+                <figure class="service-reboticon">
+                  <img src="{% static 'important/images/service-reboticon.png' %}" alt="" class="img-fluid">
+                </figure>
+                <h4>Instant Expert Assistance</h4>
+                <p class="text-size-16 mb-2">
+                  8 AI-powered assistants available <strong>24/7</strong> to guide your decisions and automate processes.
+                </p>
+                <a class="read_more text-decoration-none" href="#howitworks">Learn More</a>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="box-top">
+                <div class="service-box box-mb">
+                  <figure class="service-learningicon">
+                    <img src="{% static 'important/images/service-learningicon.png' %}" alt="" class="img-fluid">
+                  </figure>
+                  <h4>Save 30+ Hours/Week</h4>
+                  <p class="text-size-16 mb-2">
+                    Let AI handle repetitive tasks so you can focus on what truly matters.
+                  </p>
+                  <a class="read_more text-decoration-none" href="#about">Explore Benefits</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="service-box">
+                <figure class="service-scienceicon">
+                  <img src="{% static 'important/images/service-scienceicon.png' %}" alt="" class="img-fluid">
+                </figure>
+                <h4>Flexible Plans for Any Budget</h4>
+                <p class="text-size-16 mb-2">
+                  Choose a plan that fits your needs—<strong>monthly, yearly, or lifetime options available.</strong>
+                </p>
+                <a class="read_more text-decoration-none" href="#pricing">See Plans</a>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="box-top">
+                <div class="service-box">
+                  <figure class="service-analysicon">
+                    <img src="{% static 'important/images/service-analysicon.png' %}" alt="" class="img-fluid">
+                  </figure>
+                  <h4>Boost Growth & Productivity</h4>
+                  <p class="text-size-16 mb-2">
+                    AI-powered solutions tailored for <strong>business, marketing, and personal success.</strong>
+                  </p>
+                  <a class="read_more text-decoration-none" href="#portfolio">View Use Cases</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- Choose -->
+  <section class="choose-section">
+   <div class="container">
+    <figure class="choose-sideshape mb-0">
+     <img alt="" class="img-fluid" src="{% static 'important/images/choose-sideshape.png' %}"/>
+    </figure>
+    <div class="row">
+     <div class="col-lg-6 col-md-12 col-sm-12 col-12 order-lg-1 order-2">
+      <div class="choose_wrapper">
+       <figure class="mb-0 choose-image">
+        <img alt="" class="" src="{% static 'important/images/choose-image.png' %}"/>
+       </figure>
+      </div>
+     </div>
+     <div class="col-lg-6 col-md-12 col-sm-12 col-12 order-lg-2 order-1">
+      <div class="choose_content" data-aos="fade-right">
+       <h5>
+        Why Choose Us
+       </h5>
+       <h2 class="text-white">
+        Get Closer Look How Business Develop in AI Data Analysis
+       </h2>
+       <p class="text-white text-size-18">
+        Consectetur adipiscing elit sed do eiusmod tempor in 
+                        labore et dolore magna aliqua ruis ipsum suspendisse ultrices gravida sit amet.
+       </p>
+       <ul class="list-unstyled mb-0">
+        <li class="text-white text text-size-18">
+         <i class="circle fa-regular fa-angle-right">
+         </i>
+         Quis autem vel eum iure reprehenderit aui
+        </li>
+        <li class="text-white text text-size-18">
+         <i class="circle fa-regular fa-angle-right">
+         </i>
+         Suscipit laboriosam nisi rut aliuid eum iure moli
+        </li>
+        <li class="text-white text text1 text-size-18">
+         <i class="circle fa-regular fa-angle-right">
+         </i>
+         Dolor repellendus temporibus autem auibus
+        </li>
+       </ul>
+       <a class="read_more text-decoration-none" href="#">
+        Read More
+        <i class="circle fa-regular fa-angle-right">
+        </i>
+       </a>
+      </div>
+     </div>
+    </div>
+   </div>
+   <figure class="choose-sideshape2 mb-0">
+    <img alt="" class="img-fluid" src="{% static 'important/images/choose-sideshape2.png' %}"/>
+   </figure>
+  </section>
+  <!-- Case Study -->
+  <section class="study-section" id="portfolio">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="study_content">
+          <h5>🚀 Meet Your AI-Powered Workforce</h5>
+          <h2>The Perfect AI Assistant for Every Task</h2>
+          <p class="text-white">
+            From business strategy to creativity, our AI team is built to support, automate, and enhance your workflow effortlessly.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" data-aos="fade-up">
+      <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+        <div class="case-box overlay">
+          <figure class="image mb-0">
+            <img alt="Ezra" class="img-fluid" src="{% static 'myapp/images/employee/1.png' %}" />
+          </figure>
+          <div class="content">
+            <span class="text-white">Business & Strategy AI</span>
+            <h4 class="text-white">Elevate</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+        <div class="case-box overlay">
+          <figure class="image mb-0">
+            <img alt="Rudy" class="img-fluid" src="{% static 'myapp/images/employee/2.png' %}" />
+          </figure>
+          <div class="content">
+            <span class="text-white">Your Tech Savvy AI</span>
+            <h4 class="text-white">Nexara</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+        <div class="case-box overlay">
+          <figure class="image mb-0">
+            <img alt="Einstein" class="img-fluid" src="{% static 'myapp/images/employee/3.png' %}" />
+          </figure>
+          <div class="content">
+            <span class="text-white">Education & Learning AI</span>
+            <h4 class="text-white">Mentor IQ</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lower-images" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+          <div class="case-box overlay">
+            <figure class="image mb-0">
+              <img alt="Kash" class="img-fluid" src="{% static 'myapp/images/employee/4.png' %}" />
+            </figure>
+            <div class="content">
+              <span class="text-white">Wellness</span>
+              <h4 class="text-white">Thrive</h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+          <div class="case-box overlay">
+            <figure class="image mb-0">
+              <img alt="Echo" class="img-fluid" src="{% static 'myapp/images/employee/5.png' %}" />
+            </figure>
+            <div class="content">
+              <span class="text-white">Creative & Content AI</span>
+              <h4 class="text-white">Imagine</h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+          <div class="case-box overlay">
+            <figure class="image mb-0">
+              <img alt="Alden" class="img-fluid" src="{% static 'myapp/images/employee/6.png' %}" />
+            </figure>
+            <div class="content">
+              <span class="text-white">Financial and Legal AI</span>
+              <h4 class="text-white">Keystone</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+          <div class="case-box overlay">
+            <figure class="image mb-0">
+              <img alt="Aria" class="img-fluid" src="{% static 'myapp/images/employee/7.png' %}" />
+            </figure>
+            <div class="content">
+              <span class="text-white">Emotional Support AI</span>
+              <h4 class="text-white">Lumos</h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+          <div class="case-box overlay">
+            <figure class="image mb-0">
+              <img alt="Gideon" class="img-fluid" src="{% static 'myapp/images/employee/8.png' %}" />
+            </figure>
+            <div class="content">
+              <span class="text-white">Productivity & Automation AI</span>
+              <h4 class="text-white">Gideon</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="button mt-5 text-center">
+      <a class="view_all text-decoration-none" href="#pricing">
+        View Plans
+        <i class="circle fa-regular fa-angle-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+  <!-- Testimonial -->
+  <section class="testimonial-section">
+   <div class="container">
+    <div class="row position-relative">
+     <div class="col-12">
+      <div class="heading">
+       <h5>
+        Testimonials
+       </h5>
+       <h2>
+        Hear it From Our Clients
+       </h2>
+      </div>
+      <div class="carousel slide" data-ride="carousel" id="carouselExampleControls">
+       <div class="carousel-inner">
+        <div class="carousel-item active">
+         <div class="testimonial_content">
+          <div class="content-box">
+           <p class="h4">
+            “Quisquam est, qui dolorem ipsum quia dolor sit amet conse aetur, adipisci velit, sed ruia non numquam eius modi temor
+                                        incidunt ut labore et dolore magnam alieuam zuaerat voluta tem nostrum exercitationem”
+           </p>
+           <figure class="testimonial-image mb-0">
+            <img alt="" class="img-fluid" src="{% static 'important/images/testimonial-image.png' %}"/>
+           </figure>
+           <span class="text-size-18">
+            Peter Johns
+           </span>
+           <span class="text-size-16 mb-0">
+            Head of informatics at EBI
+           </span>
+           <div class="box">
+            <figure class="testimonial-comas mb-0">
+             <img alt="" class="img-fluid" src="{% static 'important/images/testimonial-comas.png' %}"/>
+            </figure>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="carousel-item">
+         <div class="testimonial_content">
+          <div class="content-box">
+           <p>
+            “Quisquam est, qui dolorem ipsum quia dolor sit amet conse aetur, adipisci velit, sed ruia non numquam eius modi temor
+                                        incidunt ut labore et dolore magnam alieuam zuaerat voluta tem nostrum exercitationem”
+           </p>
+           <figure class="testimonial-image mb-0">
+            <img alt="" class="img-fluid" src="{% static 'important/images/testimonial-image.png' %}"/>
+           </figure>
+           <span class="text-size-18">
+            Peter Johns
+           </span>
+           <span class="text-size-16 mb-0">
+            Head of informatics at EBI
+           </span>
+           <div class="box">
+            <figure class="testimonial-comas">
+             <img alt="" class="img-fluid" src="{% static 'important/images/testimonial-comas.png' %}"/>
+            </figure>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="pagination-outer">
+        <a class="carousel-control-next" data-slide="next" href="#carouselExampleControls" role="button">
+         <i class="fa-solid fa-angle-right">
+         </i>
+         <span class="sr-only">
+          Next
+         </span>
+        </a>
+        <a class="carousel-control-prev" data-slide="prev" href="#carouselExampleControls" role="button">
+         <i class="fa-solid fa-angle-left">
+         </i>
+         <span class="sr-only">
+          Previous
+         </span>
+        </a>
+       </div>
+      </div>
+     </div>
+    </div>
+    <figure class="mb-0 testimonial-sideimage">
+     <img alt="" class="img-fluid" src="{% static 'important/images/testimonial-sideimage.png' %}"/>
+    </figure>
+   </div>
+   <!-- Partner -->
+   <div class="partner-section">
+    <div class="container">
+     <div class="partner" data-aos="fade-up">
+      <ul class="mb-0 list-unstyled">
+       <li>
+        <figure class="mb-0 partner1 img1">
+         <img alt="" class="img-fluid" src="{% static 'important/images/partner1.png' %}"/>
+        </figure>
+       </li>
+       <li>
+        <figure class="mb-0 partner1 partner2 img2">
+         <img alt="" class="img-fluid" src="{% static 'important/images/partner2.png' %}"/>
+        </figure>
+       </li>
+       <li class="img-mb">
+        <figure class="mb-0 partner1 partner3 img3">
+         <img alt="" class="img-fluid" src="{% static 'important/images/partner3.png' %}"/>
+        </figure>
+       </li>
+       <li>
+        <figure class="mb-0 partner1 partner4 img4">
+         <img alt="" class="img-fluid" src="{% static 'important/images/partner4.png' %}"/>
+        </figure>
+       </li>
+       <li>
+        <figure class="mb-0 partner1 partner5 img5">
+         <img alt="" class="img-fluid" src="{% static 'important/images/partner5.png' %}"/>
+        </figure>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </section>
+  <!--FAQ / Need section-->
+ <section class="faq-section">
+  <div class="container">
+    <div class="row">
+      <!-- Left Column: FAQs -->
+      <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="faq_content" data-aos="fade-right">
+          <h5>FAQs</h5>
+          <h2>Frequently Asked Questions</h2>
+          <div class="faq">
+            <div class="row">
+              <div class="col-12">
+                <div class="accordian-section-inner position-relative">
+                  <div class="accordian-inner">
+                    <div id="accordion1">
+                      
+                      <!-- FAQ 1 -->
+                      <div class="accordion-card">
+                        <div class="card-header" id="headingOne">
+                          <a href="#" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            <h4>❓ What is iRiseUp.ai?</h4>
+                          </a>
+                        </div>
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
+                          <div class="card-body">
+                            <p class="text-size-18 text-left mb-0">
+                              iRiseUp.ai is your all-in-one team of 11 AI-powered assistants—ready to help you with business, marketing, productivity, wellness, education, emotional support, and more. It’s like hiring experts—without the salaries or stress.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- FAQ 2 -->
+                      <div class="accordion-card">
+                        <div class="card-header" id="headingTwo">
+                          <a href="#" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <h4>❓ Do I need technical skills to use this?</h4>
+                          </a>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo">
+                          <div class="card-body">
+                            <p class="text-size-18 text-left mb-0">
+                              Nope! Everything is ready for you. If you can chat, you can use iRiseUp.ai. No setup. No coding. Just smart conversations that actually help.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- FAQ 3 -->
+                      <div class="accordion-card">
+                        <div class="card-header" id="headingThree">
+                          <a href="#" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <h4>❓ Is there a free trial?</h4>
+                          </a>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree">
+                          <div class="card-body">
+                            <p class="text-size-18 text-left mb-0">
+                              Yes! All you have to do is sign up—no credit card required. You’ll get access to Lumos (Emotional Support AI), 8 chats per day, and a risk-free taste of what iRiseUp can do.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- FAQ 4 -->
+                      <div class="accordion-card">
+                        <div class="card-header" id="headingFour">
+                          <a href="#" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            <h4>❓ How many AI assistants do I get?</h4>
+                          </a>
+                        </div>
+                        <div id="collapseFour" class="collapse" aria-labelledby="headingFour">
+                          <div class="card-body">
+                            <p class="text-size-18 text-left mb-0">
+                                Even on the free plan, you get full access to all 11 AI assistants—no upgrades required. Each assistant is designed for a specific task like business, marketing, education, or wellness, so you always get the right help at the right time.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- FAQ 5 -->
+                      <div class="accordion-card faq-mb">
+                        <div class="card-header" id="headingFive">
+                          <a href="#" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            <h4>❓ Can I create my own AI assistant?</h4>
+                          </a>
+                        </div>
+                        <div id="collapseFive" class="collapse" aria-labelledby="headingFive">
+                          <div class="card-body">
+                            <p class="text-size-18 text-left mb-0">
+                              Yes! With the Pro Plan, you can build, customize, and train your very own assistant using your own data. Whether it's client docs, internal SOPs, or FAQs—your AI learns it all.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Contact Form -->
+      <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="need-section">
+            <div class="need_content">
+              <h3>Need any Help?</h3>
+              <p class="text-size-16">Got questions or feedback? Drop us a message—we’re here for you.</p>
+              <form method="post" enctype="multipart/form-data" class="contact-us-form">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group mb-0">
+                      <input class="form_style" name="requester" type="text" placeholder="Your Name" required>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group mb-0">
+                      <input class="form_style" name="email" type="email" placeholder="Your Email" required>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group mb-0">
+                      <input class="form_style" name="subject" type="text" placeholder="Subject" required>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group mb-0">
+                      <textarea class="form_style" name="description" placeholder="Your Message" rows="3" required></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="manage-button text-center">
+                  <button class="submit_now text-decoration-none" type="submit">
+                    Submit Now <i class="circle fa-regular fa-angle-right"></i>
+                  </button>
+                </div>
+              </form>
+              <figure class="faq-image mb-0">
+                <img src="{% static 'important/images/faq-image.png' %}" class="img-fluid" alt="FAQ Image"/>
+              </figure>
+            </div>
+          </div>
+          
+    </div>
+  </div>
+</section>
+
+  <!-- Footer -->
+  <section class="footer-section">
+   <div class="container">
+    <figure class="footer-sideshape mb-0">
+     <img alt="" class="img-fluid" src="{% static 'important/images/footer-sideshape.png' %}"/>
+    </figure>
+    <div class="middle-portion">
+     <div class="row">
+      <div class="col-lg-4 col-md-5 col-sm-6 col-12">
+       <a href="#">
+        <figure class="footer-logo">
+         <img alt="" class="img-fluid" src="{% static 'important/images/logo.png' %}"/>
+        </figure>
+       </a>
+       <p class="text-size-16 footer-text text-white">
+        Ruis aute irure dolor in reprehenderit in volu velit ese ciu nulla pariatur excepteur sint oc aecat curidatat nona...
+       </p>
+       <ul class="list-unstyled mb-0 social-icons">
+        <li class="circle">
+         <a href="#">
+          <i class="fa-brands fa-facebook-f">
+          </i>
+         </a>
+        </li>
+        <li class="circle">
+         <a href="#">
+          <i class="fa-brands fa-twitter">
+          </i>
+         </a>
+        </li>
+        <li class="circle">
+         <a href="#">
+          <i class="fa-brands fa-linkedin-in">
+          </i>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <div class="col-lg-2 col-md-3 col-sm-12 col-12 d-md-block d-none">
+       <div class="links">
+        <h4 class="heading text-white">
+         Useful Links
+        </h4>
+        <ul class="list-unstyled mb-0">
+         <li>
+          <i class="fa-solid fa-angle-right">
+          </i>
+          <a class="text-size-16 text text-decoration-none" href="#">
+           Home
+          </a>
+         </li>
+         <li>
+          <i class="fa-solid fa-angle-right">
+          </i>
+          <a class="text-size-16 text text-decoration-none" href="#">
+           About
+          </a>
+         </li>
+         <li>
+          <i class="fa-solid fa-angle-right">
+          </i>
+          <a class="text-size-16 text text-decoration-none" href="#">
+           Services
+          </a>
+         </li>
+         <li>
+          <i class="fa-solid fa-angle-right">
+          </i>
+          <a class="text-size-16 text text-decoration-none" href="#">
+           Projects
+          </a>
+         </li>
+         <li>
+          <i class="fa-solid fa-angle-right">
+          </i>
+          <a class="text-size-16 text text-decoration-none" href="#">
+           Contact us
+          </a>
+         </li>
+        </ul>
+       </div>
+      </div>
+      <div class="col-lg-3 col-md-2 col-sm-12 col-12 d-lg-block d-none">
+       <div class="links list-pd">
+        <h4 class="heading text-white">
+         Our Services
+        </h4>
+        <ul class="list-unstyled mb-0">
+         <li>
+          <i class="fa-solid fa-angle-right">
+          </i>
+          <a class="text-size-16 text text-decoration-none" href="#">
+           Robotic Automation
+          </a>
+         </li>
+         <li>
+          <i class="fa-solid fa-angle-right">
+          </i>
+          <a class="text-size-16 text text-decoration-none" href="#">
+           Testimonial
+          </a>
+         </li>
+         <li>
+          <i class="fa-solid fa-angle-right">
+          </i>
+          <a class="text-size-16 text text-decoration-none" href="#">
+           Predective Analysis
+          </a>
+         </li>
+         <li>
+          <i class="fa-solid fa-angle-right">
+          </i>
+          <a class="text-size-16 text text-decoration-none" href="#">
+           Our Team
+          </a>
+         </li>
+         <li>
+          <i class="fa-solid fa-angle-right">
+          </i>
+          <a class="text-size-16 text text-decoration-none" href="#">
+           Faq
+          </a>
+         </li>
+        </ul>
+       </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6 col-12 d-sm-block">
+       <div class="icon">
+        <h4 class="heading text-white">
+         Contact us
+        </h4>
+        <ul class="list-unstyled mb-0">
+         <li class="text">
+          <i class="fa fa-phone fa-icon footer-location">
+          </i>
+          <a class="mb-0 text text-decoration-none text-size-16" href="tel:+4733378901">
+           +61 3 8376 6284
+          </a>
+         </li>
+         <li class="text">
+          <i class="fa fa-envelope fa-icon footer-location">
+          </i>
+          <a class="mb-0 text text-decoration-none text-size-16" href="mailto:info@repay.com">
+           Info@Artelligence.com
+          </a>
+         </li>
+         <li class="text">
+          <i class="fa-solid fa-location-dot footer-location footer-location3">
+          </i>
+          <p class="text-size-16">
+           121 King Street, Melbourne 3000 Australia
+          </p>
+         </li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div id="fixed-form-container">
+     <div class="image">
+      <figure class="footer-image mb-0">
+       <img alt="" class="img-fluid" src="{% static 'important/images/footer-image.png' %}"/>
+      </figure>
+     </div>
+     <div class="body">
+      <form action="./contact-form.php" id="contactpage1" method="POST">
+       <div class="form-group">
+        <input class="form-control" name="name" placeholder="Your Name:" type="text"/>
+       </div>
+       <div class="form-group">
+        <input class="form-control" name="emailid" placeholder="Your Email:" type="email"/>
+       </div>
+       <div class="form-group">
+        <input class="form-control" name="phone" placeholder="Phone:" type="tel"/>
+       </div>
+       <div class="form-group">
+        <textarea class="form_style" name="msg" placeholder="Message" rows="3"></textarea>
+       </div>
+       <button class="submit_now text-decoration-none" type="submit">
+        Submit Now
+       </button>
+      </form>
+     </div>
+    </div>
+    <div class="copyright">
+     <div class="row">
+      <div class="col-12">
+       <p class="mb-0 text-white">
+        Copyright 2023, Artelligence.com All Rights Reserved.
+       </p>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+  <!-- Latest compiled JavaScript -->
+  <script src="{% static 'important/js/jquery-3.6.0.min.js' %}">
+  </script>
+  <script src="{% static 'important/js/bootstrap.min.js' %}">
+  </script>
+  <script src="{% static 'important/js/video_link.js' %}">
+  </script>
+  <script src="{% static 'important/js/video.js' %}">
+  </script>
+  <script src="{% static 'important/js/counter.js' %}">
+  </script>
+  <script src="{% static 'important/js/custom.js' %}">
+  </script>
+  <script src="{% static 'important/js/animation_links.js' %}">
+  </script>
+  <script src="{% static 'important/js/animation.js' %}">
+  </script>
+ </body>
+</html>

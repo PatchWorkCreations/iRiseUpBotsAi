@@ -264,3 +264,11 @@ class BlogCommentForm (forms.ModelForm):
             'content': forms.Textarea(attrs={'placeholder': 'Write your comment here...'}),
         }
 
+# forms.py
+from django import forms
+
+class SubmitRequestForm(forms.Form):
+    requester = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    subject = forms.CharField(max_length=200)
+    description = forms.CharField(widget=forms.Textarea)
