@@ -267,7 +267,7 @@ class BlogCommentForm (forms.ModelForm):
 # forms.py
 from django import forms
 
-class SubmitRequestForm(forms.Form):
+class SubmitRequestFormLanding(forms.Form):
     requester = forms.CharField(max_length=100)
     email = forms.EmailField()
     subject = forms.CharField(max_length=200)

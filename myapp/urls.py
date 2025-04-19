@@ -238,4 +238,7 @@ urlpatterns = [
     path('generate-urls/', views.generate_urls_py, name='generate_urls'),
 
     path('iriseup/', views.landing_for_iriseup, name='landing_for_iriseup'),
+    path('about-us/', views.about_us, name='about_us'),
+    path('service/', views.service, name='service'),
+    path('connect-with-us/', views.iriseup_contact_us, name='iriseup_contact_us'),
 ]

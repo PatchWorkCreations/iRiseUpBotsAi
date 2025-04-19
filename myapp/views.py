@@ -4753,9 +4753,14 @@ urlpatterns = [
     return HttpResponse(urls_py, content_type='text/plain')
 
 
+
+
+# 🔍 Initialize logger
+logger = logging.getLogger(__name__)
+
 import logging
 from django.shortcuts import render
-from .forms import SubmitRequestForm
+from .forms import SubmitRequestFormLanding
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -4764,16 +4769,19 @@ from django.utils.html import strip_tags
 logger = logging.getLogger(__name__)
 
 def landing_for_iriseup(request):
-    form = SubmitRequestForm()
+    form = SubmitRequestFormLanding()
 
     if request.method == 'POST':
-        form = SubmitRequestForm(request.POST)
+        form = SubmitRequestFormLanding(request.POST)
         if form.is_valid():
             try:
                 requester = form.cleaned_data['requester']
                 subject = form.cleaned_data['subject']
                 description = form.cleaned_data['description']
                 email = form.cleaned_data['email']
+
+                # ✅ Add fallback query_type to avoid template errors
+                query_type = "General Inquiry"
 
                 logger.info(f"📨 New Contact Form Submitted by {requester} ({email})")
 
@@ -4784,6 +4792,7 @@ def landing_for_iriseup(request):
                     'subject': subject,
                     'description': description,
                     'email': email,
+                    'query_type': query_type,  # ✅ Add query_type to template context
                 })
                 plain_message = strip_tags(html_message)
                 from_email = 'iriseupgroupofcompanies@gmail.com'
@@ -4806,11 +4815,11 @@ def landing_for_iriseup(request):
                     'requester': requester,
                     'subject': subject,
                     'description': description,
+                    'query_type': query_type  # ✅ Optional: include in success page context
                 })
 
             except Exception as e:
                 logger.error(f"❌ Error sending contact email: {e}", exc_info=True)
-                # Optional: show a message or fallback error template
                 return render(request, 'myapp/aibots/settings/email_error.html', {
                     'error': str(e),
                     'form': form
@@ -4820,3 +4829,192 @@ def landing_for_iriseup(request):
             logger.warning("⚠️ Form is invalid.")
     
     return render(request, 'myapp/aibots/iriseupai/landing_page.html', {'form': form})
+
+
+def about_us(request):
+    form = SubmitRequestFormLanding()
+
+    if request.method == 'POST':
+        form = SubmitRequestFormLanding(request.POST)
+        if form.is_valid():
+            try:
+                requester = form.cleaned_data['requester']
+                subject = form.cleaned_data['subject']
+                description = form.cleaned_data['description']
+                email = form.cleaned_data['email']
+
+                # ✅ Add fallback query_type to avoid template errors
+                query_type = "General Inquiry"
+
+                logger.info(f"📨 New Contact Form Submitted by {requester} ({email})")
+
+                # Email content
+                email_subject = f"New Contact: {subject}"
+                html_message = render_to_string('myapp/quiz/support/submit_request_email.html', {
+                    'requester': requester,
+                    'subject': subject,
+                    'description': description,
+                    'email': email,
+                    'query_type': query_type,  # ✅ Add query_type to template context
+                })
+                plain_message = strip_tags(html_message)
+                from_email = 'iriseupgroupofcompanies@gmail.com'
+                to = 'juliavictorio16@gmail.com'
+
+                logger.debug(f"Sending email:\nSubject: {email_subject}\nTo: {to}")
+
+                send_mail(
+                    email_subject,
+                    plain_message,
+                    from_email,
+                    [to],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+
+                logger.info("✅ Contact email sent successfully.")
+
+                return render(request, 'myapp/aibots/settings/submit_request_success.html', {
+                    'requester': requester,
+                    'subject': subject,
+                    'description': description,
+                    'query_type': query_type  # ✅ Optional: include in success page context
+                })
+
+            except Exception as e:
+                logger.error(f"❌ Error sending contact email: {e}", exc_info=True)
+                return render(request, 'myapp/aibots/settings/email_error.html', {
+                    'error': str(e),
+                    'form': form
+                })
+
+        else:
+            logger.warning("⚠️ Form is invalid.")
+
+    return render(request, 'myapp/aibots/iriseupai/about_us.html', {'form': form})
+
+
+def service(request):
+    form = SubmitRequestFormLanding()
+
+    if request.method == 'POST':
+        form = SubmitRequestFormLanding(request.POST)
+        if form.is_valid():
+            try:
+                requester = form.cleaned_data['requester']
+                subject = form.cleaned_data['subject']
+                description = form.cleaned_data['description']
+                email = form.cleaned_data['email']
+
+                # ✅ Add fallback query_type to avoid template errors
+                query_type = "General Inquiry"
+
+                logger.info(f"📨 New Contact Form Submitted by {requester} ({email})")
+
+                # Email content
+                email_subject = f"New Contact: {subject}"
+                html_message = render_to_string('myapp/quiz/support/submit_request_email.html', {
+                    'requester': requester,
+                    'subject': subject,
+                    'description': description,
+                    'email': email,
+                    'query_type': query_type,  # ✅ Add query_type to template context
+                })
+                plain_message = strip_tags(html_message)
+                from_email = 'iriseupgroupofcompanies@gmail.com'
+                to = 'juliavictorio16@gmail.com'
+
+                logger.debug(f"Sending email:\nSubject: {email_subject}\nTo: {to}")
+
+                send_mail(
+                    email_subject,
+                    plain_message,
+                    from_email,
+                    [to],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+
+                logger.info("✅ Contact email sent successfully.")
+
+                return render(request, 'myapp/aibots/settings/submit_request_success.html', {
+                    'requester': requester,
+                    'subject': subject,
+                    'description': description,
+                    'query_type': query_type  # ✅ Optional: include in success page context
+                })
+
+            except Exception as e:
+                logger.error(f"❌ Error sending contact email: {e}", exc_info=True)
+                return render(request, 'myapp/aibots/settings/email_error.html', {
+                    'error': str(e),
+                    'form': form
+                })
+
+        else:
+            logger.warning("⚠️ Form is invalid.")
+            
+    return render(request, 'myapp/aibots/iriseupai/service.html', {'form': form})
+
+
+def iriseup_contact_us(request):
+    form = SubmitRequestFormLanding()
+
+    if request.method == 'POST':
+        form = SubmitRequestFormLanding(request.POST)
+        if form.is_valid():
+            try:
+                requester = form.cleaned_data['requester']
+                subject = form.cleaned_data['subject']
+                description = form.cleaned_data['description']
+                email = form.cleaned_data['email']
+
+                # ✅ Add fallback query_type to avoid template errors
+                query_type = "General Inquiry"
+
+                logger.info(f"📨 New Contact Form Submitted by {requester} ({email})")
+
+                # Email content
+                email_subject = f"New Contact: {subject}"
+                html_message = render_to_string('myapp/quiz/support/submit_request_email.html', {
+                    'requester': requester,
+                    'subject': subject,
+                    'description': description,
+                    'email': email,
+                    'query_type': query_type,  # ✅ Add query_type to template context
+                })
+                plain_message = strip_tags(html_message)
+                from_email = 'iriseupgroupofcompanies@gmail.com'
+                to = 'juliavictorio16@gmail.com'
+
+                logger.debug(f"Sending email:\nSubject: {email_subject}\nTo: {to}")
+
+                send_mail(
+                    email_subject,
+                    plain_message,
+                    from_email,
+                    [to],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+
+                logger.info("✅ Contact email sent successfully.")
+
+                return render(request, 'myapp/aibots/settings/submit_request_success.html', {
+                    'requester': requester,
+                    'subject': subject,
+                    'description': description,
+                    'query_type': query_type  # ✅ Optional: include in success page context
+                })
+
+            except Exception as e:
+                logger.error(f"❌ Error sending contact email: {e}", exc_info=True)
+                return render(request, 'myapp/aibots/settings/email_error.html', {
+                    'error': str(e),
+                    'form': form
+                })
+
+        else:
+            logger.warning("⚠️ Form is invalid.")
+            
+    return render(request, 'myapp/aibots/iriseupai/contact_us.html', {'form': form})

@@ -37,65 +37,464 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" rel="stylesheet"/>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
  </head>
+ <style>
+  .pricing-card.standout {
+    background: linear-gradient(135deg, #0056b3, #003c82); /* Darker Blue for Contrast */
+    color: white;
+}
+
+/* Ensure all text inside Pro Plan is readable */
+.pricing-card.standout h3, 
+.pricing-card.standout .price,
+.pricing-card.standout .pricing-features li {
+    color: white !important; /* Force white for visibility */
+}
+
+/* Increase Font Weight for Readability */
+.pricing-card.standout h3 {
+    font-weight: 800; /* Make Title Stand Out */
+}
+
+/* Adjust Feature List Readability */
+.pricing-card.standout .pricing-features li i {
+    color: #ffcc00; /* Gold Checkmarks for Visibility */
+}
+
+/* Adjust the Max AI Power Badge */
+.highlighted-badge {
+    background-color: #ffcc00;
+    color: #333;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+
+/* General Pricing Section */
+.pricing-section {
+    text-align: center;
+    padding: 80px 0;
+    background: #f8f9fa;
+}
+
+.pricing-title {
+    font-size: 2.8rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 15px;
+}
+
+.pricing-subtext {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 35px;
+}
+
+/* Pricing Container */
+.pricing-container {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    flex-wrap: wrap;
+}
+
+/* Pricing Card */
+.pricing-card {
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.08);
+    width: 340px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    border-top: 5px solid transparent;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Plan Titles */
+.pricing-card h3 {
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+/* Price */
+.price {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+/* Discounted Price */
+.discounted-price {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.original-price {
+    font-size: 1.2rem;
+    text-decoration: line-through;
+    color: #888;
+    margin-left: 8px;
+}
+
+/* Savings Badge */
+.savings-badge {
+    background-color: #28a745;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+/* Features List */
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin-top: 20px;
+}
+
+.pricing-features li {
+    font-size: 1.1rem;
+    color: #444;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.pricing-features li i {
+    color: #28a745;
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+/* CTA Button */
+.btn {
+    display: inline-block;
+    padding: 14px 22px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+}
+
+/* Money-Back Guarantee */
+.money-back {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 20px;
+}
+
+ 
+/* Popular Badge */
+.badge.most-popular {
+    background-color: #ffcc00;
+    color: #333;
+    font-weight: bold;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+/* Price */
+.price {
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.price-month {
+    font-size: 1.2rem;
+    font-weight: normal;
+    opacity: 0.8;
+}
+
+/* Max AI Power Badge */
+.highlighted-badge {
+    background-color: #28a745;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+/* Features List */
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin: 20px auto;
+    max-width: 250px;
+}
+
+.pricing-features li {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.pricing-features li i {
+    color: #28a745;
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1055;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: rgba(0, 0, 0, 0.6); /* Darker background */
+    backdrop-filter: blur(5px); /* Smooth blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease-in-out;
+    padding: 10px; /* Prevents overflowing content on smaller screens */
+}
+
+/* 🖼️ Modal Content - Adjusts to Screen Size */
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px; /* Default max-width for desktop */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeInUp 0.4s ease-in-out;
+    margin-top: 90px;
+}
+
+/* 🔄 Smooth Modal Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 🌟 Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f3f4f6;
+    margin-top: 60px;
+}
+
+.modal-header h2 {
+    font-size: 1.4rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* ❌ Close Button */
+.modal-header .close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #999;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.modal-header .close:hover {
+    color: #ff4757; /* Red on hover */
+}
+
+/* 📌 Responsive Form Styling */
+.form-container {
+    padding: 15px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* 🏗️ Form Inputs */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* 🖥️ Input Fields */
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+}
+
+/* 💡 Highlight Input on Focus */
+.form-control:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* 🔽 Country Dropdown */
+.select2-container {
+    width: 100% !important;
+}
+
+/* 💳 Card Container */
+#card-container {
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Pay Now Button */
+.btn-submit {
+    background: linear-gradient(90deg, #28a745, #218838);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
+}
+
+/* ✨ Hover Effect */
+.btn-submit:hover {
+    background: linear-gradient(90deg, #218838, #1e7e34);
+    transform: translateY(-2px);
+}
+
+/* 💳 Card Icons */
+.card-icons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.card-icons img {
+    width: 45px;
+    transition: transform 0.3s ease;
+}
+
+/* ✨ Hover Effect for Icons */
+.card-icons img:hover {
+    transform: scale(1.1);
+}
+
+/* 📱 Mobile Optimizations */
+@media (max-width: 768px) {
+    .modal {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        align-items: flex-start;
+        overflow-y: auto; /* Enable scrolling for smaller screens */
+    }
+
+    .modal-content {
+        width: 100%;
+        max-width: none;
+        height: 100vh; /* Full height */
+        border-radius: 0; /* No rounded edges for fullscreen */
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .modal-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .btn-submit {
+        font-size: 1.1rem;
+    }
+}
+
+/* 📺 Full-Screen Optimizations */
+@media (min-width: 1200px) {
+    .modal-content {
+        max-width: 550px;
+        padding: 30px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.6rem;
+    }
+
+    .form-container {
+        padding: 20px;
+    }
+}
+ </style>
  <body>
   <!--Header  -->
   <div class="banner_outer">
-    <header class="header">
-        <div class="container-fluid">
-          <nav class="navbar navbar-expand-lg navbar-light">
-            <a class="navbar-brand" href="{% url 'iriseupai_landing' %}">
-              <figure class="mb-0 banner-logo">
-                <img alt="Logo" class="img-fluid" src="{% static 'assets/images/logo2.png' %}"/>
-              </figure>
-            </a>
-            <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
-              <span class="navbar-toggler-icon"></span>
-              <span class="navbar-toggler-icon"></span>
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                  <a class="nav-link" href="{% url 'iriseupai_landing' %}">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'iriseupai_landing' %}#about">About</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'iriseupai_landing' %}#pricing">Services</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'iriseupai_landing' %}#portfolio">Projects</a>
-                </li>
-                <li class="nav-space nav-item dropdown">
-                  <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle dropdown-color navbar-text-color" data-toggle="dropdown" href="#" id="navbarDropdown" role="button">
-                    Pages
-                  </a>
-                  <div class="dropdown-menu drop-down-content">
-                    <ul class="list-unstyled drop-down-pages">
-                      <li class="nav-item">
-                        <a class="dropdown-item nav-link" href="{% url 'iriseupai_landing' %}#team">Teams</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="dropdown-item nav-link" href="{% url 'iriseupai_landing' %}#faq">Faq's</a>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-                <li class="nav-space nav-item">
-                  <a class="nav-link" href="{% url 'contactus' %}">Contact us</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link lets_talk" href="{% url 'iriseupai_landing' %}#free-trial-chat">
-                    Let's Talk
-                    <i class="circle fa-regular fa-angle-right"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-        </div>
-      </header>
+    {% include 'myapp/aibots/iriseupai/header.html' %}
+
       
    <figure class="banner-sideshape mb-0">
     <img alt="" class="img-fluid" src="{% static 'important/images/banner-sideshape.png' %}"/>
@@ -107,15 +506,16 @@
           <div class="col-lg-7 col-md-12 col-sm-12 col-12">
             <div class="banner_content">
               <h1 class="text-white">
-                🚀 Real AI Help—Without the Hype
+                🚀 Rise Ahead—With AI That Actually Works
               </h1>
               <p class="text-white">
-                Meet <strong>iRiseUp.ai</strong>: Your on-demand AI assistant for business, wellness, and everything in between. No jargon. No fluff. Just results.
+                Meet <strong>iRiseUp.AI</strong>: Built for visionaries, go-getters, and businesses who don’t have time to waste. Real AI. Real results. No hype, just help.
               </p>
               <ul class="text-white text-size-18 pl-4">
-                <li>✅ Expert insights on tap—no PhD required</li>
-                <li>⏳ Save time by letting AI do the thinking</li>
-                <li>💸 No subscriptions. One-time access. Zero stress.</li>
+                <li>✅ Personalized AI strategists that evolve with your needs</li>
+                <li>⏳ Save hours—let AI handle the thinking, planning, and prep</li>
+                <li>🌐 Speak your language—voice-enabled, multilingual & intuitive</li>
+                <li>💸 One-time access. Lifetime leverage. Zero overwhelm.</li>
               </ul>
               <div class="banner-button mt-4">
                 <a class="button1 lets_talk text-decoration-none" href="#free-trial-chat">
@@ -127,8 +527,14 @@
                   <i class="circle fa-regular fa-angle-right"></i>
                 </a>
               </div>
+              <div class="mt-4">
+                <p class="text-white font-italic" style="font-size: 1rem;">
+                  ⏳ <em>Thousands are already unlocking their next big move with iRiseUp. Will you rise—</em> or be left watching?
+                </p>
+              </div>
             </div>
           </div>
+          
           <div class="col-lg-5 col-md-12 col-sm-12 col-12">
             <div class="banner_wrapper" data-aos="fade-right">
               <figure class="mb-0 banner-image">
@@ -146,67 +552,63 @@
   </div>
   <!-- About us -->
   <section class="about-section">
-   <div class="container">
-    <div class="row">
-     <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-      <div class="about_wrapper">
-       <figure class="mb-0 about-image1">
-        <img alt="" class="img-fluid" src="{% static 'important/images/about-image1.png' %}"/>
-       </figure>
-       <figure class="mb-0 about-image2">
-        <img alt="" class="img-fluid" src="{% static 'important/images/about-image2.png' %}"/>
-       </figure>
-      </div>
-     </div>
-     <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-      <div class="about_content" data-aos="fade-right">
-       <h5>
-        About us
-       </h5>
-       <h2>
-        Empowering People By Keeping Them Well
-       </h2>
-       <p class="text-size-18">
-        Repellendus autem ruibusdam et aut officiis debitis aut re necessitatibus saepe eveniet ut et voluptates repudianda sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.
-       </p>
-       <div class="about-lowercontent">
-        <div class="image">
-         <figure class="mb-0 icon">
-          <img alt="" class="img-fluid" src="{% static 'important/images/about-customer.png' %}"/>
-         </figure>
-        </div>
-        <div class="content">
-         <h4>
-          100% Customers Satisfaction
-         </h4>
-         <p class="text-size-18">
-          Amet minim mollit non deserunt ullamco est sit aliua dolor do amet sint.
-         </p>
-        </div>
-        <div class="image">
-         <figure class="mb-0 icon">
-          <img alt="" class="img-fluid" src="{% static 'important/images/about-quality.png' %}"/>
-         </figure>
-        </div>
-        <div class="content">
-         <h4>
-          Quality Assurance Guarantee
-         </h4>
-         <p class="text-size-18 text">
-          Velit officia consequat duis enim velit mollie assu omnis dolor repellendus.
-         </p>
-        </div>
+    <div class="container">
+       <div class="row">
+          <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+             <div class="about_wrapper">
+                <figure class="mb-0 about-image1">
+                   <img alt="AI working illustration" class="img-fluid" src="{% static 'important/images/about-image1.png' %}"/>
+                </figure>
+                <figure class="mb-0 about-image2">
+                   <img alt="Team collaboration AI" class="img-fluid" src="{% static 'important/images/about-image2.png' %}"/>
+                </figure>
+             </div>
+          </div>
+          <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+             <div class="about_content" data-aos="fade-right">
+                <h5>About iRiseUp.AI</h5>
+                <h2>AI that Actually Helps—Built for Real Life</h2>
+                <p class="text-size-18">
+                   At <strong>iRiseUp.AI</strong>, we’re not here to impress you with buzzwords—we're here to <em>lighten your load</em>. Whether you're scaling a business, navigating your wellness journey, or juggling life’s chaos, our AI Strategists step in with clarity, support, and smarts.
+                </p>
+                <p class="text-size-18">
+                   This isn’t just another AI tool. It’s your second brain. Your calm in the storm. Your productivity partner that never sleeps.
+                </p>
+                <div class="about-lowercontent">
+                   <div class="image">
+                      <figure class="mb-0 icon">
+                         <img alt="" class="img-fluid" src="{% static 'important/images/about-customer.png' %}"/>
+                      </figure>
+                   </div>
+                   <div class="content">
+                      <h4>Trusted by Humans, Not Just Techies</h4>
+                      <p class="text-size-18">
+                         You don’t need to “speak tech” to get real results. Just type, talk, and let your strategist handle the rest.
+                      </p>
+                   </div>
+                   <div class="image">
+                      <figure class="mb-0 icon">
+                         <img alt="" class="img-fluid" src="{% static 'important/images/about-quality.png' %}"/>
+                      </figure>
+                   </div>
+                   <div class="content">
+                      <h4>Always Available. Never Overwhelmed.</h4>
+                      <p class="text-size-18 text">
+                         Your strategist won’t ghost you, burn out, or charge by the hour. It just shows up, every time.
+                      </p>
+                   </div>
+                </div>
+                <a class="read_more text-decoration-none" href="#free-trial-chat">
+                   Start Free—Feel the Difference
+                   <i class="circle fa-regular fa-angle-right"></i>
+                </a>
+                <p class="mt-3 text-size-18" style="color:#FF7A61;"><em>Thousands are already getting ahead. Don’t be the one still figuring it out later.</em></p>
+             </div>
+          </div>
        </div>
-       <a class="read_more text-decoration-none" href="#">
-        Read More
-        <i class="circle fa-regular fa-angle-right">
-        </i>
-       </a>
-      </div>
-     </div>
     </div>
-   </div>
-  </section>
+ </section>
+ 
   <!-- Services -->
   <section class="service-section position-relative" id="about">
   <div class="container">
@@ -292,62 +694,59 @@
 </section>
 
 
-  <!-- Choose -->
-  <section class="choose-section">
-   <div class="container">
+<section class="choose-section">
+  <div class="container">
     <figure class="choose-sideshape mb-0">
-     <img alt="" class="img-fluid" src="{% static 'important/images/choose-sideshape.png' %}"/>
+      <img alt="" class="img-fluid" src="{% static 'important/images/choose-sideshape.png' %}" />
     </figure>
     <div class="row">
-     <div class="col-lg-6 col-md-12 col-sm-12 col-12 order-lg-1 order-2">
-      <div class="choose_wrapper">
-       <figure class="mb-0 choose-image">
-        <img alt="" class="" src="{% static 'important/images/choose-image.png' %}"/>
-       </figure>
+      <div class="col-lg-6 col-md-12 col-sm-12 col-12 order-lg-1 order-2">
+        <div class="choose_wrapper">
+          <figure class="mb-0 choose-image">
+            <img alt="Why Choose iRiseUp AI" class="img-fluid" src="{% static 'important/images/choose-image.png' %}" />
+          </figure>
+        </div>
       </div>
-     </div>
-     <div class="col-lg-6 col-md-12 col-sm-12 col-12 order-lg-2 order-1">
-      <div class="choose_content" data-aos="fade-right">
-       <h5>
-        Why Choose Us
-       </h5>
-       <h2 class="text-white">
-        Get Closer Look How Business Develop in AI Data Analysis
-       </h2>
-       <p class="text-white text-size-18">
-        Consectetur adipiscing elit sed do eiusmod tempor in 
-                        labore et dolore magna aliqua ruis ipsum suspendisse ultrices gravida sit amet.
-       </p>
-       <ul class="list-unstyled mb-0">
-        <li class="text-white text text-size-18">
-         <i class="circle fa-regular fa-angle-right">
-         </i>
-         Quis autem vel eum iure reprehenderit aui
-        </li>
-        <li class="text-white text text-size-18">
-         <i class="circle fa-regular fa-angle-right">
-         </i>
-         Suscipit laboriosam nisi rut aliuid eum iure moli
-        </li>
-        <li class="text-white text text1 text-size-18">
-         <i class="circle fa-regular fa-angle-right">
-         </i>
-         Dolor repellendus temporibus autem auibus
-        </li>
-       </ul>
-       <a class="read_more text-decoration-none" href="#">
-        Read More
-        <i class="circle fa-regular fa-angle-right">
-        </i>
-       </a>
+      <div class="col-lg-6 col-md-12 col-sm-12 col-12 order-lg-2 order-1">
+        <div class="choose_content" data-aos="fade-right">
+          <h5>Why Choose Us</h5>
+          <h2 class="text-white">
+            Not Just Smarter. Kinder. Quicker. Actually Useful.
+          </h2>
+          <p class="text-white text-size-18">
+            We built iRiseUp.AI to feel less like a tool—and more like a teammate. Whether you’re brainstorming your next product, writing marketing copy, or just feeling stuck, your Strategist listens, learns, and delivers.
+          </p>
+          <ul class="list-unstyled mb-0">
+            <li class="text-white text text-size-18">
+              <i class="circle fa-regular fa-angle-right"></i>
+              ✨ Personalized AI that adapts to *you*—not the other way around
+            </li>
+            <li class="text-white text text-size-18">
+              <i class="circle fa-regular fa-angle-right"></i>
+              💬 Easy chat interface anyone can use—even your grandma
+            </li>
+            <li class="text-white text text1 text-size-18">
+              <i class="circle fa-regular fa-angle-right"></i>
+              ⚡ Lightning-fast answers, strategies, and content—no burnout, ever
+            </li>
+          </ul>
+          <a class="read_more text-decoration-none" href="#free-trial-chat">
+            Try the Experience
+            <i class="circle fa-regular fa-angle-right"></i>
+          </a>
+          <p class="mt-3 text-white text-size-18">
+            <em>Still waiting for the “right time” to explore AI?</em><br>
+            The right time is *before* your competition does.
+          </p>
+        </div>
       </div>
-     </div>
     </div>
-   </div>
-   <figure class="choose-sideshape2 mb-0">
-    <img alt="" class="img-fluid" src="{% static 'important/images/choose-sideshape2.png' %}"/>
-   </figure>
-  </section>
+  </div>
+  <figure class="choose-sideshape2 mb-0">
+    <img alt="" class="img-fluid" src="{% static 'important/images/choose-sideshape2.png' %}" />
+  </figure>
+</section>
+
   <!-- Case Study -->
   <section class="study-section" id="portfolio">
   <div class="container">
@@ -599,6 +998,149 @@
     </div>
    </div>
   </section>
+
+                            
+<section id="pricing" class="pricing-section">
+  <div class="container">
+      <h2 class="pricing-title">💰 Simple & Transparent Pricing</h2>
+      <p class="pricing-subtext">No hidden fees, no surprises—just powerful AI at your fingertips.</p>
+
+      <div class="pricing-container">
+           
+          <div class="pricing-card free-plan">
+              <h3>🚀 Start for Free – No Risk!</h3>
+              <p class="price free-text">Free <span class="small-text">– Your AI Trial Awaits!</span></p>
+              <p>Not sure if AI is for you? Dip your toes in with our FREE TRIAL—no strings attached.  </p>
+              <ul class="pricing-features">
+                  <li><i class="fas fa-check-circle"></i> Limited AI Access – Try AI power</li>
+                  <li><i class="fas fa-check-circle"></i> Up to 8 Chats/Day – Great for casual use</li>
+                  <li><i class="fas fa-check-circle"></i> 1 AI Assistant – Meet Lumos, your first AI guide</li>
+              </ul>
+              <a href="{% url 'signup' %}" class="btn btn-secondary">Try for Free</a>
+          </div>
+
+           
+          <div class="pricing-card pro-plan standout">
+              <div class="badge most-popular">🔥 Most Popular</div>
+              <h3>💡 Pro Plan – Your AI Powerhouse</h3>
+              <p class="price">$20<span class="price-month">/month</span></p>
+              <span class="highlighted-badge">Max AI Power Unlocked</span>
+              <ul class="pricing-features">
+                  <li><i class="fas fa-check-circle"></i> Full AI Access (All 8 Assistants)</li>
+                  <li><i class="fas fa-check-circle"></i> Unlimited Chats – No limits, ask anytime</li>
+                  <li><i class="fas fa-check-circle"></i> Priority Support – AI + Human help</li>
+              </ul>
+              <a href="#" class="btn btn-primary standout-btn open-checkout" data-plan="pro" data-price="$20/month">🚀 Unlock Full AI Access</a>
+          </div>
+          
+
+             
+          <div class="pricing-card one-year-plan">
+              <h3>🏆 1-Year Access – Best Long-Term Value!</h3>
+              <p class="price">
+                  <span class="discounted-price">$127</span> 
+                  <span class="original-price">$468</span> 
+                  <span class="savings-badge">You Save 73%!</span>
+              </p>
+              <ul class="pricing-features">
+                  <li><i class="fas fa-check-circle"></i> Full AI Access for 12 Months</li>
+                  <li><i class="fas fa-check-circle"></i> No Monthly Fees – Pay once, enjoy a year</li>
+                  <li><i class="fas fa-check-circle"></i> All Future Updates Included</li>
+                  <li><i class="fas fa-check-circle"></i> Priority Customer Support</li>
+              </ul>
+              <a href="#" class="btn btn-primary open-checkout" data-plan="one-year" data-price="$127 one-time">Get 1-Year Access & Save!</a>
+              
+          </div>
+      </div>
+
+      <p class="money-back">✔️ 14-Day Money-Back Guarantee – Try any plan risk-free!</p>
+  </div>
+</section>
+<!-- Checkout Modal -->
+<!-- Checkout Modal -->
+<div id="checkout-modal" class="modal" style="display:none;">
+  <div class="modal-content">
+      <div class="modal-header">
+          <span class="close-modal">&times;</span>
+          <h2>Checkout</h2>
+      </div>
+
+      <h3><span style="color: #5860F8;">91% of users</span> are satisfied with the plan and stay with us after its completion</h3>
+
+      <!-- Payment Form (Visible Immediately) -->
+      <div id="card-payment">
+          <h3 style="text-align: center;">Pay with Card</h3>
+
+          <div class="card-icons" style="text-align: center;">
+              <img src="{% static 'myapp/images/card_icons/1.svg' %}" alt="Card Icon 1" />
+              <img src="{% static 'myapp/images/card_icons/2.svg' %}" alt="Card Icon 2" />
+              <img src="{% static 'myapp/images/card_icons/3.svg' %}" alt="Card Icon 3" />
+              <img src="{% static 'myapp/images/card_icons/4.svg' %}" alt="Card Icon 4" />
+              <img src="{% static 'myapp/images/card_icons/5.svg' %}" alt="Card Icon 5" />
+              <img src="{% static 'myapp/images/card_icons/6.svg' %}" alt="Card Icon 6" />
+          </div>
+
+          <div class="form-container">
+              <h2>Fill Out Your Information</h2>
+              <form id="payment-form">
+                  <input type="hidden" id="selected-plan" name="plan">
+
+                  <div class="form-group">
+                      <label for="givenName">First Name</label>
+                      <input type="text" id="givenName" name="givenName" placeholder="e.g. John" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="familyName">Last Name</label>
+                      <input type="text" id="familyName" name="familyName" placeholder="e.g. Doe" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="addressLine1">Address Line 1</label>
+                      <input type="text" id="addressLine1" name="addressLine1" placeholder="e.g. 1234 Elm Street" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="city">City</label>
+                      <input type="text" id="city" name="city" placeholder="e.g. New York" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="state">State</label>
+                      <input type="text" id="state" name="state" placeholder="e.g. NY" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="countryCode">Country Code</label>
+                      <select id="countryCode" name="countryCode" class="form-control select2" required>
+                          <option value="" disabled selected>Select a country code</option>
+                          <option value="US">United States (+1)</option>
+                          <option value="CA">Canada (+1)</option>
+                          <option value="GB">United Kingdom (+44)</option>
+                          <option value="AU">Australia (+61)</option>
+                          <option value="IN">India (+91)</option>
+                          <option value="DE">Germany (+49)</option>
+                          <option value="FR">France (+33)</option>
+                          <option value="PH">Philippines (+63)</option>
+                          <option value="JP">Japan (+81)</option>
+                          <option value="CN">China (+86)</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="phone">Phone Number</label>
+                      <input type="text" id="phone" name="phone" placeholder="e.g. +1 234 567 8900 (US)" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="email">Email</label>
+                      <input type="email" id="email" name="email" placeholder="e.g. yourname@example.com" class="form-control" required>
+                  </div>
+
+                  <div id="card-container" class="form-group"></div>
+                  <button id="pay-now-btn" type="submit" class="btn-submit">Pay Now</button>
+                  <div id="loader" class="loader" style="display: none;"></div>
+                  <p id="processing-message" class="processing-message" style="display: none;">Processing your payment...</p>
+              </form>
+               
+              
+          </div>
+      </div>
+  </div>
+</div>
   <!--FAQ / Need section-->
  <section class="faq-section">
   <div class="container">
@@ -751,200 +1293,377 @@
 </section>
 
   <!-- Footer -->
-  <section class="footer-section">
-   <div class="container">
-    <figure class="footer-sideshape mb-0">
-     <img alt="" class="img-fluid" src="{% static 'important/images/footer-sideshape.png' %}"/>
-    </figure>
-    <div class="middle-portion">
-     <div class="row">
-      <div class="col-lg-4 col-md-5 col-sm-6 col-12">
-       <a href="#">
-        <figure class="footer-logo">
-         <img alt="" class="img-fluid" src="{% static 'important/images/logo.png' %}"/>
-        </figure>
-       </a>
-       <p class="text-size-16 footer-text text-white">
-        Ruis aute irure dolor in reprehenderit in volu velit ese ciu nulla pariatur excepteur sint oc aecat curidatat nona...
-       </p>
-       <ul class="list-unstyled mb-0 social-icons">
-        <li class="circle">
-         <a href="#">
-          <i class="fa-brands fa-facebook-f">
-          </i>
-         </a>
-        </li>
-        <li class="circle">
-         <a href="#">
-          <i class="fa-brands fa-twitter">
-          </i>
-         </a>
-        </li>
-        <li class="circle">
-         <a href="#">
-          <i class="fa-brands fa-linkedin-in">
-          </i>
-         </a>
-        </li>
-       </ul>
+  
+  {% include "myapp/aibots/iriseupai/footer.html" %}
+
+      <!-- Floating Form -->
+      <div id="fixed-form-container">
+        <div class="image">
+          <figure class="footer-image mb-0">
+            <img alt="" class="img-fluid" src="{% static 'important/images/footer-image.png' %}" />
+          </figure>
+        </div>
+        <div class="body">
+          <form action="./contact-form.php" id="contactpage1" method="POST">
+            <div class="form-group"><input class="form-control" name="name" placeholder="Your Name:" type="text" /></div>
+            <div class="form-group"><input class="form-control" name="emailid" placeholder="Your Email:" type="email" /></div>
+            <div class="form-group"><input class="form-control" name="phone" placeholder="Phone:" type="tel" /></div>
+            <div class="form-group"><textarea class="form_style" name="msg" placeholder="Message" rows="3"></textarea></div>
+            <button class="submit_now text-decoration-none" type="submit">Submit Now</button>
+          </form>
+        </div>
       </div>
-      <div class="col-lg-2 col-md-3 col-sm-12 col-12 d-md-block d-none">
-       <div class="links">
-        <h4 class="heading text-white">
-         Useful Links
-        </h4>
-        <ul class="list-unstyled mb-0">
-         <li>
-          <i class="fa-solid fa-angle-right">
-          </i>
-          <a class="text-size-16 text text-decoration-none" href="#">
-           Home
-          </a>
-         </li>
-         <li>
-          <i class="fa-solid fa-angle-right">
-          </i>
-          <a class="text-size-16 text text-decoration-none" href="#">
-           About
-          </a>
-         </li>
-         <li>
-          <i class="fa-solid fa-angle-right">
-          </i>
-          <a class="text-size-16 text text-decoration-none" href="#">
-           Services
-          </a>
-         </li>
-         <li>
-          <i class="fa-solid fa-angle-right">
-          </i>
-          <a class="text-size-16 text text-decoration-none" href="#">
-           Projects
-          </a>
-         </li>
-         <li>
-          <i class="fa-solid fa-angle-right">
-          </i>
-          <a class="text-size-16 text text-decoration-none" href="#">
-           Contact us
-          </a>
-         </li>
-        </ul>
-       </div>
+  
+      <!-- Copyright -->
+      <div class="copyright">
+        <div class="row">
+          <div class="col-12">
+            <p class="mb-0 text-white">© 2024 iRiseUp.AI — Built with clarity. All rights reserved.</p>
+          </div>
+        </div>
       </div>
-      <div class="col-lg-3 col-md-2 col-sm-12 col-12 d-lg-block d-none">
-       <div class="links list-pd">
-        <h4 class="heading text-white">
-         Our Services
-        </h4>
-        <ul class="list-unstyled mb-0">
-         <li>
-          <i class="fa-solid fa-angle-right">
-          </i>
-          <a class="text-size-16 text text-decoration-none" href="#">
-           Robotic Automation
-          </a>
-         </li>
-         <li>
-          <i class="fa-solid fa-angle-right">
-          </i>
-          <a class="text-size-16 text text-decoration-none" href="#">
-           Testimonial
-          </a>
-         </li>
-         <li>
-          <i class="fa-solid fa-angle-right">
-          </i>
-          <a class="text-size-16 text text-decoration-none" href="#">
-           Predective Analysis
-          </a>
-         </li>
-         <li>
-          <i class="fa-solid fa-angle-right">
-          </i>
-          <a class="text-size-16 text text-decoration-none" href="#">
-           Our Team
-          </a>
-         </li>
-         <li>
-          <i class="fa-solid fa-angle-right">
-          </i>
-          <a class="text-size-16 text text-decoration-none" href="#">
-           Faq
-          </a>
-         </li>
-        </ul>
-       </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6 col-12 d-sm-block">
-       <div class="icon">
-        <h4 class="heading text-white">
-         Contact us
-        </h4>
-        <ul class="list-unstyled mb-0">
-         <li class="text">
-          <i class="fa fa-phone fa-icon footer-location">
-          </i>
-          <a class="mb-0 text text-decoration-none text-size-16" href="tel:+4733378901">
-           +61 3 8376 6284
-          </a>
-         </li>
-         <li class="text">
-          <i class="fa fa-envelope fa-icon footer-location">
-          </i>
-          <a class="mb-0 text text-decoration-none text-size-16" href="mailto:info@repay.com">
-           Info@Artelligence.com
-          </a>
-         </li>
-         <li class="text">
-          <i class="fa-solid fa-location-dot footer-location footer-location3">
-          </i>
-          <p class="text-size-16">
-           121 King Street, Melbourne 3000 Australia
-          </p>
-         </li>
-        </ul>
-       </div>
-      </div>
-     </div>
     </div>
-    <div id="fixed-form-container">
-     <div class="image">
-      <figure class="footer-image mb-0">
-       <img alt="" class="img-fluid" src="{% static 'important/images/footer-image.png' %}"/>
-      </figure>
-     </div>
-     <div class="body">
-      <form action="./contact-form.php" id="contactpage1" method="POST">
-       <div class="form-group">
-        <input class="form-control" name="name" placeholder="Your Name:" type="text"/>
-       </div>
-       <div class="form-group">
-        <input class="form-control" name="emailid" placeholder="Your Email:" type="email"/>
-       </div>
-       <div class="form-group">
-        <input class="form-control" name="phone" placeholder="Phone:" type="tel"/>
-       </div>
-       <div class="form-group">
-        <textarea class="form_style" name="msg" placeholder="Message" rows="3"></textarea>
-       </div>
-       <button class="submit_now text-decoration-none" type="submit">
-        Submit Now
-       </button>
-      </form>
-     </div>
-    </div>
-    <div class="copyright">
-     <div class="row">
-      <div class="col-12">
-       <p class="mb-0 text-white">
-        Copyright 2023, Artelligence.com All Rights Reserved.
-       </p>
-      </div>
-     </div>
-    </div>
-   </div>
   </section>
+  
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const lastVisit = localStorage.getItem('lastVisit');
+    const currentTime = new Date().getTime();
+
+    // Reset message count if last visit was more than 24 hours ago
+    if (!lastVisit || currentTime - lastVisit > 86400000) {
+        localStorage.setItem('messageCount', 0);  // Reset count
+        localStorage.setItem('lastVisit', currentTime);
+        console.log("🔄 Message count reset for a new session.");
+    }
+
+    // Hide the modal on page load
+    document.querySelector('.signup-modal').style.display = 'none';
+});
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const chatbox = document.getElementById('chatbox');
+    const typingIndicator = document.getElementById('typing-indicator');
+    const messageInput = document.getElementById('message');
+    const sendButton = document.getElementById('send');
+
+         const aiSelect = document.getElementById('ai-select');
+    const aiNameDisplay = document.getElementById('ai-name');
+    const signupModal = document.getElementById('signup-modal');
+
+    // ✅ Ensure the correct trial limit
+    const TRIAL_LIMIT = 10;
+
+    // ✅ Fetch stored message count or initialize it to 0
+    let messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
+
+    // 🔍 Debugging: Log message count to console
+    console.log("🔥 Initial messageCount:", messageCount);
+
+    function getCSRFToken() {
+        const token = document.querySelector('meta[name="csrf-token"]');
+        return token ? token.getAttribute('content') : null;
+    }
+
+    function addMessage(sender, text) {
+    if (!chatbox) return; // Prevent errors if chatbox is missing
+
+    const messageClass = sender === 'You' ? 'user' : 'bot';
+    const formattedText = formatResponse(text, ["React", "JavaScript", "Django"]); // Highlight keywords
+
+    const messageHTML = `
+        <div class="message ${messageClass}">
+            ${formattedText}
+            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+        </div>
+    `;
+
+    chatbox.innerHTML += messageHTML;
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+
+    function showTypingIndicator() {
+        typingIndicator.style.display = 'flex';
+    }
+
+    function hideTypingIndicator() {
+        typingIndicator.style.display = 'none';
+    }
+
+    // 🚀 Show Signup Modal when Trial Limit is Reached
+    function showSignupModal() {
+    console.log("🛑 Reached trial limit! Showing signup modal.");
+    
+    // Check if modal exists
+    if (!signupModal) {
+        console.error("❌ signupModal not found in DOM!");
+        return;
+    }
+
+    signupModal.style.display = "flex"; // ✅ Force visibility
+    signupModal.classList.add("show");
+    document.body.style.overflow = "hidden"; 
+}
+
+
+function closeSignupModal() {
+    console.log("🔄 Closing signup modal.");
+    
+    // Check if modal exists
+    if (!signupModal) {
+        console.error("❌ signupModal not found in DOM!");
+        return;
+    }
+
+    signupModal.style.display = "none"; // ✅ Hide modal properly
+    signupModal.classList.remove("show");
+    document.body.style.overflow = "auto"; 
+}
+
+
+    function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        addMessage('You', message);
+        showTypingIndicator();
+
+        // ✅ Debugging: Ensure message count updates correctly
+        console.log("📨 Sending message:", message);
+        console.log("📊 Current message count before increment:", messageCount);
+
+        if (messageCount >= TRIAL_LIMIT) {
+            showSignupModal();  // ✅ Ensure this only triggers after the 10th message
+            return;
+        }
+
+        messageCount++; // ✅ Increase count
+        localStorage.setItem('messageCount', messageCount);
+
+        console.log("✅ New messageCount after increment:", messageCount); // Debugging
+
+        fetch(`/api/guest/chat/${aiSelect.value}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideTypingIndicator();
+            addMessage(aiNameDisplay.textContent, data.response);
+            messageInput.value = '';
+
+            // ✅ Show modal ONLY when limit is reached
+            if (messageCount >= TRIAL_LIMIT) {
+                setTimeout(showSignupModal, 10000);
+            }
+        })
+        .catch(error => {
+            hideTypingIndicator();
+            console.error('❌ Fetch Error:', error);
+            addMessage('System', '⚠️ Oops! Something went wrong. Please try again.');
+        });
+    }
+
+    messageInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    sendButton.addEventListener('click', sendMessage);
+
+    // ✅ Reset message count when modal is closed
+    document.querySelector('.signup-close-button').addEventListener('click', function () {
+        closeSignupModal();
+        localStorage.setItem('messageCount', 0); // Reset count when user closes modal
+        console.log("🔄 Reset message count after signup modal closed.");
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const aiSelect = document.getElementById('ai-select');
+    const aiNameDisplay = document.getElementById('ai-name');
+
+    // Function to update AI Name
+    function updateAIName() {
+        const selectedOption = aiSelect.options[aiSelect.selectedIndex].text; // Get selected option's text
+        aiNameDisplay.textContent = selectedOption.split(" - ")[0].trim(); // Extract AI name before "-"
+    }
+
+    // Add event listener for dropdown changes
+    aiSelect.addEventListener('change', updateAIName);
+
+    // Initialize AI name on page load
+    updateAIName();
+});
+
+function formatResponse(text, keywords = []) {
+    // ✅ Preserve new lines for paragraph separation
+    text = text.replace(/\n/g, '<br>');
+
+    // ✅ Format AI-generated code blocks properly (```jsx ... ```)
+    text = text.replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>');
+
+    // ✅ Bold section headers (e.g., "Steps:", "Instructions:")
+    text = text.replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:');
+
+    // ✅ Make bold text (Convert **text** → <strong>text</strong>)
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // ✅ Convert bullet points (- Item) to unordered lists
+    text = text.replace(/<br>-\s/g, '<ul><li>');
+    text = text.replace(/<\/li><br>-\s/g, '</li><li>');
+    text = text.replace(/<\/li><br>/g, '</li></ul>');
+
+    // ✅ Convert numbered lists (1. Item) to ordered lists
+    text = text.replace(/<br>(\d+)\.\s/g, (match, p1) => {
+        return p1 === "1" ? '<ol><li>' : '</li><li>';
+    });
+    text = text.replace(/<\/li><br>(?!\d+\.)/g, '</li></ol>');
+
+    // ✅ Highlight important keywords
+    keywords.forEach(keyword => {
+        const regex = new RegExp(`\\b(${keyword})\\b`, 'gi');
+        text = text.replace(regex, '<strong>$1</strong>');
+    });
+
+    // ✅ Ensure lists are properly closed
+    if (!text.endsWith('</ul>')) text += '</ul>';
+    if (!text.endsWith('</ol>')) text += '</ol>';
+
+    return text;
+}
+
+
+// Square Payment  
+document.addEventListener("DOMContentLoaded", async function () {
+    console.log("✅ JavaScript loaded!");
+
+    const openCheckoutButtons = document.querySelectorAll(".open-checkout");
+    const checkoutModal = document.getElementById("checkout-modal");
+    const closeModalButton = document.querySelector(".close-modal");
+    const payNowButton = document.getElementById("pay-now-btn");
+    const selectedPlanInput = document.getElementById("selected-plan");
+
+    let squareInitialized = false;
+    let card;
+
+    if (!checkoutModal) {
+        console.error("❌ Checkout modal not found!");
+        return;
+    }
+
+    // ✅ Open checkout modal
+    openCheckoutButtons.forEach(button => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();
+            console.log("💳 Checkout button clicked!");
+
+            const selectedPlan = this.getAttribute("data-plan");
+            selectedPlanInput.value = selectedPlan;
+            checkoutModal.style.display = "flex";
+
+            setupSquarePayments();
+        });
+    });
+
+    // ✅ Close modal
+    closeModalButton.addEventListener("click", function () {
+        checkoutModal.style.display = "none";
+    });
+
+    async function setupSquarePayments() {
+        if (squareInitialized) return;
+
+        console.log("🔄 Initializing Square Payments...");
+
+        try {
+            const payments = Square.payments("sq0idp-jpJ9YFYpLwuh5nFx4B-qXg", "45B8XGXSPP8E3");
+            card = await payments.card();
+            await card.attach("#card-container");
+
+            console.log("✅ Card attached to container!");
+            squareInitialized = true;
+
+            payNowButton.addEventListener("click", async function (event) {
+                event.preventDefault();
+                await processPayment();
+            });
+
+        } catch (error) {
+            console.error("⚠️ Square Payment Initialization Error:", error);
+        }
+    }
+
+    async function processPayment() {
+        try {
+            payNowButton.disabled = true;
+
+            const result = await card.tokenize();
+            if (result.status !== "OK") {
+                alert("Payment failed: " + result.errors[0].message);
+                payNowButton.disabled = false;
+                return;
+            }
+
+            console.log("✅ Payment token generated!");
+
+            const response = await fetch("/process-ai-subscription/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: JSON.stringify({
+                    source_id: result.token,
+                    plan: selectedPlanInput.value,
+                    givenName: document.getElementById("givenName").value,
+                    familyName: document.getElementById("familyName").value,
+                    addressLine1: document.getElementById("addressLine1").value,
+                    city: document.getElementById("city").value,
+                    state: document.getElementById("state").value,
+                    countryCode: document.getElementById("countryCode").value,
+                    phone: document.getElementById("phone").value,
+                    email: document.getElementById("email").value,
+                }),
+            });
+
+            const jsonResult = await response.json();
+
+            if (jsonResult.success) {
+                window.location.href = "/success/";
+            } else {
+                alert(jsonResult.error);
+            }
+        } catch (error) {
+            console.error("⚠️ Payment Error:", error);
+            alert("Payment failed: " + error.message);
+        } finally {
+            payNowButton.disabled = false;
+        }
+    }
+});
+
+function closeSignupModal() {
+    let modal = document.querySelector('.signup-modal'); // Adjust this selector based on your modal's class or ID
+    if (modal) {
+        modal.style.display = 'none'; // Hides the modal
+    }
+}
+
+
+</script>
   <!-- Latest compiled JavaScript -->
   <script src="{% static 'important/js/jquery-3.6.0.min.js' %}">
   </script>

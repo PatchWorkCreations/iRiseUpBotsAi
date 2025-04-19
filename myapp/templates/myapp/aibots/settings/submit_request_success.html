@@ -4,50 +4,59 @@
 {% block title %}Request Submitted{% endblock %}
 
 {% block content %}
-{% include 'myapp/quiz/support/header_support.html' %}
-<div class="container mt-5 text-left">
-    <h2>Request Submitted Successfully</h2>
-    <p>Thank you, {{ requester }}! Your request has been successfully submitted.</p>
-    <p>We will review your query and get back to you as soon as possible.</p>
+<div class="container mt-5 px-4 py-5 bg-white rounded shadow-sm">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-success">🎉 Request Submitted!</h2>
+        <p class="lead">Thank you, <strong>{{ requester }}</strong>. We’ve received your inquiry.</p>
+        <p class="text-muted">Our team will get back to you as soon as possible.</p>
+    </div>
 
-    <h4>Details</h4>
-    <p><strong>Subject:</strong> {{ subject }}</p>
-    <p><strong>Query Type:</strong> {{ query_type }}</p>
-    <p><strong>Description:</strong> {{ description }}</p>
+    <div class="border-top pt-4">
+        <h5 class="mb-3">📋 Submission Details</h5>
+        <ul class="list-unstyled">
+            <li><strong>Subject:</strong> {{ subject }}</li>
+            <li><strong>Query Type:</strong> {{ query_type|default:"N/A" }}</li>
+            <li><strong>Description:</strong><br> {{ description }}</li>
+        </ul>
+    </div>
 
-    <a href="{% url 'iriseupdashboard' %}" class="btn btn-primary mt-4">Dashboard</a>
-    <a href="{% url 'countact_us' %}" class="btn btn-secondary mt-4">Submit Another Request</a>
+    <div class="mt-4 d-flex gap-3">
+        <a href="{% url 'iriseupdashboard' %}" class="btn btn-success px-4">Go to Dashboard</a>
+        <a href="{% url 'contactus' %}" class="btn btn-outline-secondary px-4">Submit Another Request</a>
+    </div>
 </div>
 {% endblock %}
 
 {% block styles %}
 <style>
     .container {
-        max-width: 800px;
-        margin: 50px auto;
+        max-width: 700px;
         background-color: #fff;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    }
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-        border-radius: 5px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
     }
 
-    .btn-secondary {
-        border-radius: 5px;
+    h2 {
+        font-size: 2rem;
     }
 
-    .btn-secondary:hover {
-        background-color: #5a6268;
-        border-color: #5a6268;
+    .btn {
+        border-radius: 6px;
+        font-weight: 500;
     }
 
-    .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #f8f9fa;
     }
 </style>
 {% endblock %}
