@@ -254,7 +254,7 @@ body {
     .ai-switcher.moved {
         position: absolute;
         top: 15px;
-        right: 150px; /* Ensure it's near the login button */
+        right: 200px; /* Ensure it's near the login button */
         font-size: 1rem;
         display: flex;
         align-items: center;
@@ -320,7 +320,7 @@ body {
     .ai-switcher.moved::after {
         content: " ⌄";
         font-size: 12px;
-        padding-left: 4px;
+        padding-left: 12px;
         color: #333;
     }
 
@@ -643,6 +643,30 @@ body {
     text-align: right;
 }
 
+.suggested-prompts {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px auto 5px;
+    max-width: 750px;
+}
+
+.suggested-prompts button {
+    background-color: #f1f1f1;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.suggested-prompts button:hover {
+    background-color: #e0e0e0;
+}
+
+
 </style>
 
 
@@ -698,6 +722,12 @@ body {
         Typing... <span></span><span></span><span></span>
     </div>
 
+    <!-- 💡 Suggested Prompts -->
+    <div id="suggested-prompts" class="suggested-prompts">
+        <!-- Buttons will be added here dynamically -->
+    </div>
+
+
     <div class="chat-footer">
         <input type="text" id="message" placeholder="Type a message...">
         <button id="send">Send</button>
@@ -732,249 +762,21 @@ body {
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    console.log("✅ Script Loaded!");
-
-    // 🌟 Retrieve last visit timestamp & reset message count if 24 hours have passed
-    const lastVisit = localStorage.getItem('lastVisit');
-    const currentTime = new Date().getTime();
-
-    if (!lastVisit || currentTime - lastVisit > 86400000) { // Reset every 24 hours
-        localStorage.setItem('messageCount', 0);
-        localStorage.setItem('lastVisit', currentTime);
-        console.log("🔄 Message count reset for a new session.");
-    }
-
-    // 🌟 Get DOM elements
-    const chatbox = document.getElementById('chatbox');
-    const chatContainer = document.querySelector('.chat-container');
-    const chatFooter = document.querySelector('.chat-footer');
-    const messageInput = document.getElementById('message');
-    const sendButton = document.getElementById('send');
-    const aiSelect = document.getElementById('ai-select');
-    const aiSwitcher = document.querySelector('.ai-switcher');
-    const aiNameDisplay = document.getElementById('ai-name');
-    const signupModal = document.getElementById('signup-modal');
-    const titleSection = document.querySelector('.title'); // "What can I help with?" title
-    const header = document.querySelector('.header');
-    const headerTitle = document.querySelector('.header h1'); // iRiseUp AI logo
-    const micButton = document.createElement("button");
-    let recognition;
-    let isRecording = false;
-    let finalTranscript = "";
-    let aiMoved = false;
-    let chatExpanded = false;
-    
-
-    const TRIAL_LIMIT = 10;
-    let messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
-
-    console.log("🔥 Initial messageCount:", messageCount);
-
-    signupModal.style.display = "none";
-
-    micButton.innerHTML = '<i class="fas fa-microphone"></i>';
-    micButton.classList.add("mic-btn");
-    messageInput.insertAdjacentElement("afterend", micButton);
-
-    // ✅ Typing Indicator
-    const typingIndicator = document.createElement('div');
-    typingIndicator.className = 'message bot typing-indicator';
-    typingIndicator.innerHTML = "Typing...";
-
-    // ✅ Get CSRF token
-    function getCSRFToken() {
-        const token = document.querySelector('meta[name="csrf-token"]');
-        return token ? token.getAttribute('content') : null;
-    }
-
-    // ✅ Move AI Selector & Hide Logo (Mobile)
-    function moveAISelector() {
-        if (!aiMoved && aiSwitcher) {
-            if (window.innerWidth <= 768) {
-                headerTitle.style.display = "none"; // Hide the logo on mobile
-                aiSwitcher.classList.add('moved'); // Move the AI selector
-            } else {
-                aiSwitcher.classList.add('moved'); // Desktop: Move beside login button
-            }
-            aiMoved = true;
-            console.log("🎯 AI Selector moved.");
-        }
-    }
-
-    // ✅ Expand Chat to Full Screen
-    function expandChat() {
-        if (!chatExpanded) {
-            chatContainer.style.height = "100vh";
-            chatbox.style.minHeight = "calc(100vh - 150px)"; // Adjust for header/footer
-            chatbox.style.overflowY = "auto";
-            chatbox.style.padding = "15px"; // Ensure it has some padding
-
-            chatFooter.style.position = "fixed";
-            chatFooter.style.bottom = "0";
-            chatFooter.style.width = "100%";
-
-            chatExpanded = true;
-            console.log("📱 Chat expanded to full-screen.");
-        }
-    }
-
-     // ✅ Speech Recognition Setup
-     if ("webkitSpeechRecognition" in window) {
-        recognition = new webkitSpeechRecognition();
-        recognition.continuous = true; // ✅ Allows long speech input
-        recognition.interimResults = true; // ✅ Captures partial results
-        recognition.lang = "en-US";
-
-        micButton.addEventListener("click", () => {
-            if (!isRecording) {
-                startRecognition();
-            } else {
-                stopRecognition();
-            }
-        });
-
-        function startRecognition() {
-            isRecording = true;
-            finalTranscript = ""; // ✅ Clear old transcript on start
-            micButton.style.backgroundColor = "#ff3b3b"; // Show active recording
-            recognition.start();
-            console.log("🎤 Voice recognition started...");
-        }
-
-        function stopRecognition() {
-            if (isRecording) {
-                isRecording = false;
-                micButton.style.backgroundColor = ""; // Reset color
-                recognition.stop();
-                console.log("🛑 Voice recognition stopped.");
-            }
-        }
-
-        recognition.onresult = (event) => {
-            let newTranscript = "";
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-                if (event.results[i].isFinal) {
-                    newTranscript += event.results[i][0].transcript + " ";
-                }
-            }
-
-            finalTranscript += newTranscript.trim(); // ✅ Keep adding to final transcript
-            messageInput.value = finalTranscript; // ✅ Show in input field
-
-            console.log("🎤 Full Recognized Speech:", finalTranscript);
-        };
-
-        recognition.onend = () => {
-            console.log("🎤 Speech recognition ended.");
-
-            if (isRecording && finalTranscript.length > 0) {
-                console.log("✅ Final speech transcript:", finalTranscript);
-                stopRecognition();
-                sendMessage(); // ✅ Send message when user stops speaking
-            } else if (isRecording) {
-                console.log("🔄 Restarting speech recognition...");
-                recognition.start(); // ✅ Auto-restart if user is still speaking
-            }
-        };
-
-        recognition.onerror = (event) => {
-            console.error("❌ Speech recognition error", event);
-            if (event.error === "no-speech") {
-                console.log("⏳ No speech detected, restarting recognition...");
-                setTimeout(() => {
-                    recognition.start(); // ✅ Auto-restart on no-speech
-                }, 1000);
-            } else {
-                stopRecognition();
-            }
-        };
-    } else {
-        console.error("❌ Speech recognition is not supported in this browser.");
-    }
+// ✅ Global variables
+let chatbox, chatContainer, chatFooter, messageInput, sendButton;
+let aiSelect, aiSwitcher, aiNameDisplay, signupModal, titleSection, header, headerTitle;
+let micButton = document.createElement("button");
+let recognition;
+let isRecording = false;
+let finalTranscript = "";
+let aiMoved = false;
+let chatExpanded = false;
+let messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
+const TRIAL_LIMIT = 10;
 
 
-    // ✅ Format AI Response
-    function formatResponse(text) {
-        if (!text) return ""; // Prevent errors if response is undefined
-
-        text = text.replace(/\n/g, '<br>');
-        text = text.replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>');
-        text = text.replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:');
-        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-        return text;
-    }
-
-    // ✅ Add message to chatbox
-    function addMessage(sender, text) {
-        if (!chatbox) return;
-
-        const messageClass = sender === 'You' ? 'user' : 'bot';
-        const formattedText = formatResponse(text);
-
-        const messageHTML = `
-            <div class="message ${messageClass}" style="opacity: 0; transform: translateY(10px); transition: all 0.3s;">
-                ${formattedText}
-                <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-            </div>
-        `;
-
-        chatbox.innerHTML += messageHTML;
-        setTimeout(() => {
-            chatbox.lastElementChild.style.opacity = "1";
-            chatbox.lastElementChild.style.transform = "translateY(0)";
-        }, 100);
-
-        chatbox.scrollTop = chatbox.scrollHeight;
-    }
-
-    
-    function showSignupModal() {
-    const signupModal = document.getElementById("signup-modal");
-    if (signupModal) {
-        console.log("📢 Showing signup modal...");
-        signupModal.style.display = "flex";  // ✅ Ensure the modal is visible
-    } else {
-        console.error("❌ Signup modal element not found!");
-    }
-}
-
-    function closeSignupModal() {
-        const signupModal = document.getElementById("signup-modal");
-        if (signupModal) {
-            signupModal.style.display = "none";
-        } else {
-            console.error("❌ Signup modal element not found!");
-        }
-    }
-
-    // ✅ Ensure modal closes when clicking outside
-    document.addEventListener("click", function (event) {
-        const signupModal = document.getElementById("signup-modal");
-        if (signupModal && event.target === signupModal) {
-            closeSignupModal();
-        }
-    });
-
-    function addImageMessage(sender, imageUrl) {
-    const messageHTML = `
-        <div class="message bot">
-            <p>Here’s your generated image!</p>
-            <img src="${imageUrl}" alt="Generated Image" style="max-width: 100%; border-radius: 8px;">
-            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-        </div>
-    `;
-    chatbox.innerHTML += messageHTML;
-    chatbox.scrollTop = chatbox.scrollHeight;
-}
-
-
-
-
-    
     // ✅ **Send Message to AI**
-function sendMessage() {
+    function sendMessage() {
     stopRecognition();
     const message = messageInput.value.trim();
     if (!message) return;
@@ -991,7 +793,8 @@ function sendMessage() {
 
     console.log("📨 Sending message:", message);
     console.log("📊 Current message count before increment:", messageCount);
-
+    
+    document.getElementById('suggested-prompts').style.display = 'none';
     // Clear input field and focus
     messageInput.value = '';
     messageInput.focus();
@@ -1091,6 +894,246 @@ function sendMessage() {
 }
 
 
+if ("webkitSpeechRecognition" in window) {
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = true; // ✅ Allows long speech input
+        recognition.interimResults = true; // ✅ Captures partial results
+        recognition.lang = "en-US";
+
+        micButton.addEventListener("click", () => {
+            if (!isRecording) {
+                startRecognition();
+            } else {
+                stopRecognition();
+            }
+        });
+
+        function startRecognition() {
+            isRecording = true;
+            finalTranscript = ""; // ✅ Clear old transcript on start
+            micButton.style.backgroundColor = "#ff3b3b"; // Show active recording
+            recognition.start();
+            console.log("🎤 Voice recognition started...");
+        }
+
+        function stopRecognition() {
+            if (isRecording) {
+                isRecording = false;
+                micButton.style.backgroundColor = ""; // Reset color
+                recognition.stop();
+                console.log("🛑 Voice recognition stopped.");
+            }
+        }
+
+        recognition.onresult = (event) => {
+            let newTranscript = "";
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) {
+                    newTranscript += event.results[i][0].transcript + " ";
+                }
+            }
+
+            finalTranscript += newTranscript.trim(); // ✅ Keep adding to final transcript
+            messageInput.value = finalTranscript; // ✅ Show in input field
+
+            console.log("🎤 Full Recognized Speech:", finalTranscript);
+        };
+
+        recognition.onend = () => {
+            console.log("🎤 Speech recognition ended.");
+
+            if (isRecording && finalTranscript.length > 0) {
+                console.log("✅ Final speech transcript:", finalTranscript);
+                stopRecognition();
+                sendMessage(); // ✅ Send message when user stops speaking
+            } else if (isRecording) {
+                console.log("🔄 Restarting speech recognition...");
+                recognition.start(); // ✅ Auto-restart if user is still speaking
+            }
+        };
+
+        recognition.onerror = (event) => {
+            console.error("❌ Speech recognition error", event);
+            if (event.error === "no-speech") {
+                console.log("⏳ No speech detected, restarting recognition...");
+                setTimeout(() => {
+                    recognition.start(); // ✅ Auto-restart on no-speech
+                }, 1000);
+            } else {
+                stopRecognition();
+            }
+        };
+    } else {
+        console.error("❌ Speech recognition is not supported in this browser.");
+    }
+
+    function moveAISelector() {
+        if (!aiMoved && aiSwitcher) {
+            if (window.innerWidth <= 768) {
+                headerTitle.style.display = "none"; // Hide the logo on mobile
+                aiSwitcher.classList.add('moved'); // Move the AI selector
+            } else {
+                aiSwitcher.classList.add('moved'); // Desktop: Move beside login button
+            }
+            aiMoved = true;
+            console.log("🎯 AI Selector moved.");
+        }
+    }
+
+    // ✅ Expand Chat to Full Screen
+    function expandChat() {
+        if (!chatExpanded) {
+            chatContainer.style.height = "100vh";
+            chatbox.style.minHeight = "calc(100vh - 150px)"; // Adjust for header/footer
+            chatbox.style.overflowY = "auto";
+            chatbox.style.padding = "15px"; // Ensure it has some padding
+
+            chatFooter.style.position = "fixed";
+            chatFooter.style.bottom = "0";
+            chatFooter.style.width = "100%";
+
+            chatExpanded = true;
+            console.log("📱 Chat expanded to full-screen.");
+        }
+    }
+
+    function getCSRFToken() {
+        const token = document.querySelector('meta[name="csrf-token"]');
+        return token ? token.getAttribute('content') : null;
+    }
+
+    function addMessage(sender, text) {
+    const chatbox = document.getElementById('chatbox');
+    if (!chatbox) return;
+
+    const messageClass = sender === 'You' ? 'user' : 'bot';
+    const formattedText = text
+        .replace(/\n/g, '<br>')
+        .replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>')
+        .replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    const messageHTML = `
+        <div class="message ${messageClass}" style="opacity: 0; transform: translateY(10px); transition: all 0.3s;">
+            ${formattedText}
+            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+        </div>
+    `;
+
+    chatbox.innerHTML += messageHTML;
+    setTimeout(() => {
+        chatbox.lastElementChild.style.opacity = "1";
+        chatbox.lastElementChild.style.transform = "translateY(0)";
+    }, 100);
+
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("✅ Script Loaded!");
+
+    // 🌟 Retrieve last visit timestamp & reset message count if 24 hours have passed
+    const lastVisit = localStorage.getItem('lastVisit');
+    const currentTime = new Date().getTime();
+
+    if (!lastVisit || currentTime - lastVisit > 86400000) { // Reset every 24 hours
+        localStorage.setItem('messageCount', 0);
+        localStorage.setItem('lastVisit', currentTime);
+        console.log("🔄 Message count reset for a new session.");
+    }
+
+    // 🌟 Get DOM elements
+    chatbox = document.getElementById('chatbox');
+    chatContainer = document.querySelector('.chat-container');
+    chatFooter = document.querySelector('.chat-footer');
+    messageInput = document.getElementById('message');
+    sendButton = document.getElementById('send');
+    aiSelect = document.getElementById('ai-select');
+    aiSwitcher = document.querySelector('.ai-switcher');
+    aiNameDisplay = document.getElementById('ai-name');
+    signupModal = document.getElementById('signup-modal');
+    titleSection = document.querySelector('.title');
+    header = document.querySelector('.header');
+    headerTitle = document.querySelector('.header h1');
+
+    // ✅ Mic button
+    micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+    micButton.classList.add("mic-btn");
+    messageInput.insertAdjacentElement("afterend", micButton);
+    
+
+    const TRIAL_LIMIT = 10;
+    let messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
+
+    console.log("🔥 Initial messageCount:", messageCount);
+
+    signupModal.style.display = "none";
+
+    micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+    micButton.classList.add("mic-btn");
+    messageInput.insertAdjacentElement("afterend", micButton);
+
+    // ✅ Typing Indicator
+    const typingIndicator = document.createElement('div');
+    typingIndicator.className = 'message bot typing-indicator';
+    typingIndicator.innerHTML = "Typing...";
+
+
+
+    // ✅ Format AI Response
+    function formatResponse(text) {
+        if (!text) return ""; // Prevent errors if response is undefined
+
+        text = text.replace(/\n/g, '<br>');
+        text = text.replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>');
+        text = text.replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:');
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        return text;
+    }
+
+    
+    function showSignupModal() {
+    const signupModal = document.getElementById("signup-modal");
+    if (signupModal) {
+        console.log("📢 Showing signup modal...");
+        signupModal.style.display = "flex";  // ✅ Ensure the modal is visible
+    } else {
+        console.error("❌ Signup modal element not found!");
+    }
+}
+
+    function closeSignupModal() {
+        const signupModal = document.getElementById("signup-modal");
+        if (signupModal) {
+            signupModal.style.display = "none";
+        } else {
+            console.error("❌ Signup modal element not found!");
+        }
+    }
+
+    // ✅ Ensure modal closes when clicking outside
+    document.addEventListener("click", function (event) {
+        const signupModal = document.getElementById("signup-modal");
+        if (signupModal && event.target === signupModal) {
+            closeSignupModal();
+        }
+    });
+
+    function addImageMessage(sender, imageUrl) {
+    const messageHTML = `
+        <div class="message bot">
+            <p>Here’s your generated image!</p>
+            <img src="${imageUrl}" alt="Generated Image" style="max-width: 100%; border-radius: 8px;">
+            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+        </div>
+    `;
+    chatbox.innerHTML += messageHTML;
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+
     // ✅ **Handle Enter Key Submission**
     messageInput.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
@@ -1155,6 +1198,80 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ✅ Initialize AI name on page load
     updateAIName();
+
+// ✅ Suggested Prompts
+const suggestions = {
+    lumos: [
+        "I feel overwhelmed. Can you help?",
+        "How do I stop overthinking?",
+        "I just need someone to talk to."
+    ],
+    Nexara: [
+        "Help me create a promo caption.",
+        "Give me content ideas for May.",
+        "How do I run a FB ad?"
+    ],
+    thrive: [
+        "Make me a simple 7-day workout plan.",
+        "What’s a healthy snack that’s not boring?",
+        "How do I build better habits?"
+    ],
+    gideon: [
+        "What does the Bible say about forgiveness?",
+        "Help me pray when I don’t have the words.",
+        "Give me a verse to get through anxiety."
+    ],
+    elevate: [
+        "Give me a strategy to hit my business goals.",
+        "How do I become a better leader?",
+        "Help me plan a morning routine for success."
+    ],
+    keystone: [
+        "How do I start a budget I’ll stick to?",
+        "What should I know before starting an LLC?",
+        "Help me understand this contract I was sent."
+    ],
+    "mentor-iq": [
+        "What job fits my personality?",
+        "Help me create a resume from scratch.",
+        "How do I start learning to code?"
+    ],
+    imagine: [
+        "Give me an idea for a children’s book.",
+        "Help me name my new skincare brand.",
+        "Can you help me write a poem about healing?"
+    ]
+};
+
+function renderSuggestedPrompts() {
+    const ai = aiSelect.value;
+    const pool = suggestions[ai] || ["Ask me anything!"];
+    const container = document.getElementById("suggested-prompts");
+
+    container.innerHTML = ''; // Clear old buttons
+
+    pool.slice(0, 3).forEach(prompt => {
+        const btn = document.createElement("button");
+        btn.textContent = prompt;
+        btn.addEventListener("click", function () {
+            messageInput.value = prompt;
+
+            // Manually trigger the send button click
+            sendButton.click();  // ✅ Simulates a user click
+        });
+        container.appendChild(btn);
+    });
+}
+
+// ✅ Re-render prompts when switching AI
+aiSelect.addEventListener("change", () => {
+    updatePlaceholderAndSuggestion();
+    renderSuggestedPrompts();
+});
+
+// ✅ Render immediately on load
+renderSuggestedPrompts();
+
 });
 
 document.addEventListener("DOMContentLoaded", function () {
