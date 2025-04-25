@@ -149,51 +149,7 @@ body {
     font-weight: bold;
 }
 
-/* SIGNUP MODAL */
-.signup-modal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(6px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-.signup-modal-content {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    text-align: center;
-    max-width: 400px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.signup-close-button {
-    position: absolute;
-    top: 12px;
-    right: 15px;
-    font-size: 22px;
-    color: #555;
-    cursor: pointer;
-}
-
-.signup-btn {
-    background: linear-gradient(90deg, #025450, #024642);
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
-    padding: 12px 25px;
-    border-radius: 8px;
-    text-decoration: none;
-    width: 100%;
-    text-align: center;
-}
 
 /* ✅ Hide header text after first message */
 .header h1.hidden {
@@ -666,18 +622,75 @@ body {
     background-color: #e0e0e0;
 }
 
+/* Ensure mobile Log In button doesn't overlap */
+.mobile-login-btn {
+  position: absolute;
+  right: 60px; /* Space left of hamburger */
+  top: 8px;
+  z-index: 1003;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+}
+
+.tool-btns {
+  display: flex;
+  gap: 10px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.tool-btns .login-btn {
+  white-space: nowrap;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 10px 15px;
+  }
+
+  .tool-btns .login-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    margin-left: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-btn.signup {
+    display: none !important;
+  }
+}
+
 
 </style>
 
 
 <header class="header">
-    <h1>iRiseUp</h1>
-    <div class="auth-buttons">
-        <a href="{% url 'signup' %}" class="login-btn signup">Sign up</a>
-        <a href="{% url 'sign_in' %}" class="login-btn">Log in</a>
+    <h1>
+      <img src="{% static 'assets/images/black_logo_long.png' %}" alt="iRiseUp Logo" style="height: 60px;">
+    </h1>
+  
+    <div class="tool-btns">
+      <a href="{% url 'signup' %}" class="login-btn signup">Sign up</a>
+      <a href="{% url 'sign_in' %}" class="login-btn">Log in</a>
     </div>
-</header>
-
+  </header>
+  
 
 
 <section class="chat-container">
@@ -774,6 +787,19 @@ let chatExpanded = false;
 let messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
 const TRIAL_LIMIT = 10;
 
+// Place this globally at the top (after your global variables are declared)
+function addImageMessage(sender, imageUrl) {
+    const messageHTML = `
+        <div class="message bot">
+            <p>Here's your generated image!</p>
+            <img src="${imageUrl}" alt="Generated Image" style="max-width: 100%; border-radius: 8px;">
+            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+        </div>
+    `;
+    chatbox.innerHTML += messageHTML;
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+
 
     // ✅ **Send Message to AI**
     function sendMessage() {
@@ -819,7 +845,7 @@ const TRIAL_LIMIT = 10;
     // 🚨 Trial limit check
     if (messageCount >= TRIAL_LIMIT) {
         console.log("🚨 Trial limit reached! Showing signup modal...");
-        showSignupModal();
+        document.getElementById("signup-modal").style.display = "flex";
         return;
     }
 
@@ -1202,46 +1228,47 @@ document.addEventListener('DOMContentLoaded', function () {
 // ✅ Suggested Prompts
 const suggestions = {
     lumos: [
-        "I feel overwhelmed. Can you help?",
-        "How do I stop overthinking?",
-        "I just need someone to talk to."
+        "I'm feeling anxious—can you talk me through it?",
+        "Why do I overthink so much, and how do I stop?",
+        "I just need a safe space to vent. Are you here for me?"
     ],
     Nexara: [
-        "Help me create a promo caption.",
-        "Give me content ideas for May.",
-        "How do I run a FB ad?"
+        "Can you help me write a catchy promo caption?",
+        "What content should I post on social media this May?",
+        "What’s the best way to run a Facebook ad that converts?"
     ],
     thrive: [
-        "Make me a simple 7-day workout plan.",
-        "What’s a healthy snack that’s not boring?",
-        "How do I build better habits?"
+        "Can you build me an easy 7-day fitness plan?",
+        "Suggest healthy snacks that don’t taste like cardboard.",
+        "How can I build better habits and actually stick to them?"
     ],
     gideon: [
-        "What does the Bible say about forgiveness?",
-        "Help me pray when I don’t have the words.",
-        "Give me a verse to get through anxiety."
+        "What does the Bible say about letting go and forgiving?",
+        "I want to pray, but I don’t know what to say—can you help?",
+        "Give me a comforting verse to ease my anxiety."
     ],
     elevate: [
-        "Give me a strategy to hit my business goals.",
-        "How do I become a better leader?",
-        "Help me plan a morning routine for success."
+        "What’s a practical strategy to reach my business goals?",
+        "How do I grow as a confident, purpose-driven leader?",
+        "Can you help me create a morning routine that works?"
     ],
     keystone: [
-        "How do I start a budget I’ll stick to?",
-        "What should I know before starting an LLC?",
-        "Help me understand this contract I was sent."
+        "How do I start budgeting in a way that actually works?",
+        "What legal steps do I need to form an LLC?",
+        "Can you explain this contract to me in simple terms?"
     ],
     "mentor-iq": [
-        "What job fits my personality?",
-        "Help me create a resume from scratch.",
-        "How do I start learning to code?"
+        "What career paths match my strengths and personality?",
+        "Can you help me build a resume from scratch?",
+        "I want to learn coding—where do I begin?"
     ],
     imagine: [
-        "Give me an idea for a children’s book.",
-        "Help me name my new skincare brand.",
-        "Can you help me write a poem about healing?"
+        "Give me a heartwarming idea for a children’s story.",
+        "I’m starting a skincare brand—can you help me name it?",
+        "Draw a cute animal wearing glasses and reading a book."
     ]
 };
+
 
 function renderSuggestedPrompts() {
     const ai = aiSelect.value;
