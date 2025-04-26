@@ -457,7 +457,7 @@ body {
 }
 
 /* 📱 Mobile Optimization */
-@media (max-width: 480px) {
+@media (max-width: 752px) {
     .upgrade-modal-content {
         max-width: 90%;
         padding: 20px;
@@ -656,7 +656,7 @@ body {
 }
 
 /* ✅ Mobile Responsiveness */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .fullscreen-settings-panel {
         width: 100%;
         right: -100%;
@@ -757,7 +757,7 @@ body {
 }
 
 /* On mobile: hide full view, show mobile */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .message {
     max-width: 80%;
     padding: 10px 14px;
@@ -859,6 +859,7 @@ body {
     padding: 20px;
     flex-grow: 1;
     overflow-y: auto;
+    max-width: auto;
     }
 
     .mobile-ai-card {
@@ -1018,7 +1019,7 @@ html, body {
 }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   #mobile-message-input-container {
     bottom: env(safe-area-inset-bottom); /* iOS notch support */
     padding-bottom: env(safe-area-inset-bottom);
@@ -1038,7 +1039,7 @@ html, body {
   
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .fullscreen-settings-panel {
         width: 100%;
         right: -100%;
@@ -2312,9 +2313,9 @@ function showTypingIndicator() {
         container.scrollTop = container.scrollHeight;
 
         // ✅ Only save the one matching current screen size
-        if (window.innerWidth <= 480 && container.id === "mobile-chatbox") {
+        if (window.innerWidth <= 750 && container.id === "mobile-chatbox") {
             activeTypingBubble = bubble;
-        } else if (window.innerWidth > 480 && container.id === "chatbox") {
+        } else if (window.innerWidth > 750 && container.id === "chatbox") {
             activeTypingBubble = bubble;
         }
     });
@@ -2414,7 +2415,7 @@ function typeHTMLWithEffect(target, formattedHTML, speed = 15, callback = null) 
 let lastAssistantMessage = null;
 
 function sendMessage(customPrompt = null) {
-    const isMobile = window.innerWidth <= 480;
+    const isMobile = window.innerWidth <= 750;
     const inputEl = isMobile ? document.querySelector("#mobile-message-input") : document.querySelector("#message-input");
     const chatbox = isMobile ? document.getElementById("mobile-chatbox") : document.getElementById("chatbox");
 
@@ -2986,7 +2987,7 @@ function stopRecognition(micElement) {
 }
 
 function stopRecognitionForActiveMic() {
-    const micBtn = window.innerWidth <= 480 ? document.getElementById("mobile-mic-btn") : document.getElementById("mic-btn");
+    const micBtn = window.innerWidth <= 750 ? document.getElementById("mobile-mic-btn") : document.getElementById("mic-btn");
     stopRecognition(micBtn);
 }
 
@@ -3028,12 +3029,12 @@ function initSpeechToText() {
                 interim += event.results[i][0].transcript;
             }
         }
-        const activeInput = window.innerWidth <= 480 ? mobileInput : desktopInput;
+        const activeInput = window.innerWidth <= 750 ? mobileInput : desktopInput;
         activeInput.value = finalTranscript + interim;
     };
 
         recognition.onend = function () {
-        const activeInput = window.innerWidth <= 480 ? mobileInput : desktopInput;
+        const activeInput = window.innerWidth <= 750 ? mobileInput : desktopInput;
 
         if (finalTranscript.trim()) {
             stopRecognitionForActiveMic();

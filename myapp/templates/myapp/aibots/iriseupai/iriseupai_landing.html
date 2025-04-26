@@ -1292,7 +1292,7 @@
           <p class="text-size-18">
             Your AI-powered team is designed to work smarter, automate tasks, and bring expert insights right to your fingertips—so you can focus on what really matters.
           </p>
-          <a class="read_more text-decoration-none" href="#free-trial-chat">
+          <a class="read_more text-decoration-none" href="{% url 'chat_iriseupai' %}">
             Try It Free
             <i class="circle fa-regular fa-angle-right"></i>
           </a>
@@ -1323,7 +1323,7 @@
                   <p class="text-size-16 mb-2">
                     Let AI handle repetitive tasks so you can focus on what truly matters.
                   </p>
-                  <a class="read_more text-decoration-none" href="#about">Explore Benefits</a>
+                  <a class="read_more text-decoration-none" href="{% url 'about_us' %}">Explore Benefits</a>
                 </div>
               </div>
             </div>
@@ -1363,59 +1363,40 @@
 </section>
 
 
-<section class="ai-mission-container py-5 text-center bg-light">
-    <div class="container">
-      <h2 class="text-3xl font-bold mb-3 text-gray-800">
-        Our Mission? Simple.
-      </h2>
-      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-        We’re here to make AI accessible, empowering, and (yes) actually fun.
-        Because when <em>you</em> rise up, <strong>we all rise together.</strong>
-      </p>
-    </div>
-  </section>
-  
-  <section id="howitworks" class="how-it-works py-5">
-    <div class="container">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-3">
-        How iRiseUp AI Works <span class="text-primary">in 3 Simple Steps</span>
-      </h2>
-      <p class="text-center text-lg text-gray-600 mb-5 max-w-2xl mx-auto">
-        It’s fast, easy, and built to help you scale effortlessly. Just follow these three steps:
-      </p>
-  
-      <div class="row text-center">
-        <div class="col-md-4 mb-4">
-          <div class="step-card p-4 bg-white rounded shadow-sm h-100">
-            <div class="step-number text-primary text-2xl font-bold mb-2">1</div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">Pick Your AI Assistant</h3>
-            <p class="text-gray-600">Choose from 8 expert AI assistants built for business, marketing, and productivity.</p>
-          </div>
+    <section class="ai-mission-container">
+        <h2 class="ai-mission-title">🚀 Our Mission? Simple.</h2>
+        <p class="ai-mission-text">We’re here to make AI accessible, empowering, and downright fun. Because when <em>you</em> rise up, we all rise together.</p>
+    </section>
+    
+    
+    <section id="howitworks" class="how-it-works">
+        <div class="container">
+            <h2>🧠 How iRiseUp AI Works in <span class="highlight">3 Simple Steps</span></h2>
+            <p class="how-subtext">
+                It’s fast, easy, and built to help you scale effortlessly. Just follow these three steps:
+            </p>
+            <div class="steps-container">
+                <div class="step-card">
+                    <span class="step-number">1️⃣</span>
+                    <h3>Pick Your AI Assistant</h3>
+                    <p>Choose from 8 expert AI assistants designed for business, marketing, and productivity.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-number">2️⃣</span>
+                    <h3>Ask Questions & Get Instant Help</h3>
+                    <p>Get expert insights, automations, and solutions—AI responds in seconds.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-number">3️⃣</span>
+                    <h3>Achieve Results Effortlessly</h3>
+                    <p>Scale your business, optimize tasks, and work smarter, not harder.</p>
+                </div>
+            </div>
+            <div class="how-cta">
+                <a href="#pricing" class="btn btn-primary how-btn">🔥 Start Using AI Now</a>
+            </div>
         </div>
-        <div class="col-md-4 mb-4">
-          <div class="step-card p-4 bg-white rounded shadow-sm h-100">
-            <div class="step-number text-primary text-2xl font-bold mb-2">2</div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">Ask Questions & Get Instant Help</h3>
-            <p class="text-gray-600">Get expert insights, automations, and solutions—AI responds in seconds.</p>
-          </div>
-        </div>
-        <div class="col-md-4 mb-4">
-          <div class="step-card p-4 bg-white rounded shadow-sm h-100">
-            <div class="step-number text-primary text-2xl font-bold mb-2">3</div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">Achieve Results Effortlessly</h3>
-            <p class="text-gray-600">Scale your business, optimize tasks, and work smarter—not harder.</p>
-          </div>
-        </div>
-      </div>
-  
-      <div class="text-center mt-4">
-        <a href="#pricing" class="btn btn-primary px-5 py-3 text-white text-lg rounded shadow">
-          Start Using AI Now
-        </a>
-      </div>
-    </div>
-  </section>
-  
+    </section>
 
 
 <div id="portfolio" class="portfolio section-bottom-only">
