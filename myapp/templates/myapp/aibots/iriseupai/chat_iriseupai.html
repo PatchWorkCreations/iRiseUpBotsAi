@@ -23,10 +23,7 @@ body {
 
 
 
-.header h1 {
-    font-size: 1.3rem;
-    font-weight: 600;
-}
+
 
 .header {
     position: fixed;
@@ -150,43 +147,6 @@ body {
 }
 
 
-
-/* ✅ Hide header text after first message */
-.header h1.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.ai-switcher {
-    margin-bottom: 20px;
-}
-
-.ai-switcher label {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #025450;
-    margin-right: 10px;
-}
-
-#ai-select {
-    padding: 12px 16px;
-    font-size: 1rem;
-    border: 2px solid #025450;
-    border-radius: 10px;
-    background: #ffffff;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-}
-
-#ai-select:hover {
-    border-color: #025450;
-}
-
-/* ✅ General AI Switcher Styling */
-.ai-switcher {
-    margin-bottom: 20px;
-}
 
 /* ✅ AI Switcher for Desktop */
 /* 🔹 HEADER FIX FOR DESKTOP */
@@ -676,7 +636,99 @@ body {
   }
 }
 
+.header h1.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
 
+.ai-switcher {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.ai-switcher label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #025450;
+    margin-right: 10px;
+}
+
+.custom-dropdown {
+    position: relative;
+    width: fit-content;
+}
+
+.dropdown-wrapper {
+    border: 2px solid #025450;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #ffffff;
+    padding: 12px 16px;
+    display: inline-flex;
+    align-items: center;
+    color: #333;
+    transition: all 0.3s ease-in-out;
+}
+
+.dropdown-wrapper:hover {
+    border-color: #025450;
+}
+
+.selected-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: #025450;
+    white-space: nowrap;
+}
+
+.selected-option img {
+    height: 24px;
+    width: 24px;
+    object-fit: contain;
+}
+
+.dropdown-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-top: none;
+    z-index: 10;
+    display: none;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dropdown-options li {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #333;
+    white-space: nowrap;
+}
+
+.dropdown-options li:hover {
+    background: #f1f1f1;
+}
+
+.dropdown-options img {
+    height: 24px;
+    width: 24px;
+    object-fit: contain;
+}
 </style>
 
 
@@ -711,25 +763,67 @@ body {
 </div>
 
 <h2 class="title typewriter" style="font-style: italic;"><span id="dynamic-word"></span></h2>
+<!-- ✅ CUSTOM AI STRATEGIST SELECTOR WITH ICONS -->
+<div class="ai-switcher custom-dropdown" style="display: flex; justify-content: center; margin-left: 140px;">
 
-
-    <div class="ai-switcher">
-        <label for="ai-select">Choose Your Strategist:</label>
-        <select id="ai-select">
-            <option value="lumos">💡 Lumos - Emotional Support</option>
-                <option value="Nexara">📈 Nexara - Marketing & Small Biz</option>
-                <option value="thrive">🏋️ Thrive - Wellness & Fitness</option>
-                <option value="gideon">📚 Gideon - Spiritual & Faith-Based</option>
-                <option value="elevate">🚀 Elevate - Business & Leadership</option>
-                <option value="keystone">🏛️ Keystone - Finance & Legal Basics</option>
-                <option value="mentor-iq">🎓 Mentor IQ - Career & Learning Development</option>
-                <option value="imagine">🎨 Imagine - Creative & Idea</option>
-        </select>
+    <label for="ai-select">Choose Your Strategist:</label>
+    <input type="hidden" id="ai-select" value="lumos">
+    <div class="dropdown-wrapper" id="custom-ai-select">
+        <div class="selected-option" id="selected-ai">
+            <img src="{% static 'icons/lumos.png' %}" alt="Lumos Icon">
+            <span>Lumos - Emotional Support</span>
+        </div>
+        <ul class="dropdown-options">
+            <li data-value="lumos">
+                <img src="{% static 'icons/lumos.png' %}" alt="Lumos">
+                Lumos - Emotional Support
+            </li>
+            <li data-value="nexara">
+                <img src="{% static 'icons/nexara.png' %}" alt="Nexara">
+                Nexara - Marketing & Small Biz
+            </li>
+            <li data-value="thrive">
+                <img src="{% static 'icons/thrive.png' %}" alt="Thrive">
+                Thrive - Wellness & Fitness
+            </li>
+            <li data-value="gideon">
+                <img src="{% static 'icons/gideon.png' %}" alt="Gideon">
+                Gideon - Spiritual & Faith-Based
+            </li>
+            <li data-value="elevate">
+                <img src="{% static 'icons/elevate.png' %}" alt="Elevate">
+                Elevate - Business Motivation
+            </li>
+            <li data-value="keystone">
+                <img src="{% static 'icons/keystone.png' %}" alt="Keystone">
+                Keystone - Finance & Legal Guidance
+            </li>
+            <li data-value="mentor-iq">
+                <img src="{% static 'icons/mentoriq.png' %}" alt="MentorIQ">
+                MentorIQ - Career & Learning Development
+            </li>
+            <li data-value="imagine">
+                <img src="{% static 'icons/imagine.png' %}" alt="Imagine">
+                Imagine - Creativity & Ideas
+            </li>
+            <li data-value="lifewise">
+                <img src="{% static 'icons/lifewise.png' %}" alt="LifeWise">
+                LifeWise - Everyday Decision Support
+            </li>
+        </ul>
     </div>
+</div>
 
-    <div class="chat-box" id="chatbox">
-        <div class="message bot">Hi there! 👋 I'm <span id="ai-name">Lumos</span>. Ask me anything!</div>
-    </div>
+<!-- ✅ AI Name Display Anchor -->
+<div style="display: none">
+    <span id="ai-name">Lumos</span>
+</div>
+
+  
+
+<div class="chat-box" id="chatbox">
+    <div class="message bot" id="ai-greeting">Hi there! 👋 I'm <span id="ai-name">Lumos</span>. Ask me anything!</div>
+</div>
 
     <div class="typing-indicator" id="typing-indicator">
         Typing... <span></span><span></span><span></span>
@@ -1199,7 +1293,10 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('selectedAI', selectedAI);
         
         // Reload the page to apply changes
+        renderSuggestedPrompts();
         location.reload();
+
+
     }
 
     // ✅ Event listener for AI selector changes
@@ -1225,80 +1322,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // ✅ Initialize AI name on page load
     updateAIName();
 
-// ✅ Suggested Prompts
-const suggestions = {
-    lumos: [
-        "I'm feeling anxious—can you talk me through it?",
-        "Why do I overthink so much, and how do I stop?",
-        "I just need a safe space to vent. Are you here for me?"
-    ],
-    Nexara: [
-        "Can you help me write a catchy promo caption?",
-        "What content should I post on social media this May?",
-        "What’s the best way to run a Facebook ad that converts?"
-    ],
-    thrive: [
-        "Can you build me an easy 7-day fitness plan?",
-        "Suggest healthy snacks that don’t taste like cardboard.",
-        "How can I build better habits and actually stick to them?"
-    ],
-    gideon: [
-        "What does the Bible say about letting go and forgiving?",
-        "I want to pray, but I don’t know what to say—can you help?",
-        "Give me a comforting verse to ease my anxiety."
-    ],
-    elevate: [
-        "What’s a practical strategy to reach my business goals?",
-        "How do I grow as a confident, purpose-driven leader?",
-        "Can you help me create a morning routine that works?"
-    ],
-    keystone: [
-        "How do I start budgeting in a way that actually works?",
-        "What legal steps do I need to form an LLC?",
-        "Can you explain this contract to me in simple terms?"
-    ],
-    "mentor-iq": [
-        "What career paths match my strengths and personality?",
-        "Can you help me build a resume from scratch?",
-        "I want to learn coding—where do I begin?"
-    ],
-    imagine: [
-        "Give me a heartwarming idea for a children’s story.",
-        "I’m starting a skincare brand—can you help me name it?",
-        "Draw a cute animal wearing glasses and reading a book."
-    ]
-};
-
-
-function renderSuggestedPrompts() {
-    const ai = aiSelect.value;
-    const pool = suggestions[ai] || ["Ask me anything!"];
-    const container = document.getElementById("suggested-prompts");
-
-    container.innerHTML = ''; // Clear old buttons
-
-    pool.slice(0, 3).forEach(prompt => {
-        const btn = document.createElement("button");
-        btn.textContent = prompt;
-        btn.addEventListener("click", function () {
-            messageInput.value = prompt;
-
-            // Manually trigger the send button click
-            sendButton.click();  // ✅ Simulates a user click
-        });
-        container.appendChild(btn);
-    });
-}
-
-// ✅ Re-render prompts when switching AI
-aiSelect.addEventListener("change", () => {
-    updatePlaceholderAndSuggestion();
-    renderSuggestedPrompts();
-});
-
-// ✅ Render immediately on load
-renderSuggestedPrompts();
-
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -1310,31 +1333,122 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function typeEffect() {
         const currentWord = words[wordIndex];
-        const displayedText = isDeleting
-            ? currentWord.substring(0, charIndex--)
-            : currentWord.substring(0, charIndex++);
-
-        wordElement.textContent = displayedText;
-
-        let typingSpeed = isDeleting ? 50 : 120;
-
-        if (!isDeleting && charIndex === currentWord.length + 1) {
-            typingSpeed = 1500; // Pause before deleting
-            isDeleting = true;
-        } else if (isDeleting && charIndex === 0) {
-            isDeleting = false;
-            wordIndex = (wordIndex + 1) % words.length;
-            typingSpeed = 300;
+        if (!isDeleting) {
+            wordElement.textContent = currentWord.substring(0, charIndex + 1);
+            charIndex++;
+            if (charIndex === currentWord.length) {
+                isDeleting = true;
+                setTimeout(typeEffect, 1500); // pause before deleting
+                return;
+            }
+        } else {
+            wordElement.textContent = currentWord.substring(0, charIndex - 1);
+            charIndex--;
+            if (charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                setTimeout(typeEffect, 300); // pause before typing new word
+                return;
+            }
         }
 
-        setTimeout(typeEffect, typingSpeed);
+        const speed = isDeleting ? 70 : 100;
+        setTimeout(typeEffect, speed);
     }
 
     typeEffect();
 });
+document.addEventListener('DOMContentLoaded', function () {
+    const customSelect = document.getElementById('custom-ai-select');
+    const selected = document.getElementById('selected-ai');
+    const options = customSelect.querySelector('.dropdown-options');
+    const aiNameDisplay = document.getElementById('ai-name');
+    const aiGreeting = document.getElementById('ai-greeting');
+    const hiddenSelect = document.getElementById('ai-select');
+    const messageInput = document.getElementById('message');
+    const sendButton = document.getElementById('send');
+    const suggestedPromptContainer = document.getElementById("suggested-prompts");
 
+    const suggestions = {
+        lumos: ["What’s a simple morning routine for mental clarity and energy?","Give me a weekly plan to boost brain health at 50+.","How can I optimize my sleep without medication?"],
+        nexara: ["Compare the ROI of flipping vs. long-term rental in Ohio.","What’s a good investment plan with $100k over 2 years?","Help me pitch a real estate investment to private investors."],
+        thrive: ["What crops grow best in high-altitude tropical regions?","Help me design an urban garden for a small space.","Give me a 6-month plan for launching a sustainable poultry farm."],
+        gideon: ["Share a calming verse or quote from the Quran or Bible about patience.","Guide me through a gratitude meditation from a Buddhist perspective.","Compare Christian, Jewish, and Muslim teachings on forgiveness."],
+        elevate: ["Coach me through overcoming my fear of speaking in front of a crowd.","How do I build confidence after repeated rejection?","What daily habits help elevate my presence as a leader?"],
+        keystone: ["What should I include in a simple contract for freelance work?","How do I protect my assets before starting a new business?","Give me a 3-year legal and financial plan to build generational wealth."],
+        "mentor-iq": ["Help me develop a leadership style that inspires trust.","How can I handle resistance to change within my team?","What are five out-of-the-box solutions for scaling my business fast?"],
+        imagine: ["Give me three unique names for a wellness brand rooted in nature.","Help me storyboard a short film about a young inventor.","What would a children’s book about courage look like?"],
+        lifewise: ["Should I leave this job or wait it out? Help me weigh the options.","How do I approach a tough conversation with my partner?","What’s a graceful way to end a business partnership that no longer aligns?"]
+    };
 
+    function renderSuggestedPrompts() {
+        const ai = hiddenSelect.value;
+        const pool = suggestions[ai] || ["Ask me anything!"];
 
+        suggestedPromptContainer.innerHTML = ''; // Clear old buttons
+
+        pool.slice(0, 3).forEach(prompt => {
+            const btn = document.createElement("button");
+            btn.textContent = prompt;
+            btn.addEventListener("click", function () {
+                messageInput.value = prompt;
+                sendButton.click();
+            });
+            suggestedPromptContainer.appendChild(btn);
+        });
+    }
+
+    selected.addEventListener('click', () => {
+        options.style.display = options.style.display === 'block' ? 'none' : 'block';
+    });
+
+    options.querySelectorAll('li').forEach(option => {
+        option.addEventListener('click', () => {
+            const value = option.getAttribute('data-value');
+            const label = option.textContent.trim();
+            const icon = option.querySelector('img').src;
+
+            selected.innerHTML = `<img src="${icon}" alt="icon"><span>${label}</span>`;
+            const aiName = label.split(' - ')[0].trim();
+            aiNameDisplay.textContent = aiName;
+            aiGreeting.innerHTML = `Hi there! 👋 I'm <span id="ai-name">${aiName}</span>. Ask me anything!`;
+            options.style.display = 'none';
+
+            hiddenSelect.value = value;
+            localStorage.setItem('selectedAI', value);
+
+            renderSuggestedPrompts();
+
+            // Force refresh bot behavior after AI change
+            location.reload();
+        });
+    });
+
+    const savedAI = localStorage.getItem('selectedAI');
+    if (savedAI) {
+        const savedOption = [...options.children].find(li => li.dataset.value === savedAI);
+        if (savedOption) {
+            const label = savedOption.textContent.trim();
+            const icon = savedOption.querySelector('img').src;
+            selected.innerHTML = `<img src="${icon}" alt="icon"><span>${label}</span>`;
+            const aiName = label.split(' - ')[0].trim();
+            aiNameDisplay.textContent = aiName;
+            aiGreeting.innerHTML = `Hi there! 👋 I'm <span id="ai-name">${aiName}</span>. Ask me anything!`;
+            hiddenSelect.value = savedAI;
+        }
+    }
+
+    renderSuggestedPrompts();
+});
+
+function showChatboxChrome() {
+    const header = document.getElementById("chatbox-header");
+    const footer = document.getElementById("chatbox-footer");
+    if (header && footer) {
+        header.style.display = "flex";
+        footer.style.display = "block";
+    }
+}
 </script>
 
 
