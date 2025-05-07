@@ -729,6 +729,218 @@ body {
     width: 24px;
     object-fit: contain;
 }
+
+/* Strategist Dropdown Positioning Fix */
+.strategist-dropdown {
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+/* 🌟 Refined Mobile Dropdown Styles */
+@media (max-width: 480px) {
+    .dropdown-options {
+        width: 90vw;
+        max-width: 360px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        background: #fff;
+        padding: 6px 0;
+        z-index: 999;
+    }
+
+    .dropdown-options li {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.2s ease;
+        white-space: normal;
+        color: #333;
+    }
+
+    .dropdown-options li:hover {
+        background-color: #f7f7f7;
+    }
+
+    .dropdown-options img {
+        height: 20px;
+        width: 20px;
+        object-fit: contain;
+    }
+
+    .dropdown-wrapper {
+        width: 90vw;
+        max-width: 360px;
+        padding: 12px 16px;
+        border: 2px solid #025450;
+        border-radius: 12px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .selected-option span {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #025450;
+    }
+
+    
+}
+/* Fix for the moved header */
+
+
+
+
+
+
+/* Responsive: Stack on smaller screens */
+@media (max-width: 480px) {
+        .header.moved .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header.moved .dropdown-wrapper {
+        width: 100%;
+    }
+
+    .header.moved .dropdown-wrapper .dropdown-options {
+        width: 100%;
+    }
+
+    .header.moved .login-btn {
+        margin-top: 8px;
+        align-self: flex-end;
+    }
+
+    
+    /* Dropdown list fix */
+    .header.moved .dropdown-wrapper .dropdown-options {
+    position: absolute;
+    margin-top: 6px; /* Instead of calc */
+    margin-left: 200px;
+    left: 0;
+    width: 100%;
+    background: white;
+    list-style: none;
+    padding: 0;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    display: none;
+    z-index: 9999;
+    max-height: 220px;
+    overflow-y: auto;
+    font-family: sans-serif;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: opacity 0.25s ease-in-out;
+    }
+
+
+    .header.moved .dropdown-wrapper .dropdown-options li {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    background-color: transparent;
+    transition: background 0.2s;
+    }
+
+    .header.moved .dropdown-wrapper .dropdown-options li:hover {
+    background-color: #f0f0f0;
+    }
+
+    .header.moved .dropdown-wrapper .dropdown-options img {
+    height: 20px;
+    width: 20px;
+    }
+
+}
+@media (min-width: 768px) {
+
+    /* 🔲 FIXED & CENTERED HEADER for DESKTOP */
+    .header.moved {
+    background-color: #ffffff;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 750px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+
+    /* 🔲 FLEX CONTAINER: LEFT + RIGHT SIDES */
+    .header.moved .header-inner {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* This pushes content to ends */
+    align-items: center;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    }
+
+    /* 🔲 MAIN CHAT CONTAINER CENTERED BELOW HEADER */
+    .moved .chat-box {
+    max-width: 956px;
+    margin: 0 auto;
+    padding-top: 100px; /* Gives space below fixed header */
+    }
+    
+    .chat-footer {
+        
+        margin-left: 25px;
+       
+    }
+}
+
+/* Overlay */
+.preloader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.85);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+/* Circle Loader */
+.circle-loader {
+  border: 5px solid #e0e0e0;
+  border-top: 5px solid #025450; /* Match your primary color */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+
+
 </style>
 
 
@@ -764,7 +976,8 @@ body {
 
 <h2 class="title typewriter" style="font-style: italic;"><span id="dynamic-word"></span></h2>
 <!-- ✅ CUSTOM AI STRATEGIST SELECTOR WITH ICONS -->
-<div class="ai-switcher custom-dropdown" style="display: flex; justify-content: center; margin-left: 140px;">
+<div class="ai-switcher custom-dropdown strategist-dropdown" id="original-ai-selector">
+
 
     <label for="ai-select">Choose Your Strategist:</label>
     <input type="hidden" id="ai-select" value="lumos">
@@ -868,6 +1081,10 @@ body {
     </div>
 </div>
 
+<div id="preloader-overlay" class="preloader-overlay">
+    <div class="circle-loader"></div>
+  </div>
+  
 <script>
 // ✅ Global variables
 let chatbox, chatContainer, chatFooter, messageInput, sendButton;
@@ -1088,17 +1305,96 @@ if ("webkitSpeechRecognition" in window) {
     }
 
     function moveAISelector() {
-        if (!aiMoved && aiSwitcher) {
-            if (window.innerWidth <= 768) {
-                headerTitle.style.display = "none"; // Hide the logo on mobile
-                aiSwitcher.classList.add('moved'); // Move the AI selector
-            } else {
-                aiSwitcher.classList.add('moved'); // Desktop: Move beside login button
+    if (!aiMoved) {
+        const originalSelector = document.getElementById('original-ai-selector');
+        if (originalSelector) originalSelector.style.display = 'none';
+
+        const newHeader = document.createElement("header");
+        newHeader.className = "header moved";
+        newHeader.innerHTML = `
+            <div class="header-inner">
+                <input type="hidden" id="ai-select" value="lumos">
+                <div class="dropdown-wrapper" id="custom-ai-select">
+                    <div class="selected-option" id="selected-ai">
+                        <img src="{% static 'icons/lumos.png' %}" alt="Lumos Icon">
+                        <span>Lumos - Emotional Support</span>
+                    </div>
+                    <ul class="dropdown-options">
+                        <li data-value="lumos"><img src="{% static 'icons/lumos.png' %}">Lumos - Emotional Support</li>
+                        <li data-value="nexara"><img src="{% static 'icons/nexara.png' %}">Nexara - Marketing & Small Biz</li>
+                        <li data-value="thrive"><img src="{% static 'icons/thrive.png' %}">Thrive - Wellness & Fitness</li>
+                        <li data-value="gideon"><img src="{% static 'icons/gideon.png' %}">Gideon - Spiritual & Faith-Based</li>
+                        <li data-value="elevate"><img src="{% static 'icons/elevate.png' %}">Elevate - Business Motivation</li>
+                        <li data-value="keystone"><img src="{% static 'icons/keystone.png' %}">Keystone - Finance & Legal Guidance</li>
+                        <li data-value="mentor-iq"><img src="{% static 'icons/mentoriq.png' %}">MentorIQ - Career & Learning</li>
+                        <li data-value="imagine"><img src="{% static 'icons/imagine.png' %}">Imagine - Creativity & Ideas</li>
+                        <li data-value="lifewise"><img src="{% static 'icons/lifewise.png' %}">LifeWise - Everyday Decisions</li>
+                    </ul>
+                </div>
+                <a href="/sign_in" class="login-btn">Login</a>
+            </div>
+        `;
+
+        const oldHeader = document.querySelector(".header");
+        if (oldHeader) oldHeader.replaceWith(newHeader);
+        else document.body.insertBefore(newHeader, document.body.firstChild);
+
+        const hiddenInput = newHeader.querySelector("#ai-select");
+        const selectedBox = newHeader.querySelector("#selected-ai");
+        const dropdownList = newHeader.querySelector(".dropdown-options");
+
+        const storedAI = localStorage.getItem("selectedAI");
+        if (storedAI) {
+            const target = [...dropdownList.children].find(li => li.dataset.value === storedAI);
+            if (target) {
+                const label = target.textContent.trim();
+                const icon = target.querySelector("img").src;
+                selectedBox.innerHTML = `<img src="${icon}"><span>${label}</span>`;
+                hiddenInput.value = storedAI;
             }
-            aiMoved = true;
-            console.log("🎯 AI Selector moved.");
         }
+
+        // Dropdown toggle
+        selectedBox.addEventListener("click", () => {
+            dropdownList.style.display = dropdownList.style.display === "block" ? "none" : "block";
+        });
+
+        // ✅ When selecting an AI, store it and reload
+        dropdownList.querySelectorAll("li").forEach(li => {
+            li.addEventListener("click", () => {
+                const value = li.getAttribute("data-value");
+                const label = li.textContent.trim();
+                const icon = li.querySelector("img").src;
+
+                selectedBox.innerHTML = `<img src="${icon}" alt="icon"><span>${label}</span>`;
+                hiddenInput.value = value;
+
+                // ✅ Set to localStorage
+                localStorage.setItem("selectedAI", value);
+
+                // ✅ Reload like the original version
+                const preloader = document.getElementById('preloader-overlay');
+preloader.style.display = 'flex';
+preloader.style.opacity = 0;
+setTimeout(() => {
+    preloader.style.opacity = 1;
+}, 10);
+
+// Delay to let animation show before page reload
+setTimeout(() => {
+    location.reload();
+}, 1000);
+            });
+        });
+
+        aiSelect = hiddenInput;
+        aiMoved = true;
+        console.log("✅ AI selector moved and reload-on-select is active.");
     }
+}
+
+
+
 
     // ✅ Expand Chat to Full Screen
     function expandChat() {
@@ -1294,7 +1590,17 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Reload the page to apply changes
         renderSuggestedPrompts();
-        location.reload();
+        const preloader = document.getElementById('preloader-overlay');
+preloader.style.display = 'flex';
+preloader.style.opacity = 0;
+setTimeout(() => {
+    preloader.style.opacity = 1;
+}, 10);
+
+// Delay to let animation show before page reload
+setTimeout(() => {
+    location.reload();
+}, 1000);
 
 
     }
@@ -1358,6 +1664,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     typeEffect();
 });
+
 document.addEventListener('DOMContentLoaded', function () {
     const customSelect = document.getElementById('custom-ai-select');
     const selected = document.getElementById('selected-ai');
@@ -1420,7 +1727,17 @@ document.addEventListener('DOMContentLoaded', function () {
             renderSuggestedPrompts();
 
             // Force refresh bot behavior after AI change
-            location.reload();
+            const preloader = document.getElementById('preloader-overlay');
+preloader.style.display = 'flex';
+preloader.style.opacity = 0;
+setTimeout(() => {
+    preloader.style.opacity = 1;
+}, 10);
+
+// Delay to let animation show before page reload
+setTimeout(() => {
+    location.reload();
+}, 1000);
         });
     });
 
