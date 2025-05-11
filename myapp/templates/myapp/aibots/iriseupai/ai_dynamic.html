@@ -658,11 +658,39 @@ body {
 /* ✅ Mobile Responsiveness */
 @media (max-width: 754px) {
     .fullscreen-settings-panel {
-        width: 100%;
+        position: fixed;
+        top: 0;
         right: -100%;
+        width: 100%;
+        height: 100vh;
+        background-color: #ffffff;
+        box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+        transition: right 0.4s ease-in-out;
+        z-index: 10001;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
     }
+
     .fullscreen-settings-panel.show {
         right: 0;
+    }
+
+    .settings-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+        display: none;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .settings-overlay.show {
+        display: block;
+        opacity: 1;
     }
 
     
@@ -1041,15 +1069,6 @@ html, body {
   
 }
 
-@media (max-width: 754px) {
-    .fullscreen-settings-panel {
-        width: 100%;
-        right: -100%;
-    }
-    .fullscreen-settings-panel.show {
-        right: 0;
-    }
-}
 
 .image-actions {
     display: flex;
@@ -1326,21 +1345,78 @@ html, body {
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-  .mobile-layout {
+    .message {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 18px;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    font-size: 0.95em;
+    }
+
+    .message.user {
+        max-width: 80%;
+        background-color: #2446b6;
+        color: white;
+        padding: 10px 14px;
+        border-radius: 18px 18px 0 18px;
+        margin-left: auto; /* Push to right */
+        margin-right: 0;   /* Align flush right */
+        box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.2);
+        word-wrap: break-word;
+        font-size: 0.95em;
+        
+    }
+
+    .message.bot {
+        max-width: 95%;
+        background-color: #e5e5e5;
+        color: #333;
+        padding: 10px 14px;
+        border-radius: 18px 18px 18px 0;
+        margin-right: auto; /* Push to left */
+        margin-left: 0;
+        word-wrap: break-word;
+        font-size: 0.95em;
+        white-space: pre-wrap;  
+        overflow-wrap: break-word;   /* 🛡️ Break long words safely */
+        word-wrap: break-word;
+        line-height: 1.4;    
+        
+    }
+
+
+    .full-layout {
+        display: none;
+    }
+    .mobile-layout {
+        display: block;
+    }
+
+    
+    
+    .mobile-container {
+    width: 100vw; /* Full viewport width */
+    max-width: none; /* Remove any fixed max width */
+    margin: auto;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-  }
+    
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    
+    }
 
-  .mobile-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-  }
 
-  .mobile-header {
-    position: fixed;
+    mobile-chatbox
+
+    .mobile-header {
+        position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -1351,185 +1427,379 @@ html, body {
     padding: 20px 15px;
     border-bottom-left-radius: 40px;
     border-bottom-right-radius: 40px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  }
+    }
 
-  .mobile-body-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .mobile-ai-list {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 110px 40px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    box-sizing: border-box;
-  }
-
-  .mobile-footer {
-    position: sticky;
-    bottom: 0;
-    background-color: #ffffff;
-    z-index: 999;
-    padding: 20px;
-    border-top: 1px solid #ddd;
-    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
-    text-align: center;
-  }
-
-  html, body {
-    height: 100%;
-    overflow: hidden;
+    .mobile-header h2 {
     margin: 0;
-    -webkit-text-size-adjust: 100%;
-  }
+    font-size: 1.8em;
+    }
+
+    .mobile-header p {
+    margin: 5px 0 0;
+    font-size: 0.9em;
+    }
+
+    .settings-icon {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    }
+
+    .mobile-conatiner.mobile-ai-list {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 40px 20px; /* keep side + bottom padding */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  height: 900px;
 }
 
 
+    .mobile-ai-card {
+      width: 100%;
+      padding: 18px 20px;
+      font-size: 1.1em;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .mobile-ai-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px; /* 👈 spacing like .mobile-ai-icon */
+    }
+
+
+    .bot-info p {
+    margin: 0;
+    font-size: 0.85em;
+    color: #333;
+    }
+
+    .mobile-footer {
+    padding: 20px;
+    text-align: center;
+    }
+
+    .premium-box {
+    border: 2px solid #0A4B3D;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    }
+
+    .history-btn {
+    background-color: #0A4B3D;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1em;
+    cursor: pointer;
+    width: 100%;
+    }
+
+    #mobile-ai-list, 
+    #mobile-ai-list li {
+    list-style: none;
+    padding: 0;
+    margin-top: 110px;
+    }
+
+   
+    html {
+    -webkit-text-size-adjust: 100%;
+    }
+
+    .mobile-body-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+
+    #mobile-chatbox {
+  flex: 1;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+  padding: 20px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* for iOS smooth scroll */
+}
+
+html, body {
+  height: 100%;
+  overflow: auto;
+}
+
+
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: #0A4B3D;
+  color: white;
+  text-align: center;
+  padding: 20px 15px;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+#mobile-header-chat {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+#mobile-header-chat i {
+  font-size: 1.5em;
+}
+
+
+#mobile-message-input-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-top: 1px solid #ccc;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.mobile-input-wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+#mobile-message-input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+#mobile-message-input::placeholder {
+  color: #888;
+}
+
+#mobile-message-input-container button {
+  background: #025450;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2em;
+  box-shadow: 0 3px 8px rgba(2, 84, 80, 0.3);
+  transition: all 0.2s ease;
+}
+
+#mobile-message-input-container button:hover {
+  background: #01332c;
+}
+
+#mobile-message-input-container {
+  bottom: env(safe-area-inset-bottom); /* iOS notch support */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+#mobile-footer {
+position: sticky;
+bottom: 0;
+background-color: #ffffff;
+z-index: 999;
+padding: 15px 20px;
+border-top: 1px solid #ddd;
+box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.fullscreen-settings-panel {
+        width: 100vw;
+        right: 100vw; /* Slide from full off-screen */
+        max-width: 100vw;
+
+    }
+
+    .fullscreen-settings-panel.show {
+        right: 0;
+    }
+
+    /* Make sure parent containers don't block it */
+    .mobile-layout,
+    .mobile-container {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Optional: Increase z-index if needed */
+    .fullscreen-settings-panel {
+        z-index: 9999;
+    }
+
+}
 
 </style>
-<div class="full-layout">   
-    <div id="fullscreen-settings-panel" class="fullscreen-settings-panel">
-        <button class="close-fullscreen-settings-btn">
-            <i class="fas fa-times"></i> <!-- Close icon -->
-        </button>
 
-        <h2>Settings</h2>
-        <p>Manage your preferences here.</p>
+<div id="fullscreen-settings-panel" class="fullscreen-settings-panel">
+    <button class="close-fullscreen-settings-btn">
+        <i class="fas fa-times"></i> <!-- Close icon -->
+    </button>
 
-        <div class="settings-main">
-            <!-- Profile Section -->
-            <div>
-                <a href="{% url 'personal_info_update' %}">
-                    <div class="settings-main-sub">
-                        <svg class="menu-girl-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#025450" width="50px" height="50px">
-                            <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
-                        </svg>
+    <h2>Settings</h2>
+    <p>Manage your preferences here.</p>
 
-                        <div>
-                            <h2 class="smith">{{ user.first_name }} {{ user.last_name }}</h2>
-                            <p class="smith-email">{{ user.email }}</p>
-                        </div>
+    <div class="settings-main">
+        <!-- Profile Section -->
+        <div>
+            <a href="{% url 'personal_info_update' %}">
+                <div class="settings-main-sub">
+                    <svg class="menu-girl-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#025450" width="50px" height="50px">
+                        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
+                    </svg>
+
+                    <div>
+                        <h2 class="smith">{{ user.first_name }} {{ user.last_name }}</h2>
+                        <p class="smith-email">{{ user.email }}</p>
                     </div>
-                </a>
-            </div>
-
-            {% if not is_pro_user %}
-            <div class="upgrade-pro-section">
-                <h3 class="pro-title">🚀 Discover Exclusive Features!</h3>
-                <p>Enjoy unlimited chats and priority support.</p>
-                <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">Upgrade to Pro</a>
-            </div>
-            {% endif %}
-
-            <a href="{% url 'personal_information' %}">
-                <div class="setting-opestion-main setting-opestion-space">
-                    <div class="setting-opestion-main-sub">
-                        <i class="fa-solid fa-user"></i> <!-- Personal Info icon -->
-                        <h2 class="smith new-chat">Personal Info</h2>
-                    </div>
-                    <i class="fa-solid fa-angle-right"></i>
                 </div>
             </a>
-
-            <a href="{% url 'faq' %}">
-                <div class="setting-opestion-main setting-opestion-space">
-                    <div class="setting-opestion-main-sub">
-                        <i class="fa-solid fa-question-circle"></i> <!-- FAQ icon -->
-                        <h2 class="smith new-chat">FAQs</h2>
-                    </div>
-                    <i class="fa-solid fa-angle-right"></i>
-                </div>
-            </a>
-
-            <a href="{% url 'data_privacy' %}">
-                <div class="setting-opestion-main setting-opestion-space">
-                    <div class="setting-opestion-main-sub">
-                        <i class="fa-solid fa-shield-alt"></i> <!-- Data & Privacy icon -->
-                        <h2 class="smith new-chat">Data & Privacy Policy</h2>
-                    </div>
-                    <i class="fa-solid fa-angle-right"></i>
-                </div>
-            </a>
-
-            <a href="{% url 'about_amigo' %}">
-                <div class="setting-opestion-main setting-opestion-space">
-                    <div class="setting-opestion-main-sub">
-                        <i class="fa-solid fa-info-circle"></i> <!-- About icon -->
-                        <h2 class="smith new-chat">About iRiseUp.Ai</h2>
-                    </div>
-                    <p class="version">v1.0.0</p>
-                    <i class="fa-solid fa-angle-right"></i>
-                </div>
-            </a>
-
-            <a href="{% url 'feedback' %}">
-                <div class="setting-opestion-main setting-opestion-space">
-                    <div class="setting-opestion-main-sub">
-                        <i class="fa-solid fa-comment-dots"></i> <!-- Feedback icon -->
-                        <h2 class="smith new-chat">Send Feedback</h2>
-                    </div>
-                    <i class="fa-solid fa-angle-right"></i>
-                </div>
-            </a>
-
-            <a href="{% url 'contact_us' %}">
-                <div class="setting-opestion-main setting-opestion-space">
-                    <div class="setting-opestion-main-sub">
-                        <i class="fa-solid fa-envelope"></i> <!-- Contact Us icon -->
-                        <h2 class="smith new-chat">Contact Us</h2>
-                    </div>
-                    <i class="fa-solid fa-angle-right"></i>
-                </div>
-            </a>
-
-            <a href="{% url 'delete_deactivate' %}">
-                <div class="setting-opestion-main setting-opestion-space">
-                    <div class="setting-opestion-main-sub">
-                        <i class="fa-solid fa-user-slash" style="color: #FF4848;"></i> <!-- Delete Account icon -->
-                        <h2 class="smith new-chat">Delete or Deactivate Account</h2>
-                    </div>
-                    <i class="fa-solid fa-angle-right"></i>
-                </div>
-            </a>
-
-            <a href="{% url 'sign_out' %}">
-                <div class="setting-opestion-main setting-opestion-space border-bottom-0">
-                    <div class="setting-opestion-main-sub">
-                        <i class="fa-solid fa-sign-out-alt" style="color: #FF4848;"></i> <!-- Logout icon in red -->
-                        <h2 class="smith new-chat">Logout</h2>
-                    </div>
-                    <i class="fa-solid fa-angle-right"></i>
-                </div>
-            </a>
-
-            {% if user.is_staff %}
-            <a href="{% url 'custom_admin:dashboard' %}">
-                <div class="setting-opestion-main setting-opestion-space">
-                    <div class="setting-opestion-main-sub">
-                        <i class="fa-solid fa-user-shield"></i> <!-- Staff Dashboard icon -->
-                        <h2 class="smith new-chat">Staff Dashboard</h2>
-                    </div>
-                    <i class="fa-solid fa-angle-right"></i>
-                </div>
-            </a>
-            {% endif %}
-
         </div>
 
-        <!-- Check if Access is Expired -->
-        {% if is_expired %}
-        <div class="alert alert-warning">
-            Your access has expired. Please renew your subscription to continue using the AI Bots.
+        {% if not is_pro_user %}
+        <div class="upgrade-pro-section">
+            <h3 class="pro-title">🚀 Discover Exclusive Features!</h3>
+            <p>Enjoy unlimited chats and priority support.</p>
+            <a href="{% url 'upgrade_to_pro' %}" class="upgrade-btn">Upgrade to Pro</a>
         </div>
         {% endif %}
+
+        <a href="{% url 'personal_information' %}">
+            <div class="setting-opestion-main setting-opestion-space">
+                <div class="setting-opestion-main-sub">
+                    <i class="fa-solid fa-user"></i> <!-- Personal Info icon -->
+                    <h2 class="smith new-chat">Personal Info</h2>
+                </div>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+        </a>
+
+        <a href="{% url 'faq' %}">
+            <div class="setting-opestion-main setting-opestion-space">
+                <div class="setting-opestion-main-sub">
+                    <i class="fa-solid fa-question-circle"></i> <!-- FAQ icon -->
+                    <h2 class="smith new-chat">FAQs</h2>
+                </div>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+        </a>
+
+        <a href="{% url 'data_privacy' %}">
+            <div class="setting-opestion-main setting-opestion-space">
+                <div class="setting-opestion-main-sub">
+                    <i class="fa-solid fa-shield-alt"></i> <!-- Data & Privacy icon -->
+                    <h2 class="smith new-chat">Data & Privacy Policy</h2>
+                </div>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+        </a>
+
+        <a href="{% url 'about_amigo' %}">
+            <div class="setting-opestion-main setting-opestion-space">
+                <div class="setting-opestion-main-sub">
+                    <i class="fa-solid fa-info-circle"></i> <!-- About icon -->
+                    <h2 class="smith new-chat">About iRiseUp.Ai</h2>
+                </div>
+                <p class="version">v1.0.0</p>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+        </a>
+
+        <a href="{% url 'feedback' %}">
+            <div class="setting-opestion-main setting-opestion-space">
+                <div class="setting-opestion-main-sub">
+                    <i class="fa-solid fa-comment-dots"></i> <!-- Feedback icon -->
+                    <h2 class="smith new-chat">Send Feedback</h2>
+                </div>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+        </a>
+
+        <a href="{% url 'contact_us' %}">
+            <div class="setting-opestion-main setting-opestion-space">
+                <div class="setting-opestion-main-sub">
+                    <i class="fa-solid fa-envelope"></i> <!-- Contact Us icon -->
+                    <h2 class="smith new-chat">Contact Us</h2>
+                </div>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+        </a>
+
+        <a href="{% url 'delete_deactivate' %}">
+            <div class="setting-opestion-main setting-opestion-space">
+                <div class="setting-opestion-main-sub">
+                    <i class="fa-solid fa-user-slash" style="color: #FF4848;"></i> <!-- Delete Account icon -->
+                    <h2 class="smith new-chat">Delete or Deactivate Account</h2>
+                </div>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+        </a>
+
+        <a href="{% url 'sign_out' %}">
+            <div class="setting-opestion-main setting-opestion-space border-bottom-0">
+                <div class="setting-opestion-main-sub">
+                    <i class="fa-solid fa-sign-out-alt" style="color: #FF4848;"></i> <!-- Logout icon in red -->
+                    <h2 class="smith new-chat">Logout</h2>
+                </div>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+        </a>
+
+        {% if user.is_staff %}
+        <a href="{% url 'custom_admin:dashboard' %}">
+            <div class="setting-opestion-main setting-opestion-space">
+                <div class="setting-opestion-main-sub">
+                    <i class="fa-solid fa-user-shield"></i> <!-- Staff Dashboard icon -->
+                    <h2 class="smith new-chat">Staff Dashboard</h2>
+                </div>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+        </a>
+        {% endif %}
+
     </div>
+
+    <!-- Check if Access is Expired -->
+    {% if is_expired %}
+    <div class="alert alert-warning">
+        Your access has expired. Please renew your subscription to continue using the AI Bots.
+    </div>
+    {% endif %}
+</div>
+
+<div class="full-layout">   
+    
 
     <div class="top-icons">
         <i class="fas fa-cog" id="fullscreen-settings-btn"></i>
@@ -1746,35 +2016,37 @@ html, body {
         <div class="settings-icon" id="mobile-settings-icon" onclick="toggleSettings()">⚙️</div>
       </div>
   
-      <!-- 🧠 Strategist List -->
-      <div class="mobile-body-content" id="mobile-ai-list-wrapper">
-        <div class="mobile-ai-list" id="mobile-ai-list">
-          <!-- Dynamically filled by loadAIList() -->
-        </div>
+      <!-- 🤖 AI List -->
+      <div class="mobile-ai-list" id="mobile-ai-list">
+        <!-- Dynamically filled by loadAIList() -->
       </div>
   
-      <!-- 👤 Chat Header (Back Button + AI Name) -->
       <div id="mobile-header-chat" class="mobile-header" style="display: none;">
         <button onclick="resetMobileView()" style="background: none; border: none; color: white; font-size: 1.2em;">
-          <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-left"></i>
         </button>
         <span id="mobile-ai-name" style="color: white; font-weight: bold; margin-left: 12px;"></span>
       </div>
-  
-      <!-- 💬 Chatbox Area -->
-      <div class="mobile-body-content" id="mobile-chatbox-wrapper">
+      
+      <div class="mobile-body-content">
         <div id="mobile-chatbox" class="chat-messages" style="margin-top: 70px; margin-bottom: 50px;">
           <!-- Messages will show here -->
         </div>
-  
+      
         <div id="mobile-message-input-container">
           <div style="display: flex; gap: 10px;">
             <input type="text" id="mobile-message-input" placeholder="Type a message..." />
-            <button id="mobile-mic-btn" class="mic-btn"><i class="fas fa-microphone"></i></button>
-            <button id="mobile-send"><i class="fas fa-paper-plane"></i></button>
+            <button id="mobile-mic-btn" class="mic-btn">
+                <i class="fas fa-microphone"></i>
+              </button>              
+              <button id="mobile-send">
+                <i class="fas fa-paper-plane"></i>
+              </button>              
           </div>
         </div>
       </div>
+      
+        
   
       <!-- 🔚 Footer -->
       <div class="mobile-footer" id="mobile-footer">
@@ -1802,7 +2074,8 @@ html, body {
           overflow-y: auto;
           box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
           padding: 20px;
-          z-index: 9999;">
+          z-index: 9999;
+      ">
         <h3 style="text-align: center; color: #025450;">Chat History</h3>
         <ul id="mobile-chat-history" class="mobile-ai-list">
           <!-- Filled dynamically by loadFullChatHistorySidebar() -->
@@ -1815,9 +2088,11 @@ html, body {
             border-radius: 10px;
             margin: 15px auto 0;
             display: block;
-            font-weight: bold;">Close</button>
+            font-weight: bold;
+        ">Close</button>
       </div>
   
+      <!-- 🔲 Overlay -->
       <div onclick="closeMobileHistory()" style="
           position: fixed;
           top: 0;
@@ -1825,10 +2100,10 @@ html, body {
           width: 100%;
           height: 100%;
           background: rgba(0,0,0,0.4);
-          z-index: 9998;"></div>
+          z-index: 9998;
+      "></div>
     </div>
   </div>
-  
   
   
   <div id="edit-strategist-modal" class="strategist-modal">
@@ -2055,8 +2330,28 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function toggleSettings() {
-    document.getElementById("fullscreen-settings-btn").click();
+    const settingsPanel = document.getElementById("fullscreen-settings-panel");
+    const overlay = document.querySelector(".settings-overlay");
+
+    if (!settingsPanel || !overlay) {
+        console.error("⚠️ Settings panel or overlay not found.");
+        return;
+    }
+
+    // Toggle visibility state
+    const isVisible = settingsPanel.classList.contains("show");
+
+    if (isVisible) {
+        settingsPanel.classList.remove("show");
+        overlay.classList.remove("show");
+        console.log("🔒 Settings panel closed.");
+    } else {
+        settingsPanel.classList.add("show");
+        overlay.classList.add("show");
+        console.log("⚙️ Settings panel opened.");
+    }
 }
+
 
 
 let selectedAI = null;
