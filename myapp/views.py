@@ -80,6 +80,10 @@ def test(request):
 def subscription_terms_new(request):
     return render(request, 'myapp/aibots/subscription_terms.html')
 
+def investor_page(request):
+    return render(request, 'myapp/aibots/iriseupai/investor_page.html')
+
+
 def terms_and_conditions(request):
     return render(request, 'myapp/aibots/terms_and_conditions.html')
 

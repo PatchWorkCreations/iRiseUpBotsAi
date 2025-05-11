@@ -1,0 +1,312 @@
+{% extends "myapp/aibots/base.html" %}
+{% load static %}
+
+{% block title %}iRiseUp.AI | Investor One-Pager{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="{% static 'assets/css/onepager.css' %}" />
+<style>
+    /* === onepager.css === */
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f5f7fa;
+  color: #333;
+}
+
+.section {
+  padding: 80px 20px;
+  transition: background 0.5s ease-in-out;
+}
+
+.section-light {
+  background: #ffffff;
+  color: #222;
+}
+
+.section-dark {
+  background: #141c27;
+  color: #fff;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+h1.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+h1.hero-title span {
+  color: #00ffc3;
+}
+
+.hero-section {
+  background: linear-gradient(120deg, #0e1123 0%, #1b1f3b 100%);
+  color: #fff;
+  text-align: center;
+  padding: 120px 20px;
+  position: relative;
+}
+
+.hero-sub {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+  color: #d1d9e6;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-buttons .btn {
+  padding: 12px 28px;
+  font-size: 1rem;
+  margin: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #00ffc3;
+  color: #000;
+  font-weight: 600;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #00cda2;
+}
+
+.btn-outline {
+  border: 2px solid #00ffc3;
+  color: #00ffc3;
+  background: transparent;
+}
+
+.btn-outline:hover {
+  background: #00ffc3;
+  color: #000;
+}
+
+h2 {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+  position: relative;
+}
+
+h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: #00ffc3;
+  margin-top: 10px;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+ul li::before {
+  content: "\2022";
+  color: #00ffc3;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  h1.hero-title {
+    font-size: 2.2rem;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+    margin: 10px 0;
+  }
+}
+
+/* Text Centering Utility */
+.text-center {
+  text-align: center;
+}
+
+/* Final CTA Styling */
+.section.text-center a.btn {
+  margin: 10px 15px;
+}
+
+em {
+  font-style: italic;
+  color: #00ffc3;
+  font-weight: 500;
+  display: block;
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+
+/* Animations (optional WOW effects) */
+.hero-title, .hero-sub, .hero-buttons {
+  animation: fadeInUp 1s ease-out forwards;
+  opacity: 0;
+}
+
+.hero-title {
+  animation-delay: 0.3s;
+}
+.hero-sub {
+  animation-delay: 0.6s;
+}
+.hero-buttons {
+  animation-delay: 0.9s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+</style>
+<!-- === HERO SECTION === -->
+<section class="hero-section">
+  <div class="container text-center">
+    <h1 class="hero-title">Radically Accessible AI<br><span>Built for Humans.</span></h1>
+    <p class="hero-sub">Empowering the neurodivergent, multilingual, and underserved with emotionally intelligent AI.</p>
+    <div class="hero-buttons">
+      <a href="#contact" class="btn btn-primary">Request Deck</a>
+      <a href="#product" class="btn btn-outline">Watch Demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- === VISION SECTION === -->
+<section class="section section-light">
+  <div class="container">
+    <h2>The Vision</h2>
+    <p>iRiseUp.AI makes AI radically accessible — especially for neurodivergent individuals, non-technical users, and underserved communities around the world.</p>
+  </div>
+</section>
+
+<!-- === PROBLEM SECTION === -->
+<section class="section section-dark">
+  <div class="container">
+    <h2>The Problem</h2>
+    <p>AI is rising fast, but it remains too cold, complex, and exclusive. Students with ADHD, overwhelmed founders, and multilingual learners are left behind by mainstream tools.</p>
+  </div>
+</section>
+
+<!-- === SOLUTION SECTION === -->
+<section class="section section-light">
+  <div class="container">
+    <h2>Our Solution</h2>
+    <ul>
+      <li>🧠 10 intelligent, emotionally aware AI assistants</li>
+      <li>📱 Mobile-first, multilingual, and neurodivergent-aware</li>
+      <li>❤️ Designed for clarity, compassion, and cultural relevance</li>
+    </ul>
+  </div>
+</section>
+
+<!-- === WHY NOW === -->
+<section class="section section-dark">
+  <div class="container">
+    <h2>Why Now</h2>
+    <p>The world is ready for AI that centers real people. Tech adoption is booming globally, but the tools must adapt to users — not the other way around.</p>
+  </div>
+</section>
+
+<!-- === TRACTION SECTION === -->
+<section class="section section-light">
+  <div class="container">
+    <h2>Traction So Far</h2>
+    <ul>
+      <li>🚀 Platform soft-launched in early 2025</li>
+      <li>🌍 Dubai AI Expo confirmed participation</li>
+      <li>✅ 10-AI ecosystem built, tested, and demo-ready</li>
+      <li>🤝 Partnerships in education, wellness, and digital inclusion</li>
+    </ul>
+  </div>
+</section>
+
+<!-- === FUTURE VISION === -->
+<section class="section section-dark">
+  <div class="container">
+    <h2>What We’re Building Toward</h2>
+    <ul>
+      <li>🌐 A global community of empowered everyday users</li>
+      <li>📦 Subscription and licensing model for orgs, schools, and entrepreneurs</li>
+      <li>🛠️ Deep customization for underserved and overlooked audiences</li>
+    </ul>
+  </div>
+</section>
+
+<!-- === FUNDING ASK === -->
+<section class="section section-light">
+  <div class="container">
+    <h2>What We’re Looking For</h2>
+    <p>We’re currently raising $250,000–$500,000 in pre-seed funding to move from soft launch to scale.</p>
+    <ul>
+      <li>🧪 Product refinement and mobile app development</li>
+      <li>🌍 Inclusive marketing across U.S., SEA, Africa, and the Middle East</li>
+      <li>👥 Core team expansion and technical runway</li>
+    </ul>
+  </div>
+</section>
+
+<!-- === ROI SECTION === -->
+<section class="section section-dark">
+  <div class="container">
+    <h2>How ROI Works</h2>
+    <ul>
+      <li>📈 <strong>Early-Stage Equity</strong> – Investors receive ownership in iRiseUp.AI based on contribution and valuation</li>
+      <li>💸 <strong>Revenue Growth = Value Growth</strong> – As subscriptions and deals grow, so does your share value</li>
+      <li>🚪 <strong>Exit Potential</strong> – Acquisition, merge, or IPO = multiple-based return</li>
+      <li>🔁 <strong>Profit-Sharing Options</strong> – SAFE agreements or aligned revenue share models</li>
+    </ul>
+    <p><em>“When we rise, you rise.”</em></p>
+  </div>
+</section>
+
+<!-- === FINAL CTA === -->
+<section class="section section-light text-center">
+  <div class="container">
+    <h2>Join the Rise</h2>
+    <p>Your early investment helps us scale. Your equity lets you share in the impact and the upside.</p>
+    <a href="#contact" class="btn btn-primary">Talk to Our Team</a>
+    <a href="#" class="btn btn-outline">Download Investor PDF</a>
+  </div>
+</section>
+
+{% endblock %}

@@ -36,7 +36,9 @@
 .service-section .service-image {display: none;}
 .choose-section {padding: 127px 0 120px;}
 .choose-section .choose_wrapper .choose-image {top: -64px; left: -30px;}
-.choose-section .choose_wrapper .choose-image img{width: 650px;}
+.choose-section .choose_wrapper .choose-image img{
+    padding-top: 50px;
+    width: 650px;}
 .study-section {padding: 120px 0 100px;}
 .testimonial-section .testimonial_content .content-box .box {top: -132px;}
 #carouselExampleControls .carousel-control-next {right: -26px;}

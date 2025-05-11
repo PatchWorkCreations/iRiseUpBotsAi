@@ -242,4 +242,6 @@ urlpatterns = [
     path('service/', views.service, name='service'),
     path('connect-with-us/', views.iriseup_contact_us, name='iriseup_contact_us'),
     path("api/save_reminder/", views.save_reminder, name="save_reminder"),
+
+    path('iriseup/investor/', views.investor_page, name='investor_page'),
 ]
