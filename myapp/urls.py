@@ -174,7 +174,7 @@ urlpatterns = [
     path("api/get-user-plan/", views.get_user_plan, name="get-user-plan"),
     path("upgrade-to-pro/", views.upgrade_to_pro, name="upgrade_to_pro"),
 
-    
+    path("api/guest/count/", guest_views.get_guest_count, name="get_guest_count"),
 
     path("terms/", views.terms_view, name="terms"),
 
@@ -241,4 +241,5 @@ urlpatterns = [
     path('about-us/', views.about_us, name='about_us'),
     path('service/', views.service, name='service'),
     path('connect-with-us/', views.iriseup_contact_us, name='iriseup_contact_us'),
+    path("api/save_reminder/", views.save_reminder, name="save_reminder"),
 ]

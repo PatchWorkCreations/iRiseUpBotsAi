@@ -121,6 +121,12 @@ def limit_guest_chats(request):
 
     return None  # ✅ Allows the request to proceed if limit is not reached
 
+from django.http import JsonResponse
+
+def get_guest_count(request):
+    count = request.session.get("guest_chat_count", 0)
+    return JsonResponse({"guest_chat_count": count})
+
 
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt

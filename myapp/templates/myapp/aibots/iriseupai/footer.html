@@ -29,28 +29,15 @@
             <div class="links">
               <h4 class="heading text-white">Quick Links</h4>
               <ul class="list-unstyled mb-0">
-                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="#">Home</a></li>
-                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="#">About</a></li>
-                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="#">Services</a></li>
-                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="#">Projects</a></li>
-                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="#">Contact</a></li>
+                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="{% url 'landing_for_iriseup' %}">Home</a></li>
+                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="{% url 'about_us' %}">About</a></li>
+                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="{% url 'service' %}">Services</a></li>
+                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="{% url 'iriseup_contact_us' %}">Contact</a></li>
               </ul>
             </div>
           </div>
   
-          <!-- Services -->
-          <div class="col-lg-3 col-md-2 col-sm-12 col-12 d-lg-block d-none">
-            <div class="links list-pd">
-              <h4 class="heading text-white">What We Do</h4>
-              <ul class="list-unstyled mb-0">
-                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="#">AI Automation</a></li>
-                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="#">Predictive Analytics</a></li>
-                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="#">Conversational Bots</a></li>
-                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="#">Team AI Training</a></li>
-                <li><i class="fa-solid fa-angle-right"></i><a class="text-size-16 text-decoration-none" href="#">FAQs</a></li>
-              </ul>
-            </div>
-          </div>
+
   
           <!-- Contact Info -->
           <div class="col-lg-3 col-md-4 col-sm-6 col-12 d-sm-block">

@@ -4331,16 +4331,34 @@ def simple_chat_message(request):
         if not chat_session.manually_renamed:
             chat_session.generate_chat_title(force_update=True)
 
-        return JsonResponse({
+        # Smart reminder detection
+        def detect_reminder_intent(text):
+            import re
+            match = re.search(r'remind(?: me)? to (.+?)([.!?]|$)', text, re.IGNORECASE)
+            if match:
+                return match.group(1).strip()
+            return None
+
+        # 📦 Base response
+        response_payload = {
             "chat_id": chat_session.id,
             "response": assistant_reply,
             "title": chat_session.title
-        })
+        }
+
+        # ⏰ Add reminder flag if detected
+        reminder = detect_reminder_intent(user_message + " " + assistant_reply)
+        if reminder:
+            response_payload["type"] = "reminder"
+            response_payload["data"] = {"message": reminder}
+
+        return JsonResponse(response_payload)
 
     except Exception as e:
         logger.error(f"Error in simple_chat_message: {e}", exc_info=True)
         return JsonResponse({"error": "Failed to get AI response."}, status=500)
-
+    
+    
 from myapp.models import UserLanguagePreference
 from django.utils.translation import activate
 
@@ -5018,3 +5036,65 @@ def iriseup_contact_us(request):
             logger.warning("⚠️ Form is invalid.")
             
     return render(request, 'myapp/aibots/iriseupai/contact_us.html', {'form': form})
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.utils.dateparse import parse_datetime
+from django.utils.timezone import make_aware
+import pytz
+from .models import Reminder
+from django.contrib.auth.decorators import login_required
+import datetime
+import json
+import logging
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.utils.dateparse import parse_datetime
+from django.utils.timezone import make_aware
+from .models import Reminder, AIUserSubscription
+
+import pytz
+import datetime
+import json
+import logging
+
+from django.utils.timezone import make_aware
+import pytz
+import datetime
+
+@csrf_exempt
+@login_required
+def save_reminder(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            remind_at_str = data.get("remind_at")
+            message = data.get("message")
+            user = request.user
+
+            if not message or not remind_at_str:
+                return JsonResponse({"error": "Missing reminder details"}, status=400)
+
+            # Parse the datetime from input
+            local_remind_at = datetime.datetime.fromisoformat(remind_at_str)
+
+            # Get user's preferred timezone
+            subscription = getattr(user, "aiusersubscription", None)
+            timezone_str = subscription.preferred_timezone if subscription else "UTC"
+            user_tz = pytz.timezone(timezone_str)
+
+            # Convert local time to UTC
+            aware_remind_at = make_aware(local_remind_at, timezone=user_tz)
+            remind_at_utc = aware_remind_at.astimezone(pytz.UTC)
+
+            Reminder.objects.create(
+                user=user,
+                message=message,
+                remind_at=remind_at_utc
+            )
+            return JsonResponse({"success": True})
+        except Exception as e:
+            logger.error(f"Reminder save failed: {e}")
+            return JsonResponse({"error": "Could not save reminder"}, status=500)
+    return JsonResponse({"error": "Invalid method"}, status=405)

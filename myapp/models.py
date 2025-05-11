@@ -1,6 +1,20 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now, timedelta
+from pytz import common_timezones
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class Reminder(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    remind_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Reminder for {self.user.username} at {self.remind_at}"
+
 
 class AIUserSubscription(models.Model):
     PLAN_CHOICES = [
@@ -86,6 +100,8 @@ class AIUserSubscription(models.Model):
 
     # New field for Language Preference
     preferred_language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES, default='en-US')
+    preferred_timezone = models.CharField(max_length=50, choices=[(tz, tz) for tz in common_timezones], default="UTC")
+
 
     def save(self, *args, **kwargs):
         """ Ensure expiration_date is correctly set for Pro and One-Year plans. """

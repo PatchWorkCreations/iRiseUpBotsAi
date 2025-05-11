@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),  # Default Django admin
     path('admin-panel/', include('myapp.admin_urls', namespace='custom_admin')),  # Renamed namespace
     path('', include('myapp.urls')),  # User-facing URLs
+    
 ]
 
 

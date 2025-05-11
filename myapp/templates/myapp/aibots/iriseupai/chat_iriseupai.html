@@ -937,6 +937,32 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+@media (max-width: 480px) {
+  .ai-switcher.strategist-dropdown {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+  }
+
+  .ai-switcher.strategist-dropdown label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #025450;
+  }
+
+  .ai-switcher.strategist-dropdown .dropdown-wrapper {
+    justify-content: center;
+    width: 90vw;
+    max-width: 360px;
+  }
+
+  .ai-switcher.strategist-dropdown .selected-option {
+    justify-content: center;
+  }
+}
 
 
 
@@ -983,44 +1009,44 @@ body {
     <input type="hidden" id="ai-select" value="lumos">
     <div class="dropdown-wrapper" id="custom-ai-select">
         <div class="selected-option" id="selected-ai">
-            <img src="{% static 'icons/lumos.png' %}" alt="Lumos Icon">
+            <img src="{% static 'icons2/lumos.png' %}" alt="Lumos Icon">
             <span>Lumos - Emotional Support</span>
         </div>
         <ul class="dropdown-options">
             <li data-value="lumos">
-                <img src="{% static 'icons/lumos.png' %}" alt="Lumos">
+                <img src="{% static 'icons2/lumos.png' %}" alt="Lumos">
                 Lumos - Emotional Support
             </li>
             <li data-value="nexara">
-                <img src="{% static 'icons/nexara.png' %}" alt="Nexara">
+                <img src="{% static 'icons2/nexara.png' %}" alt="Nexara">
                 Nexara - Marketing & Small Biz
             </li>
             <li data-value="thrive">
-                <img src="{% static 'icons/thrive.png' %}" alt="Thrive">
+                <img src="{% static 'icons2/thrive.png' %}" alt="Thrive">
                 Thrive - Wellness & Fitness
             </li>
             <li data-value="gideon">
-                <img src="{% static 'icons/gideon.png' %}" alt="Gideon">
+                <img src="{% static 'icons2/gideon.png' %}" alt="Gideon">
                 Gideon - Spiritual & Faith-Based
             </li>
             <li data-value="elevate">
-                <img src="{% static 'icons/elevate.png' %}" alt="Elevate">
+                <img src="{% static 'icons2/elevate.png' %}" alt="Elevate">
                 Elevate - Business Motivation
             </li>
             <li data-value="keystone">
-                <img src="{% static 'icons/keystone.png' %}" alt="Keystone">
+                <img src="{% static 'icons2/keystone.png' %}" alt="Keystone">
                 Keystone - Finance & Legal Guidance
             </li>
             <li data-value="mentor-iq">
-                <img src="{% static 'icons/mentoriq.png' %}" alt="MentorIQ">
+                <img src="{% static 'icons2/mentoriq.png' %}" alt="MentorIQ">
                 MentorIQ - Career & Learning Development
             </li>
             <li data-value="imagine">
-                <img src="{% static 'icons/imagine.png' %}" alt="Imagine">
+                <img src="{% static 'icons2/imagine.png' %}" alt="Imagine">
                 Imagine - Creativity & Ideas
             </li>
             <li data-value="lifewise">
-                <img src="{% static 'icons/lifewise.png' %}" alt="LifeWise">
+                <img src="{% static 'icons2/lifewise.png' %}" alt="LifeWise">
                 LifeWise - Everyday Decision Support
             </li>
         </ul>
@@ -1095,8 +1121,23 @@ let isRecording = false;
 let finalTranscript = "";
 let aiMoved = false;
 let chatExpanded = false;
-let messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
+
 const TRIAL_LIMIT = 10;
+
+let messageCount = 0; // default fallback
+
+// Sync with backend session on page load
+fetch('/api/guest/count/')
+  .then(res => res.json())
+  .then(data => {
+    messageCount = data.guest_chat_count || 0;
+    localStorage.setItem('messageCount', messageCount);
+    console.log("🧠 Synced messageCount from backend:", messageCount);
+  })
+  .catch(err => {
+    console.warn("⚠️ Failed to sync with backend guest count. Using localStorage.");
+    messageCount = parseInt(localStorage.getItem('messageCount')) || 0;
+  });
 
 // Place this globally at the top (after your global variables are declared)
 function addImageMessage(sender, imageUrl) {
@@ -1316,19 +1357,19 @@ if ("webkitSpeechRecognition" in window) {
                 <input type="hidden" id="ai-select" value="lumos">
                 <div class="dropdown-wrapper" id="custom-ai-select">
                     <div class="selected-option" id="selected-ai">
-                        <img src="{% static 'icons/lumos.png' %}" alt="Lumos Icon">
+                        <img src="{% static 'icons2/lumos.png' %}" alt="Lumos Icon">
                         <span>Lumos - Emotional Support</span>
                     </div>
                     <ul class="dropdown-options">
-                        <li data-value="lumos"><img src="{% static 'icons/lumos.png' %}">Lumos - Emotional Support</li>
-                        <li data-value="nexara"><img src="{% static 'icons/nexara.png' %}">Nexara - Marketing & Small Biz</li>
-                        <li data-value="thrive"><img src="{% static 'icons/thrive.png' %}">Thrive - Wellness & Fitness</li>
-                        <li data-value="gideon"><img src="{% static 'icons/gideon.png' %}">Gideon - Spiritual & Faith-Based</li>
-                        <li data-value="elevate"><img src="{% static 'icons/elevate.png' %}">Elevate - Business Motivation</li>
-                        <li data-value="keystone"><img src="{% static 'icons/keystone.png' %}">Keystone - Finance & Legal Guidance</li>
-                        <li data-value="mentor-iq"><img src="{% static 'icons/mentoriq.png' %}">MentorIQ - Career & Learning</li>
-                        <li data-value="imagine"><img src="{% static 'icons/imagine.png' %}">Imagine - Creativity & Ideas</li>
-                        <li data-value="lifewise"><img src="{% static 'icons/lifewise.png' %}">LifeWise - Everyday Decisions</li>
+                        <li data-value="lumos"><img src="{% static 'icons2/lumos.png' %}">Lumos - Emotional Support</li>
+                        <li data-value="nexara"><img src="{% static 'icons2/nexara.png' %}">Nexara - Marketing & Small Biz</li>
+                        <li data-value="thrive"><img src="{% static 'icons2/thrive.png' %}">Thrive - Wellness & Fitness</li>
+                        <li data-value="gideon"><img src="{% static 'icons2/gideon.png' %}">Gideon - Spiritual & Faith-Based</li>
+                        <li data-value="elevate"><img src="{% static 'icons2/elevate.png' %}">Elevate - Business Motivation</li>
+                        <li data-value="keystone"><img src="{% static 'icons2/keystone.png' %}">Keystone - Finance & Legal Guidance</li>
+                        <li data-value="mentor-iq"><img src="{% static 'icons2/mentoriq.png' %}">MentorIQ - Career & Learning</li>
+                        <li data-value="imagine"><img src="{% static 'icons2/imagine.png' %}">Imagine - Creativity & Ideas</li>
+                        <li data-value="lifewise"><img src="{% static 'icons2/lifewise.png' %}">LifeWise - Everyday Decisions</li>
                     </ul>
                 </div>
                 <a href="/sign_in" class="login-btn">Login</a>
@@ -1374,16 +1415,16 @@ if ("webkitSpeechRecognition" in window) {
 
                 // ✅ Reload like the original version
                 const preloader = document.getElementById('preloader-overlay');
-preloader.style.display = 'flex';
-preloader.style.opacity = 0;
-setTimeout(() => {
-    preloader.style.opacity = 1;
-}, 10);
+                preloader.style.display = 'flex';
+                preloader.style.opacity = 0;
+                setTimeout(() => {
+                    preloader.style.opacity = 1;
+                }, 10);
 
-// Delay to let animation show before page reload
-setTimeout(() => {
-    location.reload();
-}, 1000);
+                // Delay to let animation show before page reload
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
             });
         });
 

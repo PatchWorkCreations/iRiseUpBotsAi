@@ -656,7 +656,7 @@ body {
 }
 
 /* ✅ Mobile Responsiveness */
-@media (max-width: 768px) {
+@media (max-width: 754px) {
     .fullscreen-settings-panel {
         width: 100%;
         right: -100%;
@@ -664,6 +664,8 @@ body {
     .fullscreen-settings-panel.show {
         right: 0;
     }
+
+    
 }
 
 #loading-history {
@@ -757,7 +759,7 @@ body {
 }
 
 /* On mobile: hide full view, show mobile */
-@media (max-width: 768px) {
+@media (max-width: 754px) {
     .message {
     max-width: 80%;
     padding: 10px 14px;
@@ -1019,7 +1021,7 @@ html, body {
 }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 754px) {
   #mobile-message-input-container {
     bottom: env(safe-area-inset-bottom); /* iOS notch support */
     padding-bottom: env(safe-area-inset-bottom);
@@ -1039,7 +1041,7 @@ html, body {
   
 }
 
-@media (max-width: 768px) {
+@media (max-width: 754px) {
     .fullscreen-settings-panel {
         width: 100%;
         right: -100%;
@@ -1272,6 +1274,124 @@ html, body {
     border: none;
     cursor: pointer;
 }
+
+.reminder-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.reminder-modal {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.reminder-modal h3 {
+  margin-top: 0;
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#save-reminder-btn {
+  background-color: #025450;
+  color: white;
+}
+
+#cancel-reminder-btn {
+  background-color: #ccc;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .mobile-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .mobile-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .mobile-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    background-color: #0A4B3D;
+    color: white;
+    text-align: center;
+    padding: 20px 15px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  .mobile-body-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .mobile-ai-list {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 110px 40px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-sizing: border-box;
+  }
+
+  .mobile-footer {
+    position: sticky;
+    bottom: 0;
+    background-color: #ffffff;
+    z-index: 999;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+    text-align: center;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    -webkit-text-size-adjust: 100%;
+  }
+}
+
+
 
 </style>
 <div class="full-layout">   
@@ -1626,37 +1746,35 @@ html, body {
         <div class="settings-icon" id="mobile-settings-icon" onclick="toggleSettings()">⚙️</div>
       </div>
   
-      <!-- 🤖 AI List -->
-      <div class="mobile-ai-list" id="mobile-ai-list">
-        <!-- Dynamically filled by loadAIList() -->
+      <!-- 🧠 Strategist List -->
+      <div class="mobile-body-content" id="mobile-ai-list-wrapper">
+        <div class="mobile-ai-list" id="mobile-ai-list">
+          <!-- Dynamically filled by loadAIList() -->
+        </div>
       </div>
   
+      <!-- 👤 Chat Header (Back Button + AI Name) -->
       <div id="mobile-header-chat" class="mobile-header" style="display: none;">
         <button onclick="resetMobileView()" style="background: none; border: none; color: white; font-size: 1.2em;">
-            <i class="fas fa-arrow-left"></i>
+          <i class="fas fa-arrow-left"></i>
         </button>
         <span id="mobile-ai-name" style="color: white; font-weight: bold; margin-left: 12px;"></span>
       </div>
-      
-      <div class="mobile-body-content">
+  
+      <!-- 💬 Chatbox Area -->
+      <div class="mobile-body-content" id="mobile-chatbox-wrapper">
         <div id="mobile-chatbox" class="chat-messages" style="margin-top: 70px; margin-bottom: 50px;">
           <!-- Messages will show here -->
         </div>
-      
+  
         <div id="mobile-message-input-container">
           <div style="display: flex; gap: 10px;">
             <input type="text" id="mobile-message-input" placeholder="Type a message..." />
-            <button id="mobile-mic-btn" class="mic-btn">
-                <i class="fas fa-microphone"></i>
-              </button>              
-              <button id="mobile-send">
-                <i class="fas fa-paper-plane"></i>
-              </button>              
+            <button id="mobile-mic-btn" class="mic-btn"><i class="fas fa-microphone"></i></button>
+            <button id="mobile-send"><i class="fas fa-paper-plane"></i></button>
           </div>
         </div>
       </div>
-      
-        
   
       <!-- 🔚 Footer -->
       <div class="mobile-footer" id="mobile-footer">
@@ -1684,8 +1802,7 @@ html, body {
           overflow-y: auto;
           box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
           padding: 20px;
-          z-index: 9999;
-      ">
+          z-index: 9999;">
         <h3 style="text-align: center; color: #025450;">Chat History</h3>
         <ul id="mobile-chat-history" class="mobile-ai-list">
           <!-- Filled dynamically by loadFullChatHistorySidebar() -->
@@ -1698,11 +1815,9 @@ html, body {
             border-radius: 10px;
             margin: 15px auto 0;
             display: block;
-            font-weight: bold;
-        ">Close</button>
+            font-weight: bold;">Close</button>
       </div>
   
-      <!-- 🔲 Overlay -->
       <div onclick="closeMobileHistory()" style="
           position: fixed;
           top: 0;
@@ -1710,10 +1825,10 @@ html, body {
           width: 100%;
           height: 100%;
           background: rgba(0,0,0,0.4);
-          z-index: 9998;
-      "></div>
+          z-index: 9998;"></div>
     </div>
   </div>
+  
   
   
   <div id="edit-strategist-modal" class="strategist-modal">
@@ -1740,6 +1855,30 @@ html, body {
       </div>
     </div>
   </div>
+
+  <div id="reminderModal" class="reminder-modal-overlay" style="display: none;">
+    <div class="reminder-modal">
+      <h3>🧠 I noticed something important</h3>
+      <p id="reminder-text"></p>
+  
+      <label for="reminder-time">⏰ When should I remind you?</label>
+      <input type="datetime-local" id="reminder-time" />
+  
+      <!-- Timezone selector shown conditionally -->
+      <div id="timezone-selector-container" style="margin-top: 10px;">
+        <label for="reminder-timezone">🌍 Your Time Zone</label>
+        <select id="reminder-timezone">
+          <!-- Options will be injected dynamically -->
+        </select>
+      </div>
+  
+      <div class="modal-actions">
+        <button id="save-reminder-btn">Save Reminder</button>
+        <button id="cancel-reminder-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
 
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
@@ -2368,8 +2507,21 @@ function appendMessage(content, role = "bot") {
         messageDiv.innerHTML = content;
         container.appendChild(messageDiv);
         container.scrollTop = container.scrollHeight;
+
+        // 💡 Check if bot's message includes a reminder phrase
+        if (role === "bot") {
+            const reminderTrigger = /remind me to (.+?)([.!?]|$)/i;
+            const match = content.match(reminderTrigger);
+            if (match) {
+                const reminderText = match[1].trim();
+                appendReminderPrompt(reminderText, container);
+            }
+        }
     });
 }
+
+
+
 
 function typeHTMLWithEffect(target, formattedHTML, speed = 15, callback = null) {
     const dummy = document.createElement("div");
@@ -2491,6 +2643,73 @@ function sendMessage(customPrompt = null) {
         }
 
         if (data.response && data.response.trim() !== lastAssistantMessage) {
+            // ⏰ Check for smart reminder in response payload
+            if (data.type === "reminder" && data.data?.message) {
+                setTimeout(() => {
+                    document.getElementById("reminder-text").innerText = `“${data.data.message}”`;
+                    document.getElementById("reminderModal").style.display = "flex";
+                    populateTimezoneDropdown();
+                    document.getElementById("save-reminder-btn").onclick = () => {
+                        const remindAt = document.getElementById("reminder-time").value;
+                        const selectedTz = document.getElementById("timezone-select").value;
+                        if (!remindAt) {
+                            alert("⛔ Please specify when to be reminded.");
+                            return;
+                        }
+                        // 🕓 Optional Timezone Selector Logic
+                        const userHasTimezone = "{{ request.user.aiusersubscription.preferred_timezone|default:'' }}";
+                        const timezoneContainer = document.getElementById("timezone-selector-container");
+
+                        if (!userHasTimezone || userHasTimezone === "None") {
+                            const timezoneSelect = document.getElementById("reminder-timezone");
+
+                            const timezones = [
+                                "Asia/Manila", "America/New_York", "Europe/London", "Europe/Zurich",
+                                "Asia/Tokyo", "Pacific/Honolulu", "UTC"
+                            ];
+
+                            timezoneSelect.innerHTML = timezones.map(tz => `<option value="${tz}">${tz}</option>`).join('');
+                            timezoneSelect.value = Intl.DateTimeFormat().resolvedOptions().timeZone; // Set browser-detected default
+                            timezoneContainer.style.display = "block";
+                        } else {
+                            timezoneContainer.style.display = "none";
+                        }
+
+                        fetch("/api/save_reminder/", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRFToken": getCSRFToken()
+                            },
+                            body: JSON.stringify({
+                                message: data.data.message,
+                                remind_at: remindAt,
+                                timezone: selectedTz
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(resp => {
+                            if (resp.success) {
+                                alert("✅ Reminder saved!");
+                            } else {
+                                alert("⚠️ Failed to save reminder.");
+                            }
+                            document.getElementById("reminderModal").style.display = "none";
+                        })
+                        .catch(err => {
+                            console.error("❌ Reminder save error:", err);
+                            alert("⚠️ Error saving reminder.");
+                            document.getElementById("reminderModal").style.display = "none";
+                        });
+                    };
+
+                    document.getElementById("cancel-reminder-btn").onclick = () => {
+                        document.getElementById("reminderModal").style.display = "none";
+                    };
+                }, 2000);
+            }
+
+
             const raw = data.response.trim();
             const formatted = formatResponse(raw);
 
@@ -2517,6 +2736,86 @@ function sendMessage(customPrompt = null) {
         console.error("❌ Error fetching AI response:", err);
         appendMessage("⚠️ Something went wrong. Please try again later.", "bot");
     });
+}
+
+function populateTimezoneDropdown() {
+    const select = document.getElementById("reminder-timezone");
+    if (!select) {
+        console.warn("⚠️ Timezone dropdown not found.");
+        return;
+    }
+
+    // Clear any previous options to prevent duplicates
+    select.innerHTML = "";
+
+    // Try to load all supported timezones; fallback if not available
+    const timezones = (typeof Intl.supportedValuesOf === "function" && Intl.supportedValuesOf("timeZone")) || [
+        "UTC", "America/New_York", "Asia/Manila", "Europe/London", "Asia/Tokyo"
+    ];
+
+    // Populate dropdown
+    timezones.forEach(tz => {
+        const option = document.createElement("option");
+        option.value = tz;
+        option.textContent = tz;
+        select.appendChild(option);
+    });
+
+    // Set default to user's current browser-detected timezone
+    const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (browserTz && timezones.includes(browserTz)) {
+        select.value = browserTz;
+    }
+}
+
+
+
+function showReminderConfirmationModal(reminderText) {
+    const modal = document.getElementById("reminder-modal");
+    const msgSpan = document.getElementById("reminder-message");
+    const remindBtn = document.getElementById("confirm-reminder-btn");
+
+    msgSpan.textContent = reminderText;
+
+    remindBtn.onclick = () => {
+        const datetimeInput = document.getElementById("reminder-datetime").value;
+        if (!datetimeInput) {
+            alert("Please enter a date and time.");
+            return;
+        }
+
+        fetch("/api/save_reminder/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken()
+            },
+            body: JSON.stringify({
+                message: reminderText,
+                remind_at: datetimeInput
+            })
+        })
+        .then(res => res.json())
+        .then(resp => {
+            if (resp.success) {
+                alert("✅ Reminder saved!");
+            } else {
+                alert("⚠️ Failed to save reminder.");
+            }
+            modal.style.display = "none";
+        })
+        .catch(err => {
+            console.error("❌ Error:", err);
+            alert("⚠️ Failed to save reminder.");
+            modal.style.display = "none";
+        });
+    };
+
+    document.getElementById("close-reminder-modal").onclick = () => {
+        modal.style.display = "none";
+    };
+
+    modal.style.display = "block";
 }
 
 

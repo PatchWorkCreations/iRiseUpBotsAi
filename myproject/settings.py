@@ -24,7 +24,7 @@ SECRET_KEY = env('DJANGO_SECRET_KEY', default="pqu__%t3x2e$+%lk9d#vg-7d=s7$m+b1&
 DEBUG = env.bool('DEBUG', default=True)
 
 # Allowed hosts and trusted origins
-ALLOWED_HOSTS = ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[' www.iriseup.ai', 'localhost', '127.0.0.1', '0.0.0.0'])
+ALLOWED_HOSTS = ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['www.iriseup.ai', 'localhost', '127.0.0.1', '0.0.0.0', 'iriseup.ai'])
 CSRF_TRUSTED_ORIGINS = ["https://www.iriseup.ai"]
 
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'myapp.apps.MyAppConfig',
     'cloudinary',
     'cloudinary_storage',
+    'apscheduler',
 ]
 
 # Middleware

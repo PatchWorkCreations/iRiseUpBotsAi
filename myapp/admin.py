@@ -96,20 +96,26 @@ from .models import AIBot
 
 @admin.register(AIBot)
 class AIBotAdmin(admin.ModelAdmin):
-    list_display = ('name', 'ai_type', 'is_active', 'preview_image')  # Added image preview
-    search_fields = ('name', 'specialty', 'description')
-    list_filter = ('is_active', 'ai_type')
-    readonly_fields = ('preview_image',)  # Optional: show preview on edit page
-    fields = (
-        'name',
-        'slug',
-        'specialty',
-        'description',
-        'bio',
-        'ai_type',
-        'image',
-        'preview_image',
-        'is_active',
+    list_display = (
+        'name', 'ai_type', 'is_active', 'is_public', 'is_favorite', 'owner', 'preview_image'
+    )
+    search_fields = ('name', 'specialty', 'description', 'bio')
+    list_filter = ('is_active', 'is_public', 'ai_type')
+    readonly_fields = ('preview_image', 'created_at', 'updated_at')
+
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'slug', 'ai_type', 'specialty', 'description', 'bio')
+        }),
+        ('Media & Visuals', {
+            'fields': ('image', 'preview_image')
+        }),
+        ('Settings', {
+            'fields': ('is_active', 'is_public', 'is_favorite', 'owner', 'cloned_from')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at')
+        }),
     )
 
     def preview_image(self, obj):
