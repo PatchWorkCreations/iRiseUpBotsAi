@@ -1045,15 +1045,6 @@ def send_welcome_email(user_email, first_name):
     except Exception as e:
         print(f"❌ Unexpected error: {e}")
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import login
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import login
-from django.http import JsonResponse
-from django.db import IntegrityError  
 
 def signup_view(request):
     if request.method == "POST":
@@ -1062,33 +1053,41 @@ def signup_view(request):
         username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
+        heard_about_us = request.POST.get("heard_about_us")  # 👈 This is the only new line you need
 
-        # 🛑 Check for existing username & email BEFORE creation
         if User.objects.filter(username=username).exists():
             return JsonResponse({"success": False, "message": "Username already taken!", "error_field": "username"})
         
         if User.objects.filter(email=email).exists():
             return JsonResponse({"success": False, "message": "Email already registered!", "error_field": "email"})
 
-        # ✅ Wrap user creation inside a Try-Catch Block
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
             user.first_name = first_name
             user.last_name = last_name
             user.save()
-             
-        except IntegrityError:
-            return JsonResponse({"success": False, "message": "This username is already taken! Try another one.", "error_field": "username"})
 
-        # ✅ Login user & redirect to `iriseupdashboard`
+            # 🎯 Save AIUserSubscription
+            AIUserSubscription.objects.create(
+                user=user,
+                plan='free',
+                preferred_language='en-US',
+                preferred_timezone='UTC',
+                heard_about_us=heard_about_us  # 👈 Save the dropdown value
+            )
+
+        except IntegrityError:
+            return JsonResponse({"success": False, "message": "This username is already taken!", "error_field": "username"})
+
         login(request, user)
         return JsonResponse({
             "success": True, 
             "message": "🎉 Welcome! Your AI-powered journey starts now.",
-            "redirect_url": "/iriseupdashboard/"  # 🔥 Ensure we pass the redirect URL
+            "redirect_url": "/iriseupdashboard/"
         })
 
     return render(request, "myapp/aibots/iriseupai/signup.html")
+
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt

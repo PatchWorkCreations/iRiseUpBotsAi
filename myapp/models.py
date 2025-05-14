@@ -103,6 +103,23 @@ class AIUserSubscription(models.Model):
     preferred_timezone = models.CharField(max_length=50, choices=[(tz, tz) for tz in common_timezones], default="UTC")
 
 
+    HEARD_FROM_CHOICES = [
+        ('social_media', 'Social Media'),
+        ('friend', 'Friend/Referral'),
+        ('search', 'Search Engine'),
+        ('event', 'Event/Expo'),
+        ('other', 'Other'),
+    ]
+
+    heard_about_us = models.CharField(
+        max_length=50,
+        choices=HEARD_FROM_CHOICES,
+        default='other',
+        verbose_name="How did you hear about us?"
+    )
+
+
+
     def save(self, *args, **kwargs):
         """ Ensure expiration_date is correctly set for Pro and One-Year plans. """
         if not self.start_date:  # If start_date is None, assign now()
