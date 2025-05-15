@@ -2052,9 +2052,11 @@ box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
       <div class="mobile-footer" id="mobile-footer">
         {% if not is_pro_user %}
         <div class="premium-box">
-          ✨ Discover Exclusive Features!<br>
-          <small>Enjoy unlimited chats and priority support.</small>
-        </div>
+            ✨ Discover Exclusive Features!<br>
+            <small>Enjoy unlimited chats and priority support.</small><br><br>
+            <button onclick="showUpgradeModal()" class="upgrade-btn" style="margin-top: 8px;">Upgrade Now</button>
+          </div>
+          
         {% endif %}
         <button class="history-btn" onclick="showMobileHistory()">History</button>
       </div>
