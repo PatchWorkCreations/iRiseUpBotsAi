@@ -84,6 +84,10 @@ def investor_page(request):
     return render(request, 'myapp/aibots/iriseupai/investor_page.html')
 
 
+def services(request):
+    return render(request, 'myapp/aibots/service_offered/index.html')
+
+
 def terms_and_conditions(request):
     return render(request, 'myapp/aibots/terms_and_conditions.html')
 

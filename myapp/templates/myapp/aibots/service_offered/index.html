@@ -1,0 +1,1854 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+  <title>
+   Fionca - HTML 5 Template Preview
+  </title>
+  <!-- Fav Icon -->
+  <link href="{% static 'connect/images/favicon-3.ico' %}" rel="icon" type="image/x-icon"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Arimo:400,400i,700,700i&amp;display=swap" rel="stylesheet"/>
+  <!-- Stylesheets -->
+  <link href="{% static 'connect/css/font-awesome-all.css' %}" rel="stylesheet"/>
+  <link href="{% static 'connect/css/flaticon.css' %}" rel="stylesheet"/>
+  <link href="{% static 'connect/css/owl.css' %}" rel="stylesheet"/>
+  <link href="{% static 'connect/css/bootstrap.css' %}" rel="stylesheet"/>
+  <link href="{% static 'connect/css/jquery.fancybox.min.css' %}" rel="stylesheet"/>
+  <link href="{% static 'connect/css/animate.css' %}" rel="stylesheet"/>
+  <link href="{% static 'connect/css/color.css' %}" rel="stylesheet"/>
+  <link href="{% static 'connect/css/rtl.css' %}" rel="stylesheet"/>
+  <link href="{% static 'connect/css/style.css' %}" rel="stylesheet"/>
+  <link href="{% static 'connect/css/responsive.css' %}" rel="stylesheet"/>
+ </head>
+ <!-- page wrapper -->
+ <body class="boxed_wrapper ltr">
+
+  <!-- main header -->
+  <header class="main-header style-one style-three">
+    <div class="header-top">
+      <div class="auto-container">
+        <div class="top-inner clearfix">
+          <ul class="info top-left pull-left">
+            <li><i class="fas fa-map-marker-alt"></i>175 S 3rd St, Columbus, OH 43215</li>
+            <li><i class="fas fa-clock"></i>Monday to Friday: 9am to 6pm</li>
+          </ul>
+          <div class="top-right pull-right">
+            <ul class="social-links clearfix">
+              <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+              <li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
+              <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+              <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+              <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="header-lower">
+      <div class="outer-box">
+        <div class="auto-container">
+          <div class="main-box clearfix">
+            <div class="logo-box pull-left">
+              <figure class="logo">
+                <a href="{% url 'iriseupai_landing' %}">
+                  <img alt="" src="{% static 'connect/images/logo-3.png' %}" />
+                </a>
+              </figure>
+            </div>
+  
+            <div class="menu-area pull-right clearfix">
+              <div class="mobile-nav-toggler">
+                <i class="icon-bar"></i>
+                <i class="icon-bar"></i>
+                <i class="icon-bar"></i>
+              </div>
+  
+              <nav class="main-menu navbar-expand-md navbar-light">
+                <div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
+                  <ul class="navigation clearfix">
+                    <li class="current"><a href="{% url 'iriseupai_landing' %}">Home</a></li>
+                    <li><a href="{% url 'iriseupai_landing' %}#about">About</a></li>
+                    <li><a href="{% url 'iriseupai_landing' %}#pricing">Services</a></li>
+                    <li><a href="{% url 'iriseupai_landing' %}#portfolio">Portfolio</a></li>
+                    <li><a href="{% url 'iriseupai_landing' %}#howitworks">How It Works</a></li>
+                    <li><a href="{% url 'iriseupai_landing' %}#free-trial-chat">Free Trial</a></li>
+                    <li><a href="{% url 'contactus' %}">Contact</a></li>
+                    {% if user.is_authenticated %}
+                      <li><a href="{% url 'iriseupdashboard' %}">Dashboard</a></li>
+                      <li><a href="{% url 'sign_out' %}">Logout</a></li>
+                    {% else %}
+                      <li><a href="{% url 'sign_in' %}">Login</a></li>
+                    {% endif %}
+                  </ul>
+                </div>
+              </nav>
+  
+              
+            </div>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Sticky Header -->
+    
+  </header>
+  
+  <!-- Mobile Menu -->
+  <div class="mobile-menu">
+    <div class="menu-backdrop"></div>
+    <div class="close-btn"><i class="fas fa-times"></i></div>
+    <nav class="menu-box">
+      <div class="nav-logo">
+        <a href="{% url 'iriseupai_landing' %}">
+          <img alt="" src="{% static 'connect/images/mobile-logo.png' %}" title="iRiseUp.AI" />
+        </a>
+      </div>
+      <div class="menu-outer">
+        <!-- Menu will be loaded dynamically -->
+      </div>
+      <div class="contact-info">
+        <h4>Contact Info</h4>
+        <ul>
+          <li>175 S 3rd St, Columbus, OH</li>
+          <li><a href="tel:+101005200369">+1 010 0520 0369</a></li>
+          <li><a href="mailto:support@iriseup.ai">support@iriseup.ai</a></li>
+        </ul>
+      </div>
+      <div class="social-links">
+        <ul class="clearfix">
+          <li><a href="#"><span class="fab fa-twitter"></span></a></li>
+          <li><a href="#"><span class="fab fa-facebook-square"></span></a></li>
+          <li><a href="#"><span class="fab fa-pinterest-p"></span></a></li>
+          <li><a href="#"><span class="fab fa-instagram"></span></a></li>
+          <li><a href="#"><span class="fab fa-youtube"></span></a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  
+  <!-- End Mobile Menu -->
+  <!-- banner-section -->
+  <section class="banner-section style-three">
+    <div class="banner-carousel owl-theme owl-carousel owl-dots-none">
+  
+      <!-- Slide 1 -->
+      <div class="slide-item">
+        <div class="image-layer" style="background-image:url(assets/images/banner/banner-7.jpg)"></div>
+        <div class="auto-container">
+          <div class="content-box centred">
+            <h1>
+              Future-Proof Your Business<br />
+              With Human-Centered AI
+            </h1>
+            <p>
+              The world is changing fast—don’t get left behind. Our AI solutions help you scale smarter, serve better, and move boldly.
+            </p>
+            <div class="btn-box">
+              <a class="theme-btn style-three" href="#">Let’s Build Together</a>
+              <a class="banner-btn" href="index">Explore Our Services</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Slide 2 -->
+      <div class="slide-item">
+        <div class="image-layer" style="background-image:url(assets/images/banner/banner-8.jpg)"></div>
+        <div class="auto-container">
+          <div class="content-box">
+            <h1>
+              Custom AI Assistants<br />
+              Built for How You Work
+            </h1>
+            <p>
+              From smart chatbots to voice-powered tools—we bring your vision to life, aligned with your systems and your goals.
+            </p>
+            <div class="btn-box">
+              <a class="theme-btn style-three" href="#">Start Your AI Journey</a>
+              <a class="banner-btn" href="index">See Real Use Cases</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Slide 3 -->
+      <div class="slide-item">
+        <div class="image-layer" style="background-image:url(assets/images/banner/banner-9.jpg)"></div>
+        <div class="auto-container">
+          <div class="content-box centred">
+            <h1>
+              AI Integration That<br />
+              Actually Works for You
+            </h1>
+            <p>
+              No buzzwords. Just results. We deliver scalable, secure, and deeply personalized AI you’ll wish you started sooner.
+            </p>
+            <div class="btn-box">
+              <a class="theme-btn style-three" href="#">Talk to Our Experts</a>
+              <a class="banner-btn" href="index">Why iRiseUp.AI?</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </section>
+  
+  <!-- banner-section end -->
+  <!-- intro-section -->
+  <section class="intro-section">
+    <div class="auto-container">
+      <div class="upper-content">
+        <div class="row clearfix">
+          <div class="col-lg-4 col-md-6 col-sm-12 single-column">
+            <div class="single-item">
+              <div class="inner-box">
+                <div class="icon-box">
+                  <i class="flaticon-search"></i>
+                </div>
+                <h3><a href="#">AI That Understands You</a></h3>
+                <p>
+                  We don’t just build tools—we craft experiences. Every assistant is trained to listen, adapt, and truly support your goals.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 single-column">
+            <div class="single-item">
+              <div class="inner-box">
+                <div class="icon-box">
+                  <i class="flaticon-mountain"></i>
+                </div>
+                <h3><a href="#">Real Business Impact</a></h3>
+                <p>
+                  From reducing manual work to increasing customer satisfaction, our integrations deliver measurable wins—right where you need them.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 single-column">
+            <div class="single-item">
+              <div class="inner-box">
+                <div class="icon-box">
+                  <i class="flaticon-networking-1"></i>
+                </div>
+                <h3><a href="#">Built for the Bold</a></h3>
+                <p>
+                  Whether you’re local or global, scaling or pivoting—we build AI that thinks big, moves fast, and grows with you.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="lower-content centred">
+        <div class="sec-title style-three centred">
+          <h5>Loved by innovators. Trusted by teams.</h5>
+          <h2>Human-Centered AI. Built to Scale With You.</h2>
+        </div>
+        <div class="text">
+          <p>
+            At iRiseUp.AI, we believe tech should feel like a partner, not a puzzle. That’s why our AI solutions are designed to adapt to *your* systems, *your* goals, and *your* people. It’s not about catching up to the future—it’s about building it, together.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- intro-section end -->
+  <!-- info-style-two -->
+  <section class="info-style-two bg-color-3">
+    <div class="auto-container">
+      <div class="row clearfix">
+  
+        <!-- Video Column -->
+        <div class="col-lg-6 col-md-12 col-sm-12 video-column">
+          <div id="video_block_two">
+            <div class="video-content">
+              <div class="pattern-layer" style="background-image: url(assets/images/shape/shape-10.png);"></div>
+              <div class="video-inner" style="background-image: url(assets/images/resource/info-2.jpg);">
+                <div class="video-btn">
+                  <a class="lightbox-image" data-caption="" href="https://www.youtube.com/watch?v=nfP5N9Yc72A&amp;t=28s">
+                    <i class="fas fa-play"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Content Column -->
+        <div class="col-lg-6 col-md-12 col-sm-12 content-column">
+          <div id="content_block_seven">
+            <div class="content-box">
+  
+              <ul class="info-list clearfix">
+                <li>
+                  <i class="flaticon-increase"></i>
+                  <h3>Bold Strategy, Built to Lead</h3>
+                  <p>
+                    We don’t just follow trends—we help you lead them. Our AI strategy sessions are designed to unlock new possibilities and position you ahead of the curve.
+                  </p>
+                </li>
+                <li>
+                  <i class="flaticon-target"></i>
+                  <h3>Opportunities That Fit You</h3>
+                  <p>
+                    Every business is different. That’s why we tailor each AI solution to match your goals, your market, and your moment. Precision meets potential.
+                  </p>
+                </li>
+              </ul>
+  
+              <div class="support-box">
+                <p>
+                  Need help or just curious how AI can work for you? We're just one call away—anytime.
+                </p>
+                <div class="box">
+                  <i class="flaticon-smartphone-1"></i>
+                  <h3>
+                    <a href="tel:+11005200369">+1 (100) 5200 369</a><br />
+                    <a href="tel:+11005200360">+1 (100) 5200 360</a>
+                  </h3>
+                </div>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  
+  <!-- info-style-two end -->
+  <!-- service-style-three -->
+  <section class="service-style-three">
+    <div class="auto-container">
+      <div class="upper-box">
+        <div class="title-inner clearfix">
+          <div class="sec-title style-three left pull-left">
+            <h5>iRiseUp.AI Solutions</h5>
+            <h2>What We Can Build for You</h2>
+          </div>
+          <div class="text pull-left">
+            <p>
+              Whether you're scaling a startup or transforming an enterprise, our human-centered AI services are tailored to help you move faster, smarter, and more meaningfully.
+            </p>
+          </div>
+        </div>
+        <div class="btn-box">
+          <a class="theme-btn style-three" href="#">
+            View All Services
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+  
+      <div class="three-item-carousel owl-carousel owl-theme owl-nav-none">
+  
+        <div class="service-block-three">
+          <div class="inner-box">
+            <figure class="image-box">
+              <img alt="" src="{% static 'connect/images/service/service-1.jpg' %}" />
+              <a href="#"><i class="fas fa-link"></i></a>
+            </figure>
+            <div class="lower-content">
+              <h3><a href="#">AI Chatbot Integration</a></h3>
+              <p>From FAQs to advanced support, we create assistants that speak your brand and serve your users—on any channel.</p>
+              <div class="link">
+                <a href="#"><i class="fas fa-arrow-right"></i><span>Read More</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="service-block-three">
+          <div class="inner-box">
+            <figure class="image-box">
+              <img alt="" src="{% static 'connect/images/service/service-2.jpg' %}" />
+              <a href="#"><i class="fas fa-link"></i></a>
+            </figure>
+            <div class="lower-content">
+              <h3><a href="#">AI-Driven Analytics</a></h3>
+              <p>Get real insights—not just dashboards. We help you decode patterns and drive data-backed decisions that matter.</p>
+              <div class="link">
+                <a href="#"><i class="fas fa-arrow-right"></i><span>Read More</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="service-block-three">
+          <div class="inner-box">
+            <figure class="image-box">
+              <img alt="" src="{% static 'connect/images/service/service-3.jpg' %}" />
+              <a href="#"><i class="fas fa-link"></i></a>
+            </figure>
+            <div class="lower-content">
+              <h3><a href="#">Voice & Language Systems</a></h3>
+              <p>Custom-trained voice assistants and multilingual support that truly speak your users’ language—literally and emotionally.</p>
+              <div class="link">
+                <a href="#"><i class="fas fa-arrow-right"></i><span>Read More</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+
+  
+  
+  <!-- service-style-three end -->
+
+  <section class="feature-style-two">
+    <div class="auto-container">
+      <div class="row clearfix">
+  
+        <!-- Step 1 -->
+        <div class="col-lg-3 col-md-6 col-sm-12 feature-block">
+          <div class="feature-block-two wow fadeInUp animated" data-wow-delay="00ms" data-wow-duration="1500ms">
+            <div class="inner-box">
+              <figure class="image-box"><img src="{% static 'connect/images/resource/feature-4.jpg' %}" alt=""></figure>
+              <div class="overlay-box">
+                <p>Start with a free discovery call. We'll listen, understand your needs, and recommend how AI can support your growth.</p>
+              </div>
+              <div class="lower-content">
+                <div class="inner">
+                  <h4><a href="#">Step 1: Discovery</a></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Step 2 -->
+        <div class="col-lg-3 col-md-6 col-sm-12 feature-block">
+          <div class="feature-block-two wow fadeInUp animated" data-wow-delay="200ms" data-wow-duration="1500ms">
+            <div class="inner-box">
+              <figure class="image-box"><img src="{% static 'connect/images/resource/feature-5.jpg' %}" alt=""></figure>
+              <div class="overlay-box">
+                <p>We audit your systems and design a tailored AI integration roadmap that fits your brand, team, and customer journey.</p>
+              </div>
+              <div class="lower-content">
+                <div class="inner">
+                  <h4><a href="#">Step 2: Strategy & Design</a></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Step 3 -->
+        <div class="col-lg-3 col-md-6 col-sm-12 feature-block">
+          <div class="feature-block-two wow fadeInUp animated" data-wow-delay="400ms" data-wow-duration="1500ms">
+            <div class="inner-box">
+              <figure class="image-box"><img src="{% static 'connect/images/resource/feature-6.jpg' %}" alt=""></figure>
+              <div class="overlay-box">
+                <p>Our team builds and integrates your custom AI assistant—from backend logic to frontend experience. Fully tested. Ready to go.</p>
+              </div>
+              <div class="lower-content">
+                <div class="inner">
+                  <h4><a href="#">Step 3: Build & Launch</a></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Step 4 -->
+        <div class="col-lg-3 col-md-6 col-sm-12 feature-block">
+          <div class="feature-block-two wow fadeInUp animated" data-wow-delay="600ms" data-wow-duration="1500ms">
+            <div class="inner-box">
+              <figure class="image-box"><img src="{% static 'connect/images/resource/feature-7.jpg' %}" alt=""></figure>
+              <div class="overlay-box">
+                <p>After launch, we stay by your side—offering support, performance tracking, and upgrades to help your AI evolve.</p>
+              </div>
+              <div class="lower-content">
+                <div class="inner">
+                  <h4><a href="#">Step 4: Support & Scale</a></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  
+
+
+  <!-- funfact-style-two -->
+  <section class="funfact-style-two centred">
+    <div class="pattern-layer" style="background-image: url(assets/images/shape/shape-11.png);"></div>
+    <div class="auto-container">
+      <div class="row clearfix">
+  
+        <div class="col-lg-3 col-md-6 col-sm-12 counter-column">
+          <div class="counter-block-two wow slideInUp">
+            <div class="count-outer count-box"><span class="count-text" data-stop="10">0</span>k</div>
+            <h3>Clients Worldwide</h3>
+          </div>
+        </div>
+  
+        <div class="col-lg-3 col-md-6 col-sm-12 counter-column">
+          <div class="counter-block-two wow slideInUp">
+            <div class="count-outer count-box"><span class="count-text" data-stop="5">0</span>k+</div>
+            <h3>AI Projects Launched</h3>
+          </div>
+        </div>
+  
+        <div class="col-lg-3 col-md-6 col-sm-12 counter-column">
+          <div class="counter-block-two wow slideInUp">
+            <div class="count-outer count-box"><span class="count-text" data-stop="370">0</span></div>
+            <h3>Engineers & Innovators</h3>
+          </div>
+        </div>
+  
+        <div class="col-lg-3 col-md-6 col-sm-12 counter-column">
+          <div class="counter-block-two wow slideInUp">
+            <div class="count-outer count-box"><span class="count-text" data-stop="75">0</span>+</div>
+            <h3>Countries Served</h3>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  
+  
+  <!-- funfact-style-two end -->
+  <!-- chart-section -->
+  <section class="chart-section bg-color-3">
+    <div class="auto-container">
+      <div class="row clearfix">
+  
+        <div class="col-lg-6 col-md-12 col-sm-12 content-column">
+          <div id="content_block_eight">
+            <div class="content-box">
+              <div class="sec-title style-three left light">
+                <h5>Explore the Impact</h5>
+                <h2>AI That Delivers Measurable Results</h2>
+              </div>
+              <div class="text">
+                <p>
+                  Our clients don’t just talk about change—they see it. From time saved to revenue unlocked, our AI systems drive outcomes that speak for themselves.
+                </p>
+              </div>
+              <div class="btn-box">
+                <a href="#">Take a Free Demo</a>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-6 col-md-12 col-sm-12 chart-column">
+          <figure class="chart-box">
+            <img alt="" src="{% static 'connect/images/resource/chart-1.png' %}" />
+          </figure>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  
+  <!-- chart-section end -->
+  <!-- project-style-two -->
+  <section class="project-style-two">
+    <div class="auto-container">
+      <div class="sec-title style-three centred">
+        <h5>Trusted Globally</h5>
+        <h2>Recent Transformations</h2>
+      </div>
+      <div class="project-carousel-2 owl-carousel owl-theme owl-nav-none">
+  
+        <div class="project-inner">
+          <div class="inner-box">
+            <figure class="image-box">
+              <img alt="" src="{% static 'connect/images/gallery/project-4.jpg' %}" />
+            </figure>
+            <div class="content-box">
+              <span>Education & Training</span>
+              <h3>Custom AI for Online Learning</h3>
+              <p>We helped an ed-tech platform personalize learning paths with smart content suggestions, raising engagement by 63%.</p>
+              <a href="#"><i class="fas fa-arrow-right"></i><span>Read More</span></a>
+            </div>
+          </div>
+        </div>
+  
+        <div class="project-inner">
+          <div class="inner-box">
+            <figure class="image-box">
+              <img alt="" src="{% static 'connect/images/gallery/project-5.jpg' %}" />
+            </figure>
+            <div class="content-box">
+              <span>Healthcare</span>
+              <h3>HIPAA-Compliant Virtual Assistant</h3>
+              <p>We implemented a voice assistant for intake screening, reducing front desk load by 40% in under 3 months.</p>
+              <a href="#"><i class="fas fa-arrow-right"></i><span>Read More</span></a>
+            </div>
+          </div>
+        </div>
+  
+        <div class="project-inner">
+          <div class="inner-box">
+            <figure class="image-box">
+              <img alt="" src="{% static 'connect/images/gallery/project-6.jpg' %}" />
+            </figure>
+            <div class="content-box">
+              <span>eCommerce</span>
+              <h3>AI-Powered Sales Chatbot</h3>
+              <p>We developed a multilingual assistant that boosted cart conversion by 22% for a fast-scaling fashion brand.</p>
+              <a href="#"><i class="fas fa-arrow-right"></i><span>Read More</span></a>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  
+  <!-- project-style-two end -->
+  <!-- pricing-
+  <section class="pricing-section" style="background-image: url(assets/images/background/pricing-bg.jpg);">
+   <div class="auto-container">
+    <div class="tabs-box">
+     <div class="upper-box">
+      <div class="title-inner clearfix">
+       <div class="sec-title style-three left pull-left">
+        <h5>
+         how we charge
+        </h5>
+        <h2>
+         Pricing Plans
+        </h2>
+       </div>
+       <div class="text pull-left">
+        <p>
+         Tempor incididunt ut labore et dolore magna aliquat enim veniam quis nostrud exercitation ullamco laboris nis aliquip consequat duis aute irure dolor voluptate.
+        </p>
+       </div>
+      </div>
+      <div class="tab-btn-box">
+       <ul class="tab-btns tab-buttons clearfix">
+        <li class="tab-btn active-btn" data-tab="#tab-1">
+         Monthly
+        </li>
+        <li class="tab-btn" data-tab="#tab-2">
+         Yearly
+        </li>
+       </ul>
+      </div>
+     </div>
+     <div class="tabs-content">
+      <div class="tab active-tab" id="tab-1">
+       <div class="row clearfix">
+        <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
+         <div class="pricing-block-one">
+          <div class="pricing-table">
+           <div class="table-header">
+            <h3>
+             Small Plan
+            </h3>
+            <div class="price-box">
+             <span>
+              recommended
+             </span>
+             <h2>
+              $149
+             </h2>
+             <p>
+              / Month
+             </p>
+            </div>
+            <span class="text">
+             This Plan Includes Global Relations
+            </span>
+           </div>
+           <div class="table-content">
+            <ul class="clearfix">
+             <li>
+              All Financial Tasks
+             </li>
+             <li>
+              Economic Market Survey
+             </li>
+             <li>
+              <del>
+               Sales Operations
+              </del>
+             </li>
+             <li>
+              <del>
+               Auto Intelligence
+              </del>
+             </li>
+             <li>
+              <del>
+               24/7 Support
+              </del>
+             </li>
+             <li>
+              <del>
+               Technology Services
+              </del>
+             </li>
+            </ul>
+           </div>
+           <div class="table-footer">
+            <a href="#">
+             get started
+            </a>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
+         <div class="pricing-block-one active-block">
+          <div class="pricing-table">
+           <div class="table-header">
+            <h3>
+             Smart Plan
+            </h3>
+            <div class="price-box">
+             <span>
+              recommended
+             </span>
+             <h2>
+              $299
+             </h2>
+             <p>
+              / Month
+             </p>
+            </div>
+            <span class="text">
+             This Plan Includes Financial Analysis
+            </span>
+           </div>
+           <div class="table-content">
+            <ul class="clearfix">
+             <li>
+              All Financial Tasks
+             </li>
+             <li>
+              Economic Market Survey
+             </li>
+             <li>
+              Sales Operations
+             </li>
+             <li>
+              Auto Intelligence
+             </li>
+             <li>
+              <del>
+               24/7 Support
+              </del>
+             </li>
+             <li>
+              <del>
+               Technology Services
+              </del>
+             </li>
+            </ul>
+           </div>
+           <div class="table-footer">
+            <a href="#">
+             get started
+            </a>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
+         <div class="pricing-block-one">
+          <div class="pricing-table">
+           <div class="table-header">
+            <h3>
+             Super Plan
+            </h3>
+            <div class="price-box">
+             <span>
+              recommended
+             </span>
+             <h2>
+              $549
+             </h2>
+             <p>
+              / Month
+             </p>
+            </div>
+            <span class="text">
+             This Plan Includes Free Consultancy
+            </span>
+           </div>
+           <div class="table-content">
+            <ul class="clearfix">
+             <li>
+              All Financial Tasks
+             </li>
+             <li>
+              Economic Market Survey
+             </li>
+             <li>
+              Sales Operations
+             </li>
+             <li>
+              Auto Intelligence
+             </li>
+             <li>
+              24/7 Support
+             </li>
+             <li>
+              Technology Services
+             </li>
+            </ul>
+           </div>
+           <div class="table-footer">
+            <a href="#">
+             get started
+            </a>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="tab" id="tab-2">
+       <div class="row clearfix">
+        <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
+         <div class="pricing-block-one">
+          <div class="pricing-table">
+           <div class="table-header">
+            <h3>
+             Small Plan
+            </h3>
+            <div class="price-box">
+             <span>
+              recommended
+             </span>
+             <h2>
+              $349
+             </h2>
+             <p>
+              / Year
+             </p>
+            </div>
+            <span class="text">
+             This Plan Includes Global Relations
+            </span>
+           </div>
+           <div class="table-content">
+            <ul class="clearfix">
+             <li>
+              All Financial Tasks
+             </li>
+             <li>
+              Economic Market Survey
+             </li>
+             <li>
+              <del>
+               Sales Operations
+              </del>
+             </li>
+             <li>
+              <del>
+               Auto Intelligence
+              </del>
+             </li>
+             <li>
+              <del>
+               24/7 Support
+              </del>
+             </li>
+             <li>
+              <del>
+               Technology Services
+              </del>
+             </li>
+            </ul>
+           </div>
+           <div class="table-footer">
+            <a href="#">
+             get started
+            </a>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
+         <div class="pricing-block-one active-block">
+          <div class="pricing-table">
+           <div class="table-header">
+            <h3>
+             Smart Plan
+            </h3>
+            <div class="price-box">
+             <span>
+              recommended
+             </span>
+             <h2>
+              $599
+             </h2>
+             <p>
+              / Year
+             </p>
+            </div>
+            <span class="text">
+             This Plan Includes Financial Analysis
+            </span>
+           </div>
+           <div class="table-content">
+            <ul class="clearfix">
+             <li>
+              All Financial Tasks
+             </li>
+             <li>
+              Economic Market Survey
+             </li>
+             <li>
+              Sales Operations
+             </li>
+             <li>
+              Auto Intelligence
+             </li>
+             <li>
+              <del>
+               24/7 Support
+              </del>
+             </li>
+             <li>
+              <del>
+               Technology Services
+              </del>
+             </li>
+            </ul>
+           </div>
+           <div class="table-footer">
+            <a href="#">
+             get started
+            </a>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
+         <div class="pricing-block-one">
+          <div class="pricing-table">
+           <div class="table-header">
+            <h3>
+             Super Plan
+            </h3>
+            <div class="price-box">
+             <span>
+              recommended
+             </span>
+             <h2>
+              $749
+             </h2>
+             <p>
+              / Year
+             </p>
+            </div>
+            <span class="text">
+             This Plan Includes Free Consultancy
+            </span>
+           </div>
+           <div class="table-content">
+            <ul class="clearfix">
+             <li>
+              All Financial Tasks
+             </li>
+             <li>
+              Economic Market Survey
+             </li>
+             <li>
+              Sales Operations
+             </li>
+             <li>
+              Auto Intelligence
+             </li>
+             <li>
+              24/7 Support
+             </li>
+             <li>
+              Technology Services
+             </li>
+            </ul>
+           </div>
+           <div class="table-footer">
+            <a href="#">
+             get started
+            </a>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+  section -->
+  <!-- pricing-section end -->
+  <!-- testimonial-section -->
+  <section class="testimonial-section alternet-2">
+   <div class="auto-container">
+    <div class="sec-title style-three centred">
+     <h5>
+      testimonials
+     </h5>
+     <h2>
+      What Our Clients Saying
+     </h2>
+    </div>
+    <div class="testimonial-inner">
+     <div class="client-testimonial-carousel owl-carousel owl-theme owl-nav-none owl-dots-none">
+      <div class="testimonial-block">
+       <div class="text">
+        <i class="fas fa-quote-right">
+        </i>
+        <p>
+         Aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam estm qui dolorem ipsum quia dolor sit amet consectetur, adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam sd ipsum quaerat voluptatem.
+        </p>
+       </div>
+      </div>
+      <div class="testimonial-block">
+       <div class="text">
+        <i class="fas fa-quote-right">
+        </i>
+        <p>
+         Aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam estm qui dolorem ipsum quia dolor sit amet consectetur, adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam sd ipsum quaerat voluptatem.
+        </p>
+       </div>
+      </div>
+      <div class="testimonial-block">
+       <div class="text">
+        <i class="fas fa-quote-right">
+        </i>
+        <p>
+         Aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam estm qui dolorem ipsum quia dolor sit amet consectetur, adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam sd ipsum quaerat voluptatem.
+        </p>
+       </div>
+      </div>
+      <div class="testimonial-block">
+       <div class="text">
+        <i class="fas fa-quote-right">
+        </i>
+        <p>
+         Aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam estm qui dolorem ipsum quia dolor sit amet consectetur, adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam sd ipsum quaerat voluptatem.
+        </p>
+       </div>
+      </div>
+      <div class="testimonial-block">
+       <div class="text">
+        <i class="fas fa-quote-right">
+        </i>
+        <p>
+         Aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam estm qui dolorem ipsum quia dolor sit amet consectetur, adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam sd ipsum quaerat voluptatem.
+        </p>
+       </div>
+      </div>
+      <div class="testimonial-block">
+       <div class="text">
+        <i class="fas fa-quote-right">
+        </i>
+        <p>
+         Aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam estm qui dolorem ipsum quia dolor sit amet consectetur, adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam sd ipsum quaerat voluptatem.
+        </p>
+       </div>
+      </div>
+      <div class="testimonial-block">
+       <div class="text">
+        <i class="fas fa-quote-right">
+        </i>
+        <p>
+         Aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam estm qui dolorem ipsum quia dolor sit amet consectetur, adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam sd ipsum quaerat voluptatem.
+        </p>
+       </div>
+      </div>
+      <div class="testimonial-block">
+       <div class="text">
+        <i class="fas fa-quote-right">
+        </i>
+        <p>
+         Aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam estm qui dolorem ipsum quia dolor sit amet consectetur, adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam sd ipsum quaerat voluptatem.
+        </p>
+       </div>
+      </div>
+      <div class="testimonial-block">
+       <div class="text">
+        <i class="fas fa-quote-right">
+        </i>
+        <p>
+         Aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam estm qui dolorem ipsum quia dolor sit amet consectetur, adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam sd ipsum quaerat voluptatem.
+        </p>
+       </div>
+      </div>
+      <div class="testimonial-block">
+       <div class="text">
+        <i class="fas fa-quote-right">
+        </i>
+        <p>
+         Aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam estm qui dolorem ipsum quia dolor sit amet consectetur, adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam sd ipsum quaerat voluptatem.
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="client-thumb-outer">
+      <div class="client-thumbs-carousel owl-carousel owl-theme owl-nav-none owl-dots-none">
+       <div class="thumb-item">
+        <figure class="thumb-box">
+         <img alt="" src="{% static 'connect/images/resource/testimonial-1.png' %}"/>
+        </figure>
+        <div class="info-box">
+         <h5>
+          Robert Smith
+         </h5>
+         <span class="designation">
+          Senior Manager
+         </span>
+        </div>
+       </div>
+       <div class="thumb-item">
+        <figure class="thumb-box">
+         <img alt="" src="{% static 'connect/images/resource/testimonial-2.png' %}"/>
+        </figure>
+        <div class="info-box">
+         <h5>
+          Christine Eva
+         </h5>
+         <span class="designation">
+          Senior Manager
+         </span>
+        </div>
+       </div>
+       <div class="thumb-item">
+        <figure class="thumb-box">
+         <img alt="" src="{% static 'connect/images/resource/testimonial-3.png' %}"/>
+        </figure>
+        <div class="info-box">
+         <h5>
+          Jhon Doe
+         </h5>
+         <span class="designation">
+          Senior Manager
+         </span>
+        </div>
+       </div>
+       <div class="thumb-item">
+        <figure class="thumb-box">
+         <img alt="" src="{% static 'connect/images/resource/testimonial-4.png' %}"/>
+        </figure>
+        <div class="info-box">
+         <h5>
+          Robert
+         </h5>
+         <span class="designation">
+          Senior Manager
+         </span>
+        </div>
+       </div>
+       <div class="thumb-item">
+        <figure class="thumb-box">
+         <img alt="" src="{% static 'connect/images/resource/testimonial-5.png' %}"/>
+        </figure>
+        <div class="info-box">
+         <h5>
+          Tomas Tom
+         </h5>
+         <span class="designation">
+          Senior Manager
+         </span>
+        </div>
+       </div>
+       <div class="thumb-item">
+        <figure class="thumb-box">
+         <img alt="" src="{% static 'connect/images/resource/testimonial-1.png' %}"/>
+        </figure>
+        <div class="info-box">
+         <h5>
+          Robert Smith
+         </h5>
+         <span class="designation">
+          Senior Manager
+         </span>
+        </div>
+       </div>
+       <div class="thumb-item">
+        <figure class="thumb-box">
+         <img alt="" src="{% static 'connect/images/resource/testimonial-2.png' %}"/>
+        </figure>
+        <div class="info-box">
+         <h5>
+          Christine Eva
+         </h5>
+         <span class="designation">
+          Senior Manager
+         </span>
+        </div>
+       </div>
+       <div class="thumb-item">
+        <figure class="thumb-box">
+         <img alt="" src="{% static 'connect/images/resource/testimonial-3.png' %}"/>
+        </figure>
+        <div class="info-box">
+         <h5>
+          Jhon Doe
+         </h5>
+         <span class="designation">
+          Senior Manager
+         </span>
+        </div>
+       </div>
+       <div class="thumb-item">
+        <figure class="thumb-box">
+         <img alt="" src="{% static 'connect/images/resource/testimonial-4.png' %}"/>
+        </figure>
+        <div class="info-box">
+         <h5>
+          Robert
+         </h5>
+         <span class="designation">
+          Senior Manager
+         </span>
+        </div>
+       </div>
+       <div class="thumb-item">
+        <figure class="thumb-box">
+         <img alt="" src="{% static 'connect/images/resource/testimonial-5.png' %}"/>
+        </figure>
+        <div class="info-box">
+         <h5>
+          Tomas Tom
+         </h5>
+         <span class="designation">
+          Senior Manager
+         </span>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+  <!-- testimonial-section end -->
+  <!-- contact-section -->
+  <section class="contact-section" style="background-image: url(assets/images/background/contact-1.jpg);">
+   <div class="auto-container">
+    <div class="row clearfix">
+     <div class="col-xl-6 col-lg-12 col-md-12 offset-xl-6 content-column">
+      <div id="content_block_nine">
+       <div class="content-box">
+        <div class="sec-title style-three left light">
+         <h5>
+          focus on work
+         </h5>
+         <h2>
+          Let's Talk About Growing Your Business Always...
+         </h2>
+        </div>
+        <div class="text">
+         <p>
+          Boluptatem sequi nesciunt neque porro quisquam est qui dolorem ipsum quia dolor sit amet consectetur adipiscivelits.
+         </p>
+        </div>
+        <div class="form-inner">
+         <form action="contact.html" method="post">
+          <div class="form-group">
+           <input name="name" placeholder="Your Name" required="" type="text"/>
+          </div>
+          <div class="form-group">
+           <input name="email" placeholder="Email address" required="" type="email"/>
+          </div>
+          <div class="form-group">
+           <input name="phone" placeholder="Phone" required="" type="text"/>
+          </div>
+          <div class="form-group">
+           <textarea name="message" placeholder="Message"></textarea>
+          </div>
+          <div class="form-group message-btn">
+           <button class="theme-btn style-three" type="submit">
+            send message
+           </button>
+          </div>
+         </form>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+  <!-- contact-section end -->
+  <!-- news-style-three -->
+  <section class="news-style-three">
+   <div class="pattern-layer" style="background-image: url(assets/images/shape/shape-12.png);">
+   </div>
+   <div class="auto-container">
+    <div class="upper-box">
+     <div class="title-inner clearfix">
+      <div class="sec-title style-three left pull-left">
+       <h5>
+        read latest articles
+       </h5>
+       <h2>
+        What’s Happening
+       </h2>
+      </div>
+      <div class="text pull-left">
+       <p>
+        Tempor incididunt ut labore et dolore magna aliquat enim veniam quis nostrud exercitation ullamco laboris nis aliquip consequat duis aute irure dolor voluptate.
+       </p>
+      </div>
+     </div>
+     <div class="btn-box">
+      <a class="theme-btn style-three" href="#">
+       Our Blog
+       <i class="fas fa-arrow-right">
+       </i>
+      </a>
+     </div>
+    </div>
+    <div class="row clearfix">
+     <div class="col-lg-6 col-md-6 col-sm-12 big-column">
+      <div class="left-block">
+       <div class="news-block-two wow fadeInUp animated animated" data-wow-delay="00ms">
+        <div class="inner-box">
+         <figure class="image-box">
+          <img alt="" src="{% static 'connect/images/news/news-4.jpg' %}"/>
+         </figure>
+         <div class="lower-content">
+          <ul class="post-info">
+           <li>
+            By
+            <a href="#">
+             Fionca
+            </a>
+           </li>
+           <li>
+            January 31, 2020
+           </li>
+          </ul>
+          <h3>
+           <a href="#">
+            Take Action for the Best Strategy Benefits
+           </a>
+          </h3>
+          <div class="link">
+           <a href="#">
+            <i class="fas fa-arrow-right">
+            </i>
+            <span>
+             Read More
+            </span>
+           </a>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="col-lg-6 col-md-6 col-sm-12 big-column">
+      <div class="right-block">
+       <div class="row clearfix">
+        <div class="col-lg-6 col-md-6 col-sm-12 news-block">
+         <div class="news-block-one wow fadeInUp animated animated" data-wow-delay="300ms" data-wow-duration="1500ms">
+          <div class="inner-box">
+           <figure class="image-box">
+            <a href="#">
+             <img alt="" src="{% static 'connect/images/news/news-5.jpg' %}"/>
+            </a>
+           </figure>
+           <div class="lower-content">
+            <ul class="post-info">
+             <li>
+              By
+              <a href="#">
+               Fionca
+              </a>
+             </li>
+             <li>
+              January 31, 2020
+             </li>
+            </ul>
+            <h3>
+             <a href="#">
+              Enterprise is Becoming Digital Innovation
+             </a>
+            </h3>
+            <p>
+             Acepteur sintas haecat sed non dui proident sunt culpa ipsum ...
+            </p>
+            <div class="link">
+             <a href="#">
+              <i class="fas fa-arrow-right">
+              </i>
+              <span>
+               Read More
+              </span>
+             </a>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 news-block">
+         <div class="news-block-one wow fadeInUp animated animated" data-wow-delay="600ms" data-wow-duration="1500ms">
+          <div class="inner-box">
+           <figure class="image-box">
+            <a href="#">
+             <img alt="" src="{% static 'connect/images/news/news-6.jpg' %}"/>
+            </a>
+           </figure>
+           <div class="lower-content">
+            <ul class="post-info">
+             <li>
+              By
+              <a href="#">
+               Fionca
+              </a>
+             </li>
+             <li>
+              January 30, 2020
+             </li>
+            </ul>
+            <h3>
+             <a href="#">
+              Finance Market Expand: Why it’s Important?
+             </a>
+            </h3>
+            <p>
+             Acepteur sintas haecat sed non dui proident sunt culpa ipsum ...
+            </p>
+            <div class="link">
+             <a href="#">
+              <i class="fas fa-arrow-right">
+              </i>
+              <span>
+               Read More
+              </span>
+             </a>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+  <!-- news-style-three end -->
+  <!-- main-footer -->
+  <footer class="main-footer alternet-3">
+   <div class="footer-upper">
+    <div class="auto-container">
+     <div class="upper-inner clearfix">
+      <div class="text pull-left">
+       <h2>
+        Do you want to learn about us?
+       </h2>
+       <p>
+        Consectetur adipisicing elit sed eiusmod tempor incididunt labore dolore magna aliqua.
+       </p>
+      </div>
+      <div class="btn-box pull-right">
+       <a href="#">
+        Take a Free Demo
+       </a>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="footer-top">
+    <div class="auto-container">
+     <div class="widget-section">
+      <div class="row clearfix">
+       <div class="col-lg-3 col-md-6 col-sm-12 footer-column">
+        <div class="footer-widget logo-widget">
+         <figure class="footer-logo">
+          <a href="#">
+           <img alt="" src="{% static 'connect/images/footer-logo-3.png' %}"/>
+          </a>
+         </figure>
+         <div class="text">
+          <p>
+           Tempor incididunt ut labore eut dolore veniam quis nostrud exercitation ullamc consequat. Duis aute irure.
+          </p>
+         </div>
+         <ul class="info-list clearfix">
+          <li>
+           <i class="fas fa-map-marker-alt">
+           </i>
+           838 Andy Street, Madison, NJ 08003
+          </li>
+          <li>
+           <i class="fas fa-envelope">
+           </i>
+           Email
+           <a href="mailto:support@my-domain.com">
+            support@my-domain.com
+           </a>
+          </li>
+          <li>
+           <i class="fas fa-headphones">
+           </i>
+           Support
+           <a href="tel:01005200369">
+            0100 5200 369
+           </a>
+          </li>
+         </ul>
+         <ul class="social-links clearfix">
+          <li>
+           <a href="#">
+            <i class="fab fa-twitter">
+            </i>
+           </a>
+          </li>
+          <li>
+           <a href="#">
+            <i class="fab fa-facebook-f">
+            </i>
+           </a>
+          </li>
+          <li>
+           <a href="#">
+            <i class="fab fa-instagram">
+            </i>
+           </a>
+          </li>
+          <li>
+           <a href="#">
+            <i class="fab fa-linkedin-in">
+            </i>
+           </a>
+          </li>
+          <li>
+           <a href="#">
+            <i class="fab fa-pinterest-p">
+            </i>
+           </a>
+          </li>
+         </ul>
+        </div>
+       </div>
+       <div class="col-lg-3 col-md-6 col-sm-12 footer-column">
+        <div class="footer-widget links-widget ml-70">
+         <div class="widget-title">
+          <h4>
+           Useful Links
+          </h4>
+         </div>
+         <div class="widget-content">
+          <ul class="list clearfix">
+           <li>
+            <a href="#">
+             About Us
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             What We Offers
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             Testimonials
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             Our Projectss
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             Latest News
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             Privacy Policy
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             Contact Us
+            </a>
+           </li>
+          </ul>
+         </div>
+        </div>
+       </div>
+       <div class="col-lg-3 col-md-6 col-sm-12 footer-column">
+        <div class="footer-widget links-widget">
+         <div class="widget-title">
+          <h4>
+           What We Do
+          </h4>
+         </div>
+         <div class="widget-content">
+          <ul class="list clearfix">
+           <li>
+            <a href="#">
+             Financial Advice
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             Business Planning
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             Startup Help
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             Investment Strategy
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             Management Services
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             Market Research
+            </a>
+           </li>
+           <li>
+            <a href="#">
+             SEO Optimization
+            </a>
+           </li>
+          </ul>
+         </div>
+        </div>
+       </div>
+       <div class="col-lg-3 col-md-6 col-sm-12 footer-column">
+        <div class="footer-widget newsletter-widget">
+         <div class="widget-title">
+          <h4>
+           Newslette
+          </h4>
+         </div>
+         <div class="widget-content">
+          <div class="text">
+           <p>
+            Get in your inbox the latest News
+           </p>
+          </div>
+          <form action="contact.html" class="newsletter-form" method="post">
+           <div class="form-group">
+            <i class="far fa-user">
+            </i>
+            <input name="name" placeholder="Your Name" required="" type="text"/>
+           </div>
+           <div class="form-group">
+            <i class="far fa-envelope">
+            </i>
+            <input name="email" placeholder="Email address" required="" type="email"/>
+           </div>
+           <div class="form-group message-btn">
+            <button class="theme-btn style-three" type="submit">
+             subscribe
+            </button>
+           </div>
+          </form>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="footer-bottom">
+    <div class="auto-container">
+     <div class="copyright">
+      <p>
+       © 2020
+       <a href="#">
+        FIONCA
+       </a>
+       - Business &amp; Consulting. All rights reserved.
+      </p>
+     </div>
+    </div>
+   </div>
+  </footer>
+  <!-- main-footer end -->
+  <!--Scroll to top-->
+  <button class="scroll-top style-three scroll-to-target" data-target="html">
+   <span class="fa fa-arrow-up">
+   </span>
+  </button>
+  <!-- sidebar cart item -->
+  <div class="xs-sidebar-group info-group info-sidebar">
+   <div class="xs-overlay xs-bg-black">
+   </div>
+   <div class="xs-sidebar-widget">
+    <div class="sidebar-widget-container">
+     <div class="widget-heading">
+      <a class="close-side-widget" href="#">
+       X
+      </a>
+     </div>
+     <div class="sidebar-textwidget">
+      <div class="sidebar-info-contents">
+       <div class="content-inner">
+        <div class="upper-box">
+         <div class="logo">
+          <a href="#">
+           <img alt="" src="{% static 'connect/images/sidebar-logo.png' %}"/>
+          </a>
+         </div>
+         <div class="text">
+          <p>
+           Exercitation ullamco laboris nis aliquip sed conseqrure dolorn repreh deris ptate velit ecepteur duis.
+          </p>
+         </div>
+        </div>
+        <div class="side-menu-box">
+         <div class="side-menu">
+          <nav class="menu-box">
+           <div class="menu-outer">
+           </div>
+          </nav>
+         </div>
+        </div>
+        <div class="info-box">
+         <h3>
+          Get in touch
+         </h3>
+         <ul class="info-list clearfix">
+          <li>
+           <i class="fas fa-map-marker-alt">
+           </i>
+           838 Andy Street, Madison, NJ
+          </li>
+          <li>
+           <i class="fas fa-envelope">
+           </i>
+           <a href="mailto:support@my-domain.com">
+            support@my-domain.com
+           </a>
+          </li>
+          <li>
+           <i class="fas fa-headphones-alt">
+           </i>
+           <a href="tel:101005200369">
+            +1  0100 5200 369
+           </a>
+          </li>
+          <li>
+           <i class="far fa-clock">
+           </i>
+           Monday to Friday: 9am - 6pm
+          </li>
+         </ul>
+         <form action="contact.html" class="subscribe-form" method="post">
+          <div class="form-group">
+           <input name="email" placeholder="Email address" required="" type="email"/>
+           <button class="theme-btn style-one" type="submit">
+            subscribe now
+           </button>
+          </div>
+         </form>
+         <ul class="social-links clearfix">
+          <li>
+           <a href="#">
+            <i class="fab fa-twitter">
+            </i>
+           </a>
+          </li>
+          <li>
+           <a href="#">
+            <i class="fab fa-facebook-f">
+            </i>
+           </a>
+          </li>
+          <li>
+           <a href="#">
+            <i class="fab fa-linkedin-in">
+            </i>
+           </a>
+          </li>
+          <li>
+           <a href="#">
+            <i class="fab fa-google-plus-g">
+            </i>
+           </a>
+          </li>
+          <li>
+           <a href="#">
+            <i class="fab fa-pinterest-p">
+            </i>
+           </a>
+          </li>
+          <li>
+           <a href="#">
+            <i class="fab fa-instagram">
+            </i>
+           </a>
+          </li>
+         </ul>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <!-- END sidebar widget item -->
+  <!-- jequery plugins -->
+  <script src="{% static 'connect/js/jquery.js' %}">
+  </script>
+  <script src="{% static 'connect/js/popper.min.js' %}">
+  </script>
+  <script src="{% static 'connect/js/bootstrap.min.js' %}">
+  </script>
+  <script src="{% static 'connect/js/owl.js' %}">
+  </script>
+  <script src="{% static 'connect/js/wow.js' %}">
+  </script>
+  <script src="{% static 'connect/js/validation.js' %}">
+  </script>
+  <script src="{% static 'connect/js/jquery.fancybox.js' %}">
+  </script>
+  <script src="{% static 'connect/js/appear.js' %}">
+  </script>
+  <script src="{% static 'connect/js/jquery.countTo.js' %}">
+  </script>
+  <script src="{% static 'connect/js/scrollbar.js' %}">
+  </script>
+  <script src="{% static 'connect/js/nav-tool.js' %}">
+  </script>
+  <script src="{% static 'connect/js/TweenMax.min.js' %}">
+  </script>
+  <script src="{% static 'connect/js/circle-progress.js' %}">
+  </script>
+  <script src="{% static 'connect/js/jquery.nice-select.min.js' %}">
+  </script>
+  <!-- main-js -->
+  <script src="{% static 'connect/js/script.js' %}">
+  </script>
+ </body>
+ <!-- End of .page_wrapper -->
+</html>
