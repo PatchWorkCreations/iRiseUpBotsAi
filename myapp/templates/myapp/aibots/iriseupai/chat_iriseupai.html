@@ -1473,21 +1473,60 @@ if ("webkitSpeechRecognition" in window) {
         .replace(/(^|<br>)([A-Z][A-Za-z\s]+):/g, '$1<strong>$2</strong>:')
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-    const messageHTML = `
-        <div class="message ${messageClass}" style="opacity: 0; transform: translateY(10px); transition: all 0.3s;">
-            ${formattedText}
-            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-        </div>
+    const paragraphs = formattedText.split(/<br><br>/); // Chunk by paragraph
+
+    const messageElement = document.createElement('div');
+    messageElement.className = `message ${messageClass}`;
+    messageElement.style.opacity = "0";
+    messageElement.style.transform = "translateY(10px)";
+    messageElement.style.transition = "all 0.3s";
+
+    messageElement.innerHTML = `
+        <span class="message-content"></span>
+        <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
     `;
 
-    chatbox.innerHTML += messageHTML;
+    chatbox.appendChild(messageElement);
+    const contentSpan = messageElement.querySelector('.message-content');
+
+    let paragraphIndex = 0;
+
+    function revealNextParagraph() {
+        if (paragraphIndex >= paragraphs.length) return;
+
+        const words = paragraphs[paragraphIndex].split(' ');
+        let wordIndex = 0;
+
+        const paragraphContainer = document.createElement('div');
+        paragraphContainer.style.marginTop = "14px"; // ✅ Add vertical spacing
+        paragraphContainer.style.lineHeight = "1.6"; // ✅ Optional: smooth flow
+
+        contentSpan.appendChild(paragraphContainer);
+
+        function revealWord() {
+            if (wordIndex < words.length) {
+                paragraphContainer.innerHTML += words[wordIndex] + ' ';
+                chatbox.scrollTop = chatbox.scrollHeight;
+                wordIndex++;
+                setTimeout(revealWord, 100); // Speed per word
+            } else {
+                paragraphIndex++;
+                setTimeout(revealNextParagraph, 300); // Pause before next paragraph
+            }
+        }
+
+        revealWord();
+    }
+
     setTimeout(() => {
-        chatbox.lastElementChild.style.opacity = "1";
-        chatbox.lastElementChild.style.transform = "translateY(0)";
+        messageElement.style.opacity = "1";
+        messageElement.style.transform = "translateY(0)";
+        revealNextParagraph();
     }, 100);
 
     chatbox.scrollTop = chatbox.scrollHeight;
 }
+
 
 
 document.addEventListener('DOMContentLoaded', function () {

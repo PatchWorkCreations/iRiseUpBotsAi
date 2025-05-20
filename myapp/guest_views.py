@@ -221,37 +221,6 @@ def guest_bot_response(request, bot_name):
 
         ai_message = response.choices[0].message.content.strip()
 
-                # ✅ Smart follow-up generator
-        try:
-            follow_up_response = client.chat.completions.create(
-                model="gpt-4",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": (
-                            "You are a warm, wise, and witty assistant. Based on the user's latest message, "
-                            "generate a brief and encouraging follow-up question to keep the conversation helpful and engaging. "
-                            "The tone should feel like a trusted mentor or thoughtful friend. Be relevant and don't repeat the user's words."
-                        )
-                    },
-                    {
-                        "role": "user",
-                        "content": f"User said: {user_message}\nAI responded: {ai_message}\nWhat is a smart follow-up question?"
-                    }
-                ],
-                temperature=0.7,
-                max_tokens=60
-            )
-
-            follow_up = follow_up_response.choices[0].message.content.strip()
-
-            if follow_up and not follow_up.endswith("?"):
-                follow_up += "?"
-            ai_message += f"\n\n🗨️ {follow_up}"
-
-        except Exception as e:
-            logger.warning(f"⚠️ Follow-up generation failed: {e}")
-
         # ✅ Track token usage
         usage = response.usage
         logger.info(f"🧠 Guest AI Token Usage → Total: {usage.total_tokens}, Prompt: {usage.prompt_tokens}, Completion: {usage.completion_tokens}")
