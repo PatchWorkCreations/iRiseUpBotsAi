@@ -1,0 +1,203 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="description" content="Responsive Admin Dashboard Template"/>
+  <meta name="keywords" content="admin,dashboard"/>
+  <meta name="author" content="stacks"/>
+  <title>iRiseUp - Sign Up</title>
+
+  <!-- Fonts and Icons -->
+  <link rel="preconnect" href="https://fonts.gstatic.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet"/>
+
+  <!-- CSS Libraries -->
+  <link href="{% static 'ai_integration2/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
+  <link href="{% static 'ai_integration2/plugins/perfectscroll/perfect-scrollbar.css' %}" rel="stylesheet"/>
+  <link href="{% static 'ai_integration2/plugins/pace/pace.css' %}" rel="stylesheet"/>
+  <link href="{% static 'ai_integration2/css/main.min.css' %}" rel="stylesheet"/>
+  <link href="{% static 'ai_integration2/css/custom.css' %}" rel="stylesheet"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'ai_integration2/images/iriseup.png' %}"/>
+</head>
+
+<body>
+  <div class="app app-auth-sign-up align-content-stretch d-flex flex-wrap justify-content-end">
+    <div class="app-auth-background"></div>
+    <div class="app-auth-container">
+      <div class="logo">
+        <a href="{% url 'ai_integration_dashboard' %}">iRiseUp</a>
+      </div>
+      <p class="auth-description">
+        Please enter your credentials to create an account.<br/>
+        Already have an account?
+        <a href="{% url 'ai_integration_sign_in' %}">Sign In</a>
+      </p>
+
+      {% if messages %}
+        <div class="alert alert-danger">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'ai_integration_sign_up' %}">
+
+        {% csrf_token %}
+        <div class="auth-credentials m-b-xxl">
+          <label class="form-label" for="signUpUsername">Username</label>
+          <input name="username" id="signUpUsername" class="form-control m-b-md" placeholder="Enter username" type="text" required/>
+
+          <label class="form-label" for="signUpEmail">Email address</label>
+          <input name="email" id="signUpEmail" class="form-control m-b-md" placeholder="example@iRiseUp.com" type="email" required/>
+
+          <label class="form-label" for="signUpPassword">Password</label>
+          <input name="password" id="signUpPassword" class="form-control" placeholder="●●●●●●●●" type="password" required/>
+
+          <div class="form-text" id="emailHelp">Password must be at least 8 characters long.</div>
+        </div>
+
+        <div class="auth-submit">
+          <button type="submit" class="btn btn-primary">Sign Up</button>
+        </div>
+      </form>
+
+      <div class="divider"></div>
+      <div class="auth-alts">
+        <a class="auth-alts-google" href="#"></a>
+        <a class="auth-alts-facebook" href="#"></a>
+        <a class="auth-alts-twitter" href="#"></a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const submitBtn = form.querySelector("button[type=submit]");
+    
+        // ✅ Display Success or Error Message in a Modal
+        function showMessage(message, success = true) {
+            const existingModal = document.getElementById("onboardingModal");
+            if (existingModal) existingModal.remove();
+    
+            const modalHtml = `
+                <div class="modal fade" id="onboardingModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content text-center p-4">
+                            <h5 class="modal-title">${success ? "Welcome!" : "Oops..."}</h5>
+                            <div class="modal-body">
+                                <p>${message}</p>
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML("beforeend", modalHtml);
+            const modal = new bootstrap.Modal(document.getElementById("onboardingModal"));
+            modal.show();
+    
+            if (success) {
+                setTimeout(() => {
+                    modal.hide();
+                    window.location.href = "/ai-integration/dashboard/";
+                }, 3000);
+            }
+        }
+    
+        // ✅ Show Field-Specific Errors Below Input
+        function showError(field, message) {
+            const input = document.getElementById("signUp" + field.charAt(0).toUpperCase() + field.slice(1));
+            if (!input) return;
+    
+            let errorEl = input.nextElementSibling;
+            if (!errorEl || !errorEl.classList.contains("form-text")) {
+                errorEl = document.createElement("div");
+                errorEl.classList.add("form-text", "text-danger");
+                input.insertAdjacentElement("afterend", errorEl);
+            }
+            errorEl.textContent = message;
+        }
+    
+        // ✅ Real-time Username & Email Validation
+        ["username", "email"].forEach(field => {
+            const input = document.getElementById("signUp" + field.charAt(0).toUpperCase() + field.slice(1));
+            input.addEventListener("input", () => {
+                if (!input.value.trim()) {
+                    showError(field, `${field.charAt(0).toUpperCase() + field.slice(1)} is required`);
+                    return;
+                }
+                fetch(`/validate-user-input/?field=${field}&value=${encodeURIComponent(input.value)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        showError(field, data.valid ? "" : data.message);
+                    })
+                    .catch(() => {
+                        showError(field, "Error validating field");
+                    });
+            });
+        });
+    
+        // ✅ AJAX Form Submission
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Processing...";
+    
+            const formData = new FormData(form);
+    
+            fetch(form.action, {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            })
+            .then(async res => {
+                try {
+                    const data = await res.json();
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Sign Up";
+    
+                    if (data.success) {
+                        showMessage(data.message, true);
+                    } else {
+                        showMessage(data.message, false);
+                        if (data.field) showError(data.field, data.message);
+                    }
+                } catch (error) {
+                    console.error("❌ JSON parse error:", error);
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Sign Up";
+                    showMessage("Invalid server response. Please try again.", false);
+                }
+            })
+            .catch(err => {
+                console.error("❌ Fetch error:", err);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Sign Up";
+                showMessage("Something went wrong. Please try again later.", false);
+            });
+        });
+    });
+    </script>
+    
+    
+  <!-- JS Libraries -->
+  <script src="{% static 'ai_integration2/plugins/jquery/jquery-3.5.1.min.js' %}"></script>
+  <script src="{% static 'ai_integration2/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'ai_integration2/plugins/perfectscroll/perfect-scrollbar.min.js' %}"></script>
+  <script src="{% static 'ai_integration2/plugins/pace/pace.min.js' %}"></script>
+  <script src="{% static 'ai_integration2/js/main.min.js' %}"></script>
+  <script src="{% static 'ai_integration2/js/custom.js' %}"></script>
+</body>
+</html>

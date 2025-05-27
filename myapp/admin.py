@@ -123,3 +123,76 @@ class AIBotAdmin(admin.ModelAdmin):
             return format_html('<img src="{}" width="80" style="border-radius:8px;" />', obj.image.url)
         return "No image"
     preview_image.short_description = 'AI Image'
+
+
+
+from django.contrib import admin
+from .models import (
+    AIIntegrationAccount,
+    TeamMember,
+    AddOn,
+    UserAddOn,
+    UserIntegrationBot,
+    TrainingSession,
+    Document,
+    AnalyticsSnapshot,
+    AIIntegrationSubscriptionPlan
+)
+
+@admin.register(AIIntegrationSubscriptionPlan)
+class AIIntegrationSubscriptionPlanAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price_monthly', 'bot_limit', 'doc_page_limit', 'api_request_limit', 'is_active')
+    list_filter = ('code', 'is_active')
+    search_fields = ('name', 'description')
+
+
+@admin.register(AIIntegrationAccount)
+class AIIntegrationAccountAdmin(admin.ModelAdmin):
+    list_display = ('user', 'plan', 'bots_created', 'documents_uploaded', 'api_requests_today', 'is_active')
+    list_filter = ('plan__code', 'expiration_date')
+    search_fields = ('user__username',)
+
+
+@admin.register(TeamMember)
+class TeamMemberAdmin(admin.ModelAdmin):
+    list_display = ('email', 'owner', 'role', 'accepted', 'invited_on')
+    list_filter = ('accepted', 'role')
+    search_fields = ('email', 'owner__username')
+
+
+@admin.register(AddOn)
+class AddOnAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'price')
+    search_fields = ('name', 'code')
+
+
+@admin.register(UserAddOn)
+class UserAddOnAdmin(admin.ModelAdmin):
+    list_display = ('user', 'addon', 'quantity', 'activated_on')
+    search_fields = ('user__username', 'addon__name')
+
+
+@admin.register(UserIntegrationBot)
+class UserIntegrationBotAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user', 'template', 'created_at')
+    search_fields = ('name', 'user__username')
+    list_filter = ('created_at',)
+
+
+@admin.register(TrainingSession)
+class TrainingSessionAdmin(admin.ModelAdmin):
+    list_display = ('bot', 'created_at')
+    search_fields = ('bot__name', 'bot__user__username')
+
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user', 'bot', 'page_count', 'last_embedded')
+    search_fields = ('name', 'user__username', 'bot__name')
+
+
+@admin.register(AnalyticsSnapshot)
+class AnalyticsSnapshotAdmin(admin.ModelAdmin):
+    list_display = ('user', 'bot', 'date', 'total_chats', 'total_users')
+    list_filter = ('date',)
+    search_fields = ('user__username', 'bot__name')

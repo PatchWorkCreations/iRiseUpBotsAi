@@ -1,0 +1,577 @@
+{% load static %}
+
+<div class="app-sidebar">
+    <div class="logo">
+     <a class="logo-icon" href="{% url 'ai_integration_dashboard' %}">
+      <span class="logo-text">
+       iRiseUp
+      </span>
+     </a>
+     <div class="sidebar-user-switcher user-activity-online">
+      <a href="#">
+       <img src="{% static 'ai_integration2/images/avatars/avatar.png' %}"/>
+       <span class="activity-indicator">
+       </span>
+       <span class="user-info-text">
+        Chloe
+        <br/>
+        <span class="user-state-info">
+         On a call
+        </span>
+       </span>
+      </a>
+     </div>
+    </div>
+    <div class="app-menu">
+     <ul class="accordion-menu">
+      <li class="sidebar-title">
+       Apps
+      </li>
+      <li class="active-page">
+       <a class="active" href="{% url 'ai_integration_dashboard' %}">
+        <i class="material-icons-two-tone">
+         dashboard
+        </i>
+        Dashboard
+       </a>
+      </li>
+      <li>
+        <a href="{% url 'ai_integration_create_bot' %}">
+          <i class="material-icons-two-tone">
+            smart_toy
+          </i>
+          Create Assistant
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'ai_integration_file_manager' %}">
+         <i class="material-icons-two-tone">
+          cloud_queue
+         </i>
+         File Manager
+        </a>
+       </li>
+      
+      <li>
+       <a href="{% url 'ai_integration_mailbox' %}">
+        <i class="material-icons-two-tone">
+         inbox
+        </i>
+        Mailbox
+        <span class="badge rounded-pill badge-danger float-end">
+         87
+        </span>
+       </a>
+      </li>
+
+      <li>
+       <a href="{% url 'ai_integration_calendar' %}">
+        <i class="material-icons-two-tone">
+         calendar_today
+        </i>
+        Calendar
+        <span class="badge rounded-pill badge-success float-end">
+         14
+        </span>
+       </a>
+      </li>
+      <li>
+       <a href="{% url 'ai_integration_todo' %}">
+        <i class="material-icons-two-tone">
+         done
+        </i>
+        Todo
+       </a>
+      </li>
+
+      <li>
+       <a href="">
+        <i class="material-icons-two-tone">
+         star
+        </i>
+        Pages
+        <i class="material-icons has-sub-menu">
+         keyboard_arrow_right
+        </i>
+       </a>
+       <ul class="sub-menu">
+        <li>
+         <a href="{% url 'ai_integration_pricing' %}">
+          Pricing
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_invoice' %}">
+          Invoice
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_create_bot' %}">
+          Create New Assistant
+         </a>
+        </li>
+        <li>
+         <a href="#">
+          Authentication
+          <i class="material-icons has-sub-menu">
+           keyboard_arrow_right
+          </i>
+         </a>
+         <ul class="sub-menu">
+          <li>
+           <a href="{% url 'ai_integration_sign_in' %}">
+            Sign In
+           </a>
+          </li>
+          <li>
+           <a href="{% url 'ai_integration_sign_up' %}">
+            Sign Up
+           </a>
+          </li>
+          <li>
+           <a href="{% url 'ai_integration_lock_screen' %}">
+            Lock Screen
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_error' %}">
+          Error
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li class="sidebar-title">
+       UI Elements
+      </li>
+      <li>
+       <a href="#">
+        <i class="material-icons-two-tone">
+         color_lens
+        </i>
+        Styles
+        <i class="material-icons has-sub-menu">
+         keyboard_arrow_right
+        </i>
+       </a>
+       <ul class="sub-menu">
+        <li>
+         <a href="{% url 'ai_integration_styles_typography' %}">
+          Typography
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_styles_code' %}">
+          Code
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_styles_icons' %}">
+          Icons
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#">
+        <i class="material-icons-two-tone">
+         grid_on
+        </i>
+        Tables
+        <i class="material-icons has-sub-menu">
+         keyboard_arrow_right
+        </i>
+       </a>
+       <ul class="sub-menu">
+        <li>
+         <a href="{% url 'ai_integration_tables_basic' %}">
+          Basic
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_tables_datatable' %}">
+          DataTable
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="">
+        <i class="material-icons-two-tone">
+         sentiment_satisfied_alt
+        </i>
+        Elements
+        <i class="material-icons has-sub-menu">
+         keyboard_arrow_right
+        </i>
+       </a>
+       <ul class="sub-menu">
+        <li>
+         <a href="{% url 'ai_integration_ui_alerts' %}">
+          Alerts
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_avatars' %}">
+          Avatars
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_badge' %}">
+          Badge
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_breadcrumbs' %}">
+          Breadcrumbs
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_buttons' %}">
+          Buttons
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_button_groups' %}">
+          Button Groups
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_collapse' %}">
+          Collapse
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_dropdown' %}">
+          Dropdown
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_images' %}">
+          Images
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_pagination' %}">
+          Pagination
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_popovers' %}">
+          Popovers
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_progress' %}">
+          Progress
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_spinners' %}">
+          Spinners
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_toast' %}">
+          Toast
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_ui_tooltips' %}">
+          Tooltips
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#">
+        <i class="material-icons-two-tone">
+         card_giftcard
+        </i>
+        Components
+        <i class="material-icons has-sub-menu">
+         keyboard_arrow_right
+        </i>
+       </a>
+       <ul class="sub-menu">
+        <li>
+         <a href="{% url 'ai_integration_components_accordions' %}">
+          Accordions
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_components_block_ui' %}">
+          Block UI
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_components_cards' %}">
+          Cards
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_components_carousel' %}">
+          Carousel
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_components_countdown' %}">
+          Countdown
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_components_lightbox' %}">
+          Lightbox
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_components_lists' %}">
+          Lists
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_components_modals' %}">
+          Modals
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_components_tabs' %}">
+          Tabs
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_components_session_timeout' %}">
+          Session Timeout
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="{% url 'ai_integration_widgets' %}">
+        <i class="material-icons-two-tone">
+         widgets
+        </i>
+        Widgets
+       </a>
+      </li>
+      <li>
+       <a href="#">
+        <i class="material-icons-two-tone">
+         edit
+        </i>
+        Forms
+        <i class="material-icons has-sub-menu">
+         keyboard_arrow_right
+        </i>
+       </a>
+       <ul class="sub-menu">
+        <li>
+         <a href="{% url 'ai_integration_forms_basic' %}">
+          Basic
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_forms_input_groups' %}">
+          Input Groups
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_forms_input_masks' %}">
+          Input Masks
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_forms_layouts' %}">
+          Form Layouts
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_forms_validation' %}">
+          Form Validation
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_forms_file_upload' %}">
+          File Upload
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_forms_text_editor' %}">
+          Text Editor
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_forms_datepickers' %}">
+          Datepickers
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_forms_select2' %}">
+          Select2
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#">
+        <i class="material-icons-two-tone">
+         analytics
+        </i>
+        Charts
+        <i class="material-icons has-sub-menu">
+         keyboard_arrow_right
+        </i>
+       </a>
+       <ul class="sub-menu">
+        <li>
+         <a href="{% url 'ai_integration_charts_apex' %}">
+          Apex
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_charts_chartjs' %}">
+          ChartJS
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li class="sidebar-title">
+       Layout
+      </li>
+      <li>
+       <a href="#">
+        <i class="material-icons-two-tone">
+         view_agenda
+        </i>
+        Content
+        <i class="material-icons has-sub-menu">
+         keyboard_arrow_right
+        </i>
+       </a>
+       <ul class="sub-menu">
+        <li>
+         <a href="{% url 'ai_integration_content_page_headings' %}">
+          Page Headings
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_content_section_headings' %}">
+          Section Headings
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_content_left_menu' %}">
+          Left Menu
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_content_right_menu' %}">
+          Right Menu
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_content_boxed_content' %}">
+          Boxed Content
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#">
+        <i class="material-icons-two-tone">
+         menu
+        </i>
+        Menu
+        <i class="material-icons has-sub-menu">
+         keyboard_arrow_right
+        </i>
+       </a>
+       <ul class="sub-menu">
+        <li>
+         <a href="{% url 'ai_integration_menu_off_canvas' %}">
+          Off-Canvas
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_menu_standard' %}">
+          Standard
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_menu_dark_sidebar' %}">
+          Dark Sidebar
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_menu_hover_menu' %}">
+          Hover Menu
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_menu_colored_sidebar' %}">
+          Colored Sidebar
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#">
+        <i class="material-icons-two-tone">
+         view_day
+        </i>
+        Header
+        <i class="material-icons has-sub-menu">
+         keyboard_arrow_right
+        </i>
+       </a>
+       <ul class="sub-menu">
+        <li>
+         <a href="{% url 'ai_integration_header_basic' %}">
+          Basic
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_header_full_width' %}">
+          Full-width
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_header_transparent' %}">
+          Transparent
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_header_large' %}">
+          Large
+         </a>
+        </li>
+        <li>
+         <a href="{% url 'ai_integration_header_colorful' %}">
+          Colorful
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li class="sidebar-title">
+       Other
+      </li>
+      <li>
+       <a href="#">
+        <i class="material-icons-two-tone">
+         bookmark
+        </i>
+        Documentation
+       </a>
+      </li>
+      <li>
+       <a href="#">
+        <i class="material-icons-two-tone">
+         access_time
+        </i>
+        Change Log
+       </a>
+      </li>
+     </ul>
+    </div>
+   </div>

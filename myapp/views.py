@@ -88,6 +88,11 @@ def services(request):
     return render(request, 'myapp/aibots/service_offered/index.html')
 
 
+def ai_integration(request):
+    return render(request, 'myapp/ai_integration/index.html')
+
+
+
 def terms_and_conditions(request):
     return render(request, 'myapp/aibots/terms_and_conditions.html')
 
@@ -4724,15 +4729,41 @@ def generate_smart_bio(specialty, description):
 
 
 from django.shortcuts import render
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString, Tag
+
+def format_element(elem, indent=0):
+    output = ""
+    spacing = "  " * indent
+
+    if isinstance(elem, NavigableString):
+        text = elem.strip()
+        if text:
+            output += f"{spacing}{text}\n"
+    elif isinstance(elem, Tag):
+        attrs = " ".join(f'{k}="{v}"' for k, v in elem.attrs.items())
+        start_tag = f"<{elem.name}{' ' + attrs if attrs else ''}>"
+        output += f"{spacing}{start_tag}\n"
+
+        for child in elem.children:
+            output += format_element(child, indent + 1)
+
+        output += f"{spacing}</{elem.name}>\n"
+    return output
+
+from django.shortcuts import render
+from bs4 import BeautifulSoup, NavigableString
+from django.shortcuts import render
+from django.http import HttpResponse
+from bs4 import BeautifulSoup, NavigableString
+import zipfile
+import io
+import re
 
 def html_to_django_view(request):
     html_input = request.POST.get("html_input", "")
     django_output = ""
 
-    if html_input:
-        soup = BeautifulSoup(html_input, "html.parser")
-
+    def convert_static_and_urls(soup):
         # Convert static files
         for tag in soup.find_all(["link", "script", "img"]):
             if tag.name == "link" and tag.get("href") and not tag["href"].startswith("http"):
@@ -4742,14 +4773,57 @@ def html_to_django_view(request):
             elif tag.name == "img" and tag.get("src") and not tag["src"].startswith("http"):
                 tag["src"] = "{% static '" + tag['src'].lstrip('./') + "' %}"
 
-        # Replace internal page links (e.g., about.html, contact.html) with "#"
+        # Convert <a href="file.html"> to Django URLs
         for tag in soup.find_all("a", href=True):
             href = tag["href"]
-            if href.endswith(".html") or href.startswith("./"):
-                tag["href"] = "#"
+            if href.endswith(".html"):
+                page_name = href.replace(".html", "").replace("-", "_")
+                tag["href"] = "{% url 'ai_integration_" + page_name + "' %}"
 
-        # Final HTML output with {% load static %}
-        django_output = "{% load static %}\n\n" + soup.prettify()
+        # Flatten attribute lists
+        for tag in soup.find_all():
+            for attr in tag.attrs:
+                if isinstance(tag[attr], list):
+                    tag[attr] = " ".join(tag[attr])
+
+        # Preserve Django template syntax
+        for element in soup.find_all(string=True):
+            if "{%" in element or "{{" in element:
+                element.replace_with(NavigableString(element))
+
+        return soup
+
+    # --- Handle FOLDER upload ---
+    if request.method == "POST" and request.FILES.getlist("html_folder"):
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zip_file:
+            for uploaded_file in request.FILES.getlist("html_folder"):
+                file_content = uploaded_file.read().decode("utf-8")
+                soup = BeautifulSoup(file_content, "html.parser")
+                soup = convert_static_and_urls(soup)
+
+                pretty = soup.prettify(formatter="html")
+                pretty_lines = [line.rstrip() for line in pretty.split('\n') if line.strip()]
+                cleaned_output = "\n".join(pretty_lines)
+                final_output = "{% load static %}\n\n" + cleaned_output
+
+                zip_file.writestr(uploaded_file.name, final_output)
+
+        zip_buffer.seek(0)
+        response = HttpResponse(zip_buffer, content_type="application/zip")
+        response["Content-Disposition"] = "attachment; filename=converted_templates.zip"
+        return response
+
+    # --- Handle PASTED HTML (textarea mode) ---
+    if html_input:
+        soup = BeautifulSoup(html_input, "html.parser")
+        soup = convert_static_and_urls(soup)
+
+        pretty = soup.prettify(formatter="html")
+        pretty_lines = [line.rstrip() for line in pretty.split('\n') if line.strip()]
+        cleaned_output = "\n".join(pretty_lines)
+
+        django_output = "{% load static %}\n\n" + cleaned_output
 
     return render(request, "myapp/django_converter/converter.html", {
         "html_input": html_input,
@@ -5105,3 +5179,214 @@ def save_reminder(request):
             logger.error(f"Reminder save failed: {e}")
             return JsonResponse({"error": "Could not save reminder"}, status=500)
     return JsonResponse({"error": "Invalid method"}, status=405)
+
+from django.shortcuts import render
+
+def calendar(request): return render(request, "myapp/ai_integration/calendar.html")
+def charts_apex(request): return render(request, "myapp/ai_integration/charts-apex.html")
+def charts_chartjs(request): return render(request, "myapp/ai_integration/charts-chartjs.html")
+def components_accordions(request): return render(request, "myapp/ai_integration/components-accordions.html")
+def components_block_ui(request): return render(request, "myapp/ai_integration/components-block-ui.html")
+def components_cards(request): return render(request, "myapp/ai_integration/components-cards.html")
+def components_carousel(request): return render(request, "myapp/ai_integration/components-carousel.html")
+def components_countdown(request): return render(request, "myapp/ai_integration/components-countdown.html")
+def components_lightbox(request): return render(request, "myapp/ai_integration/components-lightbox.html")
+def components_lists(request): return render(request, "myapp/ai_integration/components-lists.html")
+def components_modals(request): return render(request, "myapp/ai_integration/components-modals.html")
+def components_session_timeout(request): return render(request, "myapp/ai_integration/components-session-timeout.html")
+def components_tabs(request): return render(request, "myapp/ai_integration/components-tabs.html")
+def content_boxed_content(request): return render(request, "myapp/ai_integration/content-boxed-content.html")
+def content_left_menu(request): return render(request, "myapp/ai_integration/content-left-menu.html")
+def content_page_headings(request): return render(request, "myapp/ai_integration/content-page-headings.html")
+def content_right_menu(request): return render(request, "myapp/ai_integration/content-right-menu.html")
+def content_section_headings(request): return render(request, "myapp/ai_integration/content-section-headings.html")
+def error(request): return render(request, "myapp/ai_integration/error.html")
+def file_manager(request): return render(request, "myapp/ai_integration/file-manager.html")
+def forms_basic(request): return render(request, "myapp/ai_integration/forms-basic.html")
+def forms_datepickers(request): return render(request, "myapp/ai_integration/forms-datepickers.html")
+def forms_file_upload(request): return render(request, "myapp/ai_integration/forms-file-upload.html")
+def forms_input_groups(request): return render(request, "myapp/ai_integration/forms-input-groups.html")
+def forms_input_masks(request): return render(request, "myapp/ai_integration/forms-input-masks.html")
+def forms_layouts(request): return render(request, "myapp/ai_integration/forms-layouts.html")
+def forms_select2(request): return render(request, "myapp/ai_integration/forms-select2.html")
+def forms_text_editor(request): return render(request, "myapp/ai_integration/forms-text-editor.html")
+def forms_validation(request): return render(request, "myapp/ai_integration/forms-validation.html")
+def header_basic(request): return render(request, "myapp/ai_integration/header-basic.html")
+def header_colorful(request): return render(request, "myapp/ai_integration/header-colorful.html")
+def header_full_width(request): return render(request, "myapp/ai_integration/header-full-width.html")
+def header_large(request): return render(request, "myapp/ai_integration/header-large.html")
+def header_transparent(request): return render(request, "myapp/ai_integration/header-transparent.html")
+def index(request): return render(request, "myapp/ai_integration/index.html")
+def invoice(request): return render(request, "myapp/ai_integration/invoice.html")
+def lock_screen(request): return render(request, "myapp/ai_integration/lock-screen.html")
+def mailbox(request): return render(request, "myapp/ai_integration/mailbox.html")
+def menu_colored_sidebar(request): return render(request, "myapp/ai_integration/menu-colored-sidebar.html")
+def menu_dark_sidebar(request): return render(request, "myapp/ai_integration/menu-dark-sidebar.html")
+def menu_hover_menu(request): return render(request, "myapp/ai_integration/menu-hover-menu.html")
+def menu_off_canvas(request): return render(request, "myapp/ai_integration/menu-off-canvas.html")
+def menu_standard(request): return render(request, "myapp/ai_integration/menu-standard.html")
+def pricing(request): return render(request, "myapp/ai_integration/pricing.html")
+
+
+def create_bot(request): return render(request, "myapp/ai_integration/create_bot.html")
+
+
+def sign_in(request): return render(request, "myapp/ai_integration/sign-in.html")
+def sign_up(request): return render(request, "myapp/ai_integration/sign-up.html")
+def styles_code(request): return render(request, "myapp/ai_integration/styles-code.html")
+def styles_icons(request): return render(request, "myapp/ai_integration/styles-icons.html")
+def styles_typography(request): return render(request, "myapp/ai_integration/styles-typography.html")
+def tables_basic(request): return render(request, "myapp/ai_integration/tables-basic.html")
+def tables_datatable(request): return render(request, "myapp/ai_integration/tables-datatable.html")
+def todo(request): return render(request, "myapp/ai_integration/todo.html")
+def ui_alerts(request): return render(request, "myapp/ai_integration/ui-alerts.html")
+def ui_avatars(request): return render(request, "myapp/ai_integration/ui-avatars.html")
+def ui_badge(request): return render(request, "myapp/ai_integration/ui-badge.html")
+def ui_breadcrumbs(request): return render(request, "myapp/ai_integration/ui-breadcrumbs.html")
+def ui_button_groups(request): return render(request, "myapp/ai_integration/ui-button-groups.html")
+def ui_buttons(request): return render(request, "myapp/ai_integration/ui-buttons.html")
+def ui_collapse(request): return render(request, "myapp/ai_integration/ui-collapse.html")
+def ui_dropdown(request): return render(request, "myapp/ai_integration/ui-dropdown.html")
+def ui_images(request): return render(request, "myapp/ai_integration/ui-images.html")
+def ui_pagination(request): return render(request, "myapp/ai_integration/ui-pagination.html")
+def ui_popovers(request): return render(request, "myapp/ai_integration/ui-popovers.html")
+def ui_progress(request): return render(request, "myapp/ai_integration/ui-progress.html")
+def ui_spinners(request): return render(request, "myapp/ai_integration/ui-spinners.html")
+def ui_toast(request): return render(request, "myapp/ai_integration/ui-toast.html")
+def ui_tooltips(request): return render(request, "myapp/ai_integration/ui-tooltips.html")
+def widgets(request): return render(request, "myapp/ai_integration/widgets.html")
+def ai_integration_dashboard(request): return render(request, "myapp/ai_integration/dashboard.html")
+
+from .models import UserIntegrationBot
+
+def dashboard_view(request):
+    bots = UserIntegrationBot.objects.filter(user=request.user)
+    return render(request, "myapp/ai_integration/dashboard.html", {
+        'bots': bots
+    })
+
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
+def ai_login(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("ai_integration_dashboard")
+        else:
+            return render(request, "myapp/ai_integration/sign-in.html", {
+                "error": "Invalid email or password"
+            })
+
+    return render(request, "myapp/ai_integration/sign-in.html")
+
+def ai_sign_in(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("ai_integration_dashboard")
+        else:
+            return render(request, "myapp/ai_integration/sign-in.html", {
+                "error": "Invalid email or password"
+            })
+
+    return render(request, "myapp/ai_integration/sign-in.html")
+
+
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import AIIntegrationAccount, AIIntegrationSubscriptionPlan
+
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import AIIntegrationAccount, AIIntegrationSubscriptionPlan
+
+import logging
+logger = logging.getLogger(__name__)
+
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.views.decorators.csrf import csrf_protect  # ✅ Use this instead of exempt
+from .models import AIIntegrationAccount, AIIntegrationSubscriptionPlan
+import logging
+
+logger = logging.getLogger(__name__)
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.shortcuts import render
+from .models import AIIntegrationAccount, AIIntegrationSubscriptionPlan
+from django.views.decorators.http import require_GET
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from .models import AIIntegrationAccount, AIIntegrationSubscriptionPlan
+
+@csrf_exempt
+def ai_register(request):
+    if request.method == "POST":
+        is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+        print("🟢 AJAX Header Present:", is_ajax)
+
+        if not is_ajax:
+            print("❌ Not AJAX, returning error.")
+            return JsonResponse({"success": False, "message": "Invalid request"}, status=400)
+
+        try:
+            username = request.POST.get("username")
+            email = request.POST.get("email")
+            password = request.POST.get("password")
+            print("📥 Received:", username, email)
+
+            if not username or not email or not password:
+                return JsonResponse({"success": False, "message": "All fields required", "field": "form"})
+
+            if User.objects.filter(username=username).exists():
+                return JsonResponse({"success": False, "message": "Username already taken", "field": "username"})
+
+            if User.objects.filter(email=email).exists():
+                return JsonResponse({"success": False, "message": "Email already registered", "field": "email"})
+
+            user = User.objects.create_user(username=username, email=email, password=password)
+            base_plan = AIIntegrationSubscriptionPlan.objects.get(code="base")
+            AIIntegrationAccount.objects.create(user=user, plan=base_plan)
+            login(request, user)
+
+            return JsonResponse({
+                "success": True,
+                "message": "🎉 Welcome to iRiseUp!",
+                "redirect_url": "/ai-integration/dashboard/"
+            })
+
+        except Exception as e:
+            print("🔥 Exception:", e)
+            return JsonResponse({
+                "success": False,
+                "message": f"An error occurred: {e}",
+                "field": "form"
+            })
+
+    # 🔒 Block rendering of form as fallback (forces JSON only)
+    print("🚫 Method not allowed (non-POST)")
+    return JsonResponse({"success": False, "message": "Method not allowed"}, status=405)
+
+
+

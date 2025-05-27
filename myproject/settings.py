@@ -255,3 +255,7 @@ OPENAI_TO_DJANGO_LANG = {
 
 # Optional: for convenience in views
 AVAILABLE_LANGUAGE_CODES = list(OPENAI_TO_DJANGO_LANG.keys())
+
+
+
+CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'

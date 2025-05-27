@@ -1013,44 +1013,48 @@ body {
     <div class="dropdown-wrapper" id="custom-ai-select">
         <div class="selected-option" id="selected-ai">
             <img src="{% static 'aiicons/lumos.png' %}" alt="Lumos Icon">
-            <span>Lumos- Mental Clarity </span>
+            <span>Lumos- Emotional Well-Being Guide </span>
         </div>
         <ul class="dropdown-options">
             <li data-value="lumos">
                 <img src="{% static 'aiicons/lumos.png' %}" alt="Lumos">
-                Lumos- Mental Clarity 
+                Lumos- Emotional Well-Being Guide 
             </li>
             <li data-value="nexara">
                 <img src="{% static 'aiicons/nexara.png' %}" alt="Nexara">
-                Nexara- Investment Planning
+                Nexara- Marketing and Growth Specialist
             </li>
             <li data-value="thrive">
                 <img src="{% static 'aiicons/thrive.png' %}" alt="Thrive">
-                Thrive- Grow What Matters
+                Thrive- Healthcare and Wellness Coach
             </li>
             <li data-value="gideon">
                 <img src="{% static 'aiicons/gideon.png' %}" alt="Gideon">
-                Gideon- Purpose Led-Living
+                Gideon- Spiritual Companion
             </li>
             <li data-value="elevate">
                 <img src="{% static 'aiicons/elevate.png' %}" alt="Elevate">
-                Elavate- Transform.Rise.Master
+                Elavate- Business Leadership Partner
             </li>
             <li data-value="keystone">
                 <img src="{% static 'aiicons/keystone.png' %}" alt="Keystone">
-                Keystone- Long Term Stability
+                Keystone- Financial and Legal Guide
             </li>
             <li data-value="mentor-iq">
                 <img src="{% static 'aiicons/mentoriq.png' %}" alt="MentorIQ">
-                Mentor IQ - Think Beyond
+                Mentor IQ - Career and Learning Strategist
             </li>
             <li data-value="imagine">
                 <img src="{% static 'aiicons/imagine.png' %}" alt="Imagine">
-                Imagine- Think and Create
+                Imagine- Creativity and Innovation Booster
             </li>
             <li data-value="lifewise">
                 <img src="{% static 'aiicons/lifewise.png' %}" alt="LifeWise">
-                Lifewise- Live Intentionally
+                Lifewise-  Smart Living and Decision Making Coach  
+            </li>
+            <li data-value="Polaris">
+                <img src="{% static 'aiicons/polaris.png' %}" alt="Polaris">
+                Polaris- Global Citizenship and Cultural Intelligence Guide
             </li>
         </ul>
     </div>
@@ -1361,18 +1365,19 @@ if ("webkitSpeechRecognition" in window) {
                 <div class="dropdown-wrapper" id="custom-ai-select">
                     <div class="selected-option" id="selected-ai">
                         <img src="{% static 'aiicons/lumos.png' %}" alt="Lumos Icon">
-                        <span>Lumos- Mental Clarity </span>
+                        <span>Lumos- Emotional Well-Being Guide </span>
                     </div>
                     <ul class="dropdown-options">
-                        <li data-value="lumos"><img src="{% static 'aiicons/lumos.png' %}">Lumos- Mental Clarity </li>
-                        <li data-value="nexara"><img src="{% static 'aiicons/nexara.png' %}">Nexara- Investment Planning</li>
-                        <li data-value="thrive"><img src="{% static 'aiicons/thrive.png' %}">Thrive- Grow What Matters</li>
-                        <li data-value="gideon"><img src="{% static 'aiicons/gideon.png' %}">Gideon- Purpose Led-Living</li>
-                        <li data-value="elevate"><img src="{% static 'aiicons/elevate.png' %}">Elavate- Transform.Rise.Master</li>
-                        <li data-value="keystone"><img src="{% static 'aiicons/keystone.png' %}">Keystone- Long Term Stability</li>
-                        <li data-value="mentor-iq"><img src="{% static 'aiicons/mentoriq.png' %}">MentorIQ - Career & Learning</li>
-                        <li data-value="imagine"><img src="{% static 'aiicons/imagine.png' %}">Imagine- Think and Create</li>
-                        <li data-value="lifewise"><img src="{% static 'aiicons/lifewise.png' %}">LifeWise - Live Intentionally</li>
+                        <li data-value="lumos"><img src="{% static 'aiicons/Lumos.png' %}">Lumos- Emotional Well-Being Guide </li>
+                        <li data-value="nexara"><img src="{% static 'aiicons/Nexara.png' %}">Nexara- Marketing and Growth Specialist</li>
+                        <li data-value="thrive"><img src="{% static 'aiicons/Thrive.png' %}">Thrive- Healthcare and Wellness Coach</li>
+                        <li data-value="gideon"><img src="{% static 'aiicons/Gideon.png' %}">Gideon- Spiritual Companion</li>
+                        <li data-value="elevate"><img src="{% static 'aiicons/Elevate.png' %}">Elavate- Business Leadership Partner</li>
+                        <li data-value="keystone"><img src="{% static 'aiicons/Keystone.png' %}">Keystone- Financial and Legal Guide</li>
+                        <li data-value="mentor-iq"><img src="{% static 'aiicons/Mentoriq.png' %}">MentorIQ - Career and Learning Strategist</li>
+                        <li data-value="imagine"><img src="{% static 'aiicons/Imagine.png' %}">Imagine- Creativity and Innovation Booster</li>
+                        <li data-value="lifewise"><img src="{% static 'aiicons/Lifewise.png' %}">LifeWise -  Smart Living and Decision Making Coach  </li>
+                        <li data-value="Polaris"><img src="{% static 'aiicons/Polaris.png' %}">Polaris- Global Citizenship and Cultural Intelligence Guide</li>
                     </ul>
                 </div>
                 <a href="/sign_in" class="login-btn">Login</a>
@@ -1760,7 +1765,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const suggestedPromptContainer = document.getElementById("suggested-prompts");
 
     const suggestions = {
-        lumos: ["What’s a simple morning routine for mental clarity and energy?","Give me a weekly plan to boost brain health at 50+.","How can I optimize my sleep without medication?"],
+        lumos: ["What’s a simple morning routine for Emotional Well-Being Guide and energy?","Give me a weekly plan to boost brain health at 50+.","How can I optimize my sleep without medication?"],
         nexara: ["Compare the ROI of flipping vs. long-term rental in Ohio.","What’s a good investment plan with $100k over 2 years?","Help me pitch a real estate investment to private investors."],
         thrive: ["What crops grow best in high-altitude tropical regions?","Help me design an urban garden for a small space.","Give me a 6-month plan for launching a sustainable poultry farm."],
         gideon: ["Share a calming verse or quote from the Quran or Bible about patience.","Guide me through a gratitude meditation from a Buddhist perspective.","Compare Christian, Jewish, and Muslim teachings on forgiveness."],
