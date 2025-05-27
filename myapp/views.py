@@ -748,7 +748,7 @@ from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
 
-def sign_in(request):
+def sign_in_regular(request):
     if request.user.is_authenticated:
         logger.debug(f"User {request.user.username} tried to access the login page while already logged in.")
         return redirect_to_user_ai(request.user)
@@ -796,7 +796,7 @@ def sign_in(request):
     else:
         form = SignInForm()
 
-    return render(request, 'myapp/quiz/sign_in.html', {'form': form})
+    return render(request, 'myapp/aibots/iriseupai/sign_in.html', {'form': form})
 
 
 from django.shortcuts import redirect

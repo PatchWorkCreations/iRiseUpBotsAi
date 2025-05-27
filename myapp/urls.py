@@ -7,7 +7,8 @@ from myapp import views
 
 urlpatterns = [
     path('personalized_plan', views.personalized_plan, name='personalized_plan'),
-    path('sign_in', views.sign_in, name='sign_in'),
+    path('sign_in/', views.sign_in_regular, name='sign_in'),
+
     path('sign_out/', views.sign_out, name='sign_out'),
 
 
@@ -323,7 +324,7 @@ urlpatterns = [
     path("ai-integration/sign-up/", views.ai_register, name="ai_integration_sign_up"),
     path('dashboard/', views.dashboard_view, name='ai_integration_dashboard'),
     path('sign-up/', views.ai_register, name='ai_integration_sign_up'),
-    path('sign-in/', views.ai_sign_in, name='ai_integration_sign_in'),
+    path('ai-sign-in/', views.ai_sign_in, name='ai_integration_sign_in'),
     path('bots/delete/<int:bot_id>/', views.delete_ai_bot, name='ai_integration_delete_bot'),
 
 ]
