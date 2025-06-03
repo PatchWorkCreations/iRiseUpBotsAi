@@ -1055,47 +1055,6 @@ def send_welcome_email(user_email, first_name):
         print(f"❌ Unexpected error: {e}")
 
 
-def signup_view(request):
-    if request.method == "POST":
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        heard_about_us = request.POST.get("heard_about_us")  # 👈 This is the only new line you need
-
-        if User.objects.filter(username=username).exists():
-            return JsonResponse({"success": False, "message": "Username already taken!", "error_field": "username"})
-        
-        if User.objects.filter(email=email).exists():
-            return JsonResponse({"success": False, "message": "Email already registered!", "error_field": "email"})
-
-        try:
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.first_name = first_name
-            user.last_name = last_name
-            user.save()
-
-            # 🎯 Save AIUserSubscription
-            AIUserSubscription.objects.create(
-                user=user,
-                plan='free',
-                preferred_language='en-US',
-                preferred_timezone='UTC',
-                heard_about_us=heard_about_us  # 👈 Save the dropdown value
-            )
-
-        except IntegrityError:
-            return JsonResponse({"success": False, "message": "This username is already taken!", "error_field": "username"})
-
-        login(request, user)
-        return JsonResponse({
-            "success": True, 
-            "message": "🎉 Welcome! Your AI-powered journey starts now.",
-            "redirect_url": "/iriseupdashboard/"
-        })
-
-    return render(request, "myapp/aibots/iriseupai/signup.html")
 
 
 from django.http import JsonResponse
@@ -5390,3 +5349,111 @@ def ai_register(request):
 
 
 
+from django.shortcuts import render
+from .models import QuizQuestion
+
+from itertools import chain
+from operator import attrgetter
+from .models import QuizQuestion, QuizFillerPage
+
+def signup_quiz(request):
+    questions = QuizQuestion.objects.all()
+    fillers = QuizFillerPage.objects.all()
+
+    # Tag each item with its type
+    combined = list(chain(
+        [{"type": "question", "data": q} for q in questions],
+        [{"type": "filler", "data": f} for f in fillers],
+    ))
+
+    # Sort by 'order'
+    combined_sorted = sorted(combined, key=lambda x: x["data"].order)
+
+    return render(request, 'myapp/aibots/iriseupai/signup_quiz.html', {
+        'timeline': combined_sorted
+    })
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def submit_quiz_answer(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        question_id = str(data.get('question_id'))
+        choice_id = str(data.get('choice_id'))
+
+        quiz_answers = request.session.get('quiz_answers', {})
+        quiz_answers[question_id] = choice_id
+        request.session['quiz_answers'] = quiz_answers
+        return JsonResponse({'status': 'saved to session'})
+
+    return JsonResponse({'status': 'invalid request'}, status=400)
+
+
+from django.contrib.auth import login
+from django.http import JsonResponse
+from django.db import IntegrityError
+from .models import AIUserSubscription, QuizQuestion, QuizChoice, UserQuizAnswer
+from django.contrib.auth.models import User
+
+def signup_view(request):
+    if request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        heard_about_us = request.POST.get("heard_about_us")
+
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({"success": False, "message": "Username already taken!", "error_field": "username"})
+        
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({"success": False, "message": "Email already registered!", "error_field": "email"})
+
+        try:
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+
+            # Save subscription
+            AIUserSubscription.objects.create(
+                user=user,
+                plan='free',
+                preferred_language='en-US',
+                preferred_timezone='UTC',
+                heard_about_us=heard_about_us
+            )
+
+            # Save quiz answers from session
+            quiz_answers = request.session.get('quiz_answers', {})
+            for question_id, choice_id in quiz_answers.items():
+                try:
+                    question = QuizQuestion.objects.get(pk=question_id)
+                    choice = QuizChoice.objects.get(pk=choice_id, question=question)
+                    UserQuizAnswer.objects.update_or_create(
+                        user=user,
+                        question=question,
+                        defaults={'selected_choice': choice}
+                    )
+                except (QuizQuestion.DoesNotExist, QuizChoice.DoesNotExist):
+                    continue  # skip any invalid entries
+
+            # Clean up session
+            request.session.pop('quiz_answers', None)
+
+        except IntegrityError:
+            return JsonResponse({"success": False, "message": "This username is already taken!", "error_field": "username"})
+
+        login(request, user)
+        return JsonResponse({
+            "success": True,
+            "message": "🎉 Welcome! Your AI-powered journey starts now.",
+            "redirect_url": "/iriseupdashboard/"
+        })
+
+    return render(request, "myapp/aibots/iriseupai/signup.html")

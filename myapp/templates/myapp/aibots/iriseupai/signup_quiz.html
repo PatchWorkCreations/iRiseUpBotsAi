@@ -1,0 +1,226 @@
+{% extends "myapp/aibots/base.html" %}
+{% load static %}
+{% block title %}iRiseUp AI - Your AI Experts{% endblock %}
+
+{% block content %}
+<style>
+  .quiz-wrapper {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .progress-bar-wrapper {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+
+  .progress-info {
+    font-size: 14px;
+    color: #555;
+    text-align: right;
+    margin-bottom: 6px;
+  }
+
+  .progress-track {
+    width: 100%;
+    background-color: #eee;
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background-color: #6C63FF;
+    transition: width 0.4s ease;
+  }
+
+  .question-text {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 30px;
+  }
+
+  .choice-box {
+    background: #f7f7f7;
+    padding: 18px;
+    border-radius: 12px;
+    margin: 12px 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+  }
+
+  .choice-box:hover {
+    background-color: #ecebff;
+    border-color: #6C63FF;
+  }
+
+  .choice-box.selected {
+    background-color: #dcd6ff;
+    border-color: #6C63FF;
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.3);
+  }
+
+  .filler-block img {
+    max-height: 200px;
+    margin: 20px 0;
+  }
+
+  .next-btn {
+    margin-top: 20px;
+  }
+
+  #completion-message {
+    text-align: center;
+    padding: 40px;
+  }
+
+  .quiz-block {
+  display: none;
+}
+
+.quiz-block.active {
+  display: block;
+}
+
+</style>
+
+<div class="quiz-wrapper">
+  {% if timeline %}
+    <div class="progress-bar-wrapper">
+      <div class="progress-info" id="progress-counter">1 / {{ timeline|length|add:1 }}</div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <div id="quiz-container">
+      {% for item in timeline %}
+        {% if item.type == 'question' %}
+          <div class="quiz-block question-block {% if forloop.first %}active{% endif %}" data-question-id="{{ item.data.id }}" data-type="question">
+            <div class="question-text">{{ item.data.question_text }}</div>
+            {% for choice in item.data.choices.all %}
+              <div class="choice-box" onclick="selectChoice(this)">
+                <input type="radio" name="question_{{ item.data.id }}" value="{{ choice.id }}" id="choice_{{ choice.id }}" style="display:none;" required>
+                <label for="choice_{{ choice.id }}" class="d-block m-0">
+                  {% if choice.image %}
+                    <img src="{{ choice.image.url }}" alt="{{ choice.choice_text }}" style="max-height: 120px; object-fit: contain; margin-bottom: 10px;">
+                  {% endif %}
+                  {{ choice.choice_text }}
+                </label>
+              </div>
+            {% endfor %}
+            <button class="btn btn-primary next-btn">Next</button>
+          </div>
+        {% elif item.type == 'filler' %}
+          <div class="quiz-block filler-block {% if forloop.first %}active{% endif %}" data-type="filler">
+            {% if item.data.title %}<h3>{{ item.data.title }}</h3>{% endif %}
+            {% if item.data.description %}<p>{{ item.data.description }}</p>{% endif %}
+            {% if item.data.image %}<img src="{{ item.data.image.url }}" alt="Filler image">{% endif %}
+            <button class="btn btn-primary next-btn">Next</button>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div id="signup-block" class="quiz-block" style="display:none;">
+      <h3>You're Almost There!</h3>
+      <p>We’d love to tailor your experience even more. Create your iRiseUp.AI account to unlock your personalized path forward.</p>
+      <a href="{% url 'signup' %}" class="btn btn-success mt-3">Sign Up Now</a>
+      <p class="mt-2 text-muted">Already have an account? <a href="{% url 'sign_in' %}">Log in here</a>.</p>
+    </div>
+
+    <div id="completion-message" style="display:none;">
+      <h4 class="mt-4">✅ Thank you! You're all set.</h4>
+      <p>You can now enjoy a more personalized iRiseUp.AI experience.</p>
+    </div>
+  {% else %}
+    <p class="text-center">No quiz available at the moment. Please check back later.</p>
+  {% endif %}
+</div>
+
+<script>
+  const blocks = document.querySelectorAll('.quiz-block');
+  const nextButtons = document.querySelectorAll('.next-btn');
+  const progressFill = document.getElementById('progress-fill');
+  const progressCounter = document.getElementById('progress-counter');
+  const totalSteps = blocks.length;
+
+  nextButtons.forEach((btn, index) => {
+    btn.addEventListener('click', async () => {
+      const block = btn.closest('.quiz-block');
+      const type = block.dataset.type;
+
+      if (type === 'question') {
+        const selected = block.querySelector('input[type="radio"]:checked');
+        if (!selected) {
+          alert("Please choose an option.");
+          return;
+        }
+
+        const questionId = block.dataset.questionId;
+        const choiceId = selected.value;
+
+        await fetch("{% url 'submit_quiz_answer' %}", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+          },
+          body: JSON.stringify({
+            question_id: questionId,
+            choice_id: choiceId
+          })
+        });
+      }
+
+      block.style.display = 'none';
+      const nextIndex = index + 1;
+
+      if (nextIndex < blocks.length) {
+        const nextBlock = blocks[nextIndex];
+        nextBlock.style.display = 'block';
+        setTimeout(() => nextBlock.classList.add('active'), 20);
+
+        const percent = ((nextIndex + 1) / (totalSteps + 1)) * 100;
+        progressFill.style.width = percent + "%";
+        progressCounter.textContent = `${nextIndex + 1} / ${totalSteps + 1}`;
+      } else {
+        const signupBlock = document.getElementById('signup-block');
+        signupBlock.style.display = 'block';
+        setTimeout(() => signupBlock.classList.add('active'), 20);
+
+        progressFill.style.width = "100%";
+        progressCounter.textContent = `${totalSteps + 1} / ${totalSteps + 1}`;
+      }
+    });
+  });
+
+  function selectChoice(choiceBox) {
+    const parent = choiceBox.closest('.question-block');
+    const allChoices = parent.querySelectorAll('.choice-box');
+    allChoices.forEach(box => box.classList.remove('selected'));
+    choiceBox.classList.add('selected');
+    choiceBox.querySelector('input[type="radio"]').checked = true;
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+{% endblock %}

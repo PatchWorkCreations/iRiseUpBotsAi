@@ -1188,3 +1188,54 @@ class AIIntegrationSubscriptionPlan(models.Model):
 
     def __str__(self):
         return f"{self.name} (${self.price_monthly}/mo)"
+
+
+
+# models.py
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class QuizQuestion(models.Model):
+    question_text = models.CharField(max_length=255)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.question_text
+
+class QuizChoice(models.Model):
+    question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE, related_name='choices')
+    choice_text = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='quiz_choices/', null=True, blank=True)
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.choice_text
+
+class UserQuizAnswer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE)
+    selected_choice = models.ForeignKey(QuizChoice, on_delete=models.CASCADE)
+    answered_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'question')
+
+    def __str__(self):
+        return f"{self.user.username} → {self.question} = {self.selected_choice}"
+
+# NEW MODEL: Optional filler screen
+class QuizFillerPage(models.Model):
+    title = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='quiz_fillers/', null=True, blank=True)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title or f"Filler Page {self.id}"

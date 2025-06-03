@@ -327,6 +327,9 @@ urlpatterns = [
     path('ai-sign-in/', views.ai_sign_in, name='ai_integration_sign_in'),
     path('bots/delete/<int:bot_id>/', views.delete_ai_bot, name='ai_integration_delete_bot'),
 
+
+    path('signup-quiz/', views.signup_quiz, name='signup_quiz'),
+    path('submit-answer/', views.submit_quiz_answer, name='submit_quiz_answer'),
 ]
 
 

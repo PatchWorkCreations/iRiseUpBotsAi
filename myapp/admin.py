@@ -196,3 +196,23 @@ class AnalyticsSnapshotAdmin(admin.ModelAdmin):
     list_display = ('user', 'bot', 'date', 'total_chats', 'total_users')
     list_filter = ('date',)
     search_fields = ('user__username', 'bot__name')
+
+
+from .models import QuizQuestion, QuizChoice, UserQuizAnswer
+
+class QuizChoiceInline(admin.TabularInline):
+    model = QuizChoice
+    extra = 2
+
+@admin.register(QuizQuestion)
+class QuizQuestionAdmin(admin.ModelAdmin):
+    list_display = ['question_text', 'order']
+    ordering = ['order']
+    inlines = [QuizChoiceInline]
+    search_fields = ['question_text']
+
+@admin.register(UserQuizAnswer)
+class UserQuizAnswerAdmin(admin.ModelAdmin):
+    list_display = ['user', 'question', 'selected_choice', 'answered_at']
+    search_fields = ['user__username', 'question__question_text', 'selected_choice__choice_text']
+    list_filter = ['answered_at']
