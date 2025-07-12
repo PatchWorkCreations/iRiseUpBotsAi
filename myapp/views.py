@@ -5388,9 +5388,15 @@ def submit_quiz_answer(request):
         quiz_answers = request.session.get('quiz_answers', {})
         quiz_answers[question_id] = choice_id
         request.session['quiz_answers'] = quiz_answers
+
+        request.session.modified = True  # ✅ Force session to save
+
+        print("🧠 Session updated with quiz_answers:", request.session.get('quiz_answers'))
+
         return JsonResponse({'status': 'saved to session'})
 
     return JsonResponse({'status': 'invalid request'}, status=400)
+
 
 
 from django.contrib.auth import login
@@ -5457,3 +5463,163 @@ def signup_view(request):
         })
 
     return render(request, "myapp/aibots/iriseupai/signup.html")
+
+
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+
+        if user:
+            login(request, user)
+            return redirect('staff_attendance')
+        else:
+            messages.error(request, 'Invalid credentials.')
+
+    return render(request, 'staff/login.html')
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from django.utils.timezone import now
+from django.utils.timezone import localdate
+from .models import AttendanceLog
+
+@login_required
+def staff_attendance(request):
+    user = request.user
+    profile = user.profile
+    action = request.GET.get("action")
+
+    # Save attendance log
+    if action in ['in', 'out']:
+        AttendanceLog.objects.create(
+            user=user,
+            position_type=profile.position_type,
+            action=action,
+            timestamp=now()
+        )
+
+    # Fetch today's logs
+    today_logs = AttendanceLog.objects.filter(
+        user=user,
+        timestamp__date=localdate()
+    ).order_by('-timestamp')
+
+    return render(request, "staff/attendance.html", {
+        "profile": profile,
+        "logs": today_logs
+    })
+
+import qrcode
+import base64
+from io import BytesIO
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.files.base import ContentFile
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+
+from cloudinary_storage.storage import MediaCloudinaryStorage
+
+from .models import QRCode, ScanLog
+
+
+@login_required
+def qr_generator(request):
+    qr_img_base64 = None
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        link = request.POST.get('link')
+        uploaded_file = request.FILES.get('file')
+
+        if title and (link or uploaded_file):
+            # Use scan URL instead of direct link
+            temp_qr = QRCode(user=request.user, title=title)
+            temp_qr.save()  # Save temp instance to get a valid pk
+
+            scan_url = request.build_absolute_uri(f'/scan/{temp_qr.pk}/')
+            data = scan_url  # We encode our own tracking link
+
+            # Generate QR code image
+            qr = qrcode.QRCode(version=1, box_size=10, border=4)
+            qr.add_data(data)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white")
+
+            # Save to in-memory buffer
+            buffer = BytesIO()
+            img.save(buffer, format="PNG")
+            buffer.seek(0)
+
+            # Upload to Cloudinary
+            cloudinary_storage = MediaCloudinaryStorage()
+            file_name = f"qrgen/qr_images/{title.replace(' ', '_')}.png"
+            uploaded_image_name = cloudinary_storage.save(file_name, ContentFile(buffer.read()))
+
+            # Save final record (update the temp_qr)
+            temp_qr.link = link if link else None
+            temp_qr.file = uploaded_file if uploaded_file else None
+            temp_qr.image = uploaded_image_name
+            temp_qr.save()
+
+            # For preview
+            qr_img_base64 = base64.b64encode(buffer.getvalue()).decode()
+
+    return render(request, 'qr_generator/index.html', {
+        'qr_img_base64': qr_img_base64
+    })
+
+
+@login_required
+def qr_list(request):
+    qr_codes = QRCode.objects.filter(user=request.user).order_by('-created_at')
+
+    for qr in qr_codes:
+        qr.real_scans = qr.scanlog_set.count()
+
+    return render(request, 'qr_generator/qr_list.html', {
+        'qr_codes': qr_codes
+    })
+
+
+def scan_redirect(request, pk):
+    qr = get_object_or_404(QRCode, pk=pk)
+
+    # Track the scan
+    ip = request.META.get('REMOTE_ADDR')
+    ScanLog.objects.create(qr_code=qr, ip_address=ip)
+
+    # Redirect to the real destination
+    if qr.link:
+        return redirect(qr.link)
+    return HttpResponse("This QR code has no destination link.")
+
+
+from django.http import JsonResponse
+
+@require_POST
+@login_required
+def update_qr(request):
+    qr_id = request.POST.get('qr_id')
+    title = request.POST.get('title')
+    link = request.POST.get('link')
+    qr = get_object_or_404(QRCode, id=qr_id, user=request.user)
+    qr.title = title
+    qr.link = link
+    qr.save()
+    return JsonResponse({'status': 'updated'})
+
+@require_POST
+@login_required
+def delete_qr(request):
+    qr_id = request.POST.get('qr_id')
+    qr = get_object_or_404(QRCode, id=qr_id, user=request.user)
+    qr.delete()
+    return JsonResponse({'status': 'deleted'})

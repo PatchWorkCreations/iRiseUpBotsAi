@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to iRiseUp</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f5;">
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center" style="padding: 40px 0;">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow: hidden;">
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #1e40af; padding: 30px; text-align: center; color: #ffffff;">
+              <h1 style="margin: 0; font-size: 24px;">Welcome to iRiseUp 🌱</h1>
+              <p style="margin-top: 5px; font-size: 14px;">You've been successfully added to our staff system</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding: 30px;">
+              <p style="font-size: 16px;">Hi <strong>{{ name }}</strong>,</p>
+
+              <p style="font-size: 15px; line-height: 1.6;">
+                You’ve been added to the <strong>iRiseUp Staff Portal</strong>.
+                Below are your temporary login credentials:
+              </p>
+
+              <table width="100%" style="background-color: #f0f4ff; padding: 15px; border-radius: 8px; margin-top: 15px; font-size: 14px;">
+                <tr>
+                  <td><strong>Username:</strong></td>
+                  <td>{{ username }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Password:</strong></td>
+                  <td>{{ password }}</td>
+                </tr>
+              </table>
+
+              <p style="margin-top: 20px; font-size: 15px;">
+                You can log in using the button below:
+              </p>
+
+              <p style="text-align: center; margin: 30px 0;">
+                <a href="{{ login_url }}" style="background-color: #1e40af; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                  🔐 Log In to iRiseUp
+                </a>
+              </p>
+
+              <p style="font-size: 13px; color: #555;">✨ Please change your password after logging in for the first time.</p>
+
+              <p style="font-size: 13px; color: #999; margin-top: 40px;">If you were not expecting this email, you can safely ignore it.</p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f1f5f9; text-align: center; padding: 15px; font-size: 12px; color: #888;">
+              © {{ year|default:"2025" }} iRiseUp Technologies · Empowering People with Purpose
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

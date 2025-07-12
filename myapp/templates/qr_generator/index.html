@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+  <header class="flex items-center justify-between max-w-7xl mx-auto mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">QR Code Generator</h1>
+    <div class="space-x-4 text-sm">
+      {% if user.is_authenticated %}
+        <a href="{% url 'qr_list' %}" class="text-blue-600 hover:underline">My QR Codes</a>
+        <form method="post" action="{% url 'sign_out' %}" class="inline">
+          {% csrf_token %}
+          <button class="text-red-600 hover:underline">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Login</a>
+        <a href="{% url 'signup' %}" class="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Sign Up</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-8 rounded-xl shadow-lg">
+    <!-- Left Panel -->
+    <div>
+      <h2 class="text-lg font-semibold mb-4">Create a QR Code</h2>
+      <form method="post" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="QR Title / Label" class="w-full border px-4 py-2 rounded" required>
+        <input type="url" name="link" placeholder="Enter a URL (e.g. https://example.com)" class="w-full border px-4 py-2 rounded" required>
+
+        <div class="text-sm text-gray-500">or drag and drop a file</div>
+        <input type="file" name="file" class="w-full border px-4 py-2 rounded">
+
+        <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Generate QR Code</button>
+      </form>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="text-center">
+      <h2 class="text-lg font-semibold mb-4">QR Preview</h2>
+      {% if qr_img_base64 %}
+      <img src="data:image/png;base64,{{ qr_img_base64 }}" alt="QR Code" class="mx-auto w-48 h-48 border rounded mb-4">
+      <a href="data:image/png;base64,{{ qr_img_base64 }}" download="qr-code.png"
+         class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">⬇️ Download</a>
+      {% else %}
+      <div class="w-48 h-48 bg-gray-200 mx-auto rounded flex items-center justify-center">
+        <span class="text-sm text-gray-500">No QR Code Yet</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

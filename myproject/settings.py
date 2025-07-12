@@ -189,8 +189,11 @@ EMAIL_HOST = get_env('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = int(get_env('EMAIL_PORT', default=587))
 EMAIL_USE_TLS = get_env('EMAIL_USE_TLS', default=True) in [True, 'True', 'true', 1, '1']
 EMAIL_HOST_USER = get_env('EMAIL_HOST_USER', default='iriseupgroupofcompanies@gmail.com')
-EMAIL_HOST_PASSWORD = get_env('EMAIL_HOST_PASSWORD')  # App password
+EMAIL_HOST_PASSWORD = ('wwsp rfie agvg plod')
+#EMAIL_HOST_PASSWORD = get_env('EMAIL_HOST_PASSWORD')  # App password
 DEFAULT_FROM_EMAIL = get_env('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
+
+
 
 # Third-party API keys
 OPENAI_API_KEY = env('OPENAI_API_KEY')

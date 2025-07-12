@@ -216,3 +216,87 @@ class UserQuizAnswerAdmin(admin.ModelAdmin):
     list_display = ['user', 'question', 'selected_choice', 'answered_at']
     search_fields = ['user__username', 'question__question_text', 'selected_choice__choice_text']
     list_filter = ['answered_at']
+
+
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
+import random
+import string
+
+from .models import Profile, AttendanceLog
+
+# Inline Profile model in User admin
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    verbose_name_plural = 'Profile'
+    fk_name = 'user'
+
+# Custom User Admin with inline Profile + welcome email
+class UserAdmin(BaseUserAdmin):
+    inlines = (ProfileInline,)
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            print("🟢 Creating new user:", obj.username)
+
+            temp_password = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+            obj.set_password(temp_password)
+            obj.save()
+
+            print("✅ Temp password set:", temp_password)
+            print("📧 Sending to:", obj.email)
+
+            if obj.email:
+                context = {
+                    'name': obj.first_name or obj.username,
+                    'username': obj.username,
+                    'password': temp_password,
+                    'login_url': 'https://yourdomain.com/login/',
+                }
+
+                html_message = render_to_string('emails/welcome_staff.html', context)
+
+                send_mail(
+                    subject="🎉 Welcome to iRiseUp Staff Portal",
+                    message=f"Hi {context['name']}, please view this email in HTML format.",
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[obj.email],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+                print("✅ Email sent!")
+        else:
+            print("🟡 Editing existing user:", obj.username)
+            super().save_model(request, obj, form, change)
+
+    # Show password fields during user creation
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')}
+        ),
+    )
+
+# Unregister default User admin and register the custom one
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
+
+# Profile Admin (standalone)
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'position_type')
+    list_filter = ('position_type',)
+    search_fields = ('user__username', 'user__first_name', 'user__email')
+
+# Attendance Log Admin
+@admin.register(AttendanceLog)
+class AttendanceLogAdmin(admin.ModelAdmin):
+    list_display = ('user', 'position_type', 'action', 'timestamp')
+    list_filter = ('position_type', 'action', 'timestamp')
+    search_fields = ('user__username', 'user__first_name')
+    ordering = ('-timestamp',)

@@ -330,6 +330,18 @@ urlpatterns = [
 
     path('signup-quiz/', views.signup_quiz, name='signup_quiz'),
     path('submit-answer/', views.submit_quiz_answer, name='submit_quiz_answer'),
+
+    path("staff-attendance/", views.staff_attendance, name="staff_attendance"),
+    path("iriseup-login/", views.login_view, name="iriseup_login"),
+
+    path('qr_generator/', views.qr_generator, name='qr_generator'),
+    path('my-codes/', views.qr_list, name='qr_list'),
+
+    path('scan/<int:pk>/', views.scan_redirect, name='scan_redirect'),
+
+    path('qr/update/', views.update_qr, name='update_qr'),
+    path('qr/delete/', views.delete_qr, name='delete_qr'),
+
 ]
 
 

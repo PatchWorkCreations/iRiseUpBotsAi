@@ -5,6 +5,8 @@ from pytz import common_timezones
 
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
+
 
 class Reminder(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -1239,3 +1241,63 @@ class QuizFillerPage(models.Model):
 
     def __str__(self):
         return self.title or f"Filler Page {self.id}"
+
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+# Choices for staff roles
+POSITION_CHOICES = [
+    ('regular', 'Regular Employee'),
+    ('intern', 'Intern'),
+    ('ojt', 'OJT'),
+    ('freelancer', 'Freelancer'),
+]
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    position_type = models.CharField(
+        max_length=20,
+        choices=POSITION_CHOICES,
+        default='regular'
+    )
+
+    def __str__(self):
+        return f"{self.user.username} - {self.get_position_type_display()}"
+
+class AttendanceLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    position_type = models.CharField(max_length=20, choices=POSITION_CHOICES)
+    action = models.CharField(max_length=10)  # "in" or "out"
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.action.upper()} at {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class QRCode(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    link = models.URLField(blank=True, null=True)
+    file = models.FileField(upload_to='qr_files/', blank=True, null=True)
+    
+    # Use CloudinaryField for QR image
+    image = CloudinaryField('image', folder="qrgen/qr_images/")
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.user.username}"
+
+
+class ScanLog(models.Model):
+    qr_code = models.ForeignKey(QRCode, on_delete=models.CASCADE)
+    scanned_at = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Scan of {self.qr_code.title} at {self.scanned_at}"

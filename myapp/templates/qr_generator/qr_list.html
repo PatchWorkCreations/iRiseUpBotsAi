@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My QR Codes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-800 text-white p-6 hidden md:block">
+    <h2 class="text-lg font-bold mb-6">My QR Codes</h2>
+    <nav class="space-y-3 text-sm">
+      <a href="{% url 'qr_list' %}" class="block py-1 px-2 rounded bg-gray-700">📈 Active ({{ qr_codes|length }})</a>
+      <a href="#" class="block py-1 px-2 rounded hover:bg-gray-700 text-gray-400 cursor-not-allowed">⏸️ Paused (0)</a>
+    </nav>
+    <div class="mt-8 text-sm">
+      <p class="text-gray-300 mb-2">My Folders</p>
+      <a href="#" class="text-green-400 hover:underline">+ New Folder</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">Active QR Codes</h1>
+      <a href="{% url 'qr_generator' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">+ Create QR Code</a>
+    </div>
+
+    <div class="space-y-6">
+      {% for qr in qr_codes %}
+      <div class="bg-white shadow-sm rounded-lg p-6 flex items-center justify-between">
+        <!-- Info Section -->
+        <div class="flex-1 space-y-2">
+          <div class="text-gray-700 text-sm font-medium">Website</div>
+          <a href="{{ qr.link }}" target="_blank" class="text-blue-600 font-semibold text-lg truncate">
+            {{ qr.link|default:"(No link)" }}
+          </a>
+          <div class="text-gray-400 text-sm flex items-center space-x-4">
+            <span>No folder</span>
+            <span>📅 {{ qr.created_at|date:"M d, Y" }}</span>
+          </div>
+          <div class="flex gap-3 pt-2">
+            <button onclick="openEditModal('{{ qr.id }}', '{{ qr.title }}', '{{ qr.link }}')" class="text-blue-600 hover:underline text-sm">✏️ Edit</button>
+            <button onclick="openDeleteModal('{{ qr.id }}')" class="text-red-600 hover:underline text-sm">🗑️ Delete</button>
+          </div>
+        </div>
+
+        <!-- Scan Stats -->
+        <div class="w-24 text-center">
+          <p class="text-lg font-bold text-gray-700">{{ qr.real_scans }}</p>
+          <p class="text-sm text-gray-400">Scans</p>
+          <a href="#" class="text-blue-500 text-sm hover:underline">Details →</a>
+        </div>
+
+        <!-- QR Image + Download -->
+        <div class="text-center">
+          <img src="{{ qr.image.url }}" alt="QR" class="w-20 h-20 mx-auto mb-2">
+          <a href="{{ qr.image.url }}" download class="bg-gray-200 px-4 py-1 rounded text-sm text-gray-700 hover:bg-gray-300">
+            Download
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-gray-600">No QR codes found. Try <a href="{% url 'qr_generator' %}" class="text-blue-600 underline">creating one</a>.</p>
+      {% endfor %}
+    </div>
+  </main>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg w-full max-w-md">
+      <h3 class="text-lg font-semibold mb-4">Edit QR Code</h3>
+      <form id="editForm" onsubmit="submitEditForm(event)">
+
+        {% csrf_token %}
+        <input type="hidden" name="qr_id" id="editQrId">
+        <input type="text" name="title" id="editTitle" class="w-full border px-3 py-2 rounded mb-2" required>
+        <input type="url" name="link" id="editLink" class="w-full border px-3 py-2 rounded mb-4" required>
+        <div class="flex justify-end gap-2">
+          <button type="button" onclick="closeModal('editModal')" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg w-full max-w-sm text-center">
+      <h3 class="text-lg font-semibold mb-4">Delete QR Code?</h3>
+      <form id="deleteForm" onsubmit="submitDeleteForm(event)">
+        {% csrf_token %}
+        <input type="hidden" name="qr_id" id="deleteQrId">
+        <p class="mb-4 text-sm text-gray-600">This action cannot be undone.</p>
+        <div class="flex justify-center gap-2">
+          <button type="button" onclick="closeModal('deleteModal')" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded">Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <div id="toast" class="fixed bottom-6 right-6 bg-green-500 text-white px-4 py-2 rounded shadow hidden z-50"></div>
+
+  <script>
+    function openEditModal(id, title, link) {
+      document.getElementById('editQrId').value = id;
+      document.getElementById('editTitle').value = title;
+      document.getElementById('editLink').value = link;
+      document.getElementById('editModal').classList.remove('hidden');
+    }
+    
+    function openDeleteModal(id) {
+      document.getElementById('deleteQrId').value = id;
+      document.getElementById('deleteModal').classList.remove('hidden');
+    }
+    
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.add('hidden');
+    }
+    
+    // 🔄 AJAX: Submit Edit
+    function submitEditForm(e) {
+      e.preventDefault();
+      const form = document.getElementById('editForm');
+      const formData = new FormData(form);
+      
+      fetch("{% url 'update_qr' %}", {
+        method: 'POST',
+        headers: { 'X-CSRFToken': formData.get('csrfmiddlewaretoken') },
+        body: formData
+      })
+      .then(res => res.ok ? res.json() : Promise.reject('Failed'))
+      .then(data => {
+        closeModal('editModal');
+        showToast("QR code updated!");
+        setTimeout(() => location.reload(), 1000);
+      })
+      .catch(() => showToast("Update failed!", true));
+    }
+    
+    // ❌ AJAX: Submit Delete
+    function submitDeleteForm(e) {
+      e.preventDefault();
+      const form = document.getElementById('deleteForm');
+      const formData = new FormData(form);
+    
+      fetch("{% url 'delete_qr' %}", {
+        method: 'POST',
+        headers: { 'X-CSRFToken': formData.get('csrfmiddlewaretoken') },
+        body: formData
+      })
+      .then(res => res.ok ? res.json() : Promise.reject('Failed'))
+      .then(data => {
+        closeModal('deleteModal');
+        showToast("QR code deleted!");
+        setTimeout(() => location.reload(), 1000);
+      })
+      .catch(() => showToast("Delete failed!", true));
+    }
+    
+    // ✅ Show toast
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.innerText = message;
+      toast.className = `fixed bottom-6 right-6 px-4 py-2 rounded shadow z-50 ${
+        isError ? 'bg-red-600' : 'bg-green-500'
+      } text-white`;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2500);
+    }
+    </script>
+    
+</body>
+</html>
