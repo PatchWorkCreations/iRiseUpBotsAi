@@ -335,7 +335,7 @@ urlpatterns = [
     path("iriseup-login/", views.login_view, name="iriseup_login"),
 
     path('qr_generator/', views.qr_generator, name='qr_generator'),
-    path('my-codes/', views.qr_list, name='qr_list'),
+    path('qr-dashboard/', views.qr_list, name='qr_list'),
 
     path('scan/<int:pk>/', views.scan_redirect, name='scan_redirect'),
 
