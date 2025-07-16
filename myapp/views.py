@@ -4239,17 +4239,23 @@ def simple_chat_message(request):
 
 
         if user_said_yes(user_message):
-            export_data = request.session.get("export_buffer")
-            if export_data:
+            export_text = request.session.get("export_buffer")
+            export_title = request.session.get("export_title") or "AI_Reply"
+            if export_text:
                 from .utils import generate_docx_file
-                file_url, file_id = generate_docx_file(export_data, request.user)
-
-                # Optionally store file_id in session (in case you want to delete later)
-                request.session["temp_file_id"] = file_id
-
+                file_url, file_id = generate_docx_file(export_text, request.user, title=export_title)
+                assistant_reply = f"📄 Done! Here's your download:<br><br><a href='{file_url}' target='_blank'>Download Word File</a>"
+                request.session.pop("export_buffer", None)
+                request.session.pop("export_title", None)
+                messages.append({"role": "assistant", "content": assistant_reply})
+                chat_session.messages = messages
+                chat_session.last_updated = timezone.now()
+                chat_session.save()
                 return JsonResponse({
-                    "response": f"📄 Done! Here's your download: <a href='{file_url}' target='_blank'>Download Word File</a>",
+                    "chat_id": chat_session.id,
+                    "response": assistant_reply,
                     "file_url": file_url,
+                    "title": chat_session.title
                 })
 
 
@@ -4307,7 +4313,8 @@ def simple_chat_message(request):
             "content": f"Please reply in {user_lang}. Never explain your translation unless asked."
         }
 
-        # TEXT MODE
+
+
         summary_messages = summarize_history(chat_session.id) if callable(summarize_history) else []
         global_tone_prompt = getattr(settings, "AI_TONE_PROMPT", "")
         smart_export_prompt = {
@@ -4339,44 +4346,34 @@ def simple_chat_message(request):
 
         assistant_reply = response.choices[0].message.content.strip()
 
-        # 💡 Detect if reply is structured & export-worthy
+        # ✅ Now assess export value AFTER we get the final assistant reply
         from .utils import assess_export_value
-
-        # Clear export state if the user is NOT currently replying "yes" to a previous export
-        if not user_said_yes(user_message):
-            request.session["export_prompted"] = False
-
-        # 💡 Check if the reply might be useful for exporting
-# 💡 Check if the reply might be useful for exporting
         export_analysis = assess_export_value(user_message, assistant_reply)
+        print("🧪 Export Analysis:", export_analysis)
 
-        # We only save export buffer if it’s NOT a confirmation message
-        if export_analysis.lower().startswith("yes") and not user_said_yes(user_message):
-            # Save BEFORE appending confirmation prompt
+        if export_analysis.lower().startswith("yes"):
             request.session["export_buffer"] = assistant_reply
             request.session["export_title"] = chat_session.title or "AI_Reply"
             request.session.modified = True
-
-            # Then add prompt for the user
             assistant_reply += "\n\n📄 Would you like me to turn this into a downloadable document?"
-
         else:
             request.session.pop("export_buffer", None)
             request.session.pop("export_title", None)
 
 
-        # --- Handle user's confirmation to export ---
+
+
         if user_said_yes(user_message):
             export_text = request.session.get("export_buffer")
             export_title = request.session.get("export_title") or "AI_Reply"
 
             if export_text:
+                from .utils import generate_docx_file
                 file_url, file_id = generate_docx_file(export_text, request.user, title=export_title)
-                assistant_reply = f"📄 Done! Here's your download:\n\n[Download Word File]({file_url})"
+                assistant_reply = f"📄 Done! Here's your download:\n\n<a href='{file_url}' target='_blank'>Download Word File</a>"
 
                 request.session.pop("export_buffer", None)
                 request.session.pop("export_title", None)
-
 
 
 
