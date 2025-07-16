@@ -715,11 +715,11 @@ def generate_docx_file(content, user, title=None):
         match = re.match(r'^(\d+)\.\s(\*\*.*?\*\*)(.*)', line)
         if match:
             para = doc.add_paragraph(style='List Number')
-            para.add_run(f"{match.group(1)}. ")
             bold = para.add_run(match.group(2).replace('**', ''))
             bold.bold = True
             para.add_run(match.group(3))
             continue
+
 
         # Bullet point
         if line.startswith('- ') or line.startswith('• '):
