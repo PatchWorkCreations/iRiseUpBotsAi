@@ -3783,7 +3783,7 @@ AIs = [
     {"id": "thrive", "name": "Thrive", "icon": "🩺", "description": "Focus on health & well-being!", "image": "myapp/images/aiimages/thrive.png"},
     {"id": "lumos", "name": "Lumos", "icon": "🤗", "description": "Support & companionship!", "image": "myapp/images/aiimages/lumos.png"},
     {"id": "mentor-iq", "name": "Mentor IQ", "icon": "📚", "description": "Educational & career guidance!", "image": "myapp/images/aiimages/mentor_iq.png"},
-    {"id": "Nexara", "name": "Nexara", "icon": "🚀🌐", "description": "Business & marketing insights!", "image": "myapp/images/aiimages/nexus.png"},
+    {"id": "Ezra", "name": "Ezra", "icon": "🚀🌐", "description": "Business & marketing insights!", "image": "myapp/images/aiimages/nexus.png"},
     {"id": "keystone", "name": "Keystone", "icon": "💼⚖️", "description": "Finance & legal foundation!", "image": "myapp/images/aiimages/keystone.png"},
     {"id": "imagine", "name": "Imagine", "icon": "🎨", "description": "Creative inspiration & AI images!", "image": "myapp/images/aiimages/imagine.png"},
     {"id": "gideon", "name": "Gideon", "icon": "🚀", "description": "Wisdom for all paths", "image": "myapp/images/aiimages/gideon.png"},
