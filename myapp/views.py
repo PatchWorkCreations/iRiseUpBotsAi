@@ -4345,6 +4345,7 @@ def simple_chat_message(request):
         )
 
         assistant_reply = response.choices[0].message.content.strip()
+        raw_assistant_reply = assistant_reply
 
         # ✅ Now assess export value AFTER we get the final assistant reply
         from .utils import assess_export_value
@@ -4352,7 +4353,7 @@ def simple_chat_message(request):
         print("🧪 Export Analysis:", export_analysis)
 
         if export_analysis.lower().startswith("yes"):
-            request.session["export_buffer"] = assistant_reply
+            request.session["export_buffer"] = raw_assistant_reply
             request.session["export_title"] = chat_session.title or "AI_Reply"
             request.session.modified = True
             assistant_reply += "\n\n📄 Would you like me to turn this into a downloadable document?"
