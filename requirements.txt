@@ -71,3 +71,5 @@ tzlocal==5.3.1
 pytz==2025.2
 
 qrcode==8.2
+
+python-docx==1.2.0
