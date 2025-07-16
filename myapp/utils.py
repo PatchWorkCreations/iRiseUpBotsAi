@@ -641,3 +641,112 @@ def is_translation_intended(message):
     except Exception as e:
         logger.error(f"Intent detection failed: {e}")
         return False
+
+from openai import OpenAI
+import os
+import uuid
+import tempfile
+import cloudinary.uploader
+from openai import OpenAI
+
+
+client = OpenAI()
+
+def assess_export_value(user_message, ai_reply):
+    system_prompt = (
+        "You are a helpful assistant. Based on the last user message and your reply, "
+        "determine if offering a downloadable file (PDF, Word, Checklist) would be genuinely helpful. "
+        "Reply only with 'Yes' or 'No' and a short explanation why."
+    )
+
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_message},
+        {"role": "assistant", "content": ai_reply},
+    ]
+
+    response = client.chat.completions.create(
+        model="gpt-4",
+        messages=messages,
+        temperature=0.2
+    )
+
+    return response.choices[0].message.content.strip()
+
+def generate_docx_file(content, user, title=None):
+    from docx import Document
+    import uuid, tempfile, os, re
+    from django.utils import timezone
+    import cloudinary.uploader
+
+    def add_markdown_paragraph(doc_or_para, line):
+        # For doc: add new para, for para: add to existing
+        para = doc_or_para.add_paragraph() if hasattr(doc_or_para, 'add_paragraph') else doc_or_para
+        while '**' in line:
+            start = line.find('**')
+            end = line.find('**', start + 2)
+            if end == -1:
+                para.add_run(line)
+                return
+            before = line[:start]
+            bold_text = line[start+2:end]
+            line = line[end+2:]
+            if before:
+                para.add_run(before)
+            bold_run = para.add_run(bold_text)
+            bold_run.bold = True
+        if line:
+            para.add_run(line)
+
+    doc = Document()
+
+    # === Title ===
+    clean_title = title or f"AI_Export_{timezone.now().strftime('%Y-%m-%d')}"
+    doc.add_heading(clean_title.replace('_', ' '), 0)
+
+    # === Format Line-by-Line ===
+    for line in content.split('\n'):
+        line = line.strip()
+        if not line:
+            continue
+        line = line.replace("alohg", "along")  # fix common typo
+
+        # e.g. "1. **Step Title**: Explanation"
+        match = re.match(r'^(\d+)\.\s(\*\*.*?\*\*)(.*)', line)
+        if match:
+            para = doc.add_paragraph(style='List Number')
+            para.add_run(f"{match.group(1)}. ")
+            bold = para.add_run(match.group(2).replace('**', ''))
+            bold.bold = True
+            para.add_run(match.group(3))
+            continue
+
+        # Bullet point
+        if line.startswith('- ') or line.startswith('• '):
+            para = doc.add_paragraph(style='List Bullet')
+            add_markdown_paragraph(para, line[2:])
+        # Short header (like "Steps:")
+        elif line.endswith(":") and len(line.split()) <= 6:
+            para = doc.add_paragraph()
+            run = para.add_run(line)
+            run.bold = True
+        # Regular paragraph
+        else:
+            add_markdown_paragraph(doc, line)
+
+    # === Save to Temp + Upload ===
+    tmp_file = tempfile.NamedTemporaryFile(suffix=".docx", delete=False)
+    doc.save(tmp_file.name)
+
+    upload_result = cloudinary.uploader.upload(
+        tmp_file.name,
+        resource_type="raw",
+        folder="temp_exports/",
+        public_id=f"{clean_title.replace(' ', '_')}_{uuid.uuid4().hex}",
+        invalidate=True
+    )
+
+    tmp_file.close()
+    os.unlink(tmp_file.name)
+
+    return upload_result["secure_url"], upload_result["public_id"]

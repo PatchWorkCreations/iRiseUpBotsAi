@@ -3745,11 +3745,19 @@ def iriseupai_landing(request):
     """
     return render(request, 'myapp/aibots/iriseupai/iriseupai_landing.html')
 
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+
 def chat_iriseupai(request):
     """
-    Landing page for iRiseUp AI.
+    Public landing page for iRiseUp AI.
+    Redirects authenticated users to the sandbox dashboard.
     """
+    if request.user.is_authenticated:
+        return redirect('iriseupdashboard')  # Make sure this matches the URL name in urls.py
+    
     return render(request, 'myapp/aibots/iriseupai/chat_iriseupai.html')
+
 
 
 
@@ -4169,7 +4177,16 @@ def detect_and_translate(text):
         logger.error(f"Error in translation: {e}")
         return {"error": "Translation failed"}
 
-# Main function to handle simple chat messages
+
+def user_said_yes(msg):
+    triggers = ["yes", "sure", "go ahead", "convert", "please", "okay", "alright", "yes please", "yup", "download"]
+    msg = msg.lower()
+    return any(trigger in msg for trigger in triggers)
+
+
+
+
+
 @csrf_exempt
 @login_required
 def simple_chat_message(request):
@@ -4219,6 +4236,22 @@ def simple_chat_message(request):
 
         messages = chat_session.messages or []
         messages.append({"role": "user", "content": user_message})
+
+
+        if user_said_yes(user_message):
+            export_data = request.session.get("export_buffer")
+            if export_data:
+                from .utils import generate_docx_file
+                file_url, file_id = generate_docx_file(export_data, request.user)
+
+                # Optionally store file_id in session (in case you want to delete later)
+                request.session["temp_file_id"] = file_id
+
+                return JsonResponse({
+                    "response": f"📄 Done! Here's your download: <a href='{file_url}' target='_blank'>Download Word File</a>",
+                    "file_url": file_url,
+                })
+
 
         client = openai.OpenAI()
 
@@ -4277,11 +4310,23 @@ def simple_chat_message(request):
         # TEXT MODE
         summary_messages = summarize_history(chat_session.id) if callable(summarize_history) else []
         global_tone_prompt = getattr(settings, "AI_TONE_PROMPT", "")
+        smart_export_prompt = {
+            "role": "system",
+            "content": (
+                "If the user has received multiple helpful lists, summaries, steps, or structured content, "
+                "gently suggest turning it into a downloadable PDF or Word document. "
+                "Only suggest this if it would make sense based on recent replies. "
+                "Use a warm and helpful tone. Example: 'Would you like me to turn this into a document?'"
+            )
+        }
+
         full_messages = [
             language_prompt,
             {"role": "system", "content": global_tone_prompt.strip()},
             {"role": "system", "content": system_prompt.strip()},
+            smart_export_prompt, 
         ] + summary_messages + messages
+
 
         for msg in full_messages:
             if not isinstance(msg.get("content"), str):
@@ -4293,6 +4338,47 @@ def simple_chat_message(request):
         )
 
         assistant_reply = response.choices[0].message.content.strip()
+
+        # 💡 Detect if reply is structured & export-worthy
+        from .utils import assess_export_value
+
+        # Clear export state if the user is NOT currently replying "yes" to a previous export
+        if not user_said_yes(user_message):
+            request.session["export_prompted"] = False
+
+        # 💡 Check if the reply might be useful for exporting
+# 💡 Check if the reply might be useful for exporting
+        export_analysis = assess_export_value(user_message, assistant_reply)
+
+        # We only save export buffer if it’s NOT a confirmation message
+        if export_analysis.lower().startswith("yes") and not user_said_yes(user_message):
+            # Save BEFORE appending confirmation prompt
+            request.session["export_buffer"] = assistant_reply
+            request.session["export_title"] = chat_session.title or "AI_Reply"
+            request.session.modified = True
+
+            # Then add prompt for the user
+            assistant_reply += "\n\n📄 Would you like me to turn this into a downloadable document?"
+
+        else:
+            request.session.pop("export_buffer", None)
+            request.session.pop("export_title", None)
+
+
+        # --- Handle user's confirmation to export ---
+        if user_said_yes(user_message):
+            export_text = request.session.get("export_buffer")
+            export_title = request.session.get("export_title") or "AI_Reply"
+
+            if export_text:
+                file_url, file_id = generate_docx_file(export_text, request.user, title=export_title)
+                assistant_reply = f"📄 Done! Here's your download:\n\n[Download Word File]({file_url})"
+
+                request.session.pop("export_buffer", None)
+                request.session.pop("export_title", None)
+
+
+
 
         messages.append({"role": "assistant", "content": assistant_reply})
         chat_session.messages = messages
@@ -5486,9 +5572,9 @@ def login_view(request):
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.utils.timezone import now
-from django.utils.timezone import localdate
+from django.utils.timezone import now, localdate
 from .models import AttendanceLog
+
 
 @login_required
 def staff_attendance(request):
@@ -5496,7 +5582,7 @@ def staff_attendance(request):
     profile = user.profile
     action = request.GET.get("action")
 
-    # Save attendance log
+    # Handle time in / time out action
     if action in ['in', 'out']:
         AttendanceLog.objects.create(
             user=user,
@@ -5505,7 +5591,7 @@ def staff_attendance(request):
             timestamp=now()
         )
 
-    # Fetch today's logs
+    # Fetch logs for today
     today_logs = AttendanceLog.objects.filter(
         user=user,
         timestamp__date=localdate()
@@ -5513,8 +5599,10 @@ def staff_attendance(request):
 
     return render(request, "staff/attendance.html", {
         "profile": profile,
-        "logs": today_logs
+        "logs": today_logs,
+        "user": user  # Ensure template has access to {{ user }}
     })
+
 
 import qrcode
 import base64

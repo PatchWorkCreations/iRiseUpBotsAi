@@ -1266,14 +1266,22 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.get_position_type_display()}"
 
+from django.db import models
+from django.contrib.auth.models import User
+
 class AttendanceLog(models.Model):
+    ACTION_CHOICES = [
+        ('in', 'Time In'),
+        ('out', 'Time Out'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    position_type = models.CharField(max_length=20, choices=POSITION_CHOICES)
-    action = models.CharField(max_length=10)  # "in" or "out"
-    timestamp = models.DateTimeField(auto_now_add=True)
+    position_type = models.CharField(max_length=100)
+    action = models.CharField(max_length=10, choices=ACTION_CHOICES)
+    timestamp = models.DateTimeField()
 
     def __str__(self):
-        return f"{self.user.username} - {self.action.upper()} at {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
+        return f"{self.user} - {self.get_action_display()} at {self.timestamp}"
 
 
 from django.db import models

@@ -4,6 +4,11 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 import myapp.guest_views as guest_views
 from myapp import views
+from django.conf import settings
+from django.conf.urls.static import static
+import os
+
+
 
 urlpatterns = [
     path('personalized_plan', views.personalized_plan, name='personalized_plan'),
@@ -342,6 +347,6 @@ urlpatterns = [
     path('qr/update/', views.update_qr, name='update_qr'),
     path('qr/delete/', views.delete_qr, name='delete_qr'),
 
-]
 
+]
 

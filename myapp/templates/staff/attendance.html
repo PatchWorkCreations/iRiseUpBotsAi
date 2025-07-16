@@ -1,73 +1,87 @@
 <!-- templates/staff/attendance.html -->
 <!DOCTYPE html>
 <html lang="en">
+  {% load tz %}
 <head>
   <meta charset="UTF-8">
   <title>Attendance | iRiseUp</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen flex items-center justify-center px-4 py-10">
-  <div class="bg-white shadow-2xl rounded-xl w-full max-w-2xl p-8 space-y-6">
-    
+<body class="bg-gradient-to-br from-blue-100 via-white to-gray-100 min-h-screen flex items-center justify-center px-4 py-10">
+
+  <div class="bg-white shadow-xl rounded-2xl w-full max-w-md md:max-w-2xl p-6 md:p-10 space-y-6 transition-all duration-300 ease-in-out">
+
     <!-- Header -->
-    <div class="text-center">
-      <h1 class="text-3xl font-bold text-gray-800">👋 Welcome, {{ user.first_name }}!</h1>
-      <p class="text-gray-500 mt-1">Position: <span class="font-semibold">{{ profile.get_position_type_display }}</span></p>
-      <p class="text-sm text-gray-400 mt-1">Today is <span id="today-date"></span></p>
+    <div class="text-center space-y-1">
+      <h1 class="text-3xl font-extrabold text-blue-700 tracking-tight">👋 Hello, {{ user.first_name }}!</h1>
+        {% if logs %}
+          <p class="text-blue-600 text-sm font-medium">
+            🕒 Last action: <span class="italic">{{ logs.0.get_action_display }}</span> at 
+            {{ logs.0.timestamp|timezone:"Asia/Manila"|date:"h:i A" }}
+          </p>
+        {% endif %}
+
+      <p class="text-gray-500 text-sm">Position: <span class="font-medium">{{ profile.get_position_type_display }}</span></p>
+      <p class="text-sm text-gray-400">📅 <span id="today-date"></span></p>
     </div>
 
-    <!-- Buttons -->
-    <div class="flex justify-center gap-4">
+    <!-- Time Action Buttons -->
+    <div class="grid grid-cols-2 gap-4">
       <a href="?action=in"
-         class="flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition">
+         class="flex items-center justify-center gap-2 bg-green-500 text-white px-4 py-3 rounded-xl shadow hover:bg-green-600 transition font-semibold">
         🟢 Time In
       </a>
       <a href="?action=out"
-         class="flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition">
+         class="flex items-center justify-center gap-2 bg-red-500 text-white px-4 py-3 rounded-xl shadow hover:bg-red-600 transition font-semibold">
         🔴 Time Out
       </a>
     </div>
 
-    <!-- Table of logs -->
+    <!-- Today's Log -->
     {% if logs %}
-      <div>
-        <h2 class="text-lg font-semibold text-gray-700 mb-3">📋 Today's Attendance</h2>
-        <div class="overflow-x-auto">
-          <table class="w-full table-auto border border-gray-200 rounded-lg overflow-hidden">
-            <thead class="bg-gray-100 text-gray-700 text-sm">
-              <tr>
-                <th class="px-4 py-2 text-left">Action</th>
-                <th class="px-4 py-2 text-left">Timestamp</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for log in logs %}
-                <tr class="border-b text-sm text-gray-600">
-                  <td class="px-4 py-2 font-medium">{{ log.get_action_display }}</td>
-                  <td class="px-4 py-2">{{ log.timestamp }}</td>
-                </tr>
-              {% empty %}
-                <tr>
-                  <td colspan="2" class="text-center text-gray-400 py-4">No attendance yet.</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+    <div class="pt-2">
+      <h2 class="text-lg font-semibold text-gray-700 mb-2">📋 Today’s Log</h2>
+      <div class="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+          <thead class="bg-gray-50 text-gray-600 font-semibold">
+            <tr>
+              <th class="px-4 py-2 text-left">Action</th>
+              <th class="px-4 py-2 text-left">Timestamp</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-100">
+            {% for log in logs %}
+            <tr>
+              <td class="px-4 py-2 font-semibold text-gray-700">
+                {% if log.action == "in" %}🟢 Time In{% else %}🔴 Time Out{% endif %}
+              </td>
+              <td class="px-4 py-2 text-gray-600">
+                {{ log.timestamp|timezone:"Asia/Manila"|date:"l, F j - h:i A" }}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="2" class="text-center text-gray-400 py-4">No attendance yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
+    </div>
     {% endif %}
 
-    <p class="text-xs text-gray-400 text-center mt-4">
-      ⏳ Your attendance is logged securely and will reflect in your reports.
+    <p class="text-xs text-gray-400 text-center">
+      ⏳ Attendance logs are securely tracked and synced to your reports.
     </p>
   </div>
 
-  <!-- Date script -->
+  <!-- Date Script -->
   <script>
     const today = new Date().toLocaleDateString(undefined, {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
     document.getElementById('today-date').textContent = today;
   </script>
+
 </body>
 </html>
