@@ -92,7 +92,6 @@ def ai_integration(request):
     return render(request, 'myapp/ai_integration/index.html')
 
 
-
 def terms_and_conditions(request):
     return render(request, 'myapp/aibots/terms_and_conditions.html')
 
@@ -4820,8 +4819,8 @@ def html_to_django_view(request):
         for tag in soup.find_all("a", href=True):
             href = tag["href"]
             if href.endswith(".html"):
-                page_name = href.replace(".html", "").replace("-", "_")
-                tag["href"] = "{% url 'ai_integration_" + page_name + "' %}"
+                tag["href"] = "#"
+
 
         # Flatten attribute lists
         for tag in soup.find_all():
