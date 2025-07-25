@@ -4791,15 +4791,11 @@ def format_element(elem, indent=0):
 
         output += f"{spacing}</{elem.name}>\n"
     return output
-
-from django.shortcuts import render
-from bs4 import BeautifulSoup, NavigableString
 from django.shortcuts import render
 from django.http import HttpResponse
 from bs4 import BeautifulSoup, NavigableString
 import zipfile
 import io
-import re
 
 def html_to_django_view(request):
     html_input = request.POST.get("html_input", "")
@@ -4821,7 +4817,6 @@ def html_to_django_view(request):
             if href.endswith(".html"):
                 tag["href"] = "#"
 
-
         # Flatten attribute lists
         for tag in soup.find_all():
             for attr in tag.attrs:
@@ -4840,7 +4835,15 @@ def html_to_django_view(request):
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(zip_buffer, "w") as zip_file:
             for uploaded_file in request.FILES.getlist("html_folder"):
-                file_content = uploaded_file.read().decode("utf-8")
+                # Only process .html or .htm files
+                if not uploaded_file.name.lower().endswith((".html", ".htm")):
+                    continue  # Skip non-HTML files
+
+                try:
+                    file_content = uploaded_file.read().decode("utf-8")
+                except UnicodeDecodeError:
+                    continue  # Skip unreadable or non-text files
+
                 soup = BeautifulSoup(file_content, "html.parser")
                 soup = convert_static_and_urls(soup)
 
@@ -4871,7 +4874,6 @@ def html_to_django_view(request):
         "html_input": html_input,
         "django_output": django_output,
     })
-
 
 
 def generate_views_py(request):
