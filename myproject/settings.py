@@ -16,6 +16,7 @@ if os.path.exists(env_file):
 else:
     print("⚠️ .env file not found, falling back to system environment variables.")
 
+ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
 
 # Secret key
 SECRET_KEY = env('DJANGO_SECRET_KEY', default="pqu__%t3x2e$+%lk9d#vg-7d=s7$m+b1&u91tfk8#gt*di$xkn")

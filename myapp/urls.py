@@ -347,6 +347,9 @@ urlpatterns = [
     path('qr/update/', views.update_qr, name='update_qr'),
     path('qr/delete/', views.delete_qr, name='delete_qr'),
 
+    path('translate/', views.ai_translate, name='ai_translate'),
 
+
+    path('ai_translator/', views.ai_translator, name='ai_translator'),
 ]
 
