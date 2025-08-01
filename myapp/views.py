@@ -5734,8 +5734,13 @@ ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
 VOICE_IDS = {
     'english': os.getenv("VOICE_ID_ENGLISH"),
     'tagalog': os.getenv("VOICE_ID_TAGALOG"),
-    'russian': os.getenv("VOICE_ID_RUSSIAN")
+    'russian': os.getenv("VOICE_ID_RUSSIAN"),
+    'german': os.getenv("VOICE_ID_GERMAN"),
+    'french': os.getenv("VOICE_ID_FRENCH"),
+    'spanish': os.getenv("VOICE_ID_SPANISH"),
+    'japanese': os.getenv("VOICE_ID_JAPANESE"),
 }
+
 
 
 # Home view
@@ -5745,11 +5750,20 @@ def ai_translator(request):
 # Determine voice ID based on language
 def get_voice_id(language: str) -> str:
     lang = language.lower()
-    if "tagalog" in lang:
+    if "tagalog" in lang or "tl" in lang:
         return VOICE_IDS["tagalog"]
-    elif "russian" in lang:
+    elif "russian" in lang or "ru" in lang:
         return VOICE_IDS["russian"]
+    elif "german" in lang or "de" in lang:
+        return VOICE_IDS["german"]
+    elif "french" in lang or "fr" in lang:
+        return VOICE_IDS["french"]
+    elif "spanish" in lang or "es" in lang:
+        return VOICE_IDS["spanish"]
+    elif "japanese" in lang or "ja" in lang:
+        return VOICE_IDS["japanese"]
     return VOICE_IDS["english"]
+
 
 # Call ElevenLabs API to generate speech
 def generate_elevenlabs_tts(text: str, language: str) -> bytes:
