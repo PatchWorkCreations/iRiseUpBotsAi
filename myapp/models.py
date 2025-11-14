@@ -1319,6 +1319,7 @@ class ScanLog(models.Model):
         choices=DEVICE_CHOICES,
         default='unknown',
     )
+    enriched = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Scan of {self.qr_code.title} at {self.scanned_at}"
