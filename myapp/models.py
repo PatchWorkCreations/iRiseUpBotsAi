@@ -1303,9 +1303,22 @@ class QRCode(models.Model):
 
 
 class ScanLog(models.Model):
+    DEVICE_CHOICES = [
+        ('mobile', 'Mobile'),
+        ('tablet', 'Tablet'),
+        ('desktop', 'Desktop'),
+        ('bot', 'Bot'),
+        ('unknown', 'Unknown'),
+    ]
+
     qr_code = models.ForeignKey(QRCode, on_delete=models.CASCADE)
     scanned_at = models.DateTimeField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
+    device_type = models.CharField(
+        max_length=20,
+        choices=DEVICE_CHOICES,
+        default='unknown',
+    )
 
     def __str__(self):
         return f"Scan of {self.qr_code.title} at {self.scanned_at}"

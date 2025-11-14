@@ -5676,12 +5676,43 @@ def qr_list(request):
     })
 
 
+def _get_client_ip(request):
+    forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if forwarded_for:
+        return forwarded_for.split(',')[0].strip()
+    return request.META.get('REMOTE_ADDR')
+
+
+def _detect_device_type(user_agent):
+    if not user_agent:
+        return 'unknown'
+
+    ua = user_agent.lower()
+
+    tablet_indicators = ['ipad', 'tablet', 'kindle', 'silk', 'playbook', 'nexus 7', 'nexus 9']
+    mobile_indicators = ['iphone', 'ipod', 'android', 'blackberry', 'windows phone', 'opera mini', 'mobile']
+    bot_indicators = ['bot', 'crawl', 'spider', 'slurp']
+
+    if any(keyword in ua for keyword in bot_indicators):
+        return 'bot'
+    if any(keyword in ua for keyword in tablet_indicators):
+        return 'tablet'
+    if any(keyword in ua for keyword in mobile_indicators):
+        return 'mobile'
+    if 'android' in ua and 'mobile' not in ua:
+        return 'tablet'
+
+    return 'desktop'
+
+
 def scan_redirect(request, pk):
     qr = get_object_or_404(QRCode, pk=pk)
 
     # Track the scan
-    ip = request.META.get('REMOTE_ADDR')
-    ScanLog.objects.create(qr_code=qr, ip_address=ip)
+    ip = _get_client_ip(request)
+    user_agent = request.META.get('HTTP_USER_AGENT', '')
+    device_type = _detect_device_type(user_agent)
+    ScanLog.objects.create(qr_code=qr, ip_address=ip, device_type=device_type)
 
     # Redirect to the real destination
     if qr.link:
