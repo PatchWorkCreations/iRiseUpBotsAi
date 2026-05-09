@@ -63,6 +63,12 @@
   max-width: 420px;
   line-height: 1.6;
 }
+#upgrade-page .up-greeting {
+  color: #c7fff6;
+  font-size: .92rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
 
 /* PRICING WRAP */
 #upgrade-page .up-pricing {
@@ -450,6 +456,9 @@
 
   <!-- HERO -->
   <div class="up-hero">
+    {% if renewal_name %}
+      <div class="up-greeting">Hi {{ renewal_name }} 👋</div>
+    {% endif %}
     <h1>Unlock the full power of iRiseUp.AI</h1>
     <p>All 8 AI assistants. Unlimited chats. Priority support. No limits.</p>
   </div>

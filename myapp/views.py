@@ -1350,6 +1350,7 @@ def upgrade_to_pro(request):
     prefill_plan = ""
     prefill_email = ""
     renewal_error = ""
+    renewal_name = ""
 
     renewal_token = request.GET.get("renewal_token")
     if renewal_token:
@@ -1357,6 +1358,16 @@ def upgrade_to_pro(request):
             renewal_data = signing.loads(renewal_token, salt="renewal-link", max_age=60 * 60 * 24 * 30)
             prefill_plan = renewal_data.get("plan", "")
             prefill_email = renewal_data.get("email", "")
+            renewal_user_id = renewal_data.get("user_id")
+            renewal_user = User.objects.filter(id=renewal_user_id).first()
+            if renewal_user:
+                renewal_name = (
+                    renewal_user.first_name
+                    or renewal_user.get_full_name().strip()
+                    or renewal_user.username
+                )
+            if not renewal_name and prefill_email:
+                renewal_name = prefill_email.split("@")[0]
         except signing.SignatureExpired:
             renewal_error = "This renewal link has expired. Please request a new one."
         except signing.BadSignature:
@@ -1369,6 +1380,7 @@ def upgrade_to_pro(request):
             "PAYPAL_CLIENT_ID": settings.PAYPAL_CLIENT_ID,
             "prefill_plan": prefill_plan,
             "prefill_email": prefill_email,
+            "renewal_name": renewal_name,
             "renewal_error": renewal_error,
         },
     )
