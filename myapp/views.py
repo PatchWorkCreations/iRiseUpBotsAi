@@ -1277,33 +1277,36 @@ def process_ai_subscription(request):
             if payment_result.is_error():
                 logger.error("Payment processing failed: %s", payment_result.errors)
                 return JsonResponse({"error": "Payment failed. Try again."}, status=400)
-            payment_id = payment_result.body["payment"]["id"]
 
-            card_result = square_client.cards.create_card(
-                body={
-                    "idempotency_key": str(uuid.uuid4()),
-                    "source_id": payment_id,
-                    "card": {
-                        "cardholder_name": user_email,
-                        "customer_id": customer_id,
-                    },
-                }
-            )
-            if card_result.is_error():
-                logger.error("Card storage failed: %s", card_result.errors)
-                return JsonResponse({"error": "Failed to store card on file."}, status=400)
-            card_id = card_result.body["card"]["id"]
-
-            if square_customer:
-                square_customer.customer_id = customer_id
-                square_customer.card_id = card_id
-                square_customer.save()
-            else:
-                SquareCustomer.objects.create(
-                    user=user,
-                    customer_id=customer_id,
-                    card_id=card_id,
+            # Try to store card on file, but do not block successful checkout if this fails.
+            # This keeps first-time payment reliable even when token/CSP constraints interfere.
+            try:
+                card_result = square_client.cards.create_card(
+                    body={
+                        "idempotency_key": str(uuid.uuid4()),
+                        "source_id": card_token,
+                        "card": {
+                            "cardholder_name": user_email,
+                            "customer_id": customer_id,
+                        },
+                    }
                 )
+                if card_result.is_error():
+                    logger.warning("Card storage skipped: %s", card_result.errors)
+                else:
+                    card_id = card_result.body["card"]["id"]
+                    if square_customer:
+                        square_customer.customer_id = customer_id
+                        square_customer.card_id = card_id
+                        square_customer.save()
+                    else:
+                        SquareCustomer.objects.create(
+                            user=user,
+                            customer_id=customer_id,
+                            card_id=card_id,
+                        )
+            except Exception as card_store_exc:
+                logger.warning("Card storage exception (ignored): %s", card_store_exc)
         else:
             if not paypal_order_id:
                 return JsonResponse({"error": "Missing payment token or PayPal order id."}, status=400)
