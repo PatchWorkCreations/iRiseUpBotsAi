@@ -1211,14 +1211,14 @@ square_client = Client(
 )
 
 PLAN_PRICES = {
-    'pro': 2000,      # $20/month
+    'pro': 100,      # $20/month
     'one-year': 14700, # $127/year
 }
 
 
 """              
 PLAN_PRICES = {
-    'pro': 2000,       # $20/month
+    'pro': 100,       # $20/month
     'one-year': 12700, # $127/year
 }
 """
