@@ -1209,7 +1209,7 @@ square_client = Client(
 )
 
 PLAN_PRICES = {
-    'pro': 100,       # $20/month
+    'pro': 2000,      # $20/month
     'one-year': 14700, # $127/year
 }
 
@@ -1250,27 +1250,60 @@ def process_ai_subscription(request):
 
         # Square flow (primary)
         if card_token:
-            square_customer, _ = SquareCustomer.objects.get_or_create(user=user)
-            if not square_customer.customer_id:
-                customer_result = square_client.customers.create_customer(body={"email_address": user_email})
-                if customer_result.is_error():
-                    logger.error("Customer creation failed: %s", customer_result.errors)
-                    return JsonResponse({"error": "Could not create customer."}, status=400)
-                square_customer.customer_id = customer_result.body['customer']['id']
-                square_customer.save()
+            square_customer = SquareCustomer.objects.filter(user=user).first()
+            customer_id = square_customer.customer_id if square_customer and square_customer.customer_id else None
+            if not customer_id:
+                search_response = square_client.customers.search_customers(
+                    body={"query": {"filter": {"email_address": {"exact": user_email}}}}
+                )
+                if search_response.is_success() and search_response.body.get("customers"):
+                    customer_id = search_response.body["customers"][0]["id"]
+                else:
+                    customer_result = square_client.customers.create_customer(body={"email_address": user_email})
+                    if customer_result.is_error():
+                        logger.error("Customer creation failed: %s", customer_result.errors)
+                        return JsonResponse({"error": "Could not create customer."}, status=400)
+                    customer_id = customer_result.body["customer"]["id"]
 
             payment_result = square_client.payments.create_payment(
                 body={
                     "source_id": card_token,
                     "idempotency_key": str(uuid.uuid4()),
                     "amount_money": {"amount": amount, "currency": "USD"},
-                    "customer_id": square_customer.customer_id,
+                    "customer_id": customer_id,
                     "autocomplete": True,
                 }
             )
             if payment_result.is_error():
                 logger.error("Payment processing failed: %s", payment_result.errors)
                 return JsonResponse({"error": "Payment failed. Try again."}, status=400)
+            payment_id = payment_result.body["payment"]["id"]
+
+            card_result = square_client.cards.create_card(
+                body={
+                    "idempotency_key": str(uuid.uuid4()),
+                    "source_id": payment_id,
+                    "card": {
+                        "cardholder_name": user_email,
+                        "customer_id": customer_id,
+                    },
+                }
+            )
+            if card_result.is_error():
+                logger.error("Card storage failed: %s", card_result.errors)
+                return JsonResponse({"error": "Failed to store card on file."}, status=400)
+            card_id = card_result.body["card"]["id"]
+
+            if square_customer:
+                square_customer.customer_id = customer_id
+                square_customer.card_id = card_id
+                square_customer.save()
+            else:
+                SquareCustomer.objects.create(
+                    user=user,
+                    customer_id=customer_id,
+                    card_id=card_id,
+                )
         else:
             if not paypal_order_id:
                 return JsonResponse({"error": "Missing payment token or PayPal order id."}, status=400)
