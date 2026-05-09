@@ -668,6 +668,8 @@
 
   const prefillPlan = "{{ prefill_plan|default:''|escapejs }}";
   const prefillEmail = "{{ prefill_email|default:''|escapejs }}";
+  const squareApplicationId = "{{ SQUARE_APPLICATION_ID|default:''|escapejs }}";
+  const squareLocationId = "{{ SQUARE_LOCATION_ID|default:''|escapejs }}";
 
   const planMeta = {
     "pro": { label: "Pro Monthly", price: "$20 / month" },
@@ -678,6 +680,9 @@
   const canUseSquare = window.isSecureContext || isLocalhost;
   if (!canUseSquare) {
     cardWrap.innerHTML = "<p style='color:#b42318;margin:0;'>Square checkout needs HTTPS. Open this page on <strong>https://</strong> or localhost.</p>";
+    payBtn.disabled = true;
+  } else if (!squareApplicationId || !squareLocationId) {
+    cardWrap.innerHTML = "<p style='color:#b42318;margin:0;'>Square is not configured. Set <strong>SQUARE_APPLICATION_ID</strong> and <strong>SQUARE_LOCATION_ID</strong> in your .env.</p>";
     payBtn.disabled = true;
   }
 
@@ -704,7 +709,7 @@
   async function setupSquarePayments() {
     if (squareInitialized || !canUseSquare) return;
     try {
-      payments = Square.payments("sq0idp-jpJ9YFYpLwuh5nFx4B-qXg", "45B8XGXSPP8E3");
+      payments = Square.payments(squareApplicationId, squareLocationId);
       card = await payments.card();
       await card.attach("#up-card-container");
       squareInitialized = true;

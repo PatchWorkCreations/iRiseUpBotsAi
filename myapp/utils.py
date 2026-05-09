@@ -284,7 +284,7 @@ def send_failure_email(user_email, error_message):
     Sends a failure notification email to the user when their renewal payment fails.
     """
     subject = 'Payment Renewal Failed – Action Required'
-    from_email = 'iriseupgroupofcompanies@gmail.com'
+    from_email = settings.DEFAULT_FROM_EMAIL
     to_email = [user_email]
 
     # Plain text content for fallback
@@ -427,7 +427,7 @@ def send_ezra_welcome_email(user_email, random_password):
     Sends a personalized welcome email with HTML design to new Ezra users.
     """
     subject = 'Welcome to Ezra AI – Your Personal Success Companion!'
-    from_email = 'iriseupgroupofcompanies@gmail.com'  # Update with your actual sender email
+    from_email = settings.DEFAULT_FROM_EMAIL
     to_email = [user_email]
 
     # Plain text fallback content

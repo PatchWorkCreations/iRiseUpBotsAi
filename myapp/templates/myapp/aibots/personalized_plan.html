@@ -1186,6 +1186,9 @@ document.addEventListener('DOMContentLoaded', function () {
     cardPaymentSection.style.display = 'none';
     paypalPaymentSection.style.display = 'none';
 
+    const squareApplicationId = "{{ SQUARE_APPLICATION_ID|default:''|escapejs }}";
+    const squareLocationId = "{{ SQUARE_LOCATION_ID|default:''|escapejs }}";
+
     // Show modal when "GET MY PLAN" buttons are clicked
     getPlanButtons.forEach(function (button) {
         button.addEventListener('click', function () {
@@ -1196,7 +1199,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Square payment setup function
     async function setupSquarePayments() {
     if (squareInitialized) return; // Prevent re-initialization
-    const payments = Square.payments('sq0idp-jpJ9YFYpLwuh5nFx4B-qXg', '45B8XGXSPP8E3');
+    if (!squareApplicationId || !squareLocationId) {
+        alert("Square is not configured. Set SQUARE_APPLICATION_ID and SQUARE_LOCATION_ID in .env.");
+        return;
+    }
+    const payments = Square.payments(squareApplicationId, squareLocationId);
     const card = await payments.card();
     await card.attach('#card-container');
 

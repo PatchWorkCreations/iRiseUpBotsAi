@@ -169,6 +169,8 @@ def personalized_plan(request):
         'special_goal': special_goal,
         'main_goal' : main_goal,
         'PAYPAL_CLIENT_ID': settings.PAYPAL_CLIENT_ID,
+        'SQUARE_APPLICATION_ID': settings.SQUARE_APPLICATION_ID,
+        'SQUARE_LOCATION_ID': settings.SQUARE_LOCATION_ID,
     }
 
     return render(request, 'myapp/aibots/personalized_plan.html', context)
@@ -177,7 +179,7 @@ def personalized_plan(request):
 # Initialize the Square Client
 square_client = Client(
     access_token=settings.SQUARE_ACCESS_TOKEN,
-    environment='production',
+    environment=settings.SQUARE_ENVIRONMENT,
 )
 
 def setSelectedPlanInSession(request):
@@ -274,7 +276,7 @@ def email_collection(request):
         subject = 'Welcome to iRiseUp.ai!'
         html_message = render_to_string('welcome_email.html', {'email': email})
         plain_message = strip_tags(html_message)
-        from_email = 'iriseupgroupofcompanies@gmail.com'  # Replace with your actual sender email
+        from_email = settings.DEFAULT_FROM_EMAIL
         send_mail(subject, plain_message, from_email, [email], html_message=html_message)
 
         # Store the email in the session for later use during payment
@@ -294,7 +296,7 @@ def send_welcomepassword_email(user_email, random_password):
     Sends a personalized welcome email with HTML design to new users.
     """
     subject = 'Welcome to iRiseUp.AI – Your Intelligent Assistant is Ready!'
-    from_email = 'iriseupgroupofcompanies@gmail.com'
+    from_email = settings.DEFAULT_FROM_EMAIL
     to_email = [user_email]
 
     # Plain text content for fallback
@@ -1205,7 +1207,7 @@ logger = logging.getLogger(__name__)
 # Initialize Square client
 square_client = Client(
     access_token=settings.SQUARE_ACCESS_TOKEN,
-    environment='production',  # Ensure this is in 'production' mode
+    environment=settings.SQUARE_ENVIRONMENT,
 )
 
 PLAN_PRICES = {
@@ -1231,10 +1233,11 @@ def process_ai_subscription(request):
         data = json.loads(request.body)
         card_token = data.get("source_id")
         paypal_order_id = data.get("paypal_order_id") or data.get("order_id")
-        selected_plan = data.get('plan')
-        user_email = data.get('email')
+        selected_plan = (data.get("plan") or "").strip()
+        user_email = (data.get("email") or "").strip()
 
         if not user_email:
+            logger.warning("AI subscription rejected: missing email in payload")
             return JsonResponse({"error": "Missing email."}, status=400)
 
         logger.info(f"Processing subscription for {user_email} - Plan: {selected_plan}")
@@ -1246,6 +1249,7 @@ def process_ai_subscription(request):
 
         amount = PLAN_PRICES.get(selected_plan)
         if not amount:
+            logger.warning("AI subscription rejected: invalid plan '%s' for %s", selected_plan, user_email)
             return JsonResponse({"error": "Invalid plan selected."}, status=400)
 
         # Square flow (primary)
@@ -1261,8 +1265,14 @@ def process_ai_subscription(request):
                 else:
                     customer_result = square_client.customers.create_customer(body={"email_address": user_email})
                     if customer_result.is_error():
-                        logger.error("Customer creation failed: %s", customer_result.errors)
-                        return JsonResponse({"error": "Could not create customer."}, status=400)
+                        customer_errors = customer_result.errors or []
+                        logger.error("Customer creation failed for %s: %s", user_email, customer_errors)
+                        customer_message = (
+                            customer_errors[0].get("detail")
+                            if customer_errors and isinstance(customer_errors[0], dict)
+                            else "Could not create customer."
+                        )
+                        return JsonResponse({"error": customer_message}, status=400)
                     customer_id = customer_result.body["customer"]["id"]
 
             payment_result = square_client.payments.create_payment(
@@ -1275,8 +1285,19 @@ def process_ai_subscription(request):
                 }
             )
             if payment_result.is_error():
-                logger.error("Payment processing failed: %s", payment_result.errors)
-                return JsonResponse({"error": "Payment failed. Try again."}, status=400)
+                payment_errors = payment_result.errors or []
+                logger.error(
+                    "AI subscription payment failed for %s plan=%s errors=%s",
+                    user_email,
+                    selected_plan,
+                    payment_errors,
+                )
+                payment_message = (
+                    payment_errors[0].get("detail")
+                    if payment_errors and isinstance(payment_errors[0], dict)
+                    else "Payment failed. Try again."
+                )
+                return JsonResponse({"error": payment_message}, status=400)
 
             # Try to store card on file, but do not block successful checkout if this fails.
             # This keeps first-time payment reliable even when token/CSP constraints interfere.
@@ -1309,6 +1330,11 @@ def process_ai_subscription(request):
                 logger.warning("Card storage exception (ignored): %s", card_store_exc)
         else:
             if not paypal_order_id:
+                logger.warning(
+                    "AI subscription rejected: missing source_id/paypal_order_id for %s plan=%s",
+                    user_email,
+                    selected_plan,
+                )
                 return JsonResponse({"error": "Missing payment token or PayPal order id."}, status=400)
 
             capture_response = _capture_paypal_order(paypal_order_id)
@@ -1381,6 +1407,8 @@ def upgrade_to_pro(request):
         "myapp/aibots/settings/upgrade_to_pro.html",
         {
             "PAYPAL_CLIENT_ID": settings.PAYPAL_CLIENT_ID,
+            "SQUARE_APPLICATION_ID": settings.SQUARE_APPLICATION_ID,
+            "SQUARE_LOCATION_ID": settings.SQUARE_LOCATION_ID,
             "prefill_plan": prefill_plan,
             "prefill_email": prefill_email,
             "renewal_name": renewal_name,
@@ -1636,8 +1664,8 @@ def submit_request(request):
                 'email': email,
             })
             plain_message = strip_tags(html_message)
-            from_email = 'iriseupgroupofcompanies@gmail.com'  # Replace with your email
-            to = 'iriseupgroupofcompanies@gmail.com'  # Send to yourself
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to = settings.SUPPORT_EMAIL
 
             # Send the email
             send_mail(
@@ -3301,8 +3329,8 @@ def contact_us(request):
                 'email': email,
             })
             plain_message = strip_tags(html_message)
-            from_email = 'iriseupgroupofcompanies@gmail.com'  # Replace with your email
-            to = 'email'  # Send to yourself
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to = settings.SUPPORT_EMAIL
 
             # Send the email
             send_mail(
@@ -3350,8 +3378,8 @@ def contactus(request):
                 'email': email,
             })
             plain_message = strip_tags(html_message)
-            from_email = 'iriseupgroupofcompanies@gmail.com'  # Replace with your email
-            to = 'email'  # Send to yourself
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to = settings.SUPPORT_EMAIL
 
             # Send the email
             send_mail(
@@ -3553,7 +3581,7 @@ logger = logging.getLogger(__name__)
 # Initialize Square client
 square_client = Client(
     access_token=settings.SQUARE_ACCESS_TOKEN,
-    environment='production'  # Change to 'sandbox' for testing
+    environment=settings.SQUARE_ENVIRONMENT
 )
 
 def determine_amount_based_on_plan(plan):
@@ -3779,7 +3807,7 @@ import logging
 # Initialize Square client
 client = Client(
     access_token=settings.SQUARE_ACCESS_TOKEN,
-    environment='production',  # Change to 'production' when you're ready
+    environment=settings.SQUARE_ENVIRONMENT,
 )
 
 
@@ -4021,12 +4049,11 @@ logger = logging.getLogger(__name__)
 def test_email_view(request):
     try:
         logger.info(f"Using EMAIL_HOST_USER: {settings.EMAIL_HOST_USER}")
-        logger.info(f"Using EMAIL_HOST_PASSWORD: {settings.EMAIL_HOST_PASSWORD}")
 
         send_mail(
             'Test Email',
             'Testing email with current settings.',
-            settings.EMAIL_HOST_USER,
+            settings.DEFAULT_FROM_EMAIL,
             ['juliavcitorio16@gmail.com'],  # Replace with a real recipient email
             fail_silently=False,
         )
@@ -5241,7 +5268,7 @@ def landing_for_iriseup(request):
                     'query_type': query_type,  # ✅ Add query_type to template context
                 })
                 plain_message = strip_tags(html_message)
-                from_email = 'iriseupgroupofcompanies@gmail.com'
+                from_email = settings.DEFAULT_FROM_EMAIL
                 to = 'juliavictorio16@gmail.com'
 
                 logger.debug(f"Sending email:\nSubject: {email_subject}\nTo: {to}")
@@ -5308,7 +5335,7 @@ def about_us(request):
                     'query_type': query_type,  # ✅ Add query_type to template context
                 })
                 plain_message = strip_tags(html_message)
-                from_email = 'iriseupgroupofcompanies@gmail.com'
+                from_email = settings.DEFAULT_FROM_EMAIL
                 to = 'juliavictorio16@gmail.com'
 
                 logger.debug(f"Sending email:\nSubject: {email_subject}\nTo: {to}")
@@ -5371,7 +5398,7 @@ def service(request):
                     'query_type': query_type,  # ✅ Add query_type to template context
                 })
                 plain_message = strip_tags(html_message)
-                from_email = 'iriseupgroupofcompanies@gmail.com'
+                from_email = settings.DEFAULT_FROM_EMAIL
                 to = 'juliavictorio16@gmail.com'
 
                 logger.debug(f"Sending email:\nSubject: {email_subject}\nTo: {to}")
@@ -5434,7 +5461,7 @@ def iriseup_contact_us(request):
                     'query_type': query_type,  # ✅ Add query_type to template context
                 })
                 plain_message = strip_tags(html_message)
-                from_email = 'iriseupgroupofcompanies@gmail.com'
+                from_email = settings.DEFAULT_FROM_EMAIL
                 to = 'juliavictorio16@gmail.com'
 
                 logger.debug(f"Sending email:\nSubject: {email_subject}\nTo: {to}")

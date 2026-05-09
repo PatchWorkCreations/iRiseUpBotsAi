@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.core.mail import send_mail
+from django.conf import settings
 from .models import Reminder
 import logging
 
@@ -20,6 +21,6 @@ def send_due_reminders():
         send_mail(
             subject="⏰ Your AI Reminder",
             message=f"Hi {reminder.user.username},\n\nJust a reminder: {reminder.message}\n\n- iRiseUp.AI",
-            from_email="iRiseUp.AI <iriseupgroupofcompanies@gmail.com>",
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[reminder.user.email],
         )
