@@ -1235,6 +1235,13 @@ def process_ai_subscription(request):
         paypal_order_id = data.get("paypal_order_id") or data.get("order_id")
         selected_plan = (data.get("plan") or "").strip()
         user_email = (data.get("email") or "").strip()
+        given_name = (data.get("givenName") or "").strip()
+        family_name = (data.get("familyName") or "").strip()
+        phone = (data.get("phone") or "").strip()
+        address_line1 = (data.get("addressLine1") or "").strip()
+        city = (data.get("city") or "").strip()
+        state = (data.get("state") or "").strip()
+        country_code = (data.get("countryCode") or "").strip().upper()
 
         if not user_email:
             logger.warning("AI subscription rejected: missing email in payload")
@@ -1275,15 +1282,28 @@ def process_ai_subscription(request):
                         return JsonResponse({"error": customer_message}, status=400)
                     customer_id = customer_result.body["customer"]["id"]
 
-            payment_result = square_client.payments.create_payment(
-                body={
-                    "source_id": card_token,
-                    "idempotency_key": str(uuid.uuid4()),
-                    "amount_money": {"amount": amount, "currency": "USD"},
-                    "customer_id": customer_id,
-                    "autocomplete": True,
-                }
-            )
+            payment_body = {
+                "source_id": card_token,
+                "idempotency_key": str(uuid.uuid4()),
+                "amount_money": {"amount": amount, "currency": "USD"},
+                "customer_id": customer_id,
+                "buyer_email_address": user_email,
+                "autocomplete": True,
+                "note": f"AI subscription checkout ({selected_plan})",
+            }
+            billing_address = {}
+            if address_line1:
+                billing_address["address_line_1"] = address_line1
+            if city:
+                billing_address["locality"] = city
+            if state:
+                billing_address["administrative_district_level_1"] = state
+            if country_code:
+                billing_address["country"] = country_code
+            if billing_address:
+                payment_body["billing_address"] = billing_address
+
+            payment_result = square_client.payments.create_payment(body=payment_body)
             if payment_result.is_error():
                 payment_errors = payment_result.errors or []
                 logger.error(
@@ -1292,11 +1312,17 @@ def process_ai_subscription(request):
                     selected_plan,
                     payment_errors,
                 )
-                payment_message = (
-                    payment_errors[0].get("detail")
-                    if payment_errors and isinstance(payment_errors[0], dict)
-                    else "Payment failed. Try again."
-                )
+                payment_message = "Payment failed. Try again."
+                if payment_errors and isinstance(payment_errors[0], dict):
+                    primary_error = payment_errors[0]
+                    error_code = (primary_error.get("code") or "").upper()
+                    error_detail = primary_error.get("detail") or ""
+                    if error_code in {"GENERIC_DECLINE", "CARD_DECLINED", "INSUFFICIENT_FUNDS"}:
+                        payment_message = (
+                            "Your bank declined this card. Please use a different card or contact your bank."
+                        )
+                    else:
+                        payment_message = error_detail or payment_message
                 return JsonResponse({"error": payment_message}, status=400)
 
             # Try to store card on file, but do not block successful checkout if this fails.
