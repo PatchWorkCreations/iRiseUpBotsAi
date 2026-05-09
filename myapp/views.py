@@ -6,6 +6,7 @@ from django.utils.encoding import force_str
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
 from django.core.mail import send_mail, EmailMultiAlternatives
+from django.core import signing
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.db.models.signals import post_save
@@ -32,6 +33,7 @@ import logging
 import requests
 import uuid
 import json
+from urllib.parse import quote
 
 from myapp.forms import CustomPasswordResetForm, SubmitRequestForm, CustomPasswordChangeForm
 from myapp.models import EmailCollection, Course, UserCourseAccess, KnowledgeBaseCategory, KnowledgeBaseArticle, KnowledgeBaseSubCategory
@@ -166,6 +168,7 @@ def personalized_plan(request):
         'gender': gender,
         'special_goal': special_goal,
         'main_goal' : main_goal,
+        'PAYPAL_CLIENT_ID': settings.PAYPAL_CLIENT_ID,
     }
 
     return render(request, 'myapp/aibots/personalized_plan.html', context)
@@ -436,11 +439,150 @@ from .models import SquareCustomer, User, UserCourseAccess
 
 logger = logging.getLogger(__name__)
 
-# Initialize Square client
-client = Client(
-    access_token=settings.SQUARE_ACCESS_TOKEN,
-    environment='production',  # Change to 'production' when you're ready
-)
+def _paypal_api_base():
+    return (getattr(settings, "PAYPAL_API_BASE", "") or "https://api-m.paypal.com").rstrip("/")
+
+
+def _get_paypal_access_token():
+    if not settings.PAYPAL_CLIENT_ID or not settings.PAYPAL_CLIENT_SECRET:
+        raise ValueError("PayPal credentials are not configured.")
+
+    token_response = requests.post(
+        f"{_paypal_api_base()}/v1/oauth2/token",
+        headers={"Accept": "application/json", "Accept-Language": "en_US"},
+        data={"grant_type": "client_credentials"},
+        auth=(settings.PAYPAL_CLIENT_ID, settings.PAYPAL_CLIENT_SECRET),
+        timeout=30,
+    )
+    token_response.raise_for_status()
+    return token_response.json()["access_token"]
+
+
+def _create_paypal_order(amount_cents):
+    access_token = _get_paypal_access_token()
+    amount_value = f"{amount_cents / 100:.2f}"
+    payload = {
+        "intent": "CAPTURE",
+        "purchase_units": [
+            {
+                "amount": {"currency_code": "USD", "value": amount_value},
+            }
+        ],
+        "payment_source": {
+            "paypal": {
+                "experience_context": {
+                    "user_action": "PAY_NOW",
+                    "shipping_preference": "NO_SHIPPING",
+                }
+            }
+        },
+    }
+    response = requests.post(
+        f"{_paypal_api_base()}/v2/checkout/orders",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        },
+        json=payload,
+        timeout=30,
+    )
+    if response.status_code >= 400:
+        response_body = {}
+        try:
+            response_body = response.json()
+        except ValueError:
+            response_body = {"raw": response.text}
+        logger.error(
+            "PayPal create order error status=%s body=%s payload=%s",
+            response.status_code,
+            response_body,
+            payload,
+        )
+        detail = response_body.get("message") or "Failed to create PayPal order."
+        if response_body.get("details"):
+            issue = response_body["details"][0].get("issue")
+            description = response_body["details"][0].get("description")
+            detail = f"{issue or ''} {description or detail}".strip()
+        raise ValueError(detail)
+    return response.json()
+
+
+def _capture_paypal_order(order_id):
+    access_token = _get_paypal_access_token()
+    response = requests.post(
+        f"{_paypal_api_base()}/v2/checkout/orders/{order_id}/capture",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        },
+        timeout=30,
+    )
+    if response.status_code >= 400:
+        response_body = {}
+        try:
+            response_body = response.json()
+        except ValueError:
+            response_body = {"raw": response.text}
+        logger.error(
+            "PayPal capture order error status=%s order_id=%s body=%s",
+            response.status_code,
+            order_id,
+            response_body,
+        )
+        detail = response_body.get("message") or "Failed to capture PayPal order."
+        if response_body.get("details"):
+            issue = response_body["details"][0].get("issue")
+            description = response_body["details"][0].get("description")
+            detail = f"{issue or ''} {description or detail}".strip()
+        raise ValueError(detail)
+    return response.json()
+
+
+def _extract_paypal_captured_amount(capture_response):
+    purchase_units = capture_response.get("purchase_units", [])
+    if not purchase_units:
+        return None
+    captures = purchase_units[0].get("payments", {}).get("captures", [])
+    if not captures:
+        return None
+    amount_value = captures[0].get("amount", {}).get("value")
+    if amount_value is None:
+        return None
+    try:
+        return int(round(float(amount_value) * 100))
+    except (TypeError, ValueError):
+        return None
+
+
+@csrf_exempt
+def create_paypal_order(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request method."}, status=405)
+
+    try:
+        data = json.loads(request.body or "{}")
+        selected_plan = data.get("plan")
+        flow = data.get("flow", "ai")
+
+        if flow == "course":
+            amount = determine_amount_based_on_plan(selected_plan)
+        else:
+            amount = PLAN_PRICES.get(selected_plan, 0)
+
+        if amount <= 0:
+            return JsonResponse({"error": "Invalid plan selected."}, status=400)
+
+        order = _create_paypal_order(amount)
+        return JsonResponse({"id": order.get("id")})
+    except ValueError as exc:
+        logger.error("PayPal order creation failed: %s", exc, exc_info=True)
+        return JsonResponse({"error": str(exc)}, status=502)
+    except requests.RequestException as exc:
+        logger.error("PayPal order creation failed: %s", exc, exc_info=True)
+        return JsonResponse({"error": "Failed to create PayPal order."}, status=502)
+    except Exception as exc:
+        logger.error("Unexpected error creating PayPal order: %s", exc, exc_info=True)
+        return JsonResponse({"error": "Unexpected error creating PayPal order."}, status=500)
 
 
 @csrf_exempt
@@ -448,9 +590,10 @@ def process_payment(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            card_token = data.get('source_id')
             selected_plan = data.get('plan')
-            verification_token = data.get('verification_token')
+            card_token = data.get("source_id")
+            verification_token = data.get("verification_token")
+            paypal_order_id = data.get("paypal_order_id") or data.get("order_id")
 
             # Ensure the correct email is being used from the user's current session
             user_email = data.get('email')
@@ -466,93 +609,77 @@ def process_payment(request):
             if amount <= 0:
                 return JsonResponse({"error": "Invalid plan selected."}, status=400)
 
-            # Step 1: Create a new customer or retrieve the existing one
-            customer_result = square_client.customers.create_customer(
-                body={
-                    "given_name": first_name,
-                    "family_name": last_name,
-                    "email_address": user_email,
-                }
-            )
-            if customer_result.is_error():
-                logger.error("Customer creation failed: %s", customer_result.errors)
-                user = User.objects.get(email=user_email)  # Assuming the user exists
-                Transaction.objects.create(
-                    user=user,
-                    amount=amount,
-                    subscription_type=selected_plan,
-                    status='error',
-                    error_logs=str(customer_result.errors),
-                    recurring=False
+            # Square flow (primary)
+            if card_token:
+                customer_result = square_client.customers.create_customer(
+                    body={
+                        "given_name": first_name,
+                        "family_name": last_name,
+                        "email_address": user_email,
+                    }
                 )
-                return JsonResponse({"error": "Failed to create customer profile."}, status=400)
+                if customer_result.is_error():
+                    logger.error("Customer creation failed: %s", customer_result.errors)
+                    return JsonResponse({"error": "Failed to create customer profile."}, status=400)
 
-            customer_id = customer_result.body['customer']['id']
-
-            # Step 2: Make the payment request with the verification token and store the card on file
-            payment_result = square_client.payments.create_payment(
-                body={
+                customer_id = customer_result.body['customer']['id']
+                payment_body = {
                     "source_id": card_token,
                     "idempotency_key": str(uuid.uuid4()),
-                    "amount_money": {
-                        "amount": amount,
-                        "currency": "USD"
-                    },
-                    "verification_token": verification_token,
+                    "amount_money": {"amount": amount, "currency": "USD"},
                     "autocomplete": True,
-                    "customer_id": customer_id,  # Link the payment to the customer
+                    "customer_id": customer_id,
                 }
-            )
-            logger.info("Square API Payment Response: %s", payment_result)
+                if verification_token:
+                    payment_body["verification_token"] = verification_token
 
-            # Error handling for specific payment errors
-            if payment_result.is_error():
-                error_codes = [error['code'] for error in payment_result.errors]
-                logger.error("Payment Error: %s", error_codes)
-
-                if 'INSUFFICIENT_FUNDS' in error_codes:
-                    return JsonResponse({"error": "Payment failed due to insufficient funds. Please ensure adequate balance and try again."}, status=400)
-                elif 'CARD_DECLINED' in error_codes:
-                    return JsonResponse({"error": "Your card was declined. Please try another payment method."}, status=400)
-                elif 'INVALID_CARD' in error_codes:
-                    return JsonResponse({"error": "Invalid card details. Please check and try again."}, status=400)
-                elif 'EXPIRED_CARD' in error_codes:
-                    return JsonResponse({"error": "Your card has expired. Please use another card."}, status=400)
-                elif 'FRAUD_REJECTED' in error_codes:
-                    return JsonResponse({"error": "Payment rejected due to suspected fraud. Please contact your bank."}, status=400)
-                elif 'AUTHENTICATION_REQUIRED' in error_codes:
-                    return JsonResponse({"error": "Additional authentication required. Please complete the verification."}, status=400)
-                else:
-                    # General error for other cases
+                payment_result = square_client.payments.create_payment(body=payment_body)
+                if payment_result.is_error():
+                    error_codes = [error.get('code', '') for error in payment_result.errors]
+                    logger.error("Payment Error: %s", error_codes)
+                    if 'INSUFFICIENT_FUNDS' in error_codes:
+                        return JsonResponse({"error": "Payment failed due to insufficient funds."}, status=400)
+                    if 'CARD_DECLINED' in error_codes:
+                        return JsonResponse({"error": "Your card was declined. Please try another payment method."}, status=400)
                     return JsonResponse({"error": "Payment failed. Please try again."}, status=400)
 
-            payment_id = payment_result.body['payment']['id']
-
-            # Step 3: Store the card on file for the customer
-            card_result = square_client.cards.create_card(
-                body={
+                payment_id = payment_result.body['payment']['id']
+                card_body = {
                     "idempotency_key": str(uuid.uuid4()),
                     "source_id": payment_id,
-                    "verification_token": verification_token,
                     "card": {
-                        "cardholder_name": f"{data.get('givenName')} {data.get('familyName')}",
+                        "cardholder_name": f"{first_name} {last_name}",
                         "customer_id": customer_id,
-                    }
+                    },
                 }
-            )
-            if card_result.is_error():
-                logger.error("Card storage failed: %s", card_result.errors)
-                Transaction.objects.create(
-                    user=user,
-                    amount=amount,
-                    subscription_type=selected_plan,
-                    status='error',
-                    error_logs=str(card_result.errors),
-                    recurring=False
-                )
-                return JsonResponse({"error": "Failed to store card on file."}, status=400)
+                if verification_token:
+                    card_body["verification_token"] = verification_token
+                card_result = square_client.cards.create_card(body=card_body)
+                if card_result.is_error():
+                    logger.error("Card storage failed: %s", card_result.errors)
+                    return JsonResponse({"error": "Failed to store card on file."}, status=400)
 
-            card_id = card_result.body['card']['id']
+                card_id = card_result.body['card']['id']
+            else:
+                if not paypal_order_id:
+                    return JsonResponse({"error": "Missing payment token or PayPal order id."}, status=400)
+
+                capture_response = _capture_paypal_order(paypal_order_id)
+                if capture_response.get("status") != "COMPLETED":
+                    logger.error("PayPal capture not completed: %s", capture_response)
+                    return JsonResponse({"error": "Payment was not completed."}, status=400)
+
+                captured_amount = _extract_paypal_captured_amount(capture_response)
+                if captured_amount != amount:
+                    logger.error(
+                        "Captured amount mismatch. expected=%s captured=%s order=%s",
+                        amount,
+                        captured_amount,
+                        paypal_order_id,
+                    )
+                    return JsonResponse({"error": "Captured amount does not match selected plan."}, status=400)
+                customer_id = None
+                card_id = None
 
             # Step 4: Create or retrieve the user in the Django application
             # Update or create the user with username set to email, adding first and last name support
@@ -584,12 +711,11 @@ def process_payment(request):
 
             logger.info(f"User {user_email} processed for payment.")
 
-
-            # Step 6: Store the customer_id and card_id in the database
-            SquareCustomer.objects.update_or_create(
-                user=user,
-                defaults={'customer_id': customer_id, 'card_id': card_id}
-            )
+            if customer_id and card_id:
+                SquareCustomer.objects.update_or_create(
+                    user=user,
+                    defaults={"customer_id": customer_id, "card_id": card_id},
+                )
 
             # Step 7: Compute expiration date and next billing date
             expiration_date = None
@@ -628,6 +754,12 @@ def process_payment(request):
 
             return JsonResponse({"success": True})
 
+        except ValueError as e:
+            logger.error("PayPal processing error: %s", str(e), exc_info=True)
+            return JsonResponse({"error": str(e)}, status=400)
+        except requests.RequestException as e:
+            logger.error("PayPal request failed: %s", str(e), exc_info=True)
+            return JsonResponse({"error": "Unable to process payment with PayPal."}, status=502)
         except Exception as e:
             logger.error("Unexpected error occurred: %s", str(e), exc_info=True)
             user = User.objects.get(email=user_email) if 'user_email' in locals() else None
@@ -1066,7 +1198,7 @@ from square.client import Client
 from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
-from .models import AIUserSubscription
+from .models import AIUserSubscription, SquareCustomer
 
 logger = logging.getLogger(__name__)
 
@@ -1077,7 +1209,7 @@ square_client = Client(
 )
 
 PLAN_PRICES = {
-    'pro': 2000,       # $20/month
+    'pro': 100,       # $20/month
     'one-year': 14700, # $127/year
 }
 
@@ -1097,7 +1229,8 @@ def process_ai_subscription(request):
 
     try:
         data = json.loads(request.body)
-        card_token = data.get('source_id')
+        card_token = data.get("source_id")
+        paypal_order_id = data.get("paypal_order_id") or data.get("order_id")
         selected_plan = data.get('plan')
         user_email = data.get('email')
 
@@ -1115,70 +1248,47 @@ def process_ai_subscription(request):
         if not amount:
             return JsonResponse({"error": "Invalid plan selected."}, status=400)
 
-        # ✅ Step 1: Check if customer exists in Square
-        square_customer, created = SquareCustomer.objects.get_or_create(user=user)
-
-        if not square_customer.customer_id:
-            search_response = square_client.customers.search_customers(
-                body={"query": {"filter": {"email_address": {"exact": user_email}}}}
-            )
-
-            if search_response.is_error():
-                logger.warning("Customer search failed: %s", search_response.errors)
-                return JsonResponse({"error": "Failed to retrieve customer."}, status=400)
-
-            if 'customers' in search_response.body and len(search_response.body['customers']) > 0:
-                square_customer.customer_id = search_response.body['customers'][0]['id']
-                square_customer.save()
-                logger.info(f"Customer found in Square: {square_customer.customer_id}")
-            else:
-                # Create new Square customer if not exists
+        # Square flow (primary)
+        if card_token:
+            square_customer, _ = SquareCustomer.objects.get_or_create(user=user)
+            if not square_customer.customer_id:
                 customer_result = square_client.customers.create_customer(body={"email_address": user_email})
                 if customer_result.is_error():
                     logger.error("Customer creation failed: %s", customer_result.errors)
                     return JsonResponse({"error": "Could not create customer."}, status=400)
-                
                 square_customer.customer_id = customer_result.body['customer']['id']
                 square_customer.save()
-                logger.info(f"New customer created: {square_customer.customer_id}")
 
-        # ✅ Step 2: Process Payment
-        payment_result = square_client.payments.create_payment(
-            body={
-                "source_id": card_token,
-                "idempotency_key": str(uuid.uuid4()),  # Ensure unique payment request
-                "amount_money": {"amount": amount, "currency": "USD"},
-                "customer_id": square_customer.customer_id,
-                "autocomplete": True,
-            }
-        )
-
-        if payment_result.is_error():
-            logger.error("Payment processing failed: %s", payment_result.errors)
-            return JsonResponse({"error": "Payment failed. Try again."}, status=400)
-
-        payment_id = payment_result.body['payment']['id']
-
-        # ✅ Step 3: Store Card on File if it's a recurring plan
-        if selected_plan in ['pro', 'one-year']:
-            card_result = square_client.cards.create_card(
+            payment_result = square_client.payments.create_payment(
                 body={
+                    "source_id": card_token,
                     "idempotency_key": str(uuid.uuid4()),
-                    "source_id": payment_id,
-                    "card": {
-                        "cardholder_name": user_email,
-                        "customer_id": square_customer.customer_id,
-                    }
+                    "amount_money": {"amount": amount, "currency": "USD"},
+                    "customer_id": square_customer.customer_id,
+                    "autocomplete": True,
                 }
             )
+            if payment_result.is_error():
+                logger.error("Payment processing failed: %s", payment_result.errors)
+                return JsonResponse({"error": "Payment failed. Try again."}, status=400)
+        else:
+            if not paypal_order_id:
+                return JsonResponse({"error": "Missing payment token or PayPal order id."}, status=400)
 
-            if card_result.is_error():
-                logger.error("Card storage failed: %s", card_result.errors)
-                return JsonResponse({"error": "Failed to store card on file."}, status=400)
+            capture_response = _capture_paypal_order(paypal_order_id)
+            if capture_response.get("status") != "COMPLETED":
+                logger.error("PayPal capture not completed: %s", capture_response)
+                return JsonResponse({"error": "Payment was not completed."}, status=400)
 
-            square_customer.card_id = card_result.body['card']['id']
-            square_customer.save()
-            logger.info(f"Card stored for user: {user_email} - Card ID: {square_customer.card_id}")
+            captured_amount = _extract_paypal_captured_amount(capture_response)
+            if captured_amount != amount:
+                logger.error(
+                    "Captured amount mismatch. expected=%s captured=%s order=%s",
+                    amount,
+                    captured_amount,
+                    paypal_order_id,
+                )
+                return JsonResponse({"error": "Captured amount does not match selected plan."}, status=400)
 
         # ✅ Step 4: Activate Subscription
         expiration_date = timezone.now() + timedelta(days=365 if selected_plan == 'one-year' else 30)
@@ -1192,13 +1302,43 @@ def process_ai_subscription(request):
 
         return JsonResponse({"success": True, "message": "Subscription activated!"})
 
+    except ValueError as e:
+        logger.error("PayPal processing error for AI subscription: %s", e, exc_info=True)
+        return JsonResponse({"error": str(e)}, status=400)
+    except requests.RequestException as e:
+        logger.error("PayPal request failed for AI subscription: %s", e, exc_info=True)
+        return JsonResponse({"error": "Unable to process payment with PayPal."}, status=502)
     except Exception as e:
         logger.exception("Unexpected error in payment processing")
         return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
     
 
 def upgrade_to_pro(request):
-    return render(request, "myapp/aibots/settings/upgrade_to_pro.html")
+    prefill_plan = ""
+    prefill_email = ""
+    renewal_error = ""
+
+    renewal_token = request.GET.get("renewal_token")
+    if renewal_token:
+        try:
+            renewal_data = signing.loads(renewal_token, salt="renewal-link", max_age=60 * 60 * 24 * 30)
+            prefill_plan = renewal_data.get("plan", "")
+            prefill_email = renewal_data.get("email", "")
+        except signing.SignatureExpired:
+            renewal_error = "This renewal link has expired. Please request a new one."
+        except signing.BadSignature:
+            renewal_error = "Invalid renewal link. Please request a new one."
+
+    return render(
+        request,
+        "myapp/aibots/settings/upgrade_to_pro.html",
+        {
+            "PAYPAL_CLIENT_ID": settings.PAYPAL_CLIENT_ID,
+            "prefill_plan": prefill_plan,
+            "prefill_email": prefill_email,
+            "renewal_error": renewal_error,
+        },
+    )
 
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
@@ -3370,7 +3510,7 @@ square_client = Client(
 
 def determine_amount_based_on_plan(plan):
     plan_prices = {
-        'pro': 2000,      # $20.00 in cents
+        'pro': 1000,      # $20.00 in cents
         'one-year': 14700 # $147.00 in cents
     }
     amount = plan_prices.get(plan, 0)
@@ -3465,6 +3605,117 @@ def process_renewals(request):
         return JsonResponse({'results': results})
 
     return redirect('custom_admin:renewals')
+
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff, login_url='/admin/login/')
+def _build_admin_renewal_link(request, subscription):
+    user = subscription.user
+    renewal_payload = {
+        "user_id": user.id,
+        "email": user.email,
+        "plan": subscription.plan,
+    }
+    renewal_token = signing.dumps(renewal_payload, salt="renewal-link")
+    renewal_path = f"{reverse('upgrade_to_pro')}?renewal_token={quote(renewal_token)}"
+    return request.build_absolute_uri(renewal_path)
+
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff, login_url='/admin/login/')
+def generate_renewal_links(request):
+    if request.method != "POST":
+        return redirect("custom_admin:renewals")
+
+    user_ids = request.POST.getlist("user_ids")
+    results = []
+    links = []
+
+    if not user_ids:
+        return JsonResponse({"results": ["No users selected."], "links": []})
+
+    for user_id in user_ids:
+        try:
+            subscription = AIUserSubscription.objects.select_related("user").get(user_id=user_id)
+            user = subscription.user
+
+            if not user.email:
+                results.append(f"Skipped user {user.username}: no email address on file.")
+                continue
+
+            if subscription.plan not in {"pro", "one-year"}:
+                results.append(f"Skipped {user.email}: unsupported plan '{subscription.plan}'.")
+                continue
+
+            renewal_url = _build_admin_renewal_link(request, subscription)
+            links.append(
+                {
+                    "email": user.email,
+                    "plan": subscription.plan,
+                    "url": renewal_url,
+                }
+            )
+            results.append(f"Generated renewal link for {user.email}")
+        except AIUserSubscription.DoesNotExist:
+            results.append(f"AIUserSubscription not found for user ID {user_id}")
+        except Exception as exc:
+            logger.error("Error generating renewal link for user %s: %s", user_id, exc, exc_info=True)
+            results.append(f"Failed to generate renewal link for user ID {user_id}: {str(exc)}")
+
+    return JsonResponse({"results": results, "links": links})
+
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff, login_url='/admin/login/')
+def send_renewal_links(request):
+    if request.method != "POST":
+        return redirect("custom_admin:renewals")
+
+    user_ids = request.POST.getlist("user_ids")
+    results = []
+
+    if not user_ids:
+        return JsonResponse({"results": ["No users selected."]})
+
+    for user_id in user_ids:
+        try:
+            subscription = AIUserSubscription.objects.select_related("user").get(user_id=user_id)
+            user = subscription.user
+
+            if not user.email:
+                results.append(f"Skipped user {user.username}: no email address on file.")
+                continue
+
+            if subscription.plan not in {"pro", "one-year"}:
+                results.append(f"Skipped {user.email}: unsupported plan '{subscription.plan}'.")
+                continue
+
+            renewal_url = _build_admin_renewal_link(request, subscription)
+
+            plan_label = "Pro Monthly" if subscription.plan == "pro" else "1-Year Access"
+            subject = "Your iRiseUp.AI renewal link"
+            message = (
+                f"Hi {user.username or user.email},\n\n"
+                f"Your {plan_label} subscription is up for renewal.\n"
+                "Use this secure renewal link to complete payment directly:\n\n"
+                f"{renewal_url}\n\n"
+                "For your security, this link expires in 30 days.\n\n"
+                "Thanks,\n"
+                "iRiseUp.AI Team"
+            )
+
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                fail_silently=False,
+            )
+            results.append(f"Renewal link sent to {user.email}: {renewal_url}")
+        except AIUserSubscription.DoesNotExist:
+            results.append(f"AIUserSubscription not found for user ID {user_id}")
+        except Exception as exc:
+            logger.error("Error sending renewal link for user %s: %s", user_id, exc, exc_info=True)
+            results.append(f"Failed to send renewal link for user ID {user_id}: {str(exc)}")
+
+    return JsonResponse({"results": results})
 
 
 
@@ -3742,7 +3993,11 @@ def iriseupai_landing(request):
     """
     Landing page for iRiseUp AI.
     """
-    return render(request, 'myapp/aibots/iriseupai/iriseupai_landing.html')
+    return render(
+        request,
+        'myapp/aibots/iriseupai/iriseupai_landing.html',
+        {"PAYPAL_CLIENT_ID": settings.PAYPAL_CLIENT_ID},
+    )
 
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
@@ -4971,7 +5226,11 @@ def landing_for_iriseup(request):
         else:
             logger.warning("⚠️ Form is invalid.")
     
-    return render(request, 'myapp/aibots/iriseupai/landing_page.html', {'form': form})
+    return render(
+        request,
+        'myapp/aibots/iriseupai/landing_page.html',
+        {'form': form, 'PAYPAL_CLIENT_ID': settings.PAYPAL_CLIENT_ID},
+    )
 
 
 def about_us(request):

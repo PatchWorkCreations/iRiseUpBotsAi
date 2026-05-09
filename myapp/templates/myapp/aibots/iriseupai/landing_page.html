@@ -1319,7 +1319,7 @@
   </section>
   
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-<script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=USD"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const lastVisit = localStorage.getItem('lastVisit');
@@ -1539,7 +1539,7 @@ function formatResponse(text, keywords = []) {
 }
 
 
-// Square Payment  
+// PayPal Payment
 document.addEventListener("DOMContentLoaded", async function () {
     console.log("✅ JavaScript loaded!");
 
@@ -1548,9 +1548,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     const closeModalButton = document.querySelector(".close-modal");
     const payNowButton = document.getElementById("pay-now-btn");
     const selectedPlanInput = document.getElementById("selected-plan");
-
-    let squareInitialized = false;
-    let card;
+    const paypalContainer = document.getElementById("card-container");
+    payNowButton.textContent = "Pay with PayPal";
 
     if (!checkoutModal) {
         console.error("❌ Checkout modal not found!");
@@ -1567,7 +1566,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             selectedPlanInput.value = selectedPlan;
             checkoutModal.style.display = "flex";
 
-            setupSquarePayments();
+            renderPayPalButton(selectedPlan);
         });
     });
 
@@ -1576,75 +1575,76 @@ document.addEventListener("DOMContentLoaded", async function () {
         checkoutModal.style.display = "none";
     });
 
-    async function setupSquarePayments() {
-        if (squareInitialized) return;
+    payNowButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        renderPayPalButton(selectedPlanInput.value);
+    });
 
-        console.log("🔄 Initializing Square Payments...");
-
-        try {
-            const payments = Square.payments("sq0idp-jpJ9YFYpLwuh5nFx4B-qXg", "45B8XGXSPP8E3");
-            card = await payments.card();
-            await card.attach("#card-container");
-
-            console.log("✅ Card attached to container!");
-            squareInitialized = true;
-
-            payNowButton.addEventListener("click", async function (event) {
-                event.preventDefault();
-                await processPayment();
-            });
-
-        } catch (error) {
-            console.error("⚠️ Square Payment Initialization Error:", error);
-        }
+    function buildCheckoutPayload(planValue) {
+        return {
+            plan: planValue,
+            givenName: document.getElementById("givenName").value,
+            familyName: document.getElementById("familyName").value,
+            addressLine1: document.getElementById("addressLine1").value,
+            city: document.getElementById("city").value,
+            state: document.getElementById("state").value,
+            countryCode: document.getElementById("countryCode").value,
+            phone: document.getElementById("phone").value,
+            email: document.getElementById("email").value,
+        };
     }
 
-    async function processPayment() {
-        try {
-            payNowButton.disabled = true;
-
-            const result = await card.tokenize();
-            if (result.status !== "OK") {
-                alert("Payment failed: " + result.errors[0].message);
-                payNowButton.disabled = false;
-                return;
-            }
-
-            console.log("✅ Payment token generated!");
-
-            const response = await fetch("/process-ai-subscription/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}",
-                },
-                body: JSON.stringify({
-                    source_id: result.token,
-                    plan: selectedPlanInput.value,
-                    givenName: document.getElementById("givenName").value,
-                    familyName: document.getElementById("familyName").value,
-                    addressLine1: document.getElementById("addressLine1").value,
-                    city: document.getElementById("city").value,
-                    state: document.getElementById("state").value,
-                    countryCode: document.getElementById("countryCode").value,
-                    phone: document.getElementById("phone").value,
-                    email: document.getElementById("email").value,
-                }),
-            });
-
-            const jsonResult = await response.json();
-
-            if (jsonResult.success) {
-                window.location.href = "/success/";
-            } else {
-                alert(jsonResult.error);
-            }
-        } catch (error) {
-            console.error("⚠️ Payment Error:", error);
-            alert("Payment failed: " + error.message);
-        } finally {
-            payNowButton.disabled = false;
+    function renderPayPalButton(planValue) {
+        if (!planValue) {
+            alert("Please select a plan.");
+            return;
         }
+
+        paypalContainer.innerHTML = "";
+        paypal.Buttons({
+            createOrder: async function () {
+                const createResponse = await fetch("/create-paypal-order/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: JSON.stringify({
+                        flow: "ai",
+                        plan: planValue,
+                    }),
+                });
+
+                const createData = await createResponse.json();
+                if (!createResponse.ok || !createData.id) {
+                    throw new Error(createData.error || "Unable to create PayPal order.");
+                }
+                return createData.id;
+            },
+            onApprove: async function (data) {
+                const payload = buildCheckoutPayload(planValue);
+                payload.paypal_order_id = data.orderID;
+                const response = await fetch("/process-ai-subscription/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                const jsonResult = await response.json();
+                if (jsonResult.success) {
+                    window.location.href = "/success/";
+                } else {
+                    alert(jsonResult.error || "Payment failed.");
+                }
+            },
+            onError: function (error) {
+                console.error("PayPal error:", error);
+                alert("Payment failed. Please try again.");
+            }
+        }).render("#card-container");
     }
 });
 

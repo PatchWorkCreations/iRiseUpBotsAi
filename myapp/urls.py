@@ -29,6 +29,7 @@ urlpatterns = [
     path('category/<int:id>/', views.category_detail, name='category_detail'),
 
     path('process-payment/', views.process_payment, name='process_payment'),
+    path('create-paypal-order/', views.create_paypal_order, name='create_paypal_order'),
     path('payment/', views.payment_page, name='payment_page'),
     path('success/', views.success_page, name='success_page'),
 
@@ -325,9 +326,9 @@ urlpatterns = [
     path("ai-integration/ui-toast/", views.ui_toast, name="ai_integration_ui_toast"),
     path("ai-integration/ui-tooltips/", views.ui_tooltips, name="ai_integration_ui_tooltips"),
     path("ai-integration/widgets/", views.widgets, name="ai_integration_widgets"),
-    path("ai-integration/dashboard/", views.ai_integration_dashboard, name="ai_integration_dashboard"),
+    path("ai-integration/dashboard/", views.chat_iriseupai_sandbox, name="chat_iriseupai_sandbox"),
     path("ai-integration/sign-up/", views.ai_register, name="ai_integration_sign_up"),
-    path('dashboard/', views.dashboard_view, name='ai_integration_dashboard'),
+    path('dashboard/', views.dashboard_view, name='chat_iriseupai_sandbox'),
     path('sign-up/', views.ai_register, name='ai_integration_sign_up'),
     path('ai-sign-in/', views.ai_sign_in, name='ai_integration_sign_in'),
     path('bots/delete/<int:bot_id>/', views.delete_ai_bot, name='ai_integration_delete_bot'),

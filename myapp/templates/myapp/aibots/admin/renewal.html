@@ -21,13 +21,15 @@
                 <td><input type="checkbox" name="user_ids" value="{{ user.user.id }}"></td>
                 <td>{{ user.user.username }}</td>
                 <td>{{ user.user.email }}</td>
-                <td>{{ user.selected_plan }}</td>
+                <td>{{ user.plan }}</td>
                 <td>{{ user.expiration_date|date:"Y-m-d H:i" }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <button type="submit">Renew Selected Users</button>
+    <button type="submit" formaction="{% url 'custom_admin:process_renewals' %}">Renew Selected Users</button>
+    <button type="submit" formaction="{% url 'custom_admin:generate_renewal_links' %}">Generate Copyable Links</button>
+    <button type="submit" formaction="{% url 'custom_admin:send_renewal_links' %}">Send Renewal Links</button>
 </form>
 
 <!-- Modal -->
@@ -70,7 +72,9 @@
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
         try {
-            const response = await fetch(form.action, {
+            const actionUrl = e.submitter?.formAction || form.action;
+
+            const response = await fetch(actionUrl, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': csrfToken,
@@ -82,19 +86,44 @@
 
             // Populate modal with results
             const modalContent = document.getElementById('modal-content');
-            modalContent.innerHTML = '<ul>' + data.results.map(item => `<li>${item}</li>`).join('') + '</ul>';
+            let html = '<ul>' + data.results.map(item => `<li>${item}</li>`).join('') + '</ul>';
+
+            if (data.links && data.links.length > 0) {
+                html += '<hr><h3>Copy Renewal Links</h3>';
+                data.links.forEach((item, idx) => {
+                    const inputId = `renewal-link-${idx}`;
+                    html += `
+                        <div style="margin-bottom: 10px; padding: 8px; border: 1px solid #eee; border-radius: 6px;">
+                            <div><strong>${item.email}</strong> (${item.plan})</div>
+                            <input id="${inputId}" type="text" value="${item.url}" readonly style="width: 100%; margin-top: 6px; padding: 6px;">
+                            <button type="button" style="margin-top: 6px;" onclick="copyRenewalLink('${inputId}')">Copy Link</button>
+                        </div>
+                    `;
+                });
+            }
+            modalContent.innerHTML = html;
 
             // Show modal
             document.getElementById('resultModal').style.display = 'block';
 
         } catch (error) {
-            alert('An error occurred while processing the renewal.');
+            alert('An error occurred while processing this request.');
             console.error('Error:', error);
         }
     });
 
     function closeModal() {
         document.getElementById('resultModal').style.display = 'none';
+    }
+
+    function copyRenewalLink(inputId) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        input.select();
+        input.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(input.value)
+            .then(() => alert('Renewal link copied!'))
+            .catch(() => alert('Could not copy link. Please copy manually.'));
     }
 </script>
 {% endblock %}

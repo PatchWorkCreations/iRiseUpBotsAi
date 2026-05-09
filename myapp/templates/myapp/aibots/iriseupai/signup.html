@@ -1,614 +1,587 @@
 {% extends "myapp/aibots/base.html" %}
 {% load static %}
-{% block title %}iRiseUp AI - Your AI Experts{% endblock %}
+{% block title %}iRiseUp AI - Create Account{% endblock %}
 
 {% block content %}
-    <style>
-        /* 🌟 Full-Page Centering */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f9fbfc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
 
-        /* 📌 Signup Container */
-        .signup-container {
-            display: flex;
-            max-width: 950px;
-            width: 100%;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease-in-out;
-            align-items: stretch;
-        }
+  :root {
+    --teal-dark: #0a4a47;
+    --teal:      #025450;
+    --teal-mid:  #1a8a82;
+    --coral:     #FF7A61;
+    --coral-dk:  #d6604b;
+    --mint:      #4ecdc4;
+    --paper:     #f4faf9;
+    --ink:       #0a1a19;
+    --muted:     #4a7470;
+    --line:      rgba(13,110,110,.15);
+  }
 
-        /* 🔵 Left Panel (Hero Branding) */
-        .signup-info {
-            background: #025450; /* Dark teal to light teal */
-            color: white;
-            width: 40%;
-            padding: 45px 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 84, 80, 0.3);
-        }
-        .signup-info h2 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin-bottom: 15px;
-        }
+  html, body {
+    height: 100%; margin: 0; padding: 0;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+  }
 
-        /* ✍️ Right Panel (Form) */
-        .signup-form {
-            width: 60%;
-            padding: 50px;
-        }
-
-        .signup-form h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            font-weight: 800;
-            color: #333;
-        }
-
-        .signup-form label {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #444;
-        }
-
-        .signup-form .form-group {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        .signup-form input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: 0.3s ease-in-out;
-        }
-
-         
-
-        /* 👁️ Password Toggle Icon */
-        /* 🔍 Password Toggle Fix */
-        /* Wrap the input and icon together */
-        .password-container {
-            display: flex;
-            align-items: center;
-            position: relative;
-            width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: white;
-            padding-right: 10px;
-        }
-
-        /* Make sure input takes full space */
-        .password-container input {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            outline: none;
-            font-size: 1rem;
-        }
-
-        /* Ensure the eye toggle stays in place */
-        .password-toggle {
-            margin-left: auto;
-            cursor: pointer;
-            color: #6c757d;
-            font-size: 1.2rem;
-            background: transparent;
-            border: none;
-            padding: 10px;
-        }
-
-        .password-toggle:hover {
-            color: #333;
-        }
-
-        /* Prevents the error message from affecting layout */
-        .error-message {
-            color: red;
-            font-size: 0.85rem;
-            margin-top: 5px;
-        }
-
-
-
-        .signup-btn {
-            width: 100%;
-            padding: 14px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: rgb(37, 37, 37);
-            background: #FF7A61; /* Coral to darker red */
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .signup-btn:hover {
-            background: #d6604b; /* Darker shades on hover */
-            transform: scale(1.05);
-        }
-
-        /* 📱 Mobile Responsive */
-        @media (max-width: 768px) {
-            .signup-container {
-                flex-direction: column;
-                width: 90%;
-            }
-
-            .signup-info {
-                width: 100%;
-                padding: 30px;
-                text-align: center;
-            }
-
-            .signup-form {
-                width: 100%;
-                padding: 30px;
-            }
-        }
-
-            /* 🌟 Ensure Modal is Initially Hidden */
-#activationModal {
-    display: none; /* Keep it hidden initially */
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(6px);
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 1.3s ease-in-out;
-}
-
-/* 🎯 Modal Content - Properly Centered */
-#activationModal .modal-dialog {
+  /* ── STAGE ── */
+  .split-stage {
     display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
-    margin: auto;
-}
-#activationModal .modal-content {
-    max-width: 480px;
-    width: 100%;
-    background: white;
-    border-radius: 14px;
-    padding: 25px;
-    text-align: center;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-    animation: slideIn 1.4s ease-in-out;
+    overflow: hidden;
+  }
+
+  /* ── LEFT HERO ── */
+  .split-hero {
+    flex: 0 0 38%;
     position: relative;
-}
+    background: var(--teal-dark);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem 2.5rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
 
-/* 🎨 Modal Header - Clean & Stylish */
-#activationModal .modal-header {
-    border-bottom: none;
-    padding-bottom: 0;
-}
+  .split-hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 65%, #0a4a47 0%, transparent 70%),
+      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(13,110,110,.25) 0%, transparent 60%),
+      var(--teal-dark);
+  }
 
-/* ✨ Modal Title - Eye-catching */
-#activationModal .modal-title {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #333;
-}
+  .split-hero-lines {
+    position: absolute; inset: 0; opacity: .14;
+  }
+  .split-hero-lines svg { width: 100%; height: 100%; }
 
-/* 📝 Modal Body - Smooth Text */
-#activationModal .modal-body {
-    font-size: 1.1rem;
-    color: #444;
-    margin-top: 10px;
-    line-height: 1.5;
-}
-
-/* ✅ Success Message Styling */
-#activationModal .text-success {
-    color: #28a745;
-    font-weight: bold;
-}
-
-/* ❌ Error Message Styling */
-#activationModal .text-danger {
-    color: #dc3545;
-    font-weight: bold;
-}
-
-/* 🔘 Modal Button - Stand Out */
-#activationModal .modal-footer {
-    border-top: none;
-    padding-top: 0;
-}
-
-#activationModal .btn-primary {
-    background: linear-gradient(90deg, #007bff, #0056b3);
-    color: white;
-    font-size: 1.1rem;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-}
-
-#activationModal .btn-primary:hover {
-    background: linear-gradient(90deg, #0056b3, #003f80);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
-}
-
-/* ❌ Close Button */
-#activationModal .btn-close {
+  .split-hero-orb {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 18px;
-    color: #555;
-    transition: 0.3s ease;
-}
+    width: 380px; height: 380px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(78,205,196,.18) 0%, transparent 70%);
+    top: 50%; left: 45%;
+    transform: translate(-50%,-50%);
+    animation: orbPulse 6s ease-in-out infinite;
+  }
+  @keyframes orbPulse {
+    0%,100% { transform: translate(-50%,-50%) scale(1);    opacity: .5; }
+    50%      { transform: translate(-50%,-50%) scale(1.14); opacity: 1; }
+  }
 
-#activationModal .btn-close:hover {
-    color: #ff4757;
-    transform: scale(1.2);
-}
+  .split-logo {
+    position: relative; z-index: 2;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem; font-weight: 500;
+    color: #e0f5f4; letter-spacing: .06em; text-decoration: none;
+  }
+  .split-logo span { color: var(--coral); }
 
-/* 🔥 Animation Effects */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+  .split-tagline {
+    position: relative; z-index: 2;
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; padding: 2rem 0;
+  }
 
-@keyframes slideIn {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
+  /* Typewriter headline */
+  .split-typewriter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 2.8vw, 2.8rem);
+    font-weight: 300; font-style: italic;
+    line-height: 1.2; color: #e0f5f4;
+    margin-bottom: 1.2rem; min-height: 3.5rem;
+  }
+  #dynamic-word { color: var(--mint); }
 
-/* 📱 Responsive Optimization */
-@media (max-width: 500px) {
-    #activationModal .modal-content {
-        max-width: 90%;
-        padding: 20px;
-    }
-    
-    #activationModal .modal-title {
-        font-size: 1.4rem;
-    }
+  .split-tagline p {
+    color: rgba(224,245,244,.5);
+    font-size: .88rem; line-height: 1.75;
+    font-weight: 300; max-width: 300px;
+    margin-bottom: 2rem;
+  }
 
-    #activationModal .modal-body {
-        font-size: 1rem;
-    }
+  .split-pills { display: flex; flex-direction: column; gap: .55rem; }
+  .split-pill {
+    display: inline-flex; align-items: center; gap: .5rem;
+    border: 1px solid rgba(78,205,196,.3); border-radius: 50px;
+    padding: .38rem 1rem; font-size: .76rem;
+    color: var(--mint); width: fit-content;
+  }
+  .split-pill svg {
+    width: 13px; height: 13px;
+    stroke: var(--mint); fill: none; stroke-width: 2; flex-shrink: 0;
+  }
 
-    #activationModal .btn-primary {
-        font-size: 1rem;
-        padding: 10px 15px;
-    }
-}
+  .split-foot {
+    position: relative; z-index: 2;
+    font-size: .7rem; color: rgba(224,245,244,.22); letter-spacing: .04em;
+  }
 
-#dynamic-word {
-    display: inline-block;
-    min-height: 30px; /* Adjust based on your font-size */
-    color: white;
-}
+  /* ── RIGHT FORM ── */
+  .split-form-panel {
+    flex: 1;
+    background: var(--paper);
+    display: flex; justify-content: center;
+    padding: 3.5rem 2.5rem;
+    overflow-y: auto;
+  }
 
+  .split-form-wrap {
+    width: 100%; max-width: 480px;
+    animation: formFadeUp .65s cubic-bezier(.22,1,.36,1) both;
+  }
+  @keyframes formFadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-.typewriter {
+  .split-eyebrow {
+    font-size: .7rem; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--teal-mid);
+    font-weight: 500; margin-bottom: 1rem;
+  }
+
+  .split-form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem; font-weight: 400;
+    color: var(--ink); margin-bottom: .3rem; line-height: 1.1;
+  }
+
+  .split-form-sub {
+    font-size: .875rem; color: var(--muted);
+    margin-bottom: 2rem; line-height: 1.6;
+  }
+
+  /* ── FIELDS ── */
+  .split-field {
+    margin-bottom: 1.2rem;
+  }
+
+  .split-field label {
     display: block;
-    min-height: 40px; /* Ensures stable space */
-    line-height: 1.2;
-}
+    font-size: .7rem; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted);
+    font-weight: 500; margin-bottom: .4rem;
+  }
 
+  .split-field input,
+  .split-field select {
+    width: 100%; padding: .85rem 1rem;
+    border: 1px solid var(--line); border-radius: 6px;
+    background: #fff; font-family: 'DM Sans', sans-serif;
+    font-size: .93rem; color: var(--ink); outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    appearance: none;
+  }
+  .split-field input:focus,
+  .split-field select:focus {
+    border-color: var(--teal-mid);
+    box-shadow: 0 0 0 3px rgba(13,110,110,.1);
+  }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+  /* Two-col row */
+  .split-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
 
- 
-    </style>
+  /* Password container */
+  .pw-wrap {
+    display: flex; align-items: center;
+    border: 1px solid var(--line); border-radius: 6px;
+    background: #fff; overflow: hidden;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .pw-wrap:focus-within {
+    border-color: var(--teal-mid);
+    box-shadow: 0 0 0 3px rgba(13,110,110,.1);
+  }
+  .pw-wrap input {
+    flex: 1; border: none; box-shadow: none;
+    padding: .85rem 1rem; background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .93rem; color: var(--ink); outline: none;
+  }
+  .pw-toggle {
+    padding: 0 .9rem; background: transparent;
+    border: none; cursor: pointer;
+    color: #9ab0ae; font-size: 1.1rem;
+    transition: color .2s; line-height: 1;
+  }
+  .pw-toggle:hover { color: var(--teal-mid); }
 
- 
-<!-- 🎉 Activation Modal (Initially Hidden) -->
-<div class="modal fade" id="activationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Welcome! Let’s Get Started 🚀</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                 
-                <div id="modalMessage"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-            </div>
+  /* Error messages */
+  .split-error {
+    font-size: .78rem; color: #c0392b;
+    margin-top: .3rem; min-height: 1.1rem;
+  }
+
+  /* Select arrow */
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '▾'; position: absolute;
+    right: 1rem; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted); pointer-events: none;
+    font-size: .9rem;
+  }
+
+  /* Submit */
+  .split-btn {
+    width: 100%; padding: 1rem;
+    background: var(--coral); color: #fff;
+    border: none; border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    letter-spacing: .04em; cursor: pointer;
+    transition: background .2s, transform .15s;
+    margin-top: .5rem;
+  }
+  .split-btn:hover:not(:disabled) { background: var(--coral-dk); transform: scale(1.02); }
+  .split-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+  .split-signin-link {
+    text-align: center; font-size: .85rem;
+    color: var(--muted); margin-top: 1.2rem;
+  }
+  .split-signin-link a {
+    color: var(--teal); font-weight: 500; text-decoration: none;
+    border-bottom: 1px solid var(--mint);
+  }
+
+  /* ── MODAL ── */
+  #activationModal {
+    display: none;
+    position: fixed; z-index: 9999;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(6px);
+    justify-content: center; align-items: center;
+    animation: fadeIn .3s ease;
+  }
+  #activationModal.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  #activationModal .modal-dialog {
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; margin: auto; width: 100%;
+  }
+  #activationModal .modal-content {
+    max-width: 460px; width: 90%;
+    background: #fff; border-radius: 14px;
+    padding: 2.5rem; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    animation: slideIn .35s ease;
+    position: relative;
+  }
+  @keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to   { transform: translateY(0);     opacity: 1; }
+  }
+  #activationModal .modal-header { border-bottom: none; padding-bottom: 0; }
+  #activationModal .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem; font-weight: 500; color: var(--ink);
+  }
+  #activationModal .modal-body {
+    font-size: 1rem; color: var(--muted);
+    margin-top: .8rem; line-height: 1.6;
+  }
+  #activationModal .text-success { color: var(--teal); font-weight: 600; }
+  #activationModal .text-danger  { color: #c0392b; font-weight: 600; }
+  #activationModal .modal-footer { border-top: none; padding-top: 1.2rem; }
+  #activationModal .btn-modal-ok {
+    background: var(--teal); color: #e0f5f4;
+    border: none; border-radius: 6px;
+    padding: .75rem 2rem; font-size: .95rem;
+    font-weight: 500; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background .2s;
+  }
+  #activationModal .btn-modal-ok:hover { background: var(--teal-dark); }
+  #activationModal .btn-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: none; border: none; font-size: 1.2rem;
+    color: var(--muted); cursor: pointer; line-height: 1;
+    transition: color .2s;
+  }
+  #activationModal .btn-close:hover { color: var(--coral); }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .split-hero { display: none; }
+    .split-form-panel { padding: 2.5rem 1.5rem; }
+    .split-row { grid-template-columns: 1fr; gap: 0; }
+  }
+</style>
+
+<!-- Activation Modal -->
+<div id="activationModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Let's Get Started 🚀</h5>
+        <button type="button" class="btn-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="modalMessage"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-ok" onclick="closeModal()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Layout -->
+<div class="split-stage">
+
+  <!-- ── LEFT HERO ── -->
+  <div class="split-hero">
+    <div class="split-hero-bg"></div>
+    <div class="split-hero-lines">
+      <svg viewBox="0 0 500 900" preserveAspectRatio="xMidYMid slice" fill="none">
+        <circle cx="250" cy="450" r="180" stroke="#4ecdc4" stroke-width=".5"/>
+        <circle cx="250" cy="450" r="280" stroke="#4ecdc4" stroke-width=".35"/>
+        <circle cx="250" cy="450" r="420" stroke="#4ecdc4" stroke-width=".2"/>
+        <line x1="0" y1="450" x2="500" y2="450" stroke="#4ecdc4" stroke-width=".4"/>
+        <line x1="250" y1="0" x2="250" y2="900" stroke="#4ecdc4" stroke-width=".4"/>
+        <line x1="0" y1="0" x2="500" y2="900" stroke="#4ecdc4" stroke-width=".25"/>
+        <line x1="500" y1="0" x2="0" y2="900" stroke="#4ecdc4" stroke-width=".25"/>
+      </svg>
+    </div>
+    <div class="split-hero-orb"></div>
+
+    <a class="split-logo" href="#">iRise<span>Up</span></a>
+
+    <div class="split-tagline">
+      <div class="split-typewriter"><span id="dynamic-word"></span></div>
+      <p>Join 100,000+ people already getting smarter, faster AI support — starting today.</p>
+      <div class="split-pills">
+        <div class="split-pill">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          8 AI Assistants
         </div>
+        <div class="split-pill">
+          <svg viewBox="0 0 24 24"><path d="M8 12h8M12 8v8"/><circle cx="12" cy="12" r="10"/></svg>
+          Unlimited Chats
+        </div>
+        <div class="split-pill">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Priority Support
+        </div>
+      </div>
     </div>
-</div>
 
+    <div class="split-foot">© 2025 iRiseUp AI · All rights reserved</div>
+  </div>
 
+  <!-- ── RIGHT FORM ── -->
+  <div class="split-form-panel">
+    <div class="split-form-wrap">
 
-<div class="signup-container">
-    <div class="signup-info">
-        <h2 class="title typewriter" style="font-style: italic; font-size: 1.8rem;">
-            <span id="dynamic-word"></span>
-        </h2>
-        <p style="margin-top: 15px; color: white;">Join 100,000+ people already getting smarter, faster support.</p>
-    </div>
-    
+      <div class="split-eyebrow">Get started free</div>
+      <h2 class="split-form-title">Create your account</h2>
+      <p class="split-form-sub">🚀 It only takes a minute!</p>
 
-    <div class="signup-form">
-        <h2>Create Your Free AI Account</h2>
-        <p>🚀 It only takes a minute!</p>
+      <form id="signupForm" method="POST">
+        {% csrf_token %}
 
-        <form id="signupForm" method="POST">
-            {% csrf_token %}
-
+        <div class="split-row">
+          <div class="split-field">
             <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" required>
-            <div class="error-message" id="first_name_error"></div>
-
+            <input type="text" id="first_name" name="first_name" placeholder="Jane" required>
+            <div class="split-error" id="first_name_error"></div>
+          </div>
+          <div class="split-field">
             <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" required>
-            <div class="error-message" id="last_name_error"></div>
+            <input type="text" id="last_name" name="last_name" placeholder="Doe" required>
+            <div class="split-error" id="last_name_error"></div>
+          </div>
+        </div>
 
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
-            <div class="error-message" id="username_error"></div>
+        <div class="split-field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="janedoe123" required>
+          <div class="split-error" id="username_error"></div>
+        </div>
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
-            <div class="error-message" id="email_error"></div>
+        <div class="split-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="jane@example.com" required>
+          <div class="split-error" id="email_error"></div>
+        </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <div class="password-container">
-                    <input type="password" id="password" name="password" required>
-                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password', this)">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                <div class="error-message" id="password_error"></div>
-            </div>
+        <div class="split-field">
+          <label for="password">Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
+            <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('password', this)">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="split-error" id="password_error"></div>
+        </div>
 
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                <div class="password-container">
-                    <input type="password" id="confirm_password" name="confirm_password" required>
-                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirm_password', this)">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                <div class="error-message" id="confirm_password_error"></div>
-            </div>
+        <div class="split-field">
+          <label for="confirm_password">Confirm Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required>
+            <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('confirm_password', this)">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="split-error" id="confirm_password_error"></div>
+        </div>
 
-            <div class="form-group">
-                <label for="heard_about_us">How did you hear about us?</label>
-                <select id="heard_about_us" name="heard_about_us" required>
-                    <option value="" disabled selected>-- Please select --</option>
-                    <option value="social_media">Social Media</option>
-                    <option value="friend">Friend/Referral</option>
-                    <option value="search">Search Engine</option>
-                    <option value="event">Event/Expo</option>
-                    <option value="other">Other</option>
-                </select>
-                <div class="error-message" id="heard_about_us_error"></div>
-            </div>            
+        <div class="split-field">
+          <label for="heard_about_us">How did you hear about us?</label>
+          <div class="select-wrap">
+            <select id="heard_about_us" name="heard_about_us" required>
+              <option value="" disabled selected>-- Please select --</option>
+              <option value="social_media">Social Media</option>
+              <option value="friend">Friend / Referral</option>
+              <option value="search">Search Engine</option>
+              <option value="event">Event / Expo</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="split-error" id="heard_about_us_error"></div>
+        </div>
 
- 
+        <button type="submit" class="split-btn">🚀 START USING AN EXPERT NOW</button>
+        <p class="split-signin-link">Already have an account? <a href="{% url 'sign_in' %}">Sign In</a></p>
+      </form>
 
-
-            <button type="submit" class="signup-btn">🚀 START USING AN EXPERT NOW</button>
-            <p style="color: #bdbaba;">Already have an account? <a href="{% url 'sign_in' %}">Sign In</a></p>
-        </form>
     </div>
-</div>
+  </div>
 
- 
+</div>
 
 <script>
-    function togglePasswordVisibility(fieldId, element) {
-        const passwordInput = document.getElementById(fieldId);
-        const icon = element.querySelector("i");
-        
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            icon.classList.remove("fa-eye");
-            icon.classList.add("fa-eye-slash");
-        } else {
-            passwordInput.type = "password";
-            icon.classList.remove("fa-eye-slash");
-            icon.classList.add("fa-eye");
-        }
+  /* ── Modal helpers ── */
+  function openModal(message, isSuccess = true) {
+    const modal = document.getElementById('activationModal');
+    document.getElementById('modalMessage').innerHTML =
+      `<p class="${isSuccess ? 'text-success' : 'text-danger'}">${message}</p>`;
+    modal.classList.add('show');
+  }
+  function closeModal() {
+    document.getElementById('activationModal').classList.remove('show');
+  }
+
+  /* ── Password toggle ── */
+  function togglePasswordVisibility(fieldId, btn) {
+    const inp = document.getElementById(fieldId);
+    const icon = btn.querySelector('i');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+      inp.type = 'password';
+      icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+  }
+
+  /* ── Form logic ── */
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('signupForm');
+    const submitBtn = document.querySelector('.split-btn');
+
+    function showError(field, msg) {
+      const el = document.getElementById(field + '_error');
+      if (el) el.textContent = msg;
+      checkFormValidity();
     }
 
-    
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.getElementById("signupForm");
-        const submitButton = document.querySelector(".signup-btn");
-        const modalElement = document.getElementById("activationModal");
-        const modalMessage = document.getElementById("modalMessage");
-        const bootstrapModal = new bootstrap.Modal(modalElement, { backdrop: "static", keyboard: false });
+    async function validateInput(field, value) {
+      if (!value.trim()) { showError(field, `${field.replace('_', ' ')} is required!`); return false; }
+      const res = await fetch(`/validate-user-input/?field=${field}&value=${value}`);
+      const data = await res.json();
+      showError(field, data.valid ? '' : data.message);
+      return data.valid;
+    }
 
-        function openModal(message, isSuccess = true) {
-            modalMessage.innerHTML = `<p class="${isSuccess ? 'text-success' : 'text-danger'}">${message}</p>`;
-            bootstrapModal.show();
-        }
+    function checkFormValidity() {
+      const fields = ['first_name','last_name','username','email','password','confirm_password'];
+      let ok = true;
+      fields.forEach(f => {
+        if (!document.getElementById(f).value.trim()) ok = false;
+        if (document.getElementById(f + '_error').textContent !== '') ok = false;
+      });
+      submitBtn.disabled = !ok;
+    }
 
-        function showError(field, message) {
-            const errorElement = document.getElementById(field + "_error");
-            errorElement.textContent = message;
-
-            if (message) {
-                errorElement.classList.add("error-visible");
-            } else {
-                errorElement.classList.remove("error-visible");
-            }
-
-            checkFormValidity(); // 🔥 Re-check the form when errors change
-        }
-
-        async function validateInput(field, value) {
-            if (!value.trim()) {
-                showError(field, `${field.replace("_", " ")} is required!`);
-                return false;
-            }
-
-            let response = await fetch(`/validate-user-input/?field=${field}&value=${value}`);
-            let data = await response.json();
-            if (!data.valid) {
-                showError(field, data.message);
-                return false;
-            } else {
-                showError(field, "");
-                return true;
-            }
-        }
-
-        function checkFormValidity() {
-            const requiredFields = ["first_name", "last_name", "username", "email", "password", "confirm_password"];
-            let isValid = true;
-
-            requiredFields.forEach(field => {
-                if (!document.getElementById(field).value.trim()) {
-                    isValid = false;
-                }
-                if (document.getElementById(field + "_error").textContent !== "") {
-                    isValid = false;
-                }
-            });
-
-            submitButton.disabled = !isValid;
-        }
-
-        // **✅ Add Real-Time Validation**
-        ["username", "email"].forEach(id => {
-            document.getElementById(id).addEventListener("input", async function () {
-                await validateInput(id, this.value);
-            });
-        });
-
-        // **✅ Ensure Passwords Match**
-        document.getElementById("confirm_password").addEventListener("input", function () {
-            const password = document.getElementById("password").value;
-            const confirmPassword = this.value;
-            if (password !== confirmPassword) {
-                showError("confirm_password", "Passwords do not match!");
-            } else {
-                showError("confirm_password", "");
-            }
-        });
-
-        // **✅ Run Initial Validation on All Inputs**
-        document.querySelectorAll("#signupForm input").forEach(input => {
-            input.addEventListener("input", checkFormValidity);
-        });
-
-        // **🚀 Handle Form Submission**
-        form.addEventListener("submit", async function (e) {
-            e.preventDefault();
-
-            if (submitButton.disabled) return;
-            submitButton.disabled = true;
-            submitButton.textContent = "Processing... 🚀";
-
-            openModal("Your account is being activated. Hold tight! 😊");
-
-            fetch("{% url 'signup' %}", {
-                method: "POST",
-                body: new FormData(form),
-                headers: { "X-CSRFToken": "{{ csrf_token }}" }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    openModal(data.message, true);
-                    setTimeout(() => {
-                        bootstrapModal.hide();
-                        window.location.href = data.redirect_url;
-                    }, 3000);
-                } else {
-                    openModal(data.message, false);
-                    showError(data.error_field, data.message);
-                    submitButton.disabled = false;
-                    submitButton.textContent = "🚀 Start Using AI Now";
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                openModal("Something went wrong. Please try again.", false);
-                submitButton.disabled = false;
-                submitButton.textContent = "🚀 Start Using AI Now";
-            });
-        });
-
-        // **🔥 Disable Submit Button on Page Load**
-        submitButton.disabled = true;
+    ['username','email'].forEach(id => {
+      document.getElementById(id).addEventListener('input', async function () {
+        await validateInput(id, this.value);
+      });
     });
 
-    document.addEventListener("DOMContentLoaded", function () {
-    const words = [
-        "LET'S DISCOVER", 
-        "LET'S EMPOWER", 
-        "LET'S CREATE", 
-        "LET'S TRANSFORM", 
-        "LET'S LEAD", 
-        "LET'S RISE", 
-        "LET'S BELONG"
-    ];
-    const wordElement = document.getElementById("dynamic-word");
-    let wordIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
+    document.getElementById('confirm_password').addEventListener('input', function () {
+      const pw = document.getElementById('password').value;
+      showError('confirm_password', this.value !== pw ? 'Passwords do not match!' : '');
+    });
 
-    function typeEffect() {
-        const currentWord = words[wordIndex];
-        if (!isDeleting) {
-            wordElement.textContent = currentWord.substring(0, charIndex + 1);
-            charIndex++;
-            if (charIndex === currentWord.length) {
-                isDeleting = true;
-                setTimeout(typeEffect, 1300);
-                return;
-            }
+    document.querySelectorAll('#signupForm input').forEach(inp =>
+      inp.addEventListener('input', checkFormValidity)
+    );
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if (submitBtn.disabled) return;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Processing... 🚀';
+      openModal('Your account is being activated. Hold tight! 😊');
+
+      fetch("{% url 'signup' %}", {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          openModal(data.message, true);
+          setTimeout(() => { closeModal(); window.location.href = data.redirect_url; }, 3000);
         } else {
-            wordElement.textContent = currentWord.substring(0, charIndex - 1);
-            charIndex--;
-            if (charIndex === 0) {
-                isDeleting = false;
-                wordIndex = (wordIndex + 1) % words.length;
-                setTimeout(typeEffect, 300);
-                return;
-            }
+          openModal(data.message, false);
+          showError(data.error_field, data.message);
+          submitBtn.disabled = false;
+          submitBtn.textContent = '🚀 START USING AN EXPERT NOW';
         }
+      })
+      .catch(() => {
+        openModal('Something went wrong. Please try again.', false);
+        submitBtn.disabled = false;
+        submitBtn.textContent = '🚀 START USING AN EXPERT NOW';
+      });
+    });
 
-        const speed = isDeleting ? 50 : 80;
-        setTimeout(typeEffect, speed);
+    submitBtn.disabled = true;
+  });
+
+  /* ── Typewriter ── */
+  document.addEventListener('DOMContentLoaded', function () {
+    const words = ["LET'S DISCOVER","LET'S EMPOWER","LET'S CREATE","LET'S TRANSFORM","LET'S LEAD","LET'S RISE","LET'S BELONG"];
+    const el = document.getElementById('dynamic-word');
+    let wi = 0, ci = 0, deleting = false;
+
+    function type() {
+      const word = words[wi];
+      el.textContent = deleting ? word.substring(0, ci - 1) : word.substring(0, ci + 1);
+      deleting ? ci-- : ci++;
+
+      if (!deleting && ci === word.length) { deleting = true; setTimeout(type, 1300); return; }
+      if (deleting && ci === 0) { deleting = false; wi = (wi + 1) % words.length; setTimeout(type, 300); return; }
+
+      setTimeout(type, deleting ? 50 : 80);
     }
-
-    typeEffect();
-});
-
+    type();
+  });
 </script>
 
 {% endblock %}

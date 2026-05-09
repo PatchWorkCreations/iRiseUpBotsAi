@@ -1,214 +1,392 @@
 {% extends "myapp/quiz/quiz_base.html" %}
 {% load static %}
 {% block title %}Sign In{% endblock %}
-  
+
 {% block content %}
-
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
 
-    html, body {
-    height: 100vh;
-    width: 100vw;
+  :root {
+    --teal-dark: #0a4a47;
+    --teal:      #025450;
+    --teal-mid:  #1a8a82;
+    --coral:     #FF7A61;
+    --mint:      #4ecdc4;
+    --paper:     #f4faf9;
+    --ink:       #0a1a19;
+    --muted:     #4a7470;
+    --line:      rgba(13,110,110,.15);
+  }
+
+  /* ── Reset only within this page ── */
+  html, body {
+    height: 100%; margin: 0; padding: 0;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .split-stage {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    background: #f5f5f5;
-}
+    min-height: 100vh;
+    overflow: hidden;
+  }
 
-.container {
+  /* ── LEFT HERO ── */
+  .split-hero {
+    flex: 0 0 48%;
+    position: relative;
+    background: var(--teal-dark);
+    overflow: hidden;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+  }
 
+  .split-hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 65%, #0a4a47 0%, transparent 70%),
+      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(13,110,110,.25) 0%, transparent 60%),
+      var(--teal-dark);
+  }
 
-.signin-container {
-    max-width: 400px;
-    background: #fff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    animation: fadeIn 0.6s ease-in-out;
-    margin: auto; /* ✅ Ensures auto-centering */
-}
+  .split-hero-lines {
+    position: absolute; inset: 0; opacity: .15;
+  }
+  .split-hero-lines svg { width: 100%; height: 100%; }
 
+  .split-hero-orb {
+    position: absolute;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(78,205,196,.18) 0%, transparent 70%);
+    top: 50%; left: 45%;
+    transform: translate(-50%, -50%);
+    animation: orbPulse 6s ease-in-out infinite;
+  }
+  @keyframes orbPulse {
+    0%,100% { transform: translate(-50%,-50%) scale(1);   opacity: .5; }
+    50%      { transform: translate(-50%,-50%) scale(1.14); opacity: 1; }
+  }
 
+  .split-hero-content { position: relative; z-index: 2; display: contents; }
 
-    h2 {
-        font-size: 2rem;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 20px;
-    }
+  .split-logo {
+    position: relative; z-index: 2;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem; font-weight: 500;
+    color: #e0f5f4; letter-spacing: .06em; text-decoration: none;
+  }
+  .split-logo span { color: var(--coral); }
 
-    .form-group {
-        position: relative;
-        margin-bottom: 30px;
-    }
+  .split-tagline {
+    position: relative; z-index: 2;
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; padding: 2rem 0;
+  }
+  .split-tagline h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 3.5vw, 3.4rem);
+    font-weight: 300; line-height: 1.15;
+    color: #e0f5f4; margin-bottom: 1rem; letter-spacing: -.01em;
+  }
+  .split-tagline h1 em { font-style: italic; color: var(--mint); }
+  .split-tagline p {
+    color: rgba(224,245,244,.5);
+    font-size: .9rem; line-height: 1.75; font-weight: 300;
+    max-width: 340px; margin-bottom: 1.8rem;
+  }
 
-    input.form-control {
-        width: 100%;
-        padding: 14px;
-        font-size: 1rem;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        outline: none;
-        transition: 0.3s ease;
-    }
+  /* Feature pills */
+  .split-pills { display: flex; flex-direction: column; gap: .55rem; }
+  .split-pill {
+    display: inline-flex; align-items: center; gap: .5rem;
+    border: 1px solid rgba(78,205,196,.3); border-radius: 50px;
+    padding: .38rem 1rem; font-size: .78rem;
+    color: var(--mint); width: fit-content;
+  }
+  .split-pill svg {
+    width: 14px; height: 14px;
+    stroke: var(--mint); fill: none; stroke-width: 2; flex-shrink: 0;
+  }
 
-    input.form-control:focus {
-        border-color: #FF7A61;
-        box-shadow: 0 0 10px rgba(108, 99, 255, 0.2);
-    }
+  .split-foot {
+    position: relative; z-index: 2;
+    font-size: .72rem; color: rgba(224,245,244,.25); letter-spacing: .04em;
+  }
 
-    label {
-        position: absolute;
-        left: 12px;
-        top: 14px;
-        font-size: 1rem;
-        color: #999;
-        transition: all 0.3s ease-in-out;
-        pointer-events: none;
-    }
+  /* ── RIGHT FORM ── */
+  .split-form-panel {
+    flex: 1;
+    background: var(--paper);
+    display: flex; align-items: center; justify-content: center;
+    padding: 3rem 2.5rem;
+  }
 
-    input.form-control:focus + label,
-    input.form-control:not(:placeholder-shown) + label {
-        top: -10px;
-        left: 12px;
-        font-size: 0.85rem;
-        color: #FF7A61;
-        background: white;
-        padding: 2px 5px;
-    }
+  .split-form-wrap {
+    width: 100%; max-width: 400px;
+    animation: formFadeUp .65s cubic-bezier(.22,1,.36,1) both;
+  }
+  @keyframes formFadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-    .input-group-append {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-    }
+  .split-eyebrow {
+    font-size: .7rem; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--teal-mid);
+    font-weight: 500; margin-bottom: 1rem;
+  }
 
-    .input-group-append svg {
-        width: 20px;
-        height: 20px;
-        color: #777;
-        transition: color 0.3s ease;
-    }
+  .split-form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.6rem; font-weight: 400;
+    color: var(--ink); margin-bottom: .35rem; line-height: 1.1;
+  }
 
-    .input-group-append:hover svg {
-        color: #FF7A61;
-    }
+  .split-form-sub {
+    font-size: .875rem; color: var(--muted);
+    margin-bottom: 2.2rem; line-height: 1.6;
+  }
+  .split-form-sub a {
+    color: var(--teal); text-decoration: none;
+    border-bottom: 1px solid var(--mint); font-weight: 500;
+  }
+  .split-form-sub a:hover { color: var(--teal-mid); }
 
-    .btn-primary {
-        background: #025450;
-        border: none;
-        font-size: 1rem;
-        padding: 14px;
-        width: 100%;
-        border-radius: 8px;
-        color: white;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease-in-out;
-        box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
-    }
+  /* Floating label fields */
+  .split-field {
+    position: relative; margin-bottom: 1.5rem;
+  }
+  .split-field input {
+    width: 100%; padding: 1rem 2.8rem 1rem 1rem;
+    border: 1px solid var(--line); border-radius: 6px;
+    background: #fff; font-family: 'DM Sans', sans-serif;
+    font-size: .95rem; color: var(--ink); outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .split-field input::placeholder { color: transparent; }
+  .split-field input:focus {
+    border-color: var(--teal-mid);
+    box-shadow: 0 0 0 3px rgba(13,110,110,.1);
+  }
+  .split-field label {
+    position: absolute; left: 1rem; top: 1rem;
+    font-size: .95rem; color: #9ab0ae;
+    transition: all .22s ease; pointer-events: none;
+    background: #fff; padding: 0 .25rem;
+  }
+  .split-field input:focus + label,
+  .split-field input:not(:placeholder-shown) + label {
+    top: -.55rem; font-size: .72rem;
+    color: var(--teal-mid); letter-spacing: .05em;
+  }
 
-    .btn-primary:hover {
-        background: #013d3a;
-        transform: scale(1.02);
-        box-shadow: 0 6px 18px rgba(108, 99, 255, 0.4);
-    }
+  /* Password toggle */
+  .split-pw-toggle {
+    position: absolute; right: .9rem; top: 50%;
+    transform: translateY(-50%); cursor: pointer;
+    color: #9ab0ae; transition: color .2s; line-height: 0;
+  }
+  .split-pw-toggle:hover { color: var(--teal-mid); }
+  .split-pw-toggle svg { width: 20px; height: 20px; }
 
-    .forgot-password {
-        text-align: right;
-        font-size: 0.9rem;
-        margin-top: 10px;
-    }
+  /* Messages */
+  .split-messages {
+    list-style: none; padding: 0; margin: 0 0 1rem;
+  }
+  .split-messages li {
+    padding: .65rem 1rem; border-radius: 6px; font-size: .85rem;
+    background: rgba(255,122,97,.1); color: #c0392b;
+    border: 1px solid rgba(255,122,97,.25); margin-bottom: .5rem;
+  }
+  .split-messages li.success {
+    background: rgba(13,110,110,.08); color: var(--teal);
+    border-color: rgba(13,110,110,.2);
+  }
 
-    .forgot-password a {
-        color: #FF7A61;
-        text-decoration: none;
-        font-weight: 500;
-    }
+  /* Forgot */
+  .split-forgot {
+    text-align: right; font-size: .83rem; margin-bottom: 1.4rem;
+  }
+  .split-forgot a {
+    color: var(--coral); text-decoration: none; font-weight: 500;
+  }
+  .split-forgot a:hover { text-decoration: underline; }
 
-    .forgot-password a:hover {
-        text-decoration: underline;
-    }
+  /* Submit */
+  .split-btn {
+    width: 100%; padding: .95rem;
+    background: var(--teal); color: #e0f5f4;
+    border: none; border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .95rem; font-weight: 500;
+    letter-spacing: .05em; cursor: pointer;
+    transition: background .2s, transform .15s;
+  }
+  .split-btn:hover { background: var(--teal-dark); }
+  .split-btn:active { transform: scale(.98); }
 
-    .signup-text {
-        font-size: 0.9rem;
-        margin-top: 20px;
-    }
+  /* Divider */
+  .split-divider {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 1.6rem 0; color: var(--muted);
+    font-size: .75rem; letter-spacing: .08em;
+  }
+  .split-divider::before, .split-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--line);
+  }
 
-    .signup-text a {
-        color: #FF7A61;
-        font-weight: 600;
-        text-decoration: none;
-    }
+  /* Social */
+  .split-socials { display: flex; gap: .75rem; }
+  .split-social-btn {
+    flex: 1; padding: .75rem;
+    border: 1px solid var(--line); border-radius: 6px;
+    background: #fff; display: flex; align-items: center;
+    justify-content: center; gap: .45rem;
+    font-size: .8rem; color: var(--ink);
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    transition: border-color .2s;
+  }
+  .split-social-btn:hover { border-color: var(--teal-mid); }
+  .split-social-btn svg { width: 17px; height: 17px; }
 
-    .signup-text a:hover {
-        text-decoration: underline;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+  /* Mobile */
+  @media (max-width: 768px) {
+    .split-hero { display: none; }
+    .split-form-panel { padding: 2rem 1.5rem; }
+  }
 </style>
 
-<div class="signin-container">
-    <h2>Welcome Back 👋</h2>
-    <form method="post" action="{% url 'sign_in' %}">
-        {% csrf_token %}
-        
-        <div class="form-group">
-            <input type="text" id="login_identifier" name="login_identifier" class="form-control" placeholder=" " required>
-            <label for="login_identifier">Email or Username</label>
+<div class="split-stage">
+
+  <!-- ── LEFT HERO ── -->
+  <div class="split-hero">
+    <div class="split-hero-bg"></div>
+    <div class="split-hero-lines">
+      <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice" fill="none">
+        <circle cx="300" cy="400" r="180" stroke="#4ecdc4" stroke-width=".5"/>
+        <circle cx="300" cy="400" r="280" stroke="#4ecdc4" stroke-width=".35"/>
+        <circle cx="300" cy="400" r="400" stroke="#4ecdc4" stroke-width=".2"/>
+        <line x1="0" y1="400" x2="600" y2="400" stroke="#4ecdc4" stroke-width=".4"/>
+        <line x1="300" y1="0" x2="300" y2="800" stroke="#4ecdc4" stroke-width=".4"/>
+        <line x1="0" y1="0" x2="600" y2="800" stroke="#4ecdc4" stroke-width=".25"/>
+        <line x1="600" y1="0" x2="0" y2="800" stroke="#4ecdc4" stroke-width=".25"/>
+      </svg>
+    </div>
+    <div class="split-hero-orb"></div>
+
+    <a class="split-logo" href="#">Quiz<span>App</span></a>
+
+    <div class="split-tagline">
+      <h1>Level up your<br/><em>knowledge</em><br/>every day.</h1>
+      <p>Challenge yourself, track your progress, and rise to the top of every leaderboard.</p>
+      <div class="split-pills">
+        <div class="split-pill">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          8 AI Assistants
         </div>
-        
-        <div class="form-group password-container">
-            <input type="password" name="password" class="form-control" id="password" placeholder=" " required>
-            <label for="password">Password</label>
-            <div class="input-group-append" onclick="togglePasswordVisibility()">
-                <svg id="password-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M12 5c-7 0-12 7-12 7s5 7 12 7 12-7 12-7-5-7-12-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3z"></path>
-                </svg>
-            </div>
+        <div class="split-pill">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+          Unlimited Quizzes
+        </div>
+        <div class="split-pill">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Priority Support
+        </div>
+      </div>
+    </div>
+
+    <div class="split-foot">© 2025 QuizApp · All rights reserved</div>
+  </div>
+
+  <!-- ── RIGHT FORM ── -->
+  <div class="split-form-panel">
+    <div class="split-form-wrap">
+
+      <div class="split-eyebrow">Welcome back</div>
+      <h2 class="split-form-title">Sign in 👋</h2>
+      <p class="split-form-sub">
+        New here? <a href="{% url 'signup' %}">Create an account</a>
+      </p>
+
+      <form method="post" action="{% url 'sign_in' %}">
+        {% csrf_token %}
+
+        <div class="split-field">
+          <input type="text" id="login_identifier" name="login_identifier"
+                 class="form-control" placeholder=" " required>
+          <label for="login_identifier">Email or Username</label>
+        </div>
+
+        <div class="split-field">
+          <input type="password" name="password" id="password"
+                 class="form-control" placeholder=" " required>
+          <label for="password">Password</label>
+          <span class="split-pw-toggle" onclick="togglePw()">
+            <svg id="pw-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M12 5c-7 0-12 7-12 7s5 7 12 7 12-7 12-7-5-7-12-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3z"/>
+            </svg>
+          </span>
         </div>
 
         {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li class="{{ message.tags }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
+          <ul class="split-messages">
+            {% for message in messages %}
+              <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+          </ul>
         {% endif %}
-        
-        <p class="forgot-password"><a href="{% url 'password_reset' %}">Forgot password?</a></p>
-        <button type="submit" class="btn btn-primary">Sign In</button>
-    </form>
 
-    <p class="signup-text">New here? <a href="{% url 'signup' %}">Create an account</a></p>
+        <div class="split-forgot">
+          <a href="{% url 'password_reset' %}">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="split-btn">Sign In →</button>
+      </form>
+
+      <div class="split-divider">or continue with</div>
+
+      <div class="split-socials">
+        <button class="split-social-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Google
+        </button>
+        <button class="split-social-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.027 4.388 11.024 10.125 11.927v-8.437H7.078v-3.49h3.047V9.43c0-3.007 1.792-4.669 4.532-4.669 1.313 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796v8.437C19.612 23.097 24 18.1 24 12.073z" fill="#1877F2"/>
+          </svg>
+          Facebook
+        </button>
+        <button class="split-social-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.912-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="currentColor"/>
+          </svg>
+          Twitter
+        </button>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
 <script>
-    function togglePasswordVisibility() {
-        const passwordInput = document.getElementById('password');
-        const passwordIcon = document.getElementById('password-icon');
-        
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            passwordIcon.innerHTML = '<path fill="currentColor" d="M12 6.5c4.7 0 8.7 2.7 11 6.5-2.3 3.8-6.3 6.5-11 6.5s-8.7-2.7-11-6.5c2.3-3.8 6.3-6.5 11-6.5zm0 9.5c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4z"></path>';
-        } else {
-            passwordInput.type = 'password';
-            passwordIcon.innerHTML = '<path fill="currentColor" d="M12 5c-7 0-12 7-12 7s5 7 12 7 12-7 12-7-5-7-12-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5z"></path>';
-        }
+  function togglePw() {
+    const inp = document.getElementById('password');
+    const ico = document.getElementById('pw-icon');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      ico.innerHTML = '<path fill="currentColor" d="M12 6.5c4.7 0 8.7 2.7 11 6.5-2.3 3.8-6.3 6.5-11 6.5s-8.7-2.7-11-6.5c2.3-3.8 6.3-6.5 11-6.5zm0 9.5c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4z"/>';
+    } else {
+      inp.type = 'password';
+      ico.innerHTML = '<path fill="currentColor" d="M12 5c-7 0-12 7-12 7s5 7 12 7 12-7 12-7-5-7-12-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3z"/>';
     }
+  }
 </script>
 
 {% endblock %}

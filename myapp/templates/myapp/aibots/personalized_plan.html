@@ -3,8 +3,7 @@
 {% block title %}Your Personalized AI-Driven Plan{% endblock %}
 {% block content %}
 <head>
-    <script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
-    <script src="https://www.paypal.com/sdk/js?client-id=AX8s0c8qV3I8_8EORobzhGaQ7sg5m_9_vVfLUmXLqmJaEM2lYURoArIL9wjJDVxZ2EIHRKI8qWoZrKGK_&vault=true&intent=subscription"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=USD"></script>
 
 </head>
 
@@ -1374,71 +1373,58 @@ function handlePaymentError(error) {
 
     // PayPal payment setup function
     async function setupPayPalPayments() {
-    if (paypalInitialized) return; // Prevent re-initialization
+        if (paypalInitialized) return;
 
-    paypal.Buttons({
-        createSubscription: function (data, actions) {
-            // Retrieve the selected plan from radio buttons
-            const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
-
-            // Send the selectedPlan to your backend for processing
-            return fetch('/get-paypal-plan-id/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token for Django
-                },
-                body: JSON.stringify({
-                    'selected_plan': selectedPlan
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.plan_id) {
-                    // Create the PayPal subscription with the returned plan_id
-                    return actions.subscription.create({
-                        plan_id: data.plan_id,  // Use the plan ID returned from the server
-                    });
-                } else {
-                    console.error('Plan ID not returned from server');
-                }
-            });
-        },
-
-        onApprove: function (data, actions) {
-            // Get the subscription ID from the onApprove event
-            const subscriptionId = data.subscriptionID;
-
-            if (subscriptionId) {
-                // Redirect the user to approve the subscription
-                return fetch(`/complete-paypal-subscription/?subscription_id=${subscriptionId}`, {
-                    method: 'GET',
-                })
-                .then((response) => response.json())
-                .then((result) => {
-                    if (result.success) {
-                        // Redirect to success page or show a success message
-                        window.location.href = '/success/';
-                    } else {
-                        alert('Subscription failed: ' + result.error);
-                    }
-                })
-                .catch((err) => {
-                    console.error('Subscription error:', err);
-                    alert('An error occurred during subscription processing.');
+        paypal.Buttons({
+            createOrder: async function () {
+                const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+                const response = await fetch('/create-paypal-order/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        flow: 'course',
+                        plan: selectedPlan,
+                    }),
                 });
-            } else {
-                alert('Subscription ID not found.');
+                const result = await response.json();
+                if (!response.ok || !result.id) {
+                    throw new Error(result.error || 'Failed to create PayPal order.');
+                }
+                return result.id;
+            },
+            onApprove: async function (data) {
+                const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+                const response = await fetch('/process-payment/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        paypal_order_id: data.orderID,
+                        plan: selectedPlan,
+                        email: document.getElementById('email').value,
+                        firstName: document.getElementById('givenName').value,
+                        lastName: document.getElementById('familyName').value,
+                    }),
+                });
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = '/success/';
+                } else {
+                    alert(result.error || 'Payment failed.');
+                }
+            },
+            onError: function (err) {
+                console.error('PayPal error:', err);
+                alert('An error occurred during PayPal payment.');
             }
-        },
-
-        onError: function (err) {
-            console.error('PayPal error:', err);
-            alert('An error occurred during PayPal payment: ' + err.message);
-        }
-    }).render('#paypal-button-container');  // Render PayPal buttons
-    paypalInitialized = true;  // Set initialized flag
-}
+        }).render('#paypal-button-container');
+        paypalInitialized = true;
+    }
 
 
 const statusDiv = document.getElementById("subscription-status");
@@ -1501,9 +1487,10 @@ function getCookie(name) {
 
     // Event listeners for payment method buttons
     cardBtn.addEventListener('click', function () {
-        cardPaymentSection.style.display = 'block';
-        paypalPaymentSection.style.display = 'none';
-        setupSquarePayments(); // Initialize Square payment setup
+        cardPaymentSection.style.display = 'none';
+        paypalPaymentSection.style.display = 'block';
+        alert('Card checkout via Square has been disabled. Please use PayPal.');
+        setupPayPalPayments();
     });
 
     paypalBtn.addEventListener('click', function () {
