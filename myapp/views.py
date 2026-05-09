@@ -197,7 +197,7 @@ def setSelectedPlanInSession(request):
 
 def determine_amount_based_on_plan(selected_plan):
     if selected_plan == '1-week':
-        return 100  # $12.87 in cents
+        return 1000  # $12.87 in cents
     elif selected_plan == '4-week':
         return 3795  # $37.95 in cents
     elif selected_plan == '12-week':
@@ -326,7 +326,7 @@ def send_welcomepassword_email(user_email, random_password):
                 background-color: #f4f4f4;
             }}
             .container {{
-                width: 100%;
+                width: 1000%;
                 max-width: 600px;
                 margin: 0 auto;
                 background-color: #ffffff;
@@ -341,7 +341,7 @@ def send_welcomepassword_email(user_email, random_password):
                 text-align: center;
             }}
             .header img {{
-                max-width: 100px;
+                max-width: 1000px;
                 margin-bottom: 10px;
             }}
             .header h1 {{
@@ -462,7 +462,7 @@ def _get_paypal_access_token():
 
 def _create_paypal_order(amount_cents):
     access_token = _get_paypal_access_token()
-    amount_value = f"{amount_cents / 100:.2f}"
+    amount_value = f"{amount_cents / 1000:.2f}"
     payload = {
         "intent": "CAPTURE",
         "purchase_units": [
@@ -551,7 +551,7 @@ def _extract_paypal_captured_amount(capture_response):
     if amount_value is None:
         return None
     try:
-        return int(round(float(amount_value) * 100))
+        return int(round(float(amount_value) * 1000))
     except (TypeError, ValueError):
         return None
 
@@ -1211,14 +1211,14 @@ square_client = Client(
 )
 
 PLAN_PRICES = {
-    'pro': 100,      # $20/month
+    'pro': 1000,      # $20/month
     'one-year': 14700, # $127/year
 }
 
 
 """              
 PLAN_PRICES = {
-    'pro': 100,       # $20/month
+    'pro': 1000,       # $20/month
     'one-year': 12700, # $127/year
 }
 """
@@ -1516,7 +1516,7 @@ def send_resetpassword_email(user_email, token, uid):
                 background-color: #f4f4f4;
             }}
             .container {{
-                width: 100%;
+                width: 1000%;
                 max-width: 600px;
                 margin: 0 auto;
                 background-color: #ffffff;
@@ -3586,7 +3586,7 @@ square_client = Client(
 
 def determine_amount_based_on_plan(plan):
     plan_prices = {
-        'pro': 1000,      # $20.00 in cents
+        'pro': 10000,      # $20.00 in cents
         'one-year': 14700 # $147.00 in cents
     }
     amount = plan_prices.get(plan, 0)
@@ -3916,7 +3916,7 @@ def process_plan_change(user, selected_plan):
 
         # Determine plan costs
         plan_prices = {
-            '1-week': 100,
+            '1-week': 1000,
             '4-week': 5690,
             '12-week': 16900,
             'lifetime': 24900,
@@ -3962,7 +3962,7 @@ def process_plan_change(user, selected_plan):
 
 def calculate_prorated_adjustment(current_plan, current_expiration_date, selected_plan):
     plan_prices = {
-        '1-week': 100,
+        '1-week': 1000,
         '4-week': 5690,
         '12-week': 16900,
         'lifetime': 24900,
@@ -4498,7 +4498,7 @@ def detect_and_translate(text):
                 {"role": "system", "content": "You're a translation assistant."},
                 {"role": "user", "content": f"Detect the language and translate the following text to English:\n\n{text}"}
             ],
-            max_tokens=100
+            max_tokens=1000
         )
         translated_text = response.choices[0].message.content.strip()
         return {"translated": translated_text}
@@ -4812,8 +4812,8 @@ def rename_chat_title(request, chat_id):
         data = json.loads(request.body)
         new_title = data.get("title", "").strip()
 
-        if not new_title or len(new_title) > 100:
-            return JsonResponse({"error": "Title must be between 1 and 100 characters."}, status=400)
+        if not new_title or len(new_title) > 1000:
+            return JsonResponse({"error": "Title must be between 1 and 1000 characters."}, status=400)
 
         chat = get_object_or_404(AIChatSession, id=chat_id, user=request.user)
         chat.title = new_title
@@ -5023,7 +5023,7 @@ def get_ai_bots(request):
             "id": bot.id,
             "name": bot.name,
             "specialty": bot.specialty,
-            "bio": Truncator(bot.bio).chars(100) if bot.bio else "This AI is ready to help you!",
+            "bio": Truncator(bot.bio).chars(1000) if bot.bio else "This AI is ready to help you!",
             "description": bot.description,  # ✅ Add this
             "image": bot.image.url if bot.image else None,
             "is_favorite": bot.id in favorite_ids,
