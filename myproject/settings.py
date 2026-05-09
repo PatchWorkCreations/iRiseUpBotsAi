@@ -143,19 +143,19 @@ LOGGING = {
     },
 }
 
-# Email configuration (Resend SMTP)
+# Email configuration (Resend SMTP only)
 RESEND_API_KEY = os.getenv("RESEND_API_KEY") or os.getenv("Resend_API_KEY", "")
+RESEND_FROM = os.getenv("RESEND_FROM", "onboarding@resend.dev")
+RESEND_REPLY_TO = os.getenv("RESEND_REPLY_TO", "")
+RESEND_BASE_URL = os.getenv("RESEND_BASE_URL", "https://api.resend.com")
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.resend.com")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-EMAIL_USE_TLS = get_bool_env("EMAIL_USE_TLS", True)
-if (EMAIL_HOST or "").strip().lower() == "smtp.resend.com":
-    # Resend SMTP requires the literal username "resend".
-    EMAIL_HOST_USER = os.getenv("RESEND_SMTP_USERNAME", "resend")
-else:
-    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD") or RESEND_API_KEY
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "onboarding@resend.dev")
+EMAIL_HOST = "smtp.resend.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "resend"
+EMAIL_HOST_PASSWORD = RESEND_API_KEY
+DEFAULT_FROM_EMAIL = RESEND_FROM
 SUPPORT_EMAIL = os.getenv("SUPPORT_EMAIL", DEFAULT_FROM_EMAIL)
 
 # Third-party API keys
