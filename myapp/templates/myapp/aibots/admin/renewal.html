@@ -2,64 +2,105 @@
 
 {% block content %}
 <h1>Renewal Management</h1>
+<p class="muted">Select users and process renewals, generate copyable links, or send renewal emails.</p>
 
-<form method="POST" action="{% url 'custom_admin:process_renewals' %}" id="renewal-form">
-    {% csrf_token %}
-    <table>
-        <thead>
-            <tr>
-                <th>Select</th>
-                <th>User</th>
-                <th>Email</th>
-                <th>Plan</th>
-                <th>Expiration Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users_due_for_renewal %}
-            <tr>
-                <td><input type="checkbox" name="user_ids" value="{{ user.user.id }}"></td>
-                <td>{{ user.user.username }}</td>
-                <td>{{ user.user.email }}</td>
-                <td>{{ user.plan }}</td>
-                <td>{{ user.expiration_date|date:"Y-m-d H:i" }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <button type="submit" formaction="{% url 'custom_admin:process_renewals' %}">Renew Selected Users</button>
-    <button type="submit" formaction="{% url 'custom_admin:generate_renewal_links' %}">Generate Copyable Links</button>
-    <button type="submit" formaction="{% url 'custom_admin:send_renewal_links' %}">Send Renewal Links</button>
-</form>
-
-<!-- Modal -->
-<div id="resultModal" style="display: none;">
-    <div style="
+<style>
+    .renewal-actions { margin-top: 14px; }
+    .renewal-modal {
+        display: none;
         position: fixed;
+        inset: 0;
+        z-index: 1000;
+    }
+    .renewal-modal.is-open { display: block; }
+    .renewal-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(2, 6, 23, 0.55);
+    }
+    .renewal-dialog {
+        position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: white;
-        border: 1px solid #ddd;
+        width: min(880px, 92vw);
+        max-height: 82vh;
+        overflow: auto;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+    }
+    .renewal-dialog h2 { margin-bottom: 10px; }
+    .result-list {
+        margin: 0;
+        padding-left: 20px;
+    }
+    .result-list li { margin-bottom: 6px; }
+    .copy-card {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        background: var(--surface-soft);
+    }
+    .copy-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--line);
         border-radius: 8px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        width: 50%;
-        z-index: 1000;
-    ">
+        margin-top: 8px;
+        margin-bottom: 8px;
+        font-size: 0.86rem;
+    }
+</style>
+
+<form method="POST" action="{% url 'custom_admin:process_renewals' %}" id="renewal-form">
+    {% csrf_token %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Plan</th>
+                    <th>Expiration Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users_due_for_renewal %}
+                <tr>
+                    <td><input type="checkbox" name="user_ids" value="{{ user.user.id }}"></td>
+                    <td>{{ user.user.username }}</td>
+                    <td>{{ user.user.email }}</td>
+                    <td>{{ user.plan }}</td>
+                    <td>{{ user.expiration_date|date:"Y-m-d H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align:center;">No users due for renewal right now.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="action-row renewal-actions">
+        <button class="btn btn-success" type="submit" formaction="{% url 'custom_admin:process_renewals' %}">Renew Selected Users</button>
+        <button class="btn btn-primary" type="submit" formaction="{% url 'custom_admin:generate_renewal_links' %}">Generate Copyable Links</button>
+        <button class="btn btn-soft" type="submit" formaction="{% url 'custom_admin:send_renewal_links' %}">Send Renewal Links</button>
+    </div>
+</form>
+
+<!-- Modal -->
+<div id="resultModal" class="renewal-modal">
+    <div class="renewal-dialog">
         <h2>Renewal Summary</h2>
         <div id="modal-content"></div>
-        <button onclick="closeModal()">Close</button>
+        <button class="btn btn-primary" type="button" onclick="closeModal()">Close</button>
     </div>
-    <div style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-    " onclick="closeModal()"></div>
+    <div class="renewal-overlay" onclick="closeModal()"></div>
 </div>
 
 <script>
@@ -86,17 +127,17 @@
 
             // Populate modal with results
             const modalContent = document.getElementById('modal-content');
-            let html = '<ul>' + data.results.map(item => `<li>${item}</li>`).join('') + '</ul>';
+            let html = '<ul class="result-list">' + data.results.map(item => `<li>${item}</li>`).join('') + '</ul>';
 
             if (data.links && data.links.length > 0) {
                 html += '<hr><h3>Copy Renewal Links</h3>';
                 data.links.forEach((item, idx) => {
                     const inputId = `renewal-link-${idx}`;
                     html += `
-                        <div style="margin-bottom: 10px; padding: 8px; border: 1px solid #eee; border-radius: 6px;">
+                        <div class="copy-card">
                             <div><strong>${item.email}</strong> (${item.plan})</div>
-                            <input id="${inputId}" type="text" value="${item.url}" readonly style="width: 100%; margin-top: 6px; padding: 6px;">
-                            <button type="button" style="margin-top: 6px;" onclick="copyRenewalLink('${inputId}')">Copy Link</button>
+                            <input id="${inputId}" class="copy-input" type="text" value="${item.url}" readonly>
+                            <button class="btn btn-primary" type="button" onclick="copyRenewalLink('${inputId}')">Copy Link</button>
                         </div>
                     `;
                 });
@@ -104,7 +145,7 @@
             modalContent.innerHTML = html;
 
             // Show modal
-            document.getElementById('resultModal').style.display = 'block';
+            document.getElementById('resultModal').classList.add('is-open');
 
         } catch (error) {
             alert('An error occurred while processing this request.');
@@ -113,7 +154,7 @@
     });
 
     function closeModal() {
-        document.getElementById('resultModal').style.display = 'none';
+        document.getElementById('resultModal').classList.remove('is-open');
     }
 
     function copyRenewalLink(inputId) {

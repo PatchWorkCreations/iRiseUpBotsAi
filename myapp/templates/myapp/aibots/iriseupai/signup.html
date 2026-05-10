@@ -75,11 +75,14 @@
 
   .split-logo {
     position: relative; z-index: 2;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.7rem; font-weight: 500;
-    color: #e0f5f4; letter-spacing: .06em; text-decoration: none;
+    display: inline-block;
+    text-decoration: none;
   }
-  .split-logo span { color: var(--coral); }
+  .split-logo img {
+    height: 42px;
+    width: auto;
+    display: block;
+  }
 
   .split-tagline {
     position: relative; z-index: 2;
@@ -355,7 +358,9 @@
     </div>
     <div class="split-hero-orb"></div>
 
-    <a class="split-logo" href="#">iRise<span>Up</span></a>
+    <a class="split-logo" href="#">
+      <img src="{% static 'assets/images/black_logo_long.png' %}" alt="iRiseUp logo">
+    </a>
 
     <div class="split-tagline">
       <div class="split-typewriter"><span id="dynamic-word"></span></div>

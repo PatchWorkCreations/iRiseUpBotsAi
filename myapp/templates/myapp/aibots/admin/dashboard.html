@@ -2,60 +2,37 @@
 
 {% block content %}
 <h1>Admin Dashboard</h1>
+<p class="muted">Quick overview of account health and subscription activity.</p>
 
-<div style="margin-bottom: 30px;">
-    <h2>System Overview</h2>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-        <thead>
-            <tr>
-                <th style="text-align: left; padding: 10px; background-color: #f4f4f4; border: 1px solid #ddd;">Metric</th>
-                <th style="text-align: left; padding: 10px; background-color: #f4f4f4; border: 1px solid #ddd;">Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;">Total Users</td>
-                <td style="padding: 10px; border: 1px solid #ddd;">{{ total_users }}</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;">Active Users</td>
-                <td style="padding: 10px; border: 1px solid #ddd;">{{ active_users }}</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;">Pro Users</td>
-                <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; color: #28a745;">{{ pro_users_count }}</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;">Users Needing Renewal</td>
-                <td style="padding: 10px; border: 1px solid #ddd;">{{ users_needing_renewal }}</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;">Deactivated Users</td>
-                <td style="padding: 10px; border: 1px solid #ddd;">{{ deactivated_users }}</td>
-            </tr>
-        </tbody>
-        
-    </table>
+<div class="cards">
+    <div class="card">
+        <div class="card-label">Total Users</div>
+        <div class="card-value">{{ total_users }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Active Users</div>
+        <div class="card-value">{{ active_users }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Pro Users</div>
+        <div class="card-value">{{ pro_users_count }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Need Renewal</div>
+        <div class="card-value">{{ users_needing_renewal }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Deactivated Users</div>
+        <div class="card-value">{{ deactivated_users }}</div>
+    </div>
 </div>
-
-<hr />
 
 <div style="margin-top: 20px;">
     <h2>Quick Links</h2>
-    <ul style="list-style: none; padding: 0;">
-        <li style="margin-bottom: 10px;">
-            <a href="{% url 'custom_admin:renewals' %}" 
-            style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">
-                Manage Renewals
-            </a>
-        </li>
-        <li style="margin-bottom: 10px;">
-            <a href="{% url 'custom_admin:pro_users_list' %}" 
-            style="display: inline-block; padding: 10px 15px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px;">
-                View Pro Users
-            </a>
-        </li>
-    </ul>
+    <div class="action-row">
+        <a href="{% url 'custom_admin:renewals' %}" class="btn btn-primary">Manage Renewals</a>
+        <a href="{% url 'custom_admin:pro_users_list' %}" class="btn btn-success">View Pro Users</a>
+    </div>
 </div>
 
 {% endblock %}

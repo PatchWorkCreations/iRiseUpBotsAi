@@ -87,14 +87,14 @@
     }
 
     .hero-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.6rem;
-      font-weight: 500;
-      color: #e0f5f4;
-      letter-spacing: .06em;
       text-decoration: none;
+      display: inline-block;
     }
-    .hero-logo span { color: var(--accent); }
+    .hero-logo img {
+      height: 42px;
+      width: auto;
+      display: block;
+    }
 
     .hero-tagline {
       max-width: 380px;
@@ -318,7 +318,9 @@
     <div class="hero-orb"></div>
 
     <div class="hero-content">
-      <a class="hero-logo" href="{% url 'ai_integration_dashboard' %}">iRise<span>Up</span></a>
+      <a class="hero-logo" href="{% url 'ai_integration_dashboard' %}">
+        <img src="{% static 'assets/images/black_logo_long.png' %}" alt="iRiseUp logo">
+      </a>
 
       <div class="hero-tagline">
         <h1>Elevate your<br/><em>workflow</em><br/>every day.</h1>
