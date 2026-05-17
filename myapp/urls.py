@@ -161,8 +161,10 @@ urlpatterns = [
     path('validate-user-input/', views.validate_user_input, name='validate_user_input'),
 
     path('iriseupai_landing', views.iriseupai_landing, name='iriseupai_landing'),
-    path('', views.chat_iriseupai, name='chat_iriseupai'),
+    path('', views.landing_for_iriseup, name='home'),
     path('chat-iriseupai', views.chat_iriseupai, name='chat_iriseupai'),
+    path('iriseup/terms/', views.iriseup_terms_page, name='iriseup_terms'),
+    path('iriseup/privacy/', views.iriseup_privacy_page, name='iriseup_privacy'),
     
     path('api/chat/lumos/', views.get_lumos_response, name='get_lumos_response'),  # Lumos (was soulspark)
     path('api/chat/mentor-iq/', views.get_mentor_iq_response, name='get_mentor_iq_response'),  # Mentor IQ (was mindforge)
@@ -246,6 +248,7 @@ urlpatterns = [
     path('generate-urls/', views.generate_urls_py, name='generate_urls'),
 
     path('iriseup/', views.landing_for_iriseup, name='landing_for_iriseup'),
+    path('content-engine/', views.may_content_engine, name='may_content_engine'),
     path('about-us/', views.about_us, name='about_us'),
     path('service/', views.service, name='service'),
     path('connect-with-us/', views.iriseup_contact_us, name='iriseup_contact_us'),

@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iRiseup.ai — Meet Your Inner Circle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #0b1a2e;
+    --navy-mid: #132440;
+    --ink: #0f1c2d;
+    --body: #3d5068;
+    --muted: #7a90a8;
+    --gold: #c8922a;
+    --gold-light: #f0c56a;
+    --sky: #4a90d9;
+    --line: rgba(15, 28, 45, 0.1);
+    --line-light: rgba(255,255,255,0.12);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --page: #fafaf8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink);
+    background: var(--page);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 68px;
+    background: rgba(250,250,248,0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-logo img {
+    height: 44px;
+    width: auto;
+    display: block;
+  }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--body);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-login {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink) !important;
+    padding: 9px 18px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    transition: all 0.2s !important;
+    background: #fff;
+  }
+  .nav-login:hover {
+    border-color: rgba(15,28,45,0.35);
+    background: #f7f4ef;
+    color: var(--ink) !important;
+  }
+  .nav-cta {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink) !important;
+    padding: 9px 22px;
+    border: 1px solid rgba(15,28,45,0.25);
+    border-radius: 100px;
+    transition: all 0.2s !important;
+  }
+  .nav-cta:hover {
+    background: var(--ink) !important;
+    color: #fff !important;
+    border-color: var(--ink) !important;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 180px 48px 140px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(3.2rem, 6vw, 6.2rem);
+    font-weight: 500;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    max-width: 820px;
+    margin-bottom: 32px;
+  }
+  .hero h1 em { color: var(--gold); font-style: italic; }
+  .hero-sub {
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    color: var(--body);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 52px;
+    font-weight: 300;
+  }
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .btn-dark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    background: var(--ink);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 15px 32px;
+    border-radius: 100px;
+    letter-spacing: 0.01em;
+    transition: all 0.22s;
+  }
+  .btn-dark:hover { background: var(--navy-mid); transform: translateY(-1px); }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--body);
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--ink); }
+  .btn-ghost svg { transition: transform 0.2s; }
+  .btn-ghost:hover svg { transform: translateX(3px); }
+  .hero-trust {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ─── QUIZ STRIP ─── */
+  .quiz-strip {
+    padding: 64px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .quiz-strip-left h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+    font-weight: 500;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    max-width: 520px;
+  }
+  .quiz-strip-left h2 em { color: var(--gold); font-style: italic; }
+  .quiz-strip-right {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .btn-gold {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    background: var(--gold);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 14px 30px;
+    border-radius: 100px;
+    transition: all 0.22s;
+  }
+  .btn-gold:hover { background: #b8831f; transform: translateY(-1px); }
+  .quiz-strip-right span { font-size: 12px; color: var(--muted); }
+
+  /* ─── FEELING (dark, full-bleed) ─── */
+  .feeling-section {
+    background: var(--navy);
+    padding: 120px 48px;
+    color: rgba(236,244,255,0.88);
+  }
+  .feeling-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .feeling-section .section-eyebrow { color: rgba(200,220,255,0.55); }
+  .feeling-section .section-title { color: #ecf4ff; }
+  .feeling-section .section-title em { color: var(--gold-light); }
+  .feeling-section .section-sub { color: rgba(236,244,255,0.65); max-width: 620px; }
+  .quotes-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-top: 64px;
+  }
+  .quote-item {
+    padding: 40px 40px 40px 0;
+    border-bottom: 1px solid var(--line-light);
+    color: rgba(236,244,255,0.82);
+    font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+    line-height: 1.75;
+    font-weight: 300;
+    position: relative;
+  }
+  .quote-item:nth-child(odd) { padding-right: 60px; border-right: 1px solid var(--line-light); }
+  .quote-item:nth-child(even) { padding-left: 60px; padding-right: 0; }
+  .quote-item:nth-last-child(-n+2) { border-bottom: none; padding-top: 40px; }
+  .quote-mark {
+    font-family: var(--serif);
+    font-size: 72px;
+    line-height: 0.6;
+    color: var(--gold);
+    opacity: 0.5;
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  /* ─── SHARED SECTION PARTS ─── */
+  .section-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 3.8vw, 3.8rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .section-title em { color: var(--gold); font-style: italic; }
+  .section-sub {
+    font-size: 1.08rem;
+    color: var(--body);
+    font-weight: 300;
+    line-height: 1.8;
+    max-width: 600px;
+    margin-bottom: 72px;
+  }
+
+  /* ─── STRATEGISTS (light) ─── */
+  .strategists-section {
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .strategists-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+  }
+  .strategist-item {
+    padding: 32px 28px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s;
+  }
+  .strategist-item:hover { background: rgba(200,146,42,0.04); }
+  .strategist-item:nth-child(5n) { border-right: none; }
+  .strategist-item:nth-child(n+6) { border-bottom: none; }
+  .s-name {
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .s-role {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .s-desc { font-size: 13px; color: var(--body); line-height: 1.65; font-weight: 300; }
+
+  /* ─── HOW (dark) ─── */
+  .how-section {
+    background: var(--navy);
+    padding: 120px 48px;
+    color: rgba(236,244,255,0.88);
+  }
+  .how-inner { max-width: 1200px; margin: 0 auto; }
+  .how-section .section-eyebrow { color: rgba(200,220,255,0.5); }
+  .how-section .section-title { color: #ecf4ff; }
+  .how-section .section-title em { color: var(--gold-light); }
+  .how-section .section-sub { color: rgba(236,244,255,0.6); }
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .step-item {
+    padding: 0 48px 0 0;
+    border-right: 1px solid var(--line-light);
+  }
+  .step-item:last-child { border-right: none; padding-right: 0; padding-left: 48px; }
+  .step-item:nth-child(2) { padding-left: 48px; }
+  .step-num {
+    font-family: var(--serif);
+    font-size: 4rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.1);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+  .step-item h4 {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #ecf4ff;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .step-item p { font-size: 15px; color: rgba(236,244,255,0.65); font-weight: 300; line-height: 1.75; }
+
+  /* ─── DIFFERENCE ─── */
+  .difference-section {
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .diff-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .diff-col h3 {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+  }
+  .diff-col.them h3 { color: var(--muted); }
+  .diff-col.us h3 { color: var(--ink); }
+  .diff-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .diff-col.them .diff-label { color: #b0bfd0; }
+  .diff-col.us .diff-label { color: var(--gold); }
+  .diff-list { list-style: none; }
+  .diff-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .diff-col.them .diff-list li { color: var(--muted); }
+  .diff-col.us .diff-list li { color: var(--body); }
+  .diff-col.them .diff-list li::before { content: "—"; color: #c0cdd8; flex-shrink: 0; margin-top: 1px; }
+  .diff-col.us .diff-list li::before { content: "✓"; color: var(--gold); flex-shrink: 0; font-weight: 600; margin-top: 1px; }
+
+  /* ─── PRICING (dark) ─── */
+  .pricing-section {
+    background: var(--navy);
+    padding: 120px 48px;
+  }
+  .pricing-inner { max-width: 1200px; margin: 0 auto; }
+  .pricing-section .section-eyebrow { color: rgba(200,220,255,0.5); }
+  .pricing-section .section-title { color: #ecf4ff; }
+  .pricing-section .section-title em { color: var(--gold-light); }
+  .pricing-section .section-sub { color: rgba(236,244,255,0.6); }
+  .pricing-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--line-light);
+  }
+  .price-item {
+    padding: 40px 32px;
+    border-right: 1px solid var(--line-light);
+  }
+  .price-item:last-child { border-right: none; }
+  .price-item.featured { background: rgba(200,146,42,0.12); }
+  .price-tier {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(200,220,255,0.55);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .price-item.featured .price-tier { color: var(--gold-light); }
+  .price-amount {
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 4vw, 3.2rem);
+    font-weight: 500;
+    color: #ecf4ff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .price-period { font-size: 13px; color: rgba(200,220,255,0.5); margin-bottom: 20px; }
+  .price-desc { font-size: 14px; color: rgba(200,220,255,0.7); font-weight: 300; line-height: 1.6; }
+  .price-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--gold-light);
+    background: rgba(200,146,42,0.2);
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 12px;
+  }
+  .pricing-cta { margin-top: 48px; }
+  .btn-outline-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(236,244,255,0.9);
+    font-size: 15px;
+    font-weight: 400;
+    padding: 13px 28px;
+    border-radius: 100px;
+    transition: all 0.22s;
+  }
+  .btn-outline-light:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+
+  /* ─── FAITH ─── */
+  .faith-section {
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .faith-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  .faith-left h2 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 3.2vw, 3rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .faith-left p { font-size: 1.04rem; color: var(--body); font-weight: 300; line-height: 1.85; }
+  .faith-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .faith-words span {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--body);
+    border-bottom: 1px solid rgba(15,28,45,0.15);
+    padding-bottom: 3px;
+  }
+
+  /* ─── FOUNDER ─── */
+  .founder-section {
+    background: var(--navy-mid);
+    padding: 120px 48px;
+    color: rgba(236,244,255,0.85);
+  }
+  .founder-inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .founder-inner .kicker {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(200,220,255,0.45);
+    font-weight: 500;
+    margin-bottom: 32px;
+  }
+  .founder-inner blockquote {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.5;
+    color: #ecf4ff;
+    margin-bottom: 32px;
+  }
+  .founder-inner p {
+    font-size: 1.04rem;
+    color: rgba(236,244,255,0.65);
+    font-weight: 300;
+    line-height: 1.85;
+    margin-bottom: 16px;
+  }
+  .founder-sig {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--gold-light);
+    margin-top: 24px;
+  }
+
+  /* ─── FINAL CTA ─── */
+  .final-cta {
+    padding: 140px 48px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .final-cta h2 {
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5vw, 5rem);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .final-cta h2 em { color: var(--gold); font-style: italic; }
+  .final-cta p {
+    font-size: 1.12rem;
+    color: var(--body);
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 48px;
+  }
+  .final-cta-sub {
+    margin-top: 24px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--navy);
+    padding: 64px 48px 40px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+  .footer-brand .tagline {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+  }
+  .footer-brand .copy { font-size: 12px; color: rgba(200,220,255,0.35); }
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    align-items: center;
+  }
+  .footer-links a {
+    font-size: 13px;
+    color: rgba(200,220,255,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: rgba(200,220,255,0.9); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .hero, .quiz-strip, .strategists-section, .difference-section,
+    .faith-section { padding-left: 24px; padding-right: 24px; }
+    .feeling-section, .how-section, .pricing-section, .founder-section,
+    .final-cta { padding-left: 24px; padding-right: 24px; }
+    footer { padding-left: 24px; padding-right: 24px; }
+
+    .quotes-layout { grid-template-columns: 1fr; }
+    .quote-item, .quote-item:nth-child(odd), .quote-item:nth-child(even) {
+      padding: 36px 0;
+      border-right: none;
+      border-bottom: 1px solid var(--line-light);
+    }
+    .quote-item:last-child { border-bottom: none; }
+
+    .strategists-grid { grid-template-columns: repeat(2, 1fr); }
+    .strategist-item:nth-child(5n) { border-right: 1px solid var(--line); }
+    .strategist-item:nth-child(2n) { border-right: none; }
+    .strategist-item:nth-child(n+6) { border-bottom: 1px solid var(--line); }
+    .strategist-item:last-child { border-bottom: none; }
+
+    .steps-row { grid-template-columns: 1fr; gap: 48px; }
+    .step-item, .step-item:last-child, .step-item:nth-child(2) {
+      padding: 0;
+      border-right: none;
+      border-bottom: 1px solid var(--line-light);
+      padding-bottom: 48px;
+    }
+    .step-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .diff-layout { grid-template-columns: 1fr; gap: 60px; }
+    .pricing-row { grid-template-columns: 1fr 1fr; }
+    .price-item:nth-child(2) { border-right: none; }
+    .price-item:nth-child(3) { border-top: 1px solid var(--line-light); }
+    .price-item:nth-child(4) { border-top: 1px solid var(--line-light); border-right: none; }
+    .faith-layout { grid-template-columns: 1fr; gap: 48px; }
+    .quiz-strip { flex-direction: column; align-items: flex-start; }
+    .quiz-strip-right { align-items: flex-start; }
+    footer .footer-inner { flex-direction: column; }
+  }
+
+  @media (max-width: 560px) {
+    .strategists-grid { grid-template-columns: 1fr; }
+    .strategist-item { border-right: none; border-bottom: 1px solid var(--line); }
+    .strategist-item:last-child { border-bottom: none; }
+    .pricing-row { grid-template-columns: 1fr; }
+    .price-item { border-right: none; border-bottom: 1px solid var(--line-light); }
+    .price-item:last-child { border-bottom: none; }
+    .hero { padding-top: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="{% url 'home' %}" class="nav-logo">
+    <img src="/static/assets/images/black_logo_long.png" alt="iRiseUp.ai">
+  </a>
+  <div class="nav-links">
+    <a href="#strategists">Strategists</a>
+    <a href="#how">How it works</a>
+    <a href="{% url 'may_content_engine' %}">Start Quiz Now</a>
+    <a href="{% url 'chat_iriseupai' %}">Demo</a>
+    <a href="{% url 'signup' %}">Pricing</a>
+    <a href="{% url 'sign_in' %}" class="nav-login">Login</a>
+    <a href="{% url 'signup' %}" class="nav-cta">Start free trial</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">For the woman quietly building something real</div>
+  <h1>Meet your <em>inner circle.</em><br>Ten strategists.<br>One sanctuary.</h1>
+  <p class="hero-sub">A coach for your business. A companion for your heart. A guide for your faith. A planner for your life. Ten AI strategists, always available, in your language, on your schedule.</p>
+  <div class="hero-actions">
+    <a href="{% url 'signup' %}" class="btn-dark">
+      Start 7-Day Free Trial
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a href="#strategists" class="btn-ghost">
+      Meet the circle
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+  <div class="hero-trust">No credit card required · Cancel anytime · Your conversations stay yours</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- QUIZ STRIP -->
+<div class="quiz-strip">
+  <div class="quiz-strip-left">
+    <h2>Not sure where to <em>begin</em>?<br>We'll find your strategist.</h2>
+  </div>
+  <div class="quiz-strip-right">
+    <a href="{% url 'signup_quiz' %}" class="btn-gold">
+      Take the 60-second quiz
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <span>7 questions · No email required to see your result</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FEELING -->
+<section class="feeling-section">
+  <div class="feeling-inner">
+    <div class="section-eyebrow">If this sounds familiar</div>
+    <h2 class="section-title">You're <em>doing too much</em>,<br>for too many, by yourself.</h2>
+    <p class="section-sub">iRiseup was built for the woman who already knows the answer is inside her — she just needs somewhere quiet to hear it again.</p>
+
+    <div class="quotes-layout">
+      <div class="quote-item">
+        <span class="quote-mark">"</span>
+        I'm carrying my family, my work, and my faith — and there's no one I can talk to about all of it without explaining everything from the beginning.
+      </div>
+      <div class="quote-item">
+        <span class="quote-mark">"</span>
+        I've outgrown the advice that's available to me. I need someone who can keep up with where I'm actually going.
+      </div>
+      <div class="quote-item">
+        <span class="quote-mark">"</span>
+        I don't want a chatbot. I want a circle of people who get me — without me having to perform, explain, or apologize.
+      </div>
+      <div class="quote-item">
+        <span class="quote-mark">"</span>
+        It's 2 a.m. and I'm awake again. I just need to talk to someone wise who isn't busy.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRATEGISTS -->
+<section class="strategists-section" id="strategists">
+  <div class="section-eyebrow">Your inner circle</div>
+  <h2 class="section-title">Ten strategists. <em>Every part of your life.</em></h2>
+  <p class="section-sub">Each one has a distinct voice, a real specialty, and the patience your busiest day asks for.</p>
+
+  <div class="strategists-grid">
+    <div class="strategist-item">
+      <div class="s-name">Lumos</div>
+      <div class="s-role">Emotional Well-Being</div>
+      <div class="s-desc">Active listening, validation, and the comfort that helps you breathe again.</div>
+    </div>
+    <div class="strategist-item">
+      <div class="s-name">Ezra</div>
+      <div class="s-role">Marketing & Growth</div>
+      <div class="s-desc">Branding, visibility, and the strategy that helps your work be found.</div>
+    </div>
+    <div class="strategist-item">
+      <div class="s-name">Thrive</div>
+      <div class="s-role">Healthcare & Wellness</div>
+      <div class="s-desc">Fitness, nutrition, preventive care, and support for a stronger body.</div>
+    </div>
+    <div class="strategist-item">
+      <div class="s-name">Gideon</div>
+      <div class="s-role">Spiritual Companion</div>
+      <div class="s-desc">Faith insights and reflection in the tradition you call your own.</div>
+    </div>
+    <div class="strategist-item">
+      <div class="s-name">Elevate</div>
+      <div class="s-role">Business Leadership</div>
+      <div class="s-desc">Goal setting, strategic thinking, and the courage to dream bigger.</div>
+    </div>
+    <div class="strategist-item">
+      <div class="s-name">Keystone</div>
+      <div class="s-role">Finance & Legal</div>
+      <div class="s-desc">Budgeting, saving, and the legal foundations every woman should understand.</div>
+    </div>
+    <div class="strategist-item">
+      <div class="s-name">MentorIQ</div>
+      <div class="s-role">Career & Learning</div>
+      <div class="s-desc">Career advising and skill-building for your next chapter.</div>
+    </div>
+    <div class="strategist-item">
+      <div class="s-name">Imagine</div>
+      <div class="s-role">Creativity & Innovation</div>
+      <div class="s-desc">Storytelling, ideation, and the push that turns ideas into pages.</div>
+    </div>
+    <div class="strategist-item">
+      <div class="s-name">LifeWise</div>
+      <div class="s-role">Smart Choices & Clarity</div>
+      <div class="s-desc">Life planning and the simplicity of knowing what's next.</div>
+    </div>
+    <div class="strategist-item">
+      <div class="s-name">Polaris</div>
+      <div class="s-role">Global Citizenship</div>
+      <div class="s-desc">Cross-cultural intelligence and conscious travel wisdom.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <div class="section-eyebrow">How it works</div>
+    <h2 class="section-title">A sanctuary, in <em>three steps.</em></h2>
+    <p class="section-sub">Talk to her like you'd talk to a wise friend. Day or night. Your pace. Your words.</p>
+
+    <div class="steps-row">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <h4>Take the quiz</h4>
+        <p>Seven gentle questions. We match you with the strategist your current season is asking for.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <h4>Start the conversation</h4>
+        <p>Talk to her like you'd talk to a wise friend. Day or night. Your pace. Your words.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <h4>Meet the rest of the circle</h4>
+        <p>When you're ready, the other nine strategists are waiting — each one for a different part of your life.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFFERENCE -->
+<section class="difference-section">
+  <div class="section-eyebrow">Why iRiseup is different</div>
+  <h2 class="section-title">Not a chatbot. <em>A circle.</em></h2>
+  <p class="section-sub">The difference between a generic AI and iRiseup is the same as the difference between a stranger and a trusted friend.</p>
+
+  <div class="diff-layout">
+    <div class="diff-col them">
+      <div class="diff-label">Generic AI Chatbots</div>
+      <h3>One voice. Anything goes.</h3>
+      <ul class="diff-list">
+        <li>One personality trying to be everything</li>
+        <li>No specialty, no roles, no boundaries</li>
+        <li>Built for productivity, not for people</li>
+        <li>Same tone whether you're grieving or strategizing</li>
+        <li>You do the work of explaining your context</li>
+      </ul>
+    </div>
+    <div class="diff-col us">
+      <div class="diff-label">iRiseup.ai</div>
+      <h3>Ten voices. Each one in her lane.</h3>
+      <ul class="diff-list">
+        <li>Ten distinct strategists, each with a real specialty</li>
+        <li>Lumos doesn't try to do Gideon's job</li>
+        <li>Built for women in real seasons of real life</li>
+        <li>Each strategist knows what she's here for</li>
+        <li>The right voice is one click away</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section">
+  <div class="pricing-inner">
+    <div class="section-eyebrow">Simple pricing</div>
+    <h2 class="section-title">One sanctuary. <em>Four ways in.</em></h2>
+    <p class="section-sub">Start free for 7 days. Pay nothing until you decide to stay.</p>
+
+    <div class="pricing-row">
+      <div class="price-item">
+        <div class="price-tier">Solo</div>
+        <div class="price-amount">$19</div>
+        <div class="price-period">per month</div>
+        <div class="price-desc">One strategist, unlimited conversations</div>
+      </div>
+      <div class="price-item">
+        <div class="price-tier">All Access</div>
+        <div class="price-amount">$39</div>
+        <div class="price-period">per month</div>
+        <div class="price-desc">All 10 strategists, every part of your life</div>
+      </div>
+      <div class="price-item">
+        <div class="price-tier">Annual</div>
+        <div class="price-amount">$349</div>
+        <div class="price-period">per year</div>
+        <div class="price-desc">Save $119 compared to monthly All Access</div>
+      </div>
+      <div class="price-item featured">
+        <div class="price-badge">First 500 only · 60 days left</div>
+        <div class="price-tier">Founding Member</div>
+        <div class="price-amount">$299</div>
+        <div class="price-period">per year · locked forever</div>
+        <div class="price-desc">Lock in the founding rate for life</div>
+      </div>
+    </div>
+
+    <div class="pricing-cta">
+      <a href="{% url 'signup' %}" class="btn-outline-light">
+        See full pricing details
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FAITH -->
+<section class="faith-section">
+  <div class="faith-layout">
+    <div class="faith-left">
+      <h2>Whatever word brings you peace</h2>
+      <p>iRiseup welcomes every spiritual tradition and every belief. Our spiritual companion, Gideon, is intentionally interfaith — meeting you in the language and tradition that feels true to you. No tradition is assumed. None is imposed. You choose the word that holds you, and Gideon honors it.</p>
+    </div>
+    <div class="faith-words">
+      <span>God</span>
+      <span>Allah</span>
+      <span>Brahman</span>
+      <span>Source</span>
+      <span>Light</span>
+      <span>Love</span>
+      <span>The Universe</span>
+      <span>Infinite Intelligence</span>
+      <span>Spirit</span>
+      <span>Life</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOUNDER -->
+<section class="founder-section">
+  <div class="founder-inner">
+    <div class="kicker">A note from the founder</div>
+    <blockquote>"I refused to believe that wisdom should be expensive — or that support should be impersonal."</blockquote>
+    <p>iRiseup was built quietly, by a woman caring for her husband, mentoring her family, and refusing to believe that wisdom should be expensive or that support should be impersonal.</p>
+    <p>If you are in a season of doing too much for too many — this is for you. Ten strategists, always available, in your corner, asking nothing but that you keep rising.</p>
+    <p>I'm so glad you're here.</p>
+    <div class="founder-sig">— Maria Gregory, Founder</div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2>Your inner circle is <em>waiting.</em></h2>
+  <p>Seven days. Full access. No credit card. See which strategist becomes yours.</p>
+  <a href="{% url 'signup' %}" class="btn-dark" style="margin: 0 auto; font-size: 16px; padding: 16px 36px;">
+    Start 7-Day Free Trial
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <div class="final-cta-sub">
+    OR · <a href="{% url 'signup_quiz' %}" style="color: var(--gold); text-decoration: none; letter-spacing: 0.06em;">TAKE THE 60-SECOND QUIZ FIRST →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="tagline">Ten strategists. One sanctuary. Yours.</div>
+      <div class="copy">© 2026 iRiseup AI · Made with care</div>
+    </div>
+    <div class="footer-links">
+      <a href="{% url 'about_us' %}">About</a>
+      <a href="{% url 'signup' %}">Pricing</a>
+      <a href="{% url 'iriseup_privacy' %}">Privacy</a>
+      <a href="{% url 'iriseup_terms' %}">Terms</a>
+      <a href="{% url 'iriseup_contact_us' %}">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

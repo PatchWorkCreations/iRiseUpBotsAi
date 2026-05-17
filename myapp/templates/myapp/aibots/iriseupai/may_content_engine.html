@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iRiseup.ai — Find Your Strategist Quiz</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Georgia', 'Cambria', serif;
+    line-height: 1.6;
+    color: #2a2a3a;
+    background: linear-gradient(135deg, #1a1a2e 0%, #2a2845 50%, #3a3556 100%);
+    min-height: 100vh;
+  }
+  .container { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+
+  /* HEADER */
+  .quiz-header {
+    text-align: center; color: #faf7f2; padding: 20px 0 30px;
+  }
+  .quiz-logo {
+    font-size: 24px; font-weight: 500; letter-spacing: 0.5px;
+  }
+  .quiz-logo em { color: #d4a574; font-style: italic; }
+
+  /* PROGRESS */
+  .progress-wrap {
+    margin: 20px 0 40px; max-width: 500px; margin-left: auto; margin-right: auto;
+  }
+  .progress-bar {
+    background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    background: #d4a574; height: 100%; width: 0%;
+    transition: width 0.4s ease;
+  }
+  .progress-text {
+    text-align: center; color: rgba(255,255,255,0.6);
+    font-family: -apple-system, sans-serif; font-size: 12px;
+    letter-spacing: 2px; margin-top: 12px; text-transform: uppercase;
+  }
+
+  /* CARD */
+  .card {
+    background: #faf7f2; border-radius: 20px;
+    padding: 50px 44px; box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+    animation: fadeIn 0.5s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* INTRO */
+  .intro h1 {
+    font-size: 38px; font-weight: 400; line-height: 1.2;
+    margin-bottom: 20px; color: #1a1a2e;
+  }
+  .intro h1 em { color: #8a7050; font-style: italic; }
+  .intro p {
+    font-size: 17px; color: #4a4a5a; margin-bottom: 16px; line-height: 1.7;
+  }
+  .intro .meta {
+    font-family: -apple-system, sans-serif; font-size: 13px;
+    color: #8a7050; letter-spacing: 1.5px; text-transform: uppercase;
+    margin: 32px 0 24px; text-align: center;
+  }
+  .intro-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin: 20px 0 36px;
+  }
+  .intro-bullet {
+    background: #fff; padding: 16px; border-radius: 10px;
+    border: 1px solid #ece5d8; font-size: 14px; color: #4a4a5a;
+  }
+  .intro-bullet strong { color: #1a1a2e; display: block; margin-bottom: 4px; }
+
+  /* QUESTION */
+  .question h2 {
+    font-size: 28px; font-weight: 400; line-height: 1.3;
+    margin-bottom: 8px; color: #1a1a2e;
+  }
+  .question h2 em { color: #8a7050; font-style: italic; }
+  .question-sub {
+    font-size: 15px; color: #8a7050; font-style: italic;
+    margin-bottom: 32px;
+  }
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option {
+    background: #fff; border: 2px solid #ece5d8;
+    border-radius: 12px; padding: 18px 22px;
+    cursor: pointer; transition: all 0.2s;
+    font-size: 16px; color: #2a2a3a; text-align: left;
+    display: flex; align-items: flex-start; gap: 14px;
+    font-family: inherit;
+  }
+  .option:hover {
+    border-color: #d4a574; background: #fef9f0;
+    transform: translateX(4px);
+  }
+  .option.selected {
+    border-color: #d4a574; background: #1a1a2e; color: #faf7f2;
+  }
+  .option-marker {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid #d4a574; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .option.selected .option-marker { background: #d4a574; }
+  .option.selected .option-marker::after {
+    content: "✓"; color: #1a1a2e; font-weight: bold; font-size: 13px;
+  }
+
+  /* BUTTONS */
+  .btn-row { margin-top: 36px; display: flex; gap: 12px; justify-content: space-between; }
+  .btn {
+    padding: 16px 32px; border-radius: 10px; border: none;
+    font-family: -apple-system, sans-serif; font-weight: 600;
+    font-size: 15px; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-primary {
+    background: #1a1a2e; color: #faf7f2;
+  }
+  .btn-primary:hover { background: #2a2845; transform: translateY(-2px); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-text {
+    background: transparent; color: #8a7050; padding: 16px 20px;
+  }
+  .btn-text:hover { color: #1a1a2e; }
+  .btn-big {
+    padding: 20px 40px; font-size: 16px; width: 100%;
+    background: #d4a574; color: #1a1a2e;
+  }
+  .btn-big:hover { background: #e0b687; transform: translateY(-2px); }
+
+  /* RESULT */
+  .result {
+    text-align: center;
+  }
+  .result-eyebrow {
+    font-family: -apple-system, sans-serif; font-size: 12px;
+    letter-spacing: 3px; text-transform: uppercase; color: #8a7050;
+    margin-bottom: 12px;
+  }
+  .result h1 {
+    font-size: 18px; font-weight: 400; color: #4a4a5a;
+    margin-bottom: 8px;
+  }
+  .result .strategist-name {
+    font-size: 64px; font-weight: 400; color: #1a1a2e;
+    line-height: 1; margin-bottom: 8px;
+  }
+  .result .strategist-role {
+    font-family: -apple-system, sans-serif; font-size: 13px;
+    color: #d4a574; letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+  .result-reason {
+    background: #fff; padding: 28px 32px;
+    border-radius: 14px; text-align: left;
+    border-left: 4px solid #d4a574; margin-bottom: 28px;
+  }
+  .result-reason h3 {
+    font-family: -apple-system, sans-serif; font-size: 12px;
+    letter-spacing: 2px; text-transform: uppercase; color: #8a7050;
+    margin-bottom: 12px;
+  }
+  .result-reason p {
+    font-size: 16px; line-height: 1.8; color: #2a2a3a; font-style: italic;
+  }
+  .result-secondary {
+    background: #f5f1ea; padding: 20px 24px;
+    border-radius: 12px; margin-bottom: 32px; text-align: left;
+  }
+  .result-secondary .label {
+    font-family: -apple-system, sans-serif; font-size: 11px;
+    letter-spacing: 2px; text-transform: uppercase; color: #8a7050;
+    margin-bottom: 8px;
+  }
+  .result-secondary .name {
+    font-size: 18px; color: #1a1a2e; margin-bottom: 4px;
+  }
+  .result-secondary .desc { font-size: 14px; color: #5a5a6a; }
+
+  .result-cta-meta {
+    font-family: -apple-system, sans-serif; font-size: 13px;
+    color: #8a7050; margin-top: 16px; letter-spacing: 1px;
+  }
+  .restart {
+    margin-top: 20px;
+    display: inline-block; color: #8a7050; text-decoration: none;
+    font-family: -apple-system, sans-serif; font-size: 13px;
+    cursor: pointer;
+  }
+  .restart:hover { color: #1a1a2e; }
+
+  @media (max-width: 600px) {
+    .card { padding: 36px 24px; }
+    .intro h1 { font-size: 30px; }
+    .question h2 { font-size: 22px; }
+    .result .strategist-name { font-size: 48px; }
+    .intro-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="quiz-header">
+    <div class="quiz-logo">iRiseup<em>.ai</em></div>
+  </div>
+
+  <div class="progress-wrap" id="progress" style="display:none;">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-text" id="progress-text">Question 1 of 7</div>
+  </div>
+
+  <div class="card" id="quiz-card">
+    <!-- Quiz content injected by JS -->
+  </div>
+
+</div>
+
+<script>
+// ============================================
+// STRATEGIST DATA
+// ============================================
+const STRATEGISTS = {
+  Lumos: {
+    role: "Emotional Well-Being",
+    why: "You're carrying a great deal for others, and you've earned a place to set some of it down. Lumos meets you with patience, presence, and the kind of listening that doesn't try to fix you. She's the strategist your heart has been quietly asking for.",
+    desc: "Active listening, validation, and the comfort that helps you breathe again."
+  },
+  Ezra: {
+    role: "Marketing & Growth",
+    why: "You've built something real, and now it's ready to be seen. Ezra helps you find the words, the audience, and the strategy that turns good work into visible work — without losing your voice in the noise.",
+    desc: "Branding, visibility, and the strategy that helps your work be found."
+  },
+  Thrive: {
+    role: "Healthcare & Wellness",
+    why: "Your body has been whispering and you're finally ready to listen. Thrive is the steady, knowledgeable companion who helps you reclaim your energy, your sleep, and your strength — one small choice at a time.",
+    desc: "Fitness, nutrition, preventive care, and support for a stronger body."
+  },
+  Gideon: {
+    role: "Spiritual Companion",
+    why: "You're searching for the deeper why — and you don't want simple answers. Gideon walks with you in whatever tradition you call your own, honoring your word for the sacred and meeting you where your faith actually lives.",
+    desc: "Faith insights and reflection in the tradition you call your own."
+  },
+  Elevate: {
+    role: "Business Leadership",
+    why: "You can feel the bigger version of yourself standing just beyond what you've allowed. Elevate is the bold, grounded strategist who helps you name what you actually want, lead with conviction, and dream out loud again.",
+    desc: "Goal setting, strategic thinking, and the courage to dream bigger."
+  },
+  Keystone: {
+    role: "Finance & Legal Basics",
+    why: "You're ready to feel confident about money — not impressed by it, not afraid of it, but in command. Keystone explains the things no one ever sat you down to explain, in language a wise woman can actually use.",
+    desc: "Budgeting, saving, and the legal foundations every woman should understand."
+  },
+  MentorIQ: {
+    role: "Career & Learning",
+    why: "Your next chapter is calling and you want guidance from someone who can keep up. MentorIQ helps you see your path, sharpen your skills, and step forward without abandoning everything you've already built.",
+    desc: "Career advising and skill-building for your next chapter."
+  },
+  Imagine: {
+    role: "Creativity & Innovation",
+    why: "There is a book inside you. A business. A piece of art. A new way. Imagine is the spark, the structure, and the gentle push that turns the thing you've been dreaming about into the thing you've actually made.",
+    desc: "Storytelling, ideation, and the push that turns ideas into pages."
+  },
+  LifeWise: {
+    role: "Smart Choices & Clarity",
+    why: "You're standing at a crossroads and you don't want to choose alone. LifeWise helps you see your decision clearly — the trade-offs, the truth, and the path that aligns with who you've actually become.",
+    desc: "Life planning and the simplicity of knowing what's next."
+  },
+  Polaris: {
+    role: "Global Citizenship & Travel",
+    why: "Your curiosity is wider than the room you're sitting in. Polaris helps you move through the world with cultural intelligence, conscious travel, and the global perspective of someone who knows there's more.",
+    desc: "Cross-cultural intelligence and conscious travel wisdom."
+  }
+};
+
+// ============================================
+// QUIZ QUESTIONS
+// Each option carries weighted points for strategists.
+// ============================================
+const QUESTIONS = [
+  {
+    q: "What season of life are you in right now?",
+    sub: "Be honest. There's no wrong answer.",
+    options: [
+      { text: "Tending to others more than myself", weights: { Lumos: 3, Thrive: 2 } },
+      { text: "Trying to grow something I've built", weights: { Ezra: 3, Elevate: 2 } },
+      { text: "Rebuilding after a transition", weights: { LifeWise: 3, Lumos: 2 } },
+      { text: "Stepping into a bigger version of myself", weights: { Elevate: 3, Imagine: 2 } },
+      { text: "Searching for deeper meaning", weights: { Gideon: 3, LifeWise: 2 } }
+    ]
+  },
+  {
+    q: "When you can't sleep at 2 a.m., what's usually on your mind?",
+    sub: "The truth — not the polished answer.",
+    options: [
+      { text: "The people I'm responsible for", weights: { Lumos: 3, Thrive: 1 } },
+      { text: "A decision I haven't been able to make", weights: { LifeWise: 3, MentorIQ: 1 } },
+      { text: "Money, security, or what's next", weights: { Keystone: 3, LifeWise: 1 } },
+      { text: "A dream I'm afraid to start", weights: { Imagine: 3, Elevate: 1 } },
+      { text: "Whether I'm doing enough — for God, for life, for myself", weights: { Gideon: 3, Elevate: 1 } }
+    ]
+  },
+  {
+    q: "What would you give yourself more of, if you could?",
+    sub: "Pick what your soul wants — not what makes sense.",
+    options: [
+      { text: "Peace and quiet in my chest", weights: { Lumos: 3, Gideon: 1 } },
+      { text: "Energy, sleep, and vitality in my body", weights: { Thrive: 3 } },
+      { text: "Confidence and visibility in my work", weights: { Ezra: 2, Elevate: 2 } },
+      { text: "Clarity and direction for what's next", weights: { LifeWise: 2, MentorIQ: 2 } },
+      { text: "Stillness and spiritual depth", weights: { Gideon: 3, Lumos: 1 } }
+    ]
+  },
+  {
+    q: "What's the quiet question you've been carrying?",
+    sub: "The one you don't always say out loud.",
+    options: [
+      { text: "Am I okay?", weights: { Lumos: 3 } },
+      { text: "Is this the right path for me?", weights: { LifeWise: 2, MentorIQ: 2 } },
+      { text: "Why do I feel stuck when I've worked this hard?", weights: { Elevate: 2, Imagine: 2 } },
+      { text: "Where is God / the sacred in this season?", weights: { Gideon: 3 } },
+      { text: "How do I take care of myself again?", weights: { Thrive: 2, Lumos: 2 } }
+    ]
+  },
+  {
+    q: "What kind of voice do you need right now?",
+    sub: "Picture her tone. Pick what feels closest.",
+    options: [
+      { text: "Tender, warm, completely without judgment", weights: { Lumos: 3 } },
+      { text: "Wise, grounded, and a little ancient", weights: { Gideon: 2, LifeWise: 2 } },
+      { text: "Bold, visionary, and unafraid to challenge me", weights: { Elevate: 3, Imagine: 1 } },
+      { text: "Practical, clear, and respectful of my intelligence", weights: { Keystone: 2, MentorIQ: 2 } },
+      { text: "Curious, worldly, and a little adventurous", weights: { Polaris: 3, Imagine: 1 } }
+    ]
+  },
+  {
+    q: "What would make this year feel like a testimony?",
+    sub: "If you could whisper one thank-you in December.",
+    options: [
+      { text: "I felt held — lighter, emotionally", weights: { Lumos: 3 } },
+      { text: "I got my body and energy back", weights: { Thrive: 3 } },
+      { text: "My business or work grew the way I knew it could", weights: { Ezra: 2, Elevate: 2 } },
+      { text: "I felt closer to God / the sacred / my source", weights: { Gideon: 3 } },
+      { text: "I finally made the decision I've been putting off", weights: { LifeWise: 3 } },
+      { text: "I wrote the book / made the thing / started the project", weights: { Imagine: 3 } },
+      { text: "I took quiet, confident control of my money", weights: { Keystone: 3 } }
+    ]
+  },
+  {
+    q: "What feels most true, right now, in this moment?",
+    sub: "First instinct. Don't overthink it.",
+    options: [
+      { text: "I just need someone to listen", weights: { Lumos: 3 } },
+      { text: "I need someone to challenge me", weights: { Elevate: 3 } },
+      { text: "I need someone to show me the way", weights: { MentorIQ: 2, LifeWise: 2 } },
+      { text: "I need someone to remind me who I am", weights: { Gideon: 2, Lumos: 1 } },
+      { text: "I need someone to spark my imagination", weights: { Imagine: 3 } }
+    ]
+  }
+];
+
+// ============================================
+// QUIZ STATE
+// ============================================
+let currentQ = -1; // -1 = intro, 0..6 = questions, 7 = result
+let scores = {};
+let answers = [];
+
+Object.keys(STRATEGISTS).forEach(s => scores[s] = 0);
+
+// ============================================
+// RENDER
+// ============================================
+function render() {
+  const card = document.getElementById('quiz-card');
+  const progressWrap = document.getElementById('progress');
+  const progressFill = document.getElementById('progress-fill');
+  const progressText = document.getElementById('progress-text');
+
+  if (currentQ === -1) {
+    // INTRO
+    progressWrap.style.display = 'none';
+    card.innerHTML = `
+      <div class="intro">
+        <h1>Which of the ten <em>is yours</em>?</h1>
+        <p>Seven gentle questions. About sixty seconds. No email required to see your result.</p>
+        <p>We'll match you with the strategist your season is asking for — and tell you which of the other nine to meet next.</p>
+
+        <div class="intro-grid">
+          <div class="intro-bullet"><strong>60 seconds</strong>Seven simple questions.</div>
+          <div class="intro-bullet"><strong>No email gate</strong>See your result first.</div>
+          <div class="intro-bullet"><strong>Personal</strong>Built around your season, not a category.</div>
+          <div class="intro-bullet"><strong>Honest</strong>No wrong answers. Just yours.</div>
+        </div>
+
+        <button class="btn btn-big" onclick="next()">Begin the Quiz →</button>
+      </div>
+    `;
+  } else if (currentQ >= 0 && currentQ < QUESTIONS.length) {
+    // QUESTION
+    progressWrap.style.display = 'block';
+    const pct = ((currentQ) / QUESTIONS.length) * 100;
+    progressFill.style.width = pct + '%';
+    progressText.textContent = `Question ${currentQ + 1} of ${QUESTIONS.length}`;
+
+    const q = QUESTIONS[currentQ];
+    const selectedIdx = answers[currentQ];
+
+    const optionsHtml = q.options.map((opt, i) => `
+      <button class="option ${selectedIdx === i ? 'selected' : ''}" onclick="selectOption(${i})">
+        <div class="option-marker"></div>
+        <div>${opt.text}</div>
+      </button>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="question">
+        <h2>${q.q}</h2>
+        <div class="question-sub">${q.sub}</div>
+        <div class="options">${optionsHtml}</div>
+        <div class="btn-row">
+          ${currentQ > 0 ? '<button class="btn btn-text" onclick="back()">← Back</button>' : '<span></span>'}
+          <button class="btn btn-primary" onclick="next()" ${selectedIdx === undefined ? 'disabled' : ''}>
+            ${currentQ === QUESTIONS.length - 1 ? 'See My Result →' : 'Continue →'}
+          </button>
+        </div>
+      </div>
+    `;
+  } else {
+    // RESULT
+    progressFill.style.width = '100%';
+    progressText.textContent = 'Your Match';
+
+    const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+    const primary = sorted[0][0];
+    const secondary = sorted[1][0];
+    const p = STRATEGISTS[primary];
+    const s = STRATEGISTS[secondary];
+
+    card.innerHTML = `
+      <div class="result">
+        <div class="result-eyebrow">Your strategist</div>
+        <h1>You're matched with</h1>
+        <div class="strategist-name">${primary}</div>
+        <div class="strategist-role">${p.role}</div>
+
+        <div class="result-reason">
+          <h3>Why we matched you</h3>
+          <p>${p.why}</p>
+        </div>
+
+        <div class="result-secondary">
+          <div class="label">Also meet</div>
+          <div class="name">${secondary} · <span style="color:#8a7050;font-size:13px;font-family:-apple-system,sans-serif;letter-spacing:1px;text-transform:uppercase;">${s.role}</span></div>
+          <div class="desc">${s.desc}</div>
+        </div>
+
+        <button class="btn btn-big" onclick="goToSignup()">Start My 7-Day Free Trial with ${primary} →</button>
+        <div class="result-cta-meta">NO CREDIT CARD · CANCEL ANYTIME</div>
+        <br>
+        <span class="restart" onclick="restart()">Or take the quiz again</span>
+      </div>
+    `;
+  }
+}
+
+function selectOption(i) {
+  answers[currentQ] = i;
+  render();
+}
+
+function next() {
+  if (currentQ >= 0) {
+    const q = QUESTIONS[currentQ];
+    const chosen = answers[currentQ];
+    if (chosen === undefined) return;
+    // Apply weights
+    Object.entries(q.options[chosen].weights).forEach(([strat, pts]) => {
+      scores[strat] += pts;
+    });
+  }
+  currentQ++;
+  if (currentQ > QUESTIONS.length) currentQ = QUESTIONS.length;
+  render();
+}
+
+function back() {
+  if (currentQ > 0) {
+    // Undo the weights from this question if it was already answered
+    const prev = currentQ - 1;
+    // We don't have a clean way to undo — easiest: recompute from scratch
+    Object.keys(scores).forEach(s => scores[s] = 0);
+    for (let i = 0; i < prev; i++) {
+      const a = answers[i];
+      if (a !== undefined) {
+        Object.entries(QUESTIONS[i].options[a].weights).forEach(([strat, pts]) => {
+          scores[strat] += pts;
+        });
+      }
+    }
+    currentQ = prev;
+    render();
+  }
+}
+
+function restart() {
+  currentQ = -1;
+  answers = [];
+  Object.keys(scores).forEach(s => scores[s] = 0);
+  render();
+}
+
+function goToSignup() {
+  const primary = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+  window.location.href = "{% url 'signup' %}?strategist=" + encodeURIComponent(primary);
+}
+
+render();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service | iRiseUp.ai</title>
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --surface: #ffffff;
+      --ink: #171717;
+      --body: #4f4f4f;
+      --line: #e9e4db;
+      --brand: #0e7668;
+      --brand-soft: #eef8f6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--body);
+      background: linear-gradient(180deg, #fcfbf8 0%, var(--bg) 100%);
+      line-height: 1.65;
+    }
+
+    .shell {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+
+    .home-link {
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 36px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(16, 24, 40, 0.05);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 42px);
+      color: var(--ink);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      margin: 14px 0 0;
+      font-size: 16px;
+      max-width: 760px;
+    }
+
+    .meta {
+      margin-top: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #3a3a3a;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: var(--brand-soft);
+      border: 1px solid #d4eee9;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      color: var(--ink);
+      font-size: 20px;
+      letter-spacing: -0.01em;
+    }
+
+    p { margin: 0 0 12px; }
+    ul { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 8px; }
+
+    a { color: var(--brand); }
+
+    .footer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .btn {
+      text-decoration: none;
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform 0.15s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--ink);
+      color: #fff;
+      border: 1px solid var(--ink);
+    }
+
+    .btn-ghost {
+      color: var(--ink);
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    @media (max-width: 700px) {
+      .hero, .card { padding: 22px; border-radius: 14px; }
+      .shell { padding-top: 22px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="badge"><span class="badge-dot"></span> Legal & Trust Center</div>
+      <a class="home-link" href="{% url 'home' %}">Back to iRiseUp.ai</a>
+    </div>
+
+    <section class="hero">
+      <h1>Terms of Service</h1>
+      <p>These terms govern your access to and use of iRiseUp.ai products, services, websites, and AI experiences.</p>
+      <div class="meta">Effective date: May 17, 2026</div>
+    </section>
+
+    <section class="card">
+      <h2>1. Acceptance of Terms</h2>
+      <p>By creating an account, purchasing a plan, or using our platform, you agree to these Terms of Service. If you do not agree, please discontinue use.</p>
+    </section>
+
+    <section class="card">
+      <h2>2. Eligibility & Account Responsibilities</h2>
+      <ul>
+        <li>You must have legal capacity to enter into a binding agreement.</li>
+        <li>You are responsible for safeguarding your account credentials.</li>
+        <li>You are responsible for activity that occurs under your account.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>3. Subscription, Billing, and Renewals</h2>
+      <p>Paid plans may include recurring billing. You authorize us to charge applicable fees according to your chosen plan. Unless canceled before renewal, subscriptions may renew automatically as disclosed at checkout.</p>
+    </section>
+
+    <section class="card">
+      <h2>4. Acceptable Use</h2>
+      <p>You agree not to misuse the platform. Prohibited conduct includes unlawful behavior, attempts to compromise system security, abusive content, or activities that violate rights of others.</p>
+    </section>
+
+    <section class="card">
+      <h2>5. AI Output & Service Disclaimers</h2>
+      <p>AI outputs are generated content and may contain inaccuracies. You are responsible for evaluating output before relying on it for legal, financial, medical, or other high-stakes decisions.</p>
+    </section>
+
+    <section class="card">
+      <h2>6. Intellectual Property</h2>
+      <p>All platform software, design assets, and service branding are owned by iRiseUp.ai or licensed to us. Access is granted under a limited, non-transferable right to use the service in accordance with these terms.</p>
+    </section>
+
+    <section class="card">
+      <h2>7. Limitation of Liability</h2>
+      <p>To the maximum extent permitted by law, iRiseUp.ai is not liable for indirect, incidental, special, consequential, or punitive damages, or for loss of profits, data, or goodwill arising from your use of the service.</p>
+    </section>
+
+    <section class="card">
+      <h2>8. Changes, Suspension, and Termination</h2>
+      <p>We may update these terms or modify service features. We may suspend or terminate accounts that violate these terms, applicable laws, or security policies.</p>
+    </section>
+
+    <section class="card">
+      <h2>9. Contact</h2>
+      <p>Questions about these terms can be sent to <a href="mailto:support@iriseup.ai">support@iriseup.ai</a>.</p>
+
+      <div class="footer-actions">
+        <a class="btn btn-primary" href="{% url 'signup' %}">Start Free Trial</a>
+        <a class="btn btn-ghost" href="{% url 'iriseup_privacy' %}">Read Privacy Policy</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

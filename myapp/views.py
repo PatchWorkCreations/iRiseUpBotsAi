@@ -103,6 +103,14 @@ def data_privacy(request):
 def terms_view(request):
     return render(request, 'myapp/aibots/iriseupai/termsandcondition.html')
 
+
+def iriseup_terms_page(request):
+    return render(request, 'myapp/aibots/iriseupai/terms_page.html')
+
+
+def iriseup_privacy_page(request):
+    return render(request, 'myapp/aibots/iriseupai/privacy_page.html')
+
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from myapp.models import Course, UserCourseAccess
@@ -5329,9 +5337,13 @@ def landing_for_iriseup(request):
     
     return render(
         request,
-        'myapp/aibots/iriseupai/landing_page.html',
+        'myapp/aibots/iriseupai/may_new_landing.html',
         {'form': form, 'PAYPAL_CLIENT_ID': settings.PAYPAL_CLIENT_ID},
     )
+
+
+def may_content_engine(request):
+    return render(request, 'myapp/aibots/iriseupai/may_content_engine.html')
 
 
 def about_us(request):
